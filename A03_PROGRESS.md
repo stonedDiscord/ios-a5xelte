@@ -628,3 +628,19 @@ User transcribed (minor spelling differences preserved in original chat):
 - Opt-in diagnostic committed 0b21f6a, CI 43514823420 dispatched on
   macos-15-intel. Package its test with a03_lockdown_mask=1; otherwise
   default behavior stays unmasked. No candidate artifact/flash yet.
+
+### Trial 0006-irq: scoped IRQ diagnostic built and uploaded
+
+- CI 43514823420 succeeded (source 0b21f6a). Plain arm64 kernel SHA256
+  b1700f3a60891a0cbd252c07fa89dff06ca0e49f453d860052737cddf699bde7
+  matches CI manifest. Opt-in tunable and mask/register/restoration labels
+  present. No device result inferred from host labels.
+- Packaged shim/a03/out/a03-xnu-0006-irq.img with a03_lockdown_mask=1
+  verified in payload command line. Same ADT and loader, 64 MiB SHA256
+  593adffb16338a24f73cfa62d4827b1d2c048bd0f212232659d0fb003e4e276c.
+  Host packer checks passed; entry 0x10346c488, ADT 0x103ffc000.
+- Phone detected in Download mode. Host image hash rechecked; Heimdall
+  retrieved PIT, uploaded boot to 100%, reported success, rebooted, exit 0.
+  No independent partition readback. Only BOOT written.
+- Current BOOT is trial 0006-irq. Requested register/callback/restoration
+  markers, panic or partial line. Scoped mask experiment outcome pending.

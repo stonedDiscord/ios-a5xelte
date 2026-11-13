@@ -2,16 +2,16 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 0005 still ends before LOCKDOWN callbacks, without dispatcher
-entry marker. Direct-DAIF helper confirmed in disassembly; a pending IRQ
-at mask restore is possible, not proven. Added opt-in a03_lockdown_mask=1
-(default false): saves DAIF, masks only through dispatcher, logs HPPIR1/
-CNTV_CTL and callback addresses, restores original DAIF immediately after.
-This is a diagnostic experiment, not an IRQ fix or security bypass.
-Commit 0b21f6a; CI 43514823420 dispatched. Next test must add
-a03_lockdown_mask=1 to payload command line. Phone detected in Download mode; no new image flashed.
-Current BOOT 0005 1e47cec3...f1829e2, kernel 9113ca66...b739f7c.
-No iOS rootfs/storage/USB. Preserve recovery/bootloaders/EFS/NV.
+Latest: CI 43514823420 PASSED (0b21f6a), plain arm64 kernel hash
+b1700f3a...699bde7. Trial 0006-irq BOOT uploaded successfully: Heimdall
+boot 100%, success, reboot, exit 0. Image SHA256
+593adffb16338a24f73cfa62d4827b1d2c048bd0f212232659d0fb003e4e276c.
+Verified a03_lockdown_mask=1 in payload. Current BOOT 0006-irq; user asked
+for final saved DAIF/HPPIR1/timer/callback/mask-restoration markers. Runtime
+outcome pending; no independent readback. Previous 0005 stopped before
+LOCKDOWN dispatcher. New experiment masks only dispatcher then restores
+original DAIF; diagnostic, not a proven IRQ fix. No iOS rootfs/storage/USB.
+Preserve recovery/bootloaders/EFS/NV/USERDATA.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
