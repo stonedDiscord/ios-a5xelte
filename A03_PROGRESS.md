@@ -586,3 +586,6 @@ User transcribed (minor spelling differences preserved in original chat):
 - Extracted helper compiles locally for arm64-apple-darwin with warnings
   as errors; patch application and profile staging pass. Kernel integration
   and runtime still need CI/BOOT test. No new phone write yet.
+
+- Refined diagnostic committed efb2834 and dispatched as CI 43511333915
+  on macos-15-intel; awaiting corrected diagnostic artifact.

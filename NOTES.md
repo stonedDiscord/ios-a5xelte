@@ -7,7 +7,7 @@ Do not conclude a callback hangs: helper's interrupt restore can enter
 AST scheduling before dispatcher. Refined 0084 uses direct DAIF save/mask/
 restore plus slow-console accounting reset, and adds raw dispatcher phase,
 cursor/end, callback enter/arg/return addresses. Helper cross-compile and
-patch/profile checks pass. New kernel CI pending, no new flash.
+patch/profile checks pass. Refinement efb2834 pushed; CI 43511333915 dispatched, no new flash.
 Current BOOT 0004-poll 9328ed5e...0999e23, kernel 59cae843...14fab41.
 No iOS rootfs/storage/USB. Preserve recovery/bootloaders/EFS/NV.
 
