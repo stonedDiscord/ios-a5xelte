@@ -5,6 +5,7 @@ recovery/
 # third-party/Apple sources fetched for reading
 research/
 android_kernel_samsung_universal8895/
+android_kernel_samsung_a03/
 *.ipsw
 shim/out/
 xnu/out/

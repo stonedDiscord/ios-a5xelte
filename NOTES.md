@@ -6,9 +6,15 @@ Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
 Read `A03_PROGRESS.md` and `docs/a03-bringup.md`. A locally built static
 ARM64 EL0 diagnostic ran on Android and printed `A03_EL0_PROBE_OK`; timer
-26 MHz. No boot shim/XNU execution or partition writes. Stock Android
-refuses root and raw BOOT/FDT reads. Next: exact stock BOOT/DTB/DTBO and
-verified restore route, then a returning pre-Linux probe. Previous S8
+26 MHz. User then supplied matching revision-5 firmware and authorized
+proceeding. BOOT-only Magisk flash succeeded via Odin4; Android returned,
+Magisk setup/root works, and live BOOT/recovery/EFS/NV/DTBO/vbmeta backups
+have matching device hashes. First pre-Linux probe 0001 booted and returned
+six cmdline markers: EL2, A55 r2p0, MMFR0 0x101122 (4K/16K), 26 MHz. User
+confirmed Android home/lock screen. Restored Magisk BOOT, readback hash
+matched; clean reboot requested. No XNU yet. Next: inspect user's separate
+kernel clone, prove EL2-to-EL1 and GIC/timer before XNU. See A03 progress
+for hashes, live RAM/reservations and exact test results. Previous S8
 handoff and SWEET donor history remain below as historical reference.
 
 ## Active S8 handoff — 2026-11-13

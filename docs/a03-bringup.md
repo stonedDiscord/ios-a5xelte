@@ -22,15 +22,33 @@ can emulate/filter ID-register reads; the MMFR0 output is **not evidence
 of the physical CPU's supported page granules**. The CPU can migrate
 between reads. This executable is not bootable as a Linux Image.
 
-## Current barrier to a first bootloader probe
+## First pre-Linux probe (verified on device)
 
-Stock Android refuses root and raw BOOT/FDT reads. An unlocked-bootloader
-property does not supply the original BOOT, validate image acceptance, or
-provide a tested restore route. No matching stock image is available in
-this branch, and no custom-image reboot or flash was attempted.
+Magisk BOOT from the supplied matching revision-5 firmware now boots, root
+works, and verified live backups are stored privately. The first returning
+probe also booted and reported all six register markers through cmdline.
+See `A03_PROGRESS.md` for image hashes, exact results and restore state.
 
-Obtain the exact installed firmware BOOT and matching DTB/DTBO or
-privileged read access first. Inspect their real formats and hardware
-description before writing a bootloader-entry probe. Keep recovery,
-bootloaders, vbmeta, EFS/NV and USERDATA intact. A3/A03s/A03 Core and
-SM-A035 variants are not interchangeable firmware targets.
+```sh
+python3 tools/a03-probe-image.py \
+  backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img \
+  shim/a03/out/a03-boot-probe-NEW.img
+```
+
+This host-only builder refuses any base except the verified Magisk BOOT
+SHA256, and refuses an existing output path. It preserves the raw kernel
+except first entry branch, appends its temporary stack/code within the
+kernel's declared BSS, and copies ramdisk/DT bytes. AVB signatures remain
+stale, like the supplied Magisk image; do not use on a locked device.
+
+The probe parses `/chosen/bootargs` with bounded FDT reads and replaces
+six verified diagnostic/identity hints in place without resizing the FDT.
+Markers a03m/i/p/e/s/f carry MMFR0, MIDR, MPIDR, CurrentEL, SCTLR_EL1 and
+CNTFRQ respectively. It preserves boot arguments x0..x3, SP, LR and DAIF,
+then branches back to the original kernel entry. It performs no MMIO or
+storage writes. Restore Magisk BOOT after collecting evidence.
+
+Actual boot entry is **EL2**, unlike the Samsung Exynos donors. The next
+probe must establish an EL1 transition before an XNU jump. Keep recovery,
+bootloaders, vbmeta and EFS/NV intact; no wipe is required for these tests.
+A03s/A03 Core and other variants are not interchangeable firmware targets.

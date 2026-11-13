@@ -4,9 +4,10 @@
   device is now an A03; S8/S7/A5 notes describe different phones.
 - Record A03 evidence in `A03_PROGRESS.md`, update the active handoff in
   `NOTES.md`, and commit completed work. Keep private dumps out of git.
-- Preserve all partitions. Prior donor BOOT flash permissions do not
-  authorize A03 writes. Prepare a verified stock restore artifact and
-  obtain explicit A03 BOOT-only permission before a flash test.
+- User authorized A03 bring-up writes on 2026-11-13 and stated phone data
+  is disposable. Matching stock BOOT restore is now available; BOOT-only
+  Magisk flash succeeded. Keep tests scoped to BOOT; preserve recovery,
+  bootloaders and EFS/NV. Do not wipe merely because data is disposable.
 - Distinguish Android EL0 diagnostic success from boot-shim execution,
   XNU progress, physical display observations and iOS runtime behavior.
 
