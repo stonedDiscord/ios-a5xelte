@@ -2,18 +2,16 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest trial 0003-trace screen passes vnguard and dtrace_early_init,
-then trust_cache_init / "SWEET: trust caches unavailable (Image4/AMFI not
-installed)", then "kernel_startup_initialize_upto: reached phas" (truncated
-user transcription). Asked full phase number/continuation and later lines.
-Expected phase after trust-cache path is LOCKDOWN (~0u printed %d = -1),
-but completion unconfirmed. Next normal steps: OSKextRemoveKextBootstrap,
-machine_lockdown, XNUPOST, PE_lockdown_iokit. No cause identified yet;
-do not bypass these based on the last incomplete line. No additional CI.
-Current BOOT 0003-trace SHA256
-14bcd388383700ed4818e6c6f80de5a8ddb15b7d8746e3996a7d29fec58ec98f.
-Kernel 94247210...19a6e0d from run 43500930431 has portable crypto fix.
-No rootfs/storage/USB driver. Preserve recovery/bootloaders/EFS/NV/USERDATA.
+Latest: user confirms trace 0003 ends literally mid-line "reached phas[e]",
+no number or continuation; fresh Download mode ready. Stop asking for
+missing text. A03 patch 0084 adds polling serial_putc checkpoints around
+lockdown, cleanup, XNUPOST and IOKit; bypasses normal kprintf/os_log at
+lockdown phase completion and later bootstrap labels. Startup operations
+remain intact. Logging stall suspected, not established. Patch ac2b362
+pushed; diagnostic CI 43507759809 queued on macos-15-intel. No new binary
+or flash yet. Current BOOT remains 0003-trace 14bcd388...58ec98f, corrected
+kernel 94247210...19a6e0d. Phone awaits next candidate in Download mode.
+No iOS rootfs/storage/USB yet. Preserve recovery/bootloaders/EFS/NV.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

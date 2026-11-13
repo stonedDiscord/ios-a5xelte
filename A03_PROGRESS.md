@@ -543,3 +543,7 @@ User transcribed (minor spelling differences preserved in original chat):
   device. Patch applied locally, profile stages it. New CI build pending.
 - Current phone in Download mode with trial 0003-trace last written. No
   additional BOOT flash yet; preserve recovery/EFS/NV/other partitions.
+
+- Diagnostic patch committed/pushed ac2b362. New CI run 43507759809
+  queued on macos-15-intel. Phone ready in Download; no diagnostic
+  binary available yet and no additional flash performed.
