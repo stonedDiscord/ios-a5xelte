@@ -754,3 +754,5 @@ User transcribed (minor spelling differences preserved in original chat):
   is not iOS SpringBoard. Existing tools/mkinit.py and sweet-init.S reusable.
 
 - CPU/BSD patch committed f5236cf; CI 43521738983 acquired runner and is in progress. Built private static arm64 test init (16635 bytes), SHA256 f5de3714ff95e6a3b9ece30723f677de0f3f74ec5eb985a00c5ae872f0ac9bf1; not attached/flashed/executed.
+
+- User reports trial 0008 reaches platform expert registered followed by two newlines. Normal IRQ masking thus reaches the same visible milestone as 0007; no need established for scoped masking. CPU/BSD CI remains in Build. No further phone write.

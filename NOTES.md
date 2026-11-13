@@ -5,7 +5,7 @@
 Latest: BOOT 0008-unmasked uploaded 100%, success, reboot, Heimdall exit 0.
 Same verified 0007 kernel but removed a03_lockdown_mask (default false).
 Image SHA256 998cf4de4d0f8d35c8e1ed5547a3da54d50ce23b9d1e0921425d938151ee2b81.
-Screen outcome pending. New 0085 patch prepared for CPU/BSD diagnostics:
+User confirms 0008 reaches platform expert registered plus two newlines with normal IRQ masking. New 0085 patch prepared for CPU/BSD diagnostics:
 actual SweetCPU::start uses SIMD zeroing before processor registration;
 kperf waits for CPU publication. Suspect only, not proven runtime cause.
 0085 enforces general-register codegen on CPU/kperf/BSD objects and adds
