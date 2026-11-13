@@ -752,3 +752,5 @@ User transcribed (minor spelling differences preserved in original chat):
   use RAM-backed mockfs/static test init to prove PID1/syscalls first;
   then filesystem and actual iOS userspace/display dependencies. Test init
   is not iOS SpringBoard. Existing tools/mkinit.py and sweet-init.S reusable.
+
+- CPU/BSD patch committed f5236cf; CI 43521738983 acquired runner and is in progress. Built private static arm64 test init (16635 bytes), SHA256 f5de3714ff95e6a3b9ece30723f677de0f3f74ec5eb985a00c5ae872f0ac9bf1; not attached/flashed/executed.

@@ -9,7 +9,7 @@ Screen outcome pending. New 0085 patch prepared for CPU/BSD diagnostics:
 actual SweetCPU::start uses SIMD zeroing before processor registration;
 kperf waits for CPU publication. Suspect only, not proven runtime cause.
 0085 enforces general-register codegen on CPU/kperf/BSD objects and adds
-CPU registration/SGI/max-CPU + VM/kperf/BSD polling markers. CI pending.
+CPU registration/SGI/max-CPU + VM/kperf/BSD polling markers. Source f5236cf, CI 43521738983 in progress. Private test init built, not flashed/executed.
 0007 photo includes lockdown/IRQ restoration/IOKit/platform registration;
 physical bottom trust-cache/IRQ-mask-active lines remain, console wraps.
 Next: CPU/timer + BSD, RAM-backed static PID1, then real iOS root/display.
