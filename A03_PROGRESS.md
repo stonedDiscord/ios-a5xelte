@@ -589,3 +589,20 @@ User transcribed (minor spelling differences preserved in original chat):
 
 - Refined diagnostic committed efb2834 and dispatched as CI 43511333915
   on macos-15-intel; awaiting corrected diagnostic artifact.
+
+### Trial 0005-dispatch built and uploaded
+
+- CI 43511333915 succeeded at 21:47:43 UTC (efb2834). Plain arm64
+  kernel SHA256 matches artifact manifest:
+  9113ca66a34808b5007fdf1ed54c318867b356d7ebb3422ccc19bb68db739f7c.
+- Verified dispatcher/phase/callback labels. Disassembly confirms polling
+  marker uses direct DAIF access and serial_putc, without a call to
+  ml_set_interrupts_enabled. This validates code generation, not runtime.
+- Packaged shim/a03/out/a03-xnu-0005-dispatch.img, 64 MiB SHA256
+  1e47cec3f89e1d343f52cf3309993e480c568a6123437201bb36da8fff1829e2.
+  Host packer checks passed, entry PA 0x10346c488, ADT PA 0x103ffc000.
+- Download-mode USB detected. Host image hash rechecked before BOOT-only
+  flash; Heimdall retrieved PIT, uploaded boot 100%, reported success,
+  rebooted device, exit 0. No independent partition readback via Heimdall.
+- Current BOOT is 0005-dispatch. Requested final A03 STEP lines/addresses
+  or panic. Runtime outcome pending. No other partition written.

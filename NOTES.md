@@ -2,13 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 0004-poll screen ends "A03 STEP before LOCKDOWN callbacks".
-Do not conclude a callback hangs: helper's interrupt restore can enter
-AST scheduling before dispatcher. Refined 0084 uses direct DAIF save/mask/
-restore plus slow-console accounting reset, and adds raw dispatcher phase,
-cursor/end, callback enter/arg/return addresses. Helper cross-compile and
-patch/profile checks pass. Refinement efb2834 pushed; CI 43511333915 dispatched, no new flash.
-Current BOOT 0004-poll 9328ed5e...0999e23, kernel 59cae843...14fab41.
+Latest: diagnostic CI 43511333915 PASSED (efb2834), kernel SHA256
+9113ca66...b739f7c. Verified direct-DAIF polling checkpoint code and labels.
+Trial 0005-dispatch BOOT SHA256
+1e47cec3f89e1d343f52cf3309993e480c568a6123437201bb36da8fff1829e2
+uploaded successfully: Heimdall PIT, boot 100%, success, reboot, exit 0.
+No independent readback. Current phone BOOT 0005; final A03 STEP lines
+requested, outcome pending. Previous 0004 ended before LOCKDOWN callbacks;
+helper interrupt restore could itself schedule, so new helper removes that
+ambiguity and traces dispatcher/callback addresses. No cause proven yet.
 No iOS rootfs/storage/USB. Preserve recovery/bootloaders/EFS/NV.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
