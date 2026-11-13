@@ -2,6 +2,9 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest CI: user requested return to macos-15-intel; fresh run 43500930431
+dispatched from fc640b7 with crypto fix. Allocation/build result pending.
+
 LATEST: A03 XNU trial 0001 visibly panicked. User's PC
 0xfffffe000790b958 resolves exactly to SHA1Init+0x34, loading ccsha1_di
 through g_crypto_funcs. Caller 0xfffffe0007a3caec is sleh_synchronous_sp1.

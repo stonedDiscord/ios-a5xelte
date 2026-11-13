@@ -401,3 +401,7 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
   unverified until setup and compilation execute. User prefers macOS 26.
 - GitHub status API listed Actions operational when checked; that does not
   establish runner pool availability for this repository. No phone writes.
+
+- At user request, dispatched fresh run 43500930431 on macos-15-intel
+  from fc640b7 with A03 portable crypto fix, DEVELOPMENT ARM64 SWEET.
+  macOS 26 run was not being acquired; no cancellation requested.
