@@ -666,3 +666,22 @@ User transcribed (minor spelling differences preserved in original chat):
 - Current device BOOT remains 0006-irq. No new phone write in this step.
 
 - Fix 5a4cca7 pushed. CI 43517629744 acquired macos-15-intel and started. Inspect actual helper disassembly before packaging trial 0007.
+
+### Trial 0007-nosimd: verified artifact, BOOT uploaded
+
+- CI 43517629744 succeeded at source 5a4cca7, plain arm64. Kernel SHA256
+  bc4431d7fb9727fb7d3cb750d1bf9f4a413bfae144ebf6075b58e6b8c9e3b386
+  matches artifact SHA256SUMS.
+- Actual Mach-O disassembly checked across complete symbol bounds:
+  a03_startup_checkpoint 42 instructions; a03_startup_address 97 instructions.
+  Both have DAIF operations, serial_putc calls and return, no FP/SIMD operands.
+  This validates the corrected artifact, not the cause of the previous hang.
+- Packaged shim/a03/out/a03-xnu-0007-nosimd.img, 64 MiB, SHA256
+  82ca0e5aea66bb4f8892cdc232d041b34cabd0b619bae0ba420432fff0dd7603.
+  Same ADT, loader and trace args including a03_lockdown_mask=1. Host bounds
+  checks passed; entry PA 0x10346c488, ADT PA 0x103ffc000. No rootfs attached.
+- User confirmed Download mode; USB detected 04e8:685d. Heimdall retrieved
+  PIT, uploaded boot to 100%, reported successful upload, rebooted, exit 0.
+  Only BOOT written; no independent partition readback.
+- Current BOOT is 0007-nosimd. Requested final register/callback/panic or
+  partial display lines. Physical runtime evidence pending.

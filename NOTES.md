@@ -2,15 +2,17 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: user reports trial 0006-irq stops after "A03 STEP diagnostic IRQ
-mask active", before saved DAIF. Built address formatter used SIMD for
-stack-buffer auto-zeroing; possible diagnostic trap, not proven IRQ failure.
-0084 now streams hex directly and adds -mgeneral-regs-only for startup.o
-in the A03 patch profile. Extracted production-style helper codegen passed
-(147 instructions, no FP/SIMD); earlier checks missed whole-TU flags.
-Fix 5a4cca7 pushed; CI 43517629744 acquired macos-15-intel and started. Actual artifact inspection/device result pending. Current BOOT still
-0006-irq, SHA256 593adffb16338a24f73cfa62d4827b1d2c048bd0f212232659d0fb003e4e276c.
-Retain a03_lockdown_mask=1 for the next comparison. No iOS rootfs/storage/USB.
+Latest: CI 43517629744 PASSED (5a4cca7), plain arm64 kernel SHA256
+bc4431d7fb9727fb7d3cb750d1bf9f4a413bfae144ebf6075b58e6b8c9e3b386.
+Both complete diagnostic helpers checked in actual Mach-O: no SIMD,
+42/97 instructions, return present. Trial 0007-nosimd BOOT flashed:
+Heimdall PIT read, boot 100%, success, reboot, exit 0. Image SHA256
+82ca0e5aea66bb4f8892cdc232d041b34cabd0b619bae0ba420432fff0dd7603.
+Current BOOT 0007-nosimd; final A03 STEP registers/callbacks/panic requested,
+physical runtime pending. No independent partition readback.
+0006 stopped at diagnostic IRQ mask active; its address formatter used SIMD
+for buffer initialization, a possible diagnostic trap (not proven IRQ fault).
+Retained a03_lockdown_mask=1 for comparison. No iOS rootfs/storage/USB.
 Preserve recovery/bootloaders/EFS/NV/USERDATA.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
