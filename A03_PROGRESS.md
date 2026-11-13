@@ -345,3 +345,21 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
   is established. Requested earlier panic(cpu...)/SWEET EARLY PANIC text.
 - Keep the current screen intact while reading it. No second BOOT trial
   has been written and no speculative debugger-handshake fix applied.
+
+### Trial 0001 panic symbolicated: missing SHA-1 provider
+
+- User transcribed: panic(cpu 0 caller 0xfffffe0007a3caec), Kernel data
+  abort at PC 0xfffffe000790b958. Exact unstripped trial kernel resolves
+  caller to sleh_synchronous_sp1 and fault PC to SHA1Init/sha1_init+0x34.
+- Disassembly loads g_crypto_funcs from 0xfffffe000722ea18 into x22,
+  then faults at ldr x20,[x22,#0x28], the ccsha1_di field. No corecrypto
+  kext/provider is installed in this minimal profile. This strongly
+  identifies the missing crypto dispatch table; FAR/x22 not transcribed.
+- Extend pinned donor selection with portable crypto patches 0020, 0023,
+  0027, 0032, 0033, plus 0020-stage-bearssl.sh. SHA-1 fix 0032 depends on
+  earlier crypto build rules; remaining selected patches supply legacy
+  AES/MD5/SHA-256/384/512 without importing Qualcomm peripheral drivers.
+- All five additional patches apply cleanly to the already-patched XNU
+  tree. BearSSL staging script successfully fetched its pinned immutable
+  7bea48e5e850ab4cafbe68d3765cdaba13a86d6f source locally. Workflow now
+  copies this required script along with A03 patches. Rebuild pending.

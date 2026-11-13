@@ -68,7 +68,7 @@ jobs:
           if [ "$BOARD_PROFILE" = a03 ]; then
             [ "$MACHINE_CONFIG" = SWEET ] || { echo 'a03 requires native 16K SWEET config'; exit 1; }
             python3 tools/a03-build-profile.py a03-patches
-            cp a03-patches/*.patch dxb/patches/
+            cp a03-patches/*.patch a03-patches/*.sh dxb/patches/
           elif [ "$BOARD_PROFILE" = dreamlte ]; then
             [ "$MACHINE_CONFIG" = HEROLTE ] || { echo 'dreamlte requires HEROLTE config'; exit 1; }
             python3 tools/dreamlte-build-profile.py dreamlte-patches

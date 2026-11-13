@@ -2,19 +2,17 @@
 
 ## Active A03 handoff — 2026-11-13
 
-LATEST: first A03 XNU trial 0001 is flashed to BOOT p39; full readback
-SHA256 2313ba806a818748cb5f7b565d52f395270b0b864e07c2334441597e184284fe.
-USER SCREEN REPORT: panic.apple.com footer and "handshake structure not
-initialized". Exact source match is panic_spin_shmcon() in out_shmem.c:
-secondary missing hardware-debugger handshake during panic handling.
-XNU execution/display progress is now observed via user report. Original
-panic reason is still missing; requested the earlier panic(cpu...) or
-SWEET EARLY PANIC text. Keep screen intact until captured. Do not treat
-handshake message as root cause. No iOS runtime/rootfs/storage/USB yet.
-CI 43485850320 succeeded (3cea933, Xcode 16), plain arm64 kernel hash
-91d3c7c3...f817dcf. Loader/packer committed 6cbe7e8. XNU RAM window is
-0x102000000+256 MiB, 32 MiB aligned. Successful probe 0003 and matching
-stock/Magisk BOOT remain local restore options; preserve recovery/EFS/NV.
+LATEST: A03 XNU trial 0001 visibly panicked. User's PC
+0xfffffe000790b958 resolves exactly to SHA1Init+0x34, loading ccsha1_di
+through g_crypto_funcs. Caller 0xfffffe0007a3caec is sleh_synchronous_sp1.
+Minimal profile omitted portable SHA-1 provider. Added pinned SWEET crypto
+patches 0020/0023/0027/0032/0033 and required BearSSL staging script;
+patch application and pinned source fetch pass locally. Rebuild pending.
+Phone still displays trial 0001; no recovery/other partition writes.
+BOOT hash 2313ba80...84284fe, CI kernel 91d3c7c3...f817dcf from run
+43485850320. Missing hardware-debugger handshake is secondary panic text.
+No iOS runtime yet. Next: build corrected profile, package and test only
+BOOT. Phone will require Download mode for next flash (ADB absent).
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
