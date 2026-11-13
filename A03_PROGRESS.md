@@ -525,3 +525,21 @@ User transcribed (minor spelling differences preserved in original chat):
   XNUPOST and PE_lockdown_iokit. Requested full final line/continuations
   and any later text before choosing another code change. Do not infer
   which call hangs from a truncated console string. Current BOOT unchanged.
+
+### Trial 0003-trace final line confirmed physically incomplete
+
+- User confirms final line is literally kernel_startup_initialize_upto:
+  reached phas[e], with the e obscured by cracked glass and no continuation
+  or text below. User entered a fresh Download session. Do not keep asking
+  for an absent phase number; it was not merely omitted in transcription.
+- Prepare A03 patch 0084: polling serial_putc checkpoints without kprintf
+  formatting/lock/os_log path around lockdown callbacks, kext bootstrap
+  cleanup, machine lockdown, XNUPOST and IOKit matching. Replaces the
+  lockdown-phase formatted completion line with a short polling marker;
+  after lockdown phase use polling bootstrap labels as well. Interrupt
+  mask state saved/restored around each marker. Does not skip startup calls.
+- The literal partial string suggests logging stall but is not proof of
+  one; diagnostic bypass changes logging/timing and must be assessed on
+  device. Patch applied locally, profile stages it. New CI build pending.
+- Current phone in Download mode with trial 0003-trace last written. No
+  additional BOOT flash yet; preserve recovery/EFS/NV/other partitions.
