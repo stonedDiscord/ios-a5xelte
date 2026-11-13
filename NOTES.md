@@ -7,6 +7,11 @@ wardevsa/ios-a5xelte (ff2c55e). Read DREAMLTE_PROGRESS.md and
  docs/dreamlte-bringup.md for the S8, including verified CPU probes,
 backups, new loader, build profile and outstanding CI/boot checks.
 Original local main retains d857f24 and the earlier S8 handoff.
+
+2026-11-13 diagnostic milestone: optional S8 probe 0003 wrote a marker into
+the Exynos snapshot log before Linux and root ADB recovered it from
+`/proc/last_kmsg` after reboot. Stock BOOT was restored; readback hash matches
+`71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
 The SWEET/Redmi history below is donor reference, not S8 evidence.
 
 

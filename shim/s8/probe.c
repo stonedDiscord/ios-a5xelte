@@ -30,6 +30,21 @@ static void report(unsigned char *fdt, const char *needle, unsigned length,
     report(fdt, needle, sizeof(needle)-1, key, value); \
 } while (0)
 void s8_probe(unsigned char *fdt) {
+#ifdef S8_LAST_KMSG_PROBE
+    /* Live bootargs: ess_setup=0x91200000. Running kernel configuration:
+     * non-minimized 8 MiB log_kevents followed by 2 MiB log_kernel.
+     * exynos_ss_fixmap reads the physical cursor at header+0x200 and
+     * sec_debug_save_last_kmsg snapshots this buffer before Linux logs.
+     * This deliberately replaces only the previous volatile crash log.
+     */
+    volatile unsigned char *log = (volatile unsigned char *)0x91a00000UL;
+    const char marker[] = "DREAMLTE pre-Linux last_kmsg probe 0003\n";
+    for (unsigned i = 0; i < sizeof(marker)-1; i++)
+        log[i] = (unsigned char)marker[i];
+    *(volatile uint64_t *)(0x91c00000UL-8) = 0;
+    *(volatile uint32_t *)0x91200200UL = 0x91a00000U + sizeof(marker)-1;
+    __asm__ volatile("dsb sy" : : : "memory");
+#endif
     REPORT("region1=EUR region2=OPEN", 'm', id_aa64mmfr0_el1);
     REPORT("sec_debug.chipidfail_cnt=0", 'i', midr_el1);
     REPORT("sec_debug.lpitimeout_cnt=0", 'p', mpidr_el1);

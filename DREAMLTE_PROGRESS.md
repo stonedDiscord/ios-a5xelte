@@ -88,3 +88,13 @@ compile results, hardware observations and restore results below.
 - CI run 43434858911, job 131917216434 (macos-15-intel), profile dreamlte,
   machine config HEROLTE, DEVELOPMENT, commit d9e3b43. Started; result pending.
 - No XNU flash performed. Loader-only packaging is a host test only.
+
+## 2026-11-13: diagnostic recovery path verified
+
+- Optional probe 0003 wrote `DREAMLTE pre-Linux last_kmsg probe 0003` into the
+  Exynos snapshot kernel-log region before entering unchanged Linux.
+- After reboot, root ADB recovered the exact marker from `/proc/last_kmsg`.
+  This proves a pre-Linux loader can leave a small diagnostic marker for later
+  recovery; it is not an XNU boot result.
+- Restored the verified stock BOOT; readback SHA256 is
+  `71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.

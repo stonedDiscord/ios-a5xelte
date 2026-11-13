@@ -15,6 +15,8 @@ import tempfile
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('original', type=Path)
 p.add_argument('output', type=Path)
+p.add_argument('--last-kmsg-probe', action='store_true',
+               help='test the S8 Exynos snapshot RAM log before entering Linux')
 a = p.parse_args()
 b = a.original.read_bytes()
 if b[:8] != b'ANDROID!':
@@ -48,7 +50,8 @@ with tempfile.TemporaryDirectory(prefix='s8-probe-') as tmp:
         subprocess.run(['clang','--target=aarch64-none-elf','-O2',
                         '-ffreestanding','-fno-builtin','-fno-stack-protector',
                         '-mgeneral-regs-only','-mstrict-align','-fno-pic',
-                        '-Wall','-Wextra','-Werror','-c',
+                        '-Wall','-Wextra','-Werror',
+                        *(['-DS8_LAST_KMSG_PROBE'] if a.last_kmsg_probe else []),'-c',
                         str(root/'shim/s8'/name),'-o',str(t/(name+'.o'))],check=True)
     (t/'probe.ld').write_text('ENTRY(s8_probe_entry) SECTIONS { . = '+str(probe_off)+
         '; .text : { *(.text.entry) *(.text*) *(.rodata*) } '
