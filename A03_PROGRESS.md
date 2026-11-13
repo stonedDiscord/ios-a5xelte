@@ -756,3 +756,24 @@ User transcribed (minor spelling differences preserved in original chat):
 - CPU/BSD patch committed f5236cf; CI 43521738983 acquired runner and is in progress. Built private static arm64 test init (16635 bytes), SHA256 f5de3714ff95e6a3b9ece30723f677de0f3f74ec5eb985a00c5ae872f0ac9bf1; not attached/flashed/executed.
 
 - User reports trial 0008 reaches platform expert registered followed by two newlines. Normal IRQ masking thus reaches the same visible milestone as 0007; no need established for scoped masking. CPU/BSD CI remains in Build. No further phone write.
+
+### 2026-11-14: trial 0009 CPU diagnostic uploaded; BSD build flag corrected
+
+- CI 43521738983 passed at f5236cf. Plain arm64 kernel SHA256
+  5709f594f7f7129d27ff07767d5e74a82071e59a5d5aad6157559599ef8fcf31
+  matches artifact manifest. Actual complete-symbol checks found no SIMD in
+  checkpoint/address (42/97 instructions), SweetCPU::start/initCPU (200/65),
+  and kperf_init_early (32). CPU/BSD diagnostic labels present.
+- Artifact inspection caught that bsd_init STILL uses SIMD: its object flag
+  was incorrectly placed in osfmk's make template; BSD uses a separate one.
+  Do not claim BSD codegen fixed in this artifact. Added profile patch 0086
+  moving that flag into bsd/conf/Makefile.template. Reverse patch check and
+  profile staging pass; rebuilt artifact verification pending.
+- Packaged 0009-cpubsd with normal IRQ masking, same ADT/loader/trace flags,
+  no rootfs. Image SHA256
+  26cf151d8b52ed9977e62e80d1535c46b900b2dae90a44ad27fd9ddb7d000edb.
+  Host checks passed; entry PA 0x103470488, ADT PA 0x104000000.
+- Download-mode USB detected. BOOT-only Heimdall upload reached 100%, success,
+  reboot, exit 0. No independent readback. Current BOOT 0009-cpubsd, usable
+  to establish CPU publication/kperf progress, with known BSD codegen defect.
+- Asked user for 0009 CPU/SGI/kperf/BSD markers or photo. Runtime pending.

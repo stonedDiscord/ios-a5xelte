@@ -2,18 +2,18 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: BOOT 0008-unmasked uploaded 100%, success, reboot, Heimdall exit 0.
-Same verified 0007 kernel but removed a03_lockdown_mask (default false).
-Image SHA256 998cf4de4d0f8d35c8e1ed5547a3da54d50ce23b9d1e0921425d938151ee2b81.
-User confirms 0008 reaches platform expert registered plus two newlines with normal IRQ masking. New 0085 patch prepared for CPU/BSD diagnostics:
-actual SweetCPU::start uses SIMD zeroing before processor registration;
-kperf waits for CPU publication. Suspect only, not proven runtime cause.
-0085 enforces general-register codegen on CPU/kperf/BSD objects and adds
-CPU registration/SGI/max-CPU + VM/kperf/BSD polling markers. Source f5236cf, CI 43521738983 in progress. Private test init built, not flashed/executed.
-0007 photo includes lockdown/IRQ restoration/IOKit/platform registration;
-physical bottom trust-cache/IRQ-mask-active lines remain, console wraps.
+Latest 2026-11-14: BOOT 0009-cpubsd flashed 100%, success, reboot, exit 0.
+CI 43521738983 source f5236cf passed; actual CPU start/initCPU and kperf
+are SIMD-free, as are polling helpers. Kernel SHA256
+5709f594f7f7129d27ff07767d5e74a82071e59a5d5aad6157559599ef8fcf31.
+Image SHA256 26cf151d8b52ed9977e62e80d1535c46b900b2dae90a44ad27fd9ddb7d000edb.
+Normal IRQ masking; no rootfs. Runtime 0009 CPU/SGI/kperf/BSD markers asked.
+IMPORTANT: BSD still has SIMD in this artifact; flag mistakenly in osfmk
+make template. Profile patch 0086 moves it to bsd/conf/Makefile.template;
+corrected rebuild pending. Current 0009 remains useful CPU diagnostic.
+0008 confirmed platform registration without diagnostic IRQ mask.
 Next: CPU/timer + BSD, RAM-backed static PID1, then real iOS root/display.
-No rootfs attached; no iOS runtime yet. Preserve all non-BOOT partitions.
+Private static test init prepared, not attached or run. Preserve non-BOOT.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

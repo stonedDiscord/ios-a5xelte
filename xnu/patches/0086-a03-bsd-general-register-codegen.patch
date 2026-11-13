@@ -1,0 +1,22 @@
+--- a/osfmk/conf/Makefile.template
++++ b/osfmk/conf/Makefile.template
+@@ -76,7 +76,6 @@
+ # A03 early startup diagnostics must not touch the kernel FP/SIMD state.
+ startup.o_CFLAGS_ADD += -mgeneral-regs-only
+ kperf.o_CFLAGS_ADD += -mgeneral-regs-only
+-bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ #
+ # Diagnostic opt-outs.  We need to make this list empty.
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -74,6 +74,9 @@
+ %SFILES
+ 
+ %MACHDEP
++
++# A03: BSD is a separate make target from osfmk.
++bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ tcp_cubic.o_CWARNFLAGS_ADD += -Wno-error=implicit-int-float-conversion
+ 
