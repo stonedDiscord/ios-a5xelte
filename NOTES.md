@@ -12,6 +12,9 @@ Fix be14062 pushed; CI 43491007355 STUCK in Set up job, no compile.
 Force-cancel HTTP 202 accepted 19:55:18 UTC; completion not yet confirmed.
 Runner isolation a93ce7e pushed; new ARM run 43496849574 dispatched.
 User requests no further cancellation attempts on the old run.
+Run 43496849574 failed hosted-runner allocation before any steps.
+New run 43499857623 uses macos-26 ARM64; user prefers this host.
+Old run 43491007355 now cancelled; corrected kernel still pending.
 Download mode requested; no corrected kernel artifact yet.
 Phone still displays trial 0001; no recovery/other partition writes.
 BOOT hash 2313ba80...84284fe, CI kernel 91d3c7c3...f817dcf from run

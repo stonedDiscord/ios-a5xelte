@@ -390,3 +390,14 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
 - Runner isolation committed a93ce7e; new run 43496849574 dispatched on
   macos-15 ARM64. User requests starting a new run rather than further
   cancellation attempts. Leave old run alone; new group is independent.
+
+### macOS 15 runner allocation failed; macOS 26 ARM retry
+
+- Run 43496849574 completed failure: job was not acquired by hosted runner
+  after multiple attempts, with no steps executed. This is provisioning
+  failure, not a kernel compiler error. Earlier 43491007355 now cancelled.
+- Dispatched 43499857623 on macos-26 (ARM64 host), retaining ARM64 SWEET
+  target and portable crypto fix. Runner/toolchain compatibility remains
+  unverified until setup and compilation execute. User prefers macOS 26.
+- GitHub status API listed Actions operational when checked; that does not
+  establish runner pool availability for this repository. No phone writes.
