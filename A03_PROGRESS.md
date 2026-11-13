@@ -363,3 +363,12 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
   tree. BearSSL staging script successfully fetched its pinned immutable
   7bea48e5e850ab4cafbe68d3765cdaba13a86d6f source locally. Workflow now
   copies this required script along with A03 patches. Rebuild pending.
+
+- Crypto fix committed/pushed be14062; replacement CI run 43491007355
+  is in progress on macos-15-intel. Host test compiled the exact donor
+  SHA-1 wrapper/context with pinned BearSSL: empty, abc, million-a and
+  multi-block binary vectors across chunk lengths 1/63/64/65/4096 all
+  matched Python hashlib (20 tests). This validates hash behavior, not
+  kernel integration; the CI build/device result remain pending.
+- Requested manual Download mode while building, because trial 0001 has
+  no ADB driver. No subsequent partition write yet.

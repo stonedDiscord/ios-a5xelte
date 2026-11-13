@@ -7,7 +7,8 @@ LATEST: A03 XNU trial 0001 visibly panicked. User's PC
 through g_crypto_funcs. Caller 0xfffffe0007a3caec is sleh_synchronous_sp1.
 Minimal profile omitted portable SHA-1 provider. Added pinned SWEET crypto
 patches 0020/0023/0027/0032/0033 and required BearSSL staging script;
-patch application and pinned source fetch pass locally. Rebuild pending.
+patch application, source fetch and 20 SHA-1 digest tests pass locally.
+Fix be14062 pushed; CI 43491007355 in progress. Download mode requested.
 Phone still displays trial 0001; no recovery/other partition writes.
 BOOT hash 2313ba80...84284fe, CI kernel 91d3c7c3...f817dcf from run
 43485850320. Missing hardware-debugger handshake is secondary panic text.
