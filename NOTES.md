@@ -2,28 +2,18 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest CI: user requested return to macos-15-intel; fresh run 43500930431
-dispatched from fc640b7 with crypto fix. Allocation/build result pending.
-
-LATEST: A03 XNU trial 0001 visibly panicked. User's PC
-0xfffffe000790b958 resolves exactly to SHA1Init+0x34, loading ccsha1_di
-through g_crypto_funcs. Caller 0xfffffe0007a3caec is sleh_synchronous_sp1.
-Minimal profile omitted portable SHA-1 provider. Added pinned SWEET crypto
-patches 0020/0023/0027/0032/0033 and required BearSSL staging script;
-patch application, source fetch and 20 SHA-1 digest tests pass locally.
-Fix be14062 pushed; CI 43491007355 STUCK in Set up job, no compile.
-Force-cancel HTTP 202 accepted 19:55:18 UTC; completion not yet confirmed.
-Runner isolation a93ce7e pushed; new ARM run 43496849574 dispatched.
-User requests no further cancellation attempts on the old run.
-Run 43496849574 failed hosted-runner allocation before any steps.
-New run 43499857623 uses macos-26 ARM64; user prefers this host.
-Old run 43491007355 now cancelled; corrected kernel still pending.
-Download mode requested; no corrected kernel artifact yet.
-Phone still displays trial 0001; no recovery/other partition writes.
-BOOT hash 2313ba80...84284fe, CI kernel 91d3c7c3...f817dcf from run
-43485850320. Missing hardware-debugger handshake is secondary panic text.
-No iOS runtime yet. Next: build corrected profile, package and test only
-BOOT. Phone will require Download mode for next flash (ADB absent).
+Latest CI 43500930431 PASSED, corrected arm64 kernel hash
+94247210...19a6e0d; SHA1Init now calls br_sha1_init (disassembly verified).
+Trial 0002 BOOT image hash 4819988d...55b77b8, same native16K loader and
+RAM 0x102000000+256 MiB. User confirmed Download mode, Heimdall detected
+phone and BOOT-only flash invoked; protocol initialized/session beginning.
+FLASH BLOCKED BEFORE TRANSFER: first session exit 1 after Beginning session;
+verbose retry failed USB handshake (-7 timeout). Requested fresh Download
+mode reset/reconnect. Trial 0001 remains last successfully written BOOT.
+No new screen evidence yet. Previous trial 0001 reached visible XNU panic
+at SHA1Init+0x34, missing crypto provider; extra portable crypto patches
+0020/23/27/32/33 and pinned BearSSL stage fix compiled successfully.
+No rootfs/storage/USB or iOS runtime. Preserve recovery, bootloaders, EFS/NV.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

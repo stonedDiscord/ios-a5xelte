@@ -405,3 +405,31 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
 - At user request, dispatched fresh run 43500930431 on macos-15-intel
   from fc640b7 with A03 portable crypto fix, DEVELOPMENT ARM64 SWEET.
   macOS 26 run was not being acquired; no cancellation requested.
+
+## 2026-11-13: portable-crypto kernel built; trial 0002 flash started
+
+- Run 43500930431 succeeded on macos-15-intel at 20:36:49 UTC, source
+  fc640b7. Downloaded plain arm64 kernel SHA256
+  94247210aa2c06b2e20f14342e12eb2a7a384d98295d2e73c262403b319a6e0d
+  matches CI SHA256SUMS. Disassembly confirms SHA1Init calls br_sha1_init;
+  the trial-0001 null crypto table access is absent in this function.
+- Packaged first corrected candidate shim/a03/out/a03-xnu-0002.img,
+  64 MiB SHA256
+  4819988d9641c49008a19c1d47ae8eddc5456ff349c1b8a3b8b94037955b77b8.
+  XNU entry PA 0x10346b488; ADT PA 0x103ff8000. Same single-CPU 16K RAM
+  window/loader and no rootfs. Packer architecture, segment/entry bounds,
+  bootargs layout and original ramdisk/DT preservation checks passed.
+- User confirmed Download mode. Heimdall detected USB 04e8:685d. Invoked
+  only heimdall flash --boot <trial0002>; protocol initialized, session
+  beginning. Transfer/completion and physical screen report still pending.
+
+### Trial 0002 flash blocked before transfer
+
+- First Heimdall invocation initialized protocol, then ended exit 1 after
+  Beginning session; no PIT retrieval, BOOT upload or success message.
+- Device still detected in Download mode. One verbose retry exited 1:
+  Failed to receive handshake response, result -7 (timeout), protocol
+  initialization failed. No image transfer began on either invocation.
+- Requested physical reset/re-entry into Download mode to establish a
+  fresh session. Do not claim candidate 0002 installed. Trial 0001 remains
+  the last successfully written BOOT; recovery and other partitions intact.
