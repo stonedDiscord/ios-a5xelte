@@ -2,15 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: CI 43514823420 PASSED (0b21f6a), plain arm64 kernel hash
-b1700f3a...699bde7. Trial 0006-irq BOOT uploaded successfully: Heimdall
-boot 100%, success, reboot, exit 0. Image SHA256
-593adffb16338a24f73cfa62d4827b1d2c048bd0f212232659d0fb003e4e276c.
-Verified a03_lockdown_mask=1 in payload. Current BOOT 0006-irq; user asked
-for final saved DAIF/HPPIR1/timer/callback/mask-restoration markers. Runtime
-outcome pending; no independent readback. Previous 0005 stopped before
-LOCKDOWN dispatcher. New experiment masks only dispatcher then restores
-original DAIF; diagnostic, not a proven IRQ fix. No iOS rootfs/storage/USB.
+Latest: user reports trial 0006-irq stops after "A03 STEP diagnostic IRQ
+mask active", before saved DAIF. Built address formatter used SIMD for
+stack-buffer auto-zeroing; possible diagnostic trap, not proven IRQ failure.
+0084 now streams hex directly and adds -mgeneral-regs-only for startup.o
+in the A03 patch profile. Extracted production-style helper codegen passed
+(147 instructions, no FP/SIMD); earlier checks missed whole-TU flags.
+Full rebuilt artifact inspection/device result pending. Current BOOT still
+0006-irq, SHA256 593adffb16338a24f73cfa62d4827b1d2c048bd0f212232659d0fb003e4e276c.
+Retain a03_lockdown_mask=1 for the next comparison. No iOS rootfs/storage/USB.
 Preserve recovery/bootloaders/EFS/NV/USERDATA.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a

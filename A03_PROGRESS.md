@@ -644,3 +644,23 @@ User transcribed (minor spelling differences preserved in original chat):
   No independent partition readback. Only BOOT written.
 - Current BOOT is trial 0006-irq. Requested register/callback/restoration
   markers, panic or partial line. Scoped mask experiment outcome pending.
+
+### Trial 0006 display result and diagnostic formatter correction
+
+- User reports exactly trust caches unavailable followed by
+  A03 STEP diagnostic IRQ mask active. No saved DAIF or later line.
+- Inspection of the built 0006 address formatter found automatic stack
+  buffer zeroing using movi v0 and stp q0. That is unsafe for an early
+  kernel diagnostic with FP/SIMD unavailable; a trap here is a hypothesis,
+  not a recovered panic or proof of the original startup stall's cause.
+- Earlier extracted-helper checks used -mgeneral-regs-only but the actual
+  startup translation unit did not. Those checks missed this difference.
+- Patch 0084 now streams label/hex digits directly to serial_putc without
+  an automatic buffer. Its A03-only patch set also adds
+  startup.o_CFLAGS_ADD += -mgeneral-regs-only to the kernel make template.
+  No startup callback is skipped; the opt-in IRQ experiment is retained.
+- Reverse patch validation and A03 profile staging passed. Extracted
+  helpers compiled for arm64-apple-darwin at O2 with stack protection,
+  automatic zero initialization and -mgeneral-regs-only: 147 instructions,
+  no FP/SIMD register operands. Full CI artifact still requires inspection.
+- Current device BOOT remains 0006-irq. No new phone write in this step.
