@@ -97,3 +97,9 @@ partition authorized for these trials; retain matching stock/Magisk restore.
 This profile has no rootfs or A03 storage/USB drivers. Absent ADB is not
 proof of kernel progress. The 0x9e000000 logo RAM display candidate and
 32-bit format are unverified; a blank screen is inconclusive too.
+
+For a DEVELOPMENT startup stall, first add the existing boot arguments
+-enable_kprintf_spam startup_debug=1 -show_pointers when generating the
+payload. startup_debug alone does not override DEVELOPMENT kprintf
+suppression. This exposes initializer addresses without a kernel rebuild.
+A final printed policy line alone does not prove the next function hung.

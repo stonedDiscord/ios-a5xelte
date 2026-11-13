@@ -470,3 +470,22 @@ User reports the following visible lines (no new panic reason supplied):
   IRQ operation, root wait or a later panic remains unverified.
 - Requested whether display stops there or additional lines follow.
   No speculative warning-suppression patch or additional flash performed.
+
+### Trial 0002 stalls at policy output; use existing startup trace
+
+- User confirms screen stays at Security policy loaded: Guarded vnode
+  policy. No later panic or root-wait output reported. Last displayed line
+  does not identify the exact stalled function.
+- Source kernel_bootstrap_thread() registers vnguard after enabling
+  interrupts, then proceeds to DTrace, trust-cache init and lockdown.
+  These steps cannot be distinguished from this transcription alone.
+- Found existing tracing: startup_debug=1 enables kernel bootstrap and
+  initializer logs. DEVELOPMENT requires -enable_kprintf_spam to actually
+  emit kprintf output; previous trial omitted this. -show_pointers retains
+  useful initializer addresses for symbolication.
+- Packaged host-only trial 0003-trace from SAME corrected kernel and ADT;
+  only command-line changes: -enable_kprintf_spam startup_debug=1
+  -show_pointers. No additional source patch or CI required.
+  Image shim/a03/out/a03-xnu-0003-trace.img, SHA256
+  14bcd388383700ed4818e6c6f80de5a8ddb15b7d8746e3996a7d29fec58ec98f.
+  Host packer checks passed. Requested fresh Download mode; not flashed yet.
