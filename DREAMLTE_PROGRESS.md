@@ -51,7 +51,8 @@ contains live trees. Never add these to git.
   SHA256 a0db11153d9136648358f51e205943578263d0672932d22c8bd40e829fcbfe68
 - USERDATA /dev/block/sda24, untouched.
 
-Original BOOT restored and hash matched after 0002; Android reboot requested.
+Original BOOT restored and hash matched after 0002; Android rebooted,
+sys.boot_completed=1. ADB returned to unprivileged mode.
 Restore fallback: download mode, heimdall flash --BOOT <verified original>.
 Samsung download mode uses VolumeDown+Bixby+Power (not S7 Home).
 
@@ -77,3 +78,13 @@ Samsung download mode uses VolumeDown+Bixby+Power (not S7 Home).
 GitHub account authenticated, but upstream permission READ. Creating an
 account fork for the CI build while preserving origin. Record exact CI IDs,
 compile results, hardware observations and restore results below.
+
+## CI / repository milestone
+
+- Initial S8 implementation commit: d9e3b434b7462d0dc452aa11feef327b755f9888.
+- Authenticated account has READ access upstream; created fork
+  stonedDiscord/ios-a5xelte, remote build. Origin remains wardevsa/ios-a5xelte.
+- Fork default branch set to dreamlte-bringup so workflow_dispatch is found.
+- CI run 43434858911, job 131917216434 (macos-15-intel), profile dreamlte,
+  machine config HEROLTE, DEVELOPMENT, commit d9e3b43. Started; result pending.
+- No XNU flash performed. Loader-only packaging is a host test only.

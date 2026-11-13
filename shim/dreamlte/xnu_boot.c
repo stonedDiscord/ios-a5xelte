@@ -93,7 +93,7 @@ static uint64_t counter(void)
     return value;
 }
 
-/* Show why the loader stopped, give time for a photo, then request TWRP. */
+/* Record failure in the RAM log, delay briefly, then halt in assembly. */
 static uintptr_t fail(volatile uint64_t *log, int64_t step, const char *why)
 {
     uint64_t freq;
