@@ -64,12 +64,13 @@ def main():
     shutil.copyfile(ROOT/'xnu/patches/0084-a03-lockdown-polling-checkpoints.patch', a.destination/'0084-a03-lockdown-polling-checkpoints.patch')
     shutil.copyfile(ROOT/'xnu/patches/0085-a03-cpu-bsd-checkpoints.patch', a.destination/'0085-a03-cpu-bsd-checkpoints.patch')
     shutil.copyfile(ROOT/'xnu/patches/0086-a03-bsd-general-register-codegen.patch', a.destination/'0086-a03-bsd-general-register-codegen.patch')
+    shutil.copyfile(ROOT/'xnu/patches/0087-a03-cortex-a55-cpu-match.patch', a.destination/'0087-a03-cortex-a55-cpu-match.patch')
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
         'Portable crypto 0020/0023/0027/0032/0033 and pinned BearSSL stage script.',
         'A03 GICv3 timer INTID27; logo candidate 0x9e000000 720x1600 stride2880.',
         'No rootfs/storage/peripheral drivers. Display needs device test.', '']))
-    print('A03 profile staged:', len(patches)+4, 'patches; MACHINE_CONFIG=SWEET')
+    print('A03 profile staged:', len(patches)+5, 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':

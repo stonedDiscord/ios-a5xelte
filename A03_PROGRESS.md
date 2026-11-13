@@ -779,3 +779,20 @@ User transcribed (minor spelling differences preserved in original chat):
 - Asked user for 0009 CPU/SGI/kperf/BSD markers or photo. Runtime pending.
 
 - BSD correction committed/pushed 31c628a, CI 43524594391 dispatched on macos-15-intel. Inspect bsd_init actual codegen before next package.
+
+### 0009 result: kperf CPU wait; CPU match mismatch found
+
+- User reports 0009 before VM restrictions, after VM restrictions, then
+  before kperf CPU wait (transcribed 009). No after-wait marker supplied.
+  kperf_init_early immediately calls ml_wait_max_cpus; source waits until
+  CPU driver calls ml_set_max_cpus. Current execution PC not recovered.
+- Found definite configuration defect: A03 ADT CPU compatible is
+  arm,cortex-a55 + ARM,v8, while built-in SweetCPU IONameMatch is solely
+  qcom,kryo470. Therefore its intended compatible match cannot select the
+  A03 CPU; SIMD fix alone cannot cause that driver to attach.
+- Added A03-only profile patch 0087 matching arm,cortex-a55 and reporting
+  Cortex-A55 instead of donor Kryo 470. Keep real DT identity and all CPU
+  registration/SGI validation/waits. No forced CPU-completion publication.
+- Patch reverse validation passes. Rebuild includes existing BSD flag fix
+  0086; inspect CPU match and BSD codegen in resulting artifact.
+- Current phone BOOT remains 0009, no further device write in this step.

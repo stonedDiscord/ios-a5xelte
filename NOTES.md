@@ -2,18 +2,18 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 2026-11-14: BOOT 0009-cpubsd flashed 100%, success, reboot, exit 0.
-CI 43521738983 source f5236cf passed; actual CPU start/initCPU and kperf
-are SIMD-free, as are polling helpers. Kernel SHA256
-5709f594f7f7129d27ff07767d5e74a82071e59a5d5aad6157559599ef8fcf31.
-Image SHA256 26cf151d8b52ed9977e62e80d1535c46b900b2dae90a44ad27fd9ddb7d000edb.
-Normal IRQ masking; no rootfs. Runtime 0009 CPU/SGI/kperf/BSD markers asked.
-IMPORTANT: BSD still has SIMD in this artifact; flag mistakenly in osfmk
-make template. Profile patch 0086 moves it to bsd/conf/Makefile.template;
-source 31c628a dispatched as CI 43524594391; inspect actual BSD codegen. Current 0009 remains useful CPU diagnostic.
-0008 confirmed platform registration without diagnostic IRQ mask.
-Next: CPU/timer + BSD, RAM-backed static PID1, then real iOS root/display.
-Private static test init prepared, not attached or run. Preserve non-BOOT.
+Latest 2026-11-14: user reports 0009 before/after VM restrictions, then
+before kperf CPU wait; no after-wait marker. Source immediately waits for
+CPU driver publication. Definite config defect found: ADT arm,cortex-a55
+but SweetCPU IONameMatch qcom,kryo470. New A03-only patch 0087 fixes match
+and CPU display name; does not skip registration/SGI validation or wait.
+Next build must include 0086 BSD make-target fix plus 0087 CPU match.
+Current phone BOOT remains 0009-cpubsd, normal IRQ masking, no rootfs.
+0009 image SHA256 26cf151d8b52ed9977e62e80d1535c46b900b2dae90a44ad27fd9ddb7d000edb.
+Previous CI 43524594391 has BSD fix only, CPU match still wrong there.
+Next: verify corrected artifact, BOOT trial, CPU/SGI/BSD progress, then
+RAM-backed test PID1 and actual iOS filesystem/display work.
+Preserve non-BOOT partitions; private static test init not attached/run.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
