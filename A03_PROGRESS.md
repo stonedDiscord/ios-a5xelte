@@ -433,3 +433,16 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
 - Requested physical reset/re-entry into Download mode to establish a
   fresh session. Do not claim candidate 0002 installed. Trial 0001 remains
   the last successfully written BOOT; recovery and other partitions intact.
+
+### Trial 0002 BOOT flash completed after fresh Download session
+
+- User reset/re-entered Download mode. Same candidate SHA256
+  4819988d9641c49008a19c1d47ae8eddc5456ff349c1b8a3b8b94037955b77b8
+  verified immediately before flash. Heimdall session and PIT retrieval
+  succeeded; uploaded only boot to 100%, reported boot upload successful,
+  ended session, rebooted device, exit 0. No full partition readback is
+  available through this transport; distinguish upload acknowledgement
+  from independent readback verification.
+- Trial 0002 is now the last successfully uploaded BOOT. User screen
+  report requested; crypto fix/runtime progress remains unverified until
+  observed. Recovery, bootloaders, EFS/NV and USERDATA were not written.

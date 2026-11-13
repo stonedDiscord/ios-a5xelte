@@ -2,18 +2,16 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest CI 43500930431 PASSED, corrected arm64 kernel hash
-94247210...19a6e0d; SHA1Init now calls br_sha1_init (disassembly verified).
-Trial 0002 BOOT image hash 4819988d...55b77b8, same native16K loader and
-RAM 0x102000000+256 MiB. User confirmed Download mode, Heimdall detected
-phone and BOOT-only flash invoked; protocol initialized/session beginning.
-FLASH BLOCKED BEFORE TRANSFER: first session exit 1 after Beginning session;
-verbose retry failed USB handshake (-7 timeout). Requested fresh Download
-mode reset/reconnect. Trial 0001 remains last successfully written BOOT.
-No new screen evidence yet. Previous trial 0001 reached visible XNU panic
-at SHA1Init+0x34, missing crypto provider; extra portable crypto patches
-0020/23/27/32/33 and pinned BearSSL stage fix compiled successfully.
-No rootfs/storage/USB or iOS runtime. Preserve recovery, bootloaders, EFS/NV.
+Latest: corrected XNU trial 0002 BOOT flash SUCCEEDED after user reset
+Download session: PIT retrieved, boot uploaded 100%, success, reboot, exit 0.
+Image SHA256 4819988d9641c49008a19c1d47ae8eddc5456ff349c1b8a3b8b94037955b77b8.
+No independent partition readback via Heimdall. Screen result requested,
+not yet received; no claim that SHA1 panic is fixed on-device yet.
+Kernel 94247210...19a6e0d from successful run 43500930431; SHA1Init calls
+br_sha1_init. First attempt/retry had USB session timeouts before transfer;
+fresh Download mode resolved those. Phone now has trial 0002 BOOT, only
+boot written; preserve recovery/bootloaders/EFS/NV/USERDATA. No rootfs or
+A03 storage/USB drivers; waiting-for-root or a new panic may be next.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
