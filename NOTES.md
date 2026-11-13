@@ -3,9 +3,12 @@
 ## Active A03 handoff — 2026-11-13
 
 Latest: 0007 photo confirms progress past LOCKDOWN, original IRQ mask
-restoration, kext cleanup, machine lockdown and IOKit matching. Last new
-visible line: SWEET: platform expert registered. Console wrapped; old
-trust-cache/IRQ-mask-active text below it is not the current stopping point.
+restoration, kext cleanup, machine lockdown and IOKit matching in a pass.
+User confirms physical BOTTOM lines remain trust-cache unavailable and
+diagnostic IRQ mask active. Do not conflate physical order with time.
+Console source wraps rows modulo height, clearing current+following row;
+blank band after platform expert registered fits that being newest in
+this pass. Still photo cannot exclude a repeated boot; current PC unknown.
 No panic visible. HPPIR1=0x3ff, CNTV_CTL=1; saved DAIF ends 0200;
 phase=0x10, cursor=end=fffffe0007c00a88 (no remaining callbacks there).
 XNUPOST returned with No POST boot-arg set (tests not proven executed).

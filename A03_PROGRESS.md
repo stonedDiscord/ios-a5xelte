@@ -689,9 +689,9 @@ User transcribed (minor spelling differences preserved in original chat):
 ### Trial 0007 physical display evidence: past lockdown into IOKit
 
 - Inspected user photo IMG_20261113_233441_353.jpg directly (private local
-  photo, not added to git). Console wraps: older trust-cache/policy output
-  remains in the lower display; the last new visible marker is
-  SWEET: platform expert registered. No panic is visible in this photo.
+  photo, not added to git). Physical bottom lines are trust caches unavailable and diagnostic IRQ
+  mask active, as the user explicitly confirmed afterward. Later startup
+  milestones are visible above them. No panic is visible in this photo.
 - Visible diagnostics: saved DAIF ends in 0200 (upper digits partly
   obscured); pending Group1 00000000000003ff; virtual timer ctl
   0000000000000001; phase before 0000000000000010; cursor and end both
@@ -711,3 +711,19 @@ User transcribed (minor spelling differences preserved in original chat):
   kperf_init_early and bsd_init entry, plus CPU service publication/waits.
 - No additional build or phone write from this photo inspection. Current
   BOOT remains 0007-nosimd; no rootfs/storage/USB driver yet.
+
+### User clarification: physical bottom lines remain the IRQ marker
+
+- User confirms the bottom two lines remain SWEET trust caches unavailable
+  and A03 STEP diagnostic IRQ mask active, beneath all other text. Preserve
+  that observation separately from the inferred chronological order.
+- Checked actual console source pexpert/arm/pe_serial.c: fbcon_newline
+  advances row modulo fbcon_rows, clears that row AND the following row;
+  it does not scroll. The photo shows a blank band after platform expert
+  registered, then earlier startup output below. This fits a wrapped ring
+  display, with platform registration most recently written in that pass.
+- A single still photo cannot exclude a repeated boot or other output
+  history. Do not call the physical bottom lines absent or assume an
+  unobserved reset. The visible later milestones establish that a pass
+  reached them, but the exact current execution location remains unproven.
+- No build or flash performed for this clarification.
