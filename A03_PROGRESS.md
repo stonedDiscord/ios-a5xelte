@@ -489,3 +489,13 @@ User reports the following visible lines (no new panic reason supplied):
   Image shim/a03/out/a03-xnu-0003-trace.img, SHA256
   14bcd388383700ed4818e6c6f80de5a8ddb15b7d8746e3996a7d29fec58ec98f.
   Host packer checks passed. Requested fresh Download mode; not flashed yet.
+
+### Trial 0003-trace successfully uploaded
+
+- User confirmed fresh Download session. Verified host candidate hash
+  14bcd388383700ed4818e6c6f80de5a8ddb15b7d8746e3996a7d29fec58ec98f;
+  Heimdall retrieved PIT, uploaded only boot to 100%, reported successful,
+  rebooted, exit 0. Independent partition readback unavailable.
+- Current BOOT is trial 0003-trace. Requested final 5-10 physical display
+  lines, particularly bootstrap step/initializer address or panic. Runtime
+  outcome remains pending. No other partition write.

@@ -8,8 +8,9 @@ with existing flags -enable_kprintf_spam startup_debug=1 -show_pointers;
 no CI/source changes. DEVELOPMENT normally suppresses kprintf, so earlier
 boot lacked initializer traces. Image shim/a03/out/a03-xnu-0003-trace.img
 SHA256 14bcd388383700ed4818e6c6f80de5a8ddb15b7d8746e3996a7d29fec58ec98f.
-Fresh Download mode requested; NOT FLASHED YET. Current BOOT remains 0002
-(4819988d...55b77b8). Next: BOOT-only trace test and symbolicate last step.
+Trial 0003-trace FLASHED: Heimdall boot upload 100%, success, reboot, exit 0.
+No independent readback. Current BOOT 0003-trace; final screen lines
+requested, outcome pending. Next: symbolicate last initializer/step.
 Kernel 94247210...19a6e0d from run 43500930431 has portable crypto fix.
 No rootfs/storage/USB driver. Preserve recovery/bootloaders/EFS/NV/USERDATA.
 
