@@ -777,3 +777,5 @@ User transcribed (minor spelling differences preserved in original chat):
   reboot, exit 0. No independent readback. Current BOOT 0009-cpubsd, usable
   to establish CPU publication/kperf progress, with known BSD codegen defect.
 - Asked user for 0009 CPU/SGI/kperf/BSD markers or photo. Runtime pending.
+
+- BSD correction committed/pushed 31c628a, CI 43524594391 dispatched on macos-15-intel. Inspect bsd_init actual codegen before next package.

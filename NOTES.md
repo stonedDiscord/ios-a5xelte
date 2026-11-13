@@ -10,7 +10,7 @@ Image SHA256 26cf151d8b52ed9977e62e80d1535c46b900b2dae90a44ad27fd9ddb7d000edb.
 Normal IRQ masking; no rootfs. Runtime 0009 CPU/SGI/kperf/BSD markers asked.
 IMPORTANT: BSD still has SIMD in this artifact; flag mistakenly in osfmk
 make template. Profile patch 0086 moves it to bsd/conf/Makefile.template;
-corrected rebuild pending. Current 0009 remains useful CPU diagnostic.
+source 31c628a dispatched as CI 43524594391; inspect actual BSD codegen. Current 0009 remains useful CPU diagnostic.
 0008 confirmed platform registration without diagnostic IRQ mask.
 Next: CPU/timer + BSD, RAM-backed static PID1, then real iOS root/display.
 Private static test init prepared, not attached or run. Preserve non-BOOT.
