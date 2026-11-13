@@ -8,7 +8,7 @@ stack-buffer auto-zeroing; possible diagnostic trap, not proven IRQ failure.
 0084 now streams hex directly and adds -mgeneral-regs-only for startup.o
 in the A03 patch profile. Extracted production-style helper codegen passed
 (147 instructions, no FP/SIMD); earlier checks missed whole-TU flags.
-Full rebuilt artifact inspection/device result pending. Current BOOT still
+Fix 5a4cca7 pushed; CI 43517629744 acquired macos-15-intel and started. Actual artifact inspection/device result pending. Current BOOT still
 0006-irq, SHA256 593adffb16338a24f73cfa62d4827b1d2c048bd0f212232659d0fb003e4e276c.
 Retain a03_lockdown_mask=1 for the next comparison. No iOS rootfs/storage/USB.
 Preserve recovery/bootloaders/EFS/NV/USERDATA.

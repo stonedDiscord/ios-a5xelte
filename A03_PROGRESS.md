@@ -664,3 +664,5 @@ User transcribed (minor spelling differences preserved in original chat):
   automatic zero initialization and -mgeneral-regs-only: 147 instructions,
   no FP/SIMD register operands. Full CI artifact still requires inspection.
 - Current device BOOT remains 0006-irq. No new phone write in this step.
+
+- Fix 5a4cca7 pushed. CI 43517629744 acquired macos-15-intel and started. Inspect actual helper disassembly before packaging trial 0007.
