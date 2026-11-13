@@ -2,16 +2,17 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: corrected XNU trial 0002 BOOT flash SUCCEEDED after user reset
-Download session: PIT retrieved, boot uploaded 100%, success, reboot, exit 0.
-Image SHA256 4819988d9641c49008a19c1d47ae8eddc5456ff349c1b8a3b8b94037955b77b8.
-No independent partition readback via Heimdall. Screen result requested,
-not yet received; no claim that SHA1 panic is fixed on-device yet.
-Kernel 94247210...19a6e0d from successful run 43500930431; SHA1Init calls
-br_sha1_init. First attempt/retry had USB session timeouts before transfer;
-fresh Download mode resolved those. Phone now has trial 0002 BOOT, only
-boot written; preserve recovery/bootloaders/EFS/NV/USERDATA. No rootfs or
-A03 storage/USB drivers; waiting-for-root or a new panic may be next.
+Latest: trial 0002 screen shows startup through "Security policy loaded:
+Guarded vnode policy" (user transcription). Also gPanicBase not initialized,
+kdp_core zlib 0x8000, Serial requested, iBoot a03-shim, name/AAPL,phandle
+not-a-kext logs. Source confirms missing panic buffer warning returns;
+non-kext properties are skipped; policy-loaded prints after callback.
+No new SHA1Init panic reported. Asked whether startup stops here or more
+text/new panic appears. Do not claim root wait/IRQs/iOS runtime yet.
+Trial 0002 BOOT upload success (100%, reboot, exit 0), image SHA256
+4819988d9641c49008a19c1d47ae8eddc5456ff349c1b8a3b8b94037955b77b8.
+Kernel 94247210...19a6e0d from run 43500930431 has portable crypto fix.
+No rootfs/storage/USB driver. Preserve recovery/bootloaders/EFS/NV/USERDATA.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

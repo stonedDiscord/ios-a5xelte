@@ -446,3 +446,27 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
 - Trial 0002 is now the last successfully uploaded BOOT. User screen
   report requested; crypto fix/runtime progress remains unverified until
   observed. Recovery, bootloaders, EFS/NV and USERDATA were not written.
+
+### Trial 0002 user-transcribed startup output
+
+User reports the following visible lines (no new panic reason supplied):
+
+    Error!! gPanicBase is still not initialized
+    kdp_core zlib memory 0x8000
+    Serial requested
+    iBoot version: a03-shim
+    "name" not a kext
+    "AAPL,phandle" not a kext
+    calling mpo_policy_init for vnguard
+    Security policy loaded: Guarded vnode policy
+
+- Source debug_log_init() in osfmk/kern/debug.c prints the gPanicBase
+  warning and returns when no panic buffer exists; it does not panic.
+- OSKext::createExcludeListFromBooterData() logs non-kext ADT properties
+  and continues its loop. These messages alone do not identify a fault.
+- security/mac_base.c prints Security policy loaded after the policy init
+  callback completes. This confirms visible startup/policy progress in
+  trial 0002; no new SHA1Init panic reported. Exact final boot stage,
+  IRQ operation, root wait or a later panic remains unverified.
+- Requested whether display stops there or additional lines follow.
+  No speculative warning-suppression patch or additional flash performed.
