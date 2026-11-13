@@ -295,3 +295,28 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
 - Follow-up workflow fix committed as 3cea933 and pushed. Dispatched
   run 43485850320 on macos-15-intel for DEVELOPMENT ARM64 SWEET/a03;
   awaiting runner allocation. No device write in this CI correction.
+
+## 2026-11-13: first successful A03 XNU build and packaged trial
+
+- GitHub Actions run 43485850320 succeeded on macos-15-intel at
+  19:06:42 UTC, source 3cea933, Xcode 16.0. Downloaded kernel is Mach-O
+  plain arm64 (CPU subtype 0), SHA256
+  91d3c7c39571f9403cf15959c4ea2c6bfb949f1818f168d502bc887c0f817dcf.
+  This is build success, not device execution or an iOS runtime result.
+- Added A03 EL2-to-EL1 wrapper, bounded SWEETXNU segment loader, single-A55
+  ADT and exact-base Android BOOT v2 packer. No storage/USB/display-controller
+  driver. Logo RAM writes use 0x9e000000, 720x1600, stride 2880; scanout and
+  32-bit pixel interpretation remain unverified (stock logo_bpix says 24).
+- Corrected proposed RAM window to 0x102000000+0x10000000: 32 MiB aligned
+  for XNU bootstrap L2 blocks, above debug-reserved page 0x100000000 and
+  within live RAM. The earlier 0x100200000 proposal was not block aligned.
+- Loader compiled with warnings as errors, no linked relocations; explicit
+  padding matches linker payload boundary. Payload bounds/segment overlap,
+  entry, bootargs layout and BOOT ramdisk/DT preservation checks passed.
+  Host checks verify Mach-O architecture, ADT single CPU and timer INTID27.
+- Candidate shim/a03/out/a03-xnu-0001.img: 64 MiB SHA256
+  2313ba806a818748cb5f7b565d52f395270b0b864e07c2334441597e184284fe.
+  XNU entry PA 0x10346b488, ADT PA 0x103ff4000. No iOS rootfs attached;
+  this trial targets early XNU only. Stale AVB signature needs unlocked boot.
+- Before flash: Android boot-complete 1, root works, BOOT resolves to p39,
+  current hash matches successful probe 0003. BOOT-only flash pending.

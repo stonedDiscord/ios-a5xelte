@@ -1,0 +1,89 @@
+#!/usr/bin/env python3
+"""Host-only A03 XNU wrapper packer; BOOT-only, exact Magisk base required."""
+import argparse
+import hashlib
+from pathlib import Path
+import struct
+import subprocess
+import importlib.util
+
+ROOT = Path(__file__).resolve().parent.parent
+spec = importlib.util.spec_from_file_location('probe', ROOT/'tools/a03-probe-image.py')
+probe = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(probe)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('base', type=Path)
+    ap.add_argument('payload', type=Path)
+    ap.add_argument('output', type=Path)
+    a = ap.parse_args()
+    b = a.base.read_bytes()
+    assert hashlib.sha256(b).hexdigest() == probe.BASE_SHA256, 'wrong base BOOT'
+    assert not a.output.exists(), 'refusing existing output'
+    subprocess.run(['sh', str(ROOT/'shim/a03/build-xnu.sh')], check=True)
+    loader = (ROOT/'shim/a03/out/a03-xnu-loader.Image').read_bytes()
+    payload = a.payload.read_bytes()
+    assert payload[:8] == b'SWEETXNU'
+    version, count = struct.unpack_from('<II', payload, 8)
+    base, entry, ao, al, end, phys, mem = struct.unpack_from('<7Q', payload, 16)
+    assert version == 1 and 0 < count <= 32
+    assert phys == 0x102000000 and mem == 0x10000000 and phys % 0x2000000 == 0
+    assert base <= entry < end and end-base < mem
+    assert ao <= len(payload) and al <= len(payload)-ao and al <= 0x100000
+    assert (end-base+al+16383)//16384*16384+16384 <= mem
+    assert payload[0x48+607] == 0
+    ranges = []
+    entry_found = False
+    for i in range(count):
+        va, size, off, fs = struct.unpack_from('<4Q', payload, 0x2a8+i*32)
+        assert base <= va and va-base+size <= end-base and fs <= size
+        assert off <= len(payload) and fs <= len(payload)-off
+        assert all(not size or not ts or va+size <= tv or tv+ts <= va for tv, ts in ranges)
+        ranges.append((va, size))
+        entry_found |= va <= entry < va+fs
+    assert entry_found
+    kernel = bytearray(loader+payload)
+    struct.pack_into('<Q', kernel, 16, len(kernel))
+    ks, _, rs, _, ss, _, _, page, version = struct.unpack_from('<9I', b, 8)
+    assert b[:8] == b'ANDROID!' and version == 2 and page == 2048 and ss == 0
+    rds, rdo = struct.unpack_from('<IQ', b, 1632)
+    ds, = struct.unpack_from('<I', b, 1648)
+    assert rds == rdo == 0
+    align = lambda n: (n+page-1)//page*page
+    ro = page+align(ks)
+    ramdisk = b[ro:ro+rs]
+    dt = b[ro+align(rs):ro+align(rs)+ds]
+    out = bytearray(b[:page])
+    struct.pack_into('<I', out, 8, len(kernel))
+    digest = hashlib.sha1()
+    for part in (kernel, ramdisk, b'', b'', dt):
+        digest.update(part)
+        digest.update(struct.pack('<I', len(part)))
+    out[576:608] = digest.digest()+bytes(12)
+    for part in (kernel, ramdisk, dt):
+        out.extend(part)
+        out.extend(bytes(align(len(part))-len(part)))
+    out.extend(b'SEANDROIDENFORCE'+bytes(1))
+    original_size = len(out)
+    magic, major, minor, _, vo, vs = struct.unpack_from('>4sIIQQQ', b, len(b)-64)
+    assert magic == b'AVBf' and vo+vs <= len(b)-64
+    out.extend(bytes((-len(out)) % 4096))
+    new_vo = len(out)
+    out.extend(b[vo:vo+vs])
+    assert len(out) <= len(b)-64, 'exceeds BOOT partition'
+    out.extend(bytes(len(b)-64-len(out)))
+    out.extend(struct.pack('>4sIIQQQ', magic, major, minor, original_size, new_vo, vs)+bytes(28))
+    nr = page+align(len(kernel))
+    assert out[nr:nr+rs] == ramdisk and out[nr+align(rs):nr+align(rs)+ds] == dt
+    assert len(out) == len(b) == 67108864
+    a.output.parent.mkdir(parents=True, exist_ok=True)
+    a.output.write_bytes(out)
+    print('SHA256', hashlib.sha256(out).hexdigest())
+    print('XNU entry PA', hex(phys+entry-base), 'ADT PA', hex(phys+end-base))
+    print('Host candidate only; stale AVB signature requires unlocked device.')
+
+
+if __name__ == '__main__':
+    main()
