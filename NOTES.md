@@ -1,5 +1,15 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+## Active S8 handoff — 2026-11-13
+
+Current work is on dreamlte-bringup, based on origin/herolte from
+wardevsa/ios-a5xelte (ff2c55e). Read DREAMLTE_PROGRESS.md and
+ docs/dreamlte-bringup.md for the S8, including verified CPU probes,
+backups, new loader, build profile and outstanding CI/boot checks.
+Original local main retains d857f24 and the earlier S8 handoff.
+The SWEET/Redmi history below is donor reference, not S8 evidence.
+
+
 ## a5xelte fork handoff (2026-10-20)
 
 The Samsung SM-A510F branch has a separate dated record in `A5XELTE_PROGRESS.md` and a donor replacement map in `docs/a5xelte-migration-map.md`. Its 4 KiB XNU boots four Exynos7580 cores with SGI1 verified, mounts an iOS 16 HFSX root from USERDATA, and executes launchd, SpringBoard and backboardd. A graphical SpringBoard frame remains unverified. The latest recovered log confirms backboardd has its stock system-container XML entitlement, yet it crashes after receiving a missing container path; `lsd` also aborts in system-group container URL initialization. The HFS `RENAME_SWAP` fallback was SWEET-only despite A5XELTE usermanagerd reporting ENOTSUP for atomic keybag writes. Patch `0117` enables the existing fallback for A5XELTE, and its four-core BOOT image was written to p10; the runtime log is pending. Recovery and EFS remain untouched. The SWEET notes below are donor history, not Samsung device results.

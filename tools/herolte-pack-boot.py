@@ -105,8 +105,9 @@ def cmd_pack(args):
         image.extend(b"\0" * (-len(image) % 4096))
         image.extend(payload)
     version, entries = dtbh_entries(b["dt"])
-    if version is None or not any(e[0] == 8890 for e in entries):
-        raise SystemExit("stock DT has no Exynos 8890 DTBH entry; refusing")
+    expected_chip = getattr(args, 'chip', 8890)
+    if version is None or not any(e[0] == expected_chip for e in entries):
+        raise SystemExit(f"stock DT has no Exynos {expected_chip} DTBH entry; refusing")
     stock_hdr = image_header(b["kernel"])
     if stock_hdr:
         text_offset, _, flags = stock_hdr
@@ -153,6 +154,8 @@ def main():
     info = sub.add_parser("info")
     info.add_argument("stock", type=Path)
     pack = sub.add_parser("pack")
+    pack.add_argument('--chip', type=int, choices=(8890, 8895), default=8890,
+                      help='expected DTBH chip; explicit 8895 opt-in for S8')
     pack.add_argument("stock", type=Path)
     pack.add_argument("image", type=Path)
     pack.add_argument("output", type=Path)

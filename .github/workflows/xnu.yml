@@ -12,6 +12,11 @@ on:
       machine_config:
         description: xnu MACHINE_CONFIG (HEROLTE = Galaxy S7, A5XELTE, SWEET)
         default: HEROLTE
+      board_profile:
+        description: Patch profile (dreamlte = minimal S8 early bring-up)
+        type: choice
+        options: [herolte, dreamlte]
+        default: herolte
       keep_going:
         description: make -k (collect all compile errors in one run)
         default: "true"
@@ -34,6 +39,7 @@ env:
   MACOS_VERSION: ${{ inputs.macos_version || '13.5' }}
   KERNEL_CONFIG: ${{ inputs.kernel_config || 'DEVELOPMENT' }}
   MACHINE_CONFIG: ${{ inputs.machine_config || 'HEROLTE' }}
+  BOARD_PROFILE: ${{ inputs.board_profile || 'herolte' }}
 
 jobs:
   build:
@@ -56,7 +62,13 @@ jobs:
           git -C dxb fetch -q --depth 1 "$DXB_REPO" "$DXB_SHA"
           git -C dxb checkout -q FETCH_HEAD
           # 12.5-14.3 use the top-level patches dir; ours go next to blacktop's
-          cp xnu/patches/*.patch xnu/patches/*.sh dxb/patches/
+          if [ "$BOARD_PROFILE" = dreamlte ]; then
+            [ "$MACHINE_CONFIG" = HEROLTE ] || { echo 'dreamlte requires HEROLTE config'; exit 1; }
+            python3 tools/dreamlte-build-profile.py dreamlte-patches
+            cp dreamlte-patches/*.patch dreamlte-patches/*.sh dxb/patches/
+          else
+            cp xnu/patches/*.patch xnu/patches/*.sh dxb/patches/
+          fi
           # libfirehose_kernel is built arm64e-only; these kernels are plain arm64.
           # Cortex-A53 boards (A5XELTE, HEROLTE) also need it without ARMv8.1
           # LSE atomics: same flags as tools/a5xelte-build-firehose.sh.

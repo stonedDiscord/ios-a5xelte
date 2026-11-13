@@ -1,3 +1,12 @@
+# Working on the DREAMLTE adaptation (Galaxy S8 SM-G950F, Exynos 8895)
+
+- Read DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md first. The connected
+  phone is an S8; HEROLTE_PROGRESS.md describes a different phone.
+- User explicitly authorizes BOOT test flashes. Keep RECOVERY, bootloaders,
+  EFS/CPEFS and USERDATA intact. S8 BOOT is /dev/block/sda7, not the S7 path.
+- Record new S8 evidence in DREAMLTE_PROGRESS.md and update the active handoff
+  in NOTES.md without rewriting the donor history. Commit completed changes.
+
 # Working on the HEROLTE port (Galaxy S7 SM-G930F, Exynos 8890)
 
 - Read `HEROLTE_PROGRESS.md` and `docs/herolte-bringup.md` first; record new device evidence in the former. The A5XELTE files below are the reference implementation this port adapts.

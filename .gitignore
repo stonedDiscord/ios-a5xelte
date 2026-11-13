@@ -4,6 +4,7 @@ dtb/
 recovery/
 # third-party/Apple sources fetched for reading
 research/
+android_kernel_samsung_universal8895/
 *.ipsw
 shim/out/
 xnu/out/
@@ -13,6 +14,7 @@ shim/a5xelte/out/
 shim/a5xelte/out4k/
 shim/a5xelte/outxnu/
 shim/herolte/out/
+shim/dreamlte/out/
 *.img
 # the drop zone (docs/herolte-howto.md): Wi-Fi firmware from the phone's VENDOR, the network's passphrase,
 # Apple-derived device trees and payloads

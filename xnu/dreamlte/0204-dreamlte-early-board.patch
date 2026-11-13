@@ -1,0 +1,28 @@
+diff --git a/pexpert/pexpert/arm64/A5XELTE.h b/pexpert/pexpert/arm64/A5XELTE.h
+--- a/pexpert/pexpert/arm64/A5XELTE.h
++++ b/pexpert/pexpert/arm64/A5XELTE.h
+@@ -12,16 +12,19 @@
+ 
+ /* Firmware scanout buffer and the earliest XNU marker (physical). */
+ #if defined(ARM64_BOARD_CONFIG_HEROLTE)
+-/* Galaxy S7 SM-G930F: S-Boot leaves DECON_F scanning out this buffer. */
++/* Galaxy S8: early console is a RAM sink, NOT a verified panel buffer.
++ * Low RAM 0x8b000000..0x8c1fffff has no live-DT reservation; isolated
++ * XNU RAM is the upper bank. No S7 display/PMIC/storage driver allowed. */
++#define DREAMLTE                      1
+ #define HEROLTE                       1
+-#define A5XELTE_FB_PA                 0xe2a00000
++#define A5XELTE_FB_PA                 0x8b000000
+ #define A5XELTE_FB_WIDTH              1440
+-#define A5XELTE_FB_HEIGHT             2560
++#define A5XELTE_FB_HEIGHT             2960
+ #define A5XELTE_FB_STRIDE             5760
+-#define A5XELTE_FB_BLOCKS             8     /* 2 MiB VA=PA bootstrap blocks */
++#define A5XELTE_FB_BLOCKS             9     /* 2 MiB VA=PA bootstrap blocks */
+ #define A5XELTE_FB_TEXT_SCALE         3
+ #define A5XELTE_FB_DOT_PITCH          577   /* 1440 pixels across 5.1 inches */
+-#define A5XELTE_MARKER_PA             0x8ffff100
++#define A5XELTE_MARKER_PA             0x8afff100
+ /* S-Boot starts on the Cortex-A53 "Apollo" cluster, Aff1 = 1. */
+ #define A5XELTE_BOOT_MPIDR            0x100
+ #else
