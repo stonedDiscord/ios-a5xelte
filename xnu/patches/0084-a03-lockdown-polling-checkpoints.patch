@@ -1,10 +1,11 @@
 --- a/osfmk/kern/startup.c
 +++ b/osfmk/kern/startup.c
-@@ -218,9 +218,59 @@
+@@ -218,9 +218,60 @@
  
  TUNABLE(startup_debug_t, startup_debug, "startup_debug", 0);
  
 +#if defined(SWEET)
++TUNABLE(bool, a03_lockdown_mask, "a03_lockdown_mask", false);
 +/* A03 diagnostic profile only: polling output without kprintf/os_log locks. */
 +static void
 +a03_startup_checkpoint(const char *message)
@@ -60,7 +61,7 @@
  	if ((startup_debug & STARTUP_DEBUG_VERBOSE) &&
  	    startup_phase >= STARTUP_SUB_KPRINTF) {
  		kprintf("kernel_bootstrap: %s\n", message);
-@@ -396,10 +446,23 @@
+@@ -396,10 +447,23 @@
  kernel_startup_initialize_upto(startup_subsystem_id_t upto)
  {
  	struct startup_entry *cur = startup_entry_cur;
@@ -85,7 +86,7 @@
  		if ((startup_debug & STARTUP_DEBUG_VERBOSE) &&
  		    startup_phase >= STARTUP_SUB_KPRINTF) {
  			kprintf("%s[%d, rank %d]: %p(%p)\n", __func__,
-@@ -408,13 +471,26 @@
+@@ -408,13 +472,26 @@
  		startup_phase = cur->subsystem - 1;
  		kernel_startup_log(cur->subsystem);
  		cur->func(cur->arg);
@@ -112,17 +113,39 @@
  	}
  	startup_phase = upto;
  }
-@@ -744,7 +820,9 @@
+@@ -744,7 +821,31 @@
  	load_static_trust_cache();
  #endif
  
++#if defined(SWEET)
++	uint64_t a03_saved_daif = __builtin_arm_rsr64("DAIF");
++	if (a03_lockdown_mask) {
++		__builtin_arm_wsr("DAIFSet", 3);
++		a03_startup_checkpoint("diagnostic IRQ mask active");
++		a03_startup_address("saved DAIF", a03_saved_daif);
++		a03_startup_address("pending Group1", __builtin_arm_rsr64("ICC_HPPIR1_EL1"));
++		a03_startup_address("virtual timer ctl", __builtin_arm_rsr64("CNTV_CTL_EL0"));
++	}
++#endif
 +	a03_startup_checkpoint("before LOCKDOWN callbacks");
  	kernel_startup_initialize_upto(STARTUP_SUB_LOCKDOWN);
 +	a03_startup_checkpoint("after LOCKDOWN callbacks");
++#if defined(SWEET)
++	if (a03_lockdown_mask) {
++		a03_startup_checkpoint("restoring original IRQ mask");
++#if SCHED_HYGIENE_DEBUG
++		if ((a03_saved_daif & 0xc0) == 0) {
++			ml_spin_debug_clear_self();
++		}
++#endif
++		__builtin_arm_wsr64("DAIF", a03_saved_daif);
++		a03_startup_checkpoint("original IRQ mask restored");
++	}
++#endif
  
  	/*
  	 * Get rid of segments used to bootstrap kext loading. This removes
-@@ -753,24 +831,32 @@
+@@ -753,24 +854,32 @@
  	 * the static KVA mappings used for the jettisoned bootstrap segments.
  	 */
  	kernel_bootstrap_log("OSKextRemoveKextBootstrap");

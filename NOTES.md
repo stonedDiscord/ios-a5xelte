@@ -2,15 +2,14 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: diagnostic CI 43511333915 PASSED (efb2834), kernel SHA256
-9113ca66...b739f7c. Verified direct-DAIF polling checkpoint code and labels.
-Trial 0005-dispatch BOOT SHA256
-1e47cec3f89e1d343f52cf3309993e480c568a6123437201bb36da8fff1829e2
-uploaded successfully: Heimdall PIT, boot 100%, success, reboot, exit 0.
-No independent readback. Current phone BOOT 0005; final A03 STEP lines
-requested, outcome pending. Previous 0004 ended before LOCKDOWN callbacks;
-helper interrupt restore could itself schedule, so new helper removes that
-ambiguity and traces dispatcher/callback addresses. No cause proven yet.
+Latest 0005 still ends before LOCKDOWN callbacks, without dispatcher
+entry marker. Direct-DAIF helper confirmed in disassembly; a pending IRQ
+at mask restore is possible, not proven. Added opt-in a03_lockdown_mask=1
+(default false): saves DAIF, masks only through dispatcher, logs HPPIR1/
+CNTV_CTL and callback addresses, restores original DAIF immediately after.
+This is a diagnostic experiment, not an IRQ fix or security bypass.
+Next CI pending. Phone detected in Download mode; no new image flashed.
+Current BOOT 0005 1e47cec3...f1829e2, kernel 9113ca66...b739f7c.
 No iOS rootfs/storage/USB. Preserve recovery/bootloaders/EFS/NV.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a

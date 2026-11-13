@@ -606,3 +606,21 @@ User transcribed (minor spelling differences preserved in original chat):
   rebooted device, exit 0. No independent partition readback via Heimdall.
 - Current BOOT is 0005-dispatch. Requested final A03 STEP lines/addresses
   or panic. Runtime outcome pending. No other partition written.
+
+### Trial 0005-dispatch still stops at pre-dispatch marker
+
+- User reports trust caches unavailable followed by A03 STEP before
+  LOCKDOWN callbacks. No entered-dispatcher/phase/callback marker appears.
+- Disassembly verifies marker returns after direct DAIF restore. The only
+  post-output helper work is optional ml_spin_debug_clear_self, direct DAIF
+  restoration and return. The clear helper only zeros current-thread debug
+  timestamps; a pending interrupt upon restoration remains a hypothesis.
+  This does not prove a callback, timer or IRQ is defective.
+- Added opt-in a03_lockdown_mask=1 diagnostic (default false): saves DAIF,
+  masks IRQ/FIQ before pre-dispatch marker, reports saved DAIF, read-only
+  Group1 HPPIR and CNTV_CTL, executes the dispatcher with existing per-call
+  markers, then restores original DAIF immediately after dispatcher and
+  reports restoration. Does not skip callbacks or leave IRQs disabled for
+  IOKit startup. Masking can change timing/semantics: diagnostic only.
+- Patch reverse-application/profile staging pass. Phone USB currently in
+  Download mode; no additional image written. Next kernel build pending.
