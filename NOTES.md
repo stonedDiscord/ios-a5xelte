@@ -15,9 +15,14 @@ confirmed Android home/lock screen. Restored Magisk BOOT, readback hash
 matched; clean reboot confirmed (`sys.boot_completed=1`, bootanim stopped).
 No XNU yet. User's separate kernel clone b48e9ddfd73a is clean; its head.S
 has the expected EL2 setup. Next: prove EL2-to-EL1 and GIC/timer before XNU.
-See A03 progress
-for hashes, live RAM/reservations and exact test results. Previous S8
-handoff and SWEET donor history remain below as historical reference.
+See A03 progress for hashes, live RAM/reservations and exact test results.
+
+A03 donor direction: native 16 KiB SWEET/GICv3 core plus reviewed Topaz
+generic improvements; see `docs/a03-donor-selection.md` for pinned
+sources. Do not keep HEROLTE's 4 KiB workaround or enable Qualcomm
+peripheral drivers. Both inspected donors remain XNU 8796/iOS 16.
+
+Previous S8 handoff and SWEET donor history remain below as historical reference.
 
 ## Active S8 handoff — 2026-11-13
 

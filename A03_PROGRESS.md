@@ -171,3 +171,18 @@ Inspect cloned kernel boot entry and live reserved memory, then verify
 EL2-to-EL1 transition, timer and GICv3 interrupt delivery with a returning
 probe. XNU expects EL1; do not jump directly from the observed EL2. No
 display controller writes or XNU memory window have been verified yet.
+
+## 2026-11-13: native 16 KiB donor direction
+
+User proposed using a richer community fork now that the boot A55's raw
+MMFR0 confirms 16 KiB support. Adopt native 16 KiB for initial XNU work,
+SWEET's GICv3 core with reviewed Topaz generic integration improvements,
+instead of continuing the HEROLTE/A5XELTE 4 KiB workaround.
+
+Pinned donor comparison, source URLs and exclusions are recorded in
+`docs/a03-donor-selection.md`. Topaz is XNU 8796/iOS 16 too, and its
+optional `TOPAZ_4K` path must stay disabled for this direction. Its
+Qualcomm/Adreno hardware drivers are not A03 drivers. Actual 16 KiB MMU
+operation, other CPUs, EL1 transition and IRQs still need device tests.
+This records the target architecture; no A03 XNU build profile or
+replacement build has yet been implemented.
