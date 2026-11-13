@@ -2,18 +2,19 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 2026-11-14: BOOT 0010-cpumatch uploaded 100%, success, reboot,
-Heimdall exit 0. CI 43526118698 source 4e90279 passed; manifest matches.
-Kernel SHA256 f3b7de775b74b27d17c89c19081e5a9488988c8161292a7b75266e43c2b340f8.
-Image SHA256 7af08504a558c1517bf996535cb0670ddbded54f2157ebc85d9e93eb3f231543.
-Actual Cortex-A55 personality verified; complete CPU start/initCPU, kperf,
-BSD init and polling helpers verified SIMD-free. Normal IRQ mask, no rootfs.
-Runtime CPU/SGI/publication/after-kperf/BSD/panic lines requested. Labels
-still say 0009. No independent partition readback. Current BOOT 0010.
-Previous 0009 stopped before kperf CPU wait; CPU match was donor Kryo470
-while ADT was Cortex-A55. That mismatch fixed, device outcome pending.
-Next: CPU/timer + BSD, RAM-backed test PID1, then actual iOS root/display.
-Preserve non-BOOT partitions; private static test init not attached/run.
+Latest 2026-11-14: 0010 PHOTO CONFIRMS CPU 0 registration, SGI1 verified,
+CPU initialization complete and BSD startup through aio_init. Primary panic
+cpu0 caller 0xfffffe0007a62a50: pthread kernel extension not loaded
+(function table is NULL), pthread_shims.c:318. Handshake text is secondary.
+Missing profile integration: donor 0019 built-in pthread provider excluded.
+Now staged 0019 + pinned stage-libpthread, 0021/22/24 mockfs RAM-root,
+0025 minimal AMFI interface; 0088 makes new provider objects general-regs.
+Local patches/profile/syntax checks pass; full CI build pending.
+Next trial: verify providers/codegen, attach private static test init with
+--ramdisk and rd=md0. Test PID1 is not real iOS launchd/SpringBoard.
+Current phone BOOT remains 0010-cpumatch, no new flash in photo analysis.
+0010 image SHA256 7af08504a558c1517bf996535cb0670ddbded54f2157ebc85d9e93eb3f231543.
+Preserve non-BOOT partitions. No real iOS rootfs or storage/USB drivers.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

@@ -14,6 +14,8 @@ import urllib.request
 SHA = '45263bee51df4a0f55cdf9c649af886399488ddb'
 ROOT = Path(__file__).resolve().parent.parent
 EXTRA_CRYPTO = {20, 23, 27, 32, 33}
+EXTRA_USERSPACE = {19, 21, 22, 24, 25}
+EXTRA_PATCHES = EXTRA_CRYPTO | EXTRA_USERSPACE
 
 
 def main():
@@ -32,17 +34,21 @@ def main():
         source = None
     a.destination.mkdir(parents=True)
     if source:
-        patches = [(x.name, x.read_bytes()) for x in sorted((source/'xnu/patches').glob('*.patch')) if int(x.name[:4])<=18 or int(x.name[:4]) in EXTRA_CRYPTO]
+        patches = [(x.name, x.read_bytes()) for x in sorted((source/'xnu/patches').glob('*.patch')) if int(x.name[:4])<=18 or int(x.name[:4]) in EXTRA_PATCHES]
         stage = (source/'xnu/patches/0020-stage-bearssl.sh').read_bytes()
+        pthread_stage = (source/'xnu/patches/0019-stage-libpthread.sh').read_bytes()
     else:
         patches = [(Path(m.name).name, archive.extractfile(m).read()) for m in archive.getmembers()
                    if '/xnu/patches/' in m.name and m.name.endswith('.patch') and
-                   (int(Path(m.name).name[:4])<=18 or int(Path(m.name).name[:4]) in EXTRA_CRYPTO)]
+                   (int(Path(m.name).name[:4])<=18 or int(Path(m.name).name[:4]) in EXTRA_PATCHES)]
         member = next(m for m in archive.getmembers() if m.name.endswith('/xnu/patches/0020-stage-bearssl.sh'))
         stage = archive.extractfile(member).read()
-    if len(patches)!=23:
-        raise SystemExit('expected 18 core and 5 portable crypto patches')
+        member = next(m for m in archive.getmembers() if m.name.endswith('/xnu/patches/0019-stage-libpthread.sh'))
+        pthread_stage = archive.extractfile(member).read()
+    if len(patches)!=28:
+        raise SystemExit('expected 18 core, 5 crypto and 5 pthread/RAM-root patches')
     (a.destination/'0020-stage-bearssl.sh').write_bytes(stage)
+    (a.destination/'0019-stage-libpthread.sh').write_bytes(pthread_stage)
     changes = {
         '0004-sweet-machine-config.patch': [('SWEET_VTIMER_INTID        19','SWEET_VTIMER_INTID        27')],
         '0010-sweet-early-framebuffer-debug.patch': [
@@ -65,12 +71,14 @@ def main():
     shutil.copyfile(ROOT/'xnu/patches/0085-a03-cpu-bsd-checkpoints.patch', a.destination/'0085-a03-cpu-bsd-checkpoints.patch')
     shutil.copyfile(ROOT/'xnu/patches/0086-a03-bsd-general-register-codegen.patch', a.destination/'0086-a03-bsd-general-register-codegen.patch')
     shutil.copyfile(ROOT/'xnu/patches/0087-a03-cortex-a55-cpu-match.patch', a.destination/'0087-a03-cortex-a55-cpu-match.patch')
+    shutil.copyfile(ROOT/'xnu/patches/0088-a03-userspace-provider-codegen.patch', a.destination/'0088-a03-userspace-provider-codegen.patch')
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
         'Portable crypto 0020/0023/0027/0032/0033 and pinned BearSSL stage script.',
         'A03 GICv3 timer INTID27; logo candidate 0x9e000000 720x1600 stride2880.',
-        'No rootfs/storage/peripheral drivers. Display needs device test.', '']))
-    print('A03 profile staged:', len(patches)+5, 'patches; MACHINE_CONFIG=SWEET')
+        'Pinned libpthread, mockfs RAM-root and minimal AMFI interface for test init.',
+        'No iOS rootfs/storage/peripheral drivers. Display needs device test.', '']))
+    print('A03 profile staged:', len(patches)+6, 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':

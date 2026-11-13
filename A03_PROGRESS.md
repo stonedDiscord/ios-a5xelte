@@ -818,3 +818,29 @@ User transcribed (minor spelling differences preserved in original chat):
   no independent partition readback. Current BOOT 0010-cpumatch.
 - Requested CPU registration/SGI/publication, after-kperf/BSD or panic
   lines/photo. Diagnostic labels still say 0009. Runtime result pending.
+
+### 2026-11-14: trial 0010 photo confirms CPU + BSD, missing pthread provider
+
+- Directly inspected private photo IMG_20261114_005550.jpg. Visible:
+  CPU initialization complete; SWEET CPU boot CPU 0 registered, SGI1
+  verified, initialization complete. BSD progresses through credentials,
+  buffer init, IOKitInitializeTime, vfsinit, mbinit (64 MB pool), audit,
+  knote/eventhandler init and calling aio_init.
+- Exact visible primary panic: cpu 0 caller 0xfffffe0007a62a50:
+  pthread kernel extension not loaded (function table is NULL).
+  @pthread_shims.c:318. Subsequent handshake structure not initialized is
+  debugger fallout, not a replacement root cause. No root/userspace yet.
+- Source pthread_init explicitly panics when pthread_functions is NULL.
+  A03 profile excluded donor 0019 built-in pthread provider. This is a
+  missing required integration, not a reason to skip pthread_init/aio_init.
+- Expanded pinned donor selection with 0019 libpthread provider plus pinned
+  0019 staging script (Apple libpthread commit a6c70ca0e544347a0377babf748f831577ec24f9),
+  0021/0022/0024 mockfs RAM-root support and 0025 minimal AMFI interface.
+  These are generic test-userspace integrations, no Qualcomm drivers.
+  AMFI provider returns no entitlements; it does not grant privileges.
+- Added 0088 general-register codegen for new pthread/AMFI/mockfs objects.
+  Donor patches apply locally, 0088 reverse check/profile staging/Python
+  syntax checks pass. Full integration compile still pending.
+- Next trial intended to attach prepared static test init via --ramdisk,
+  rd=md0. This proves PID1/syscalls if successful; it is not iOS launchd
+  or SpringBoard. No additional phone write yet. Current BOOT remains 0010.

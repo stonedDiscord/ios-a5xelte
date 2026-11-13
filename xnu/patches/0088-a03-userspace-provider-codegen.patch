@@ -1,0 +1,18 @@
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -86,6 +86,15 @@
+ 
+ # A03: BSD is a separate make target from osfmk.
+ bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
++
++# A03 built-in userspace providers execute without kernel FP/SIMD state.
++sweet_pthread_init.o_CFLAGS_ADD += -mgeneral-regs-only
++sweet_pthread_support.o_CFLAGS_ADD += -mgeneral-regs-only
++sweet_pthread_synch.o_CFLAGS_ADD += -mgeneral-regs-only
++sweet_amfi.o_CFLAGS_ADD += -mgeneral-regs-only
++mockfs_fsnode.o_CFLAGS_ADD += -mgeneral-regs-only
++mockfs_vfsops.o_CFLAGS_ADD += -mgeneral-regs-only
++mockfs_vnops.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ tcp_cubic.o_CWARNFLAGS_ADD += -Wno-error=implicit-int-float-conversion
+ 
