@@ -2,16 +2,16 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: user confirms trace 0003 ends literally mid-line "reached phas[e]",
-no number or continuation; fresh Download mode ready. Stop asking for
-missing text. A03 patch 0084 adds polling serial_putc checkpoints around
-lockdown, cleanup, XNUPOST and IOKit; bypasses normal kprintf/os_log at
-lockdown phase completion and later bootstrap labels. Startup operations
-remain intact. Logging stall suspected, not established. Patch ac2b362
-pushed; diagnostic CI 43507759809 queued on macos-15-intel. No new binary
-or flash yet. Current BOOT remains 0003-trace 14bcd388...58ec98f, corrected
-kernel 94247210...19a6e0d. Phone awaits next candidate in Download mode.
-No iOS rootfs/storage/USB yet. Preserve recovery/bootloaders/EFS/NV.
+Latest: CI 43507759809 PASSED (ac2b362); polling diagnostic kernel
+59cae843...14fab41 verified against manifest and disassembly. Trial
+0004-poll BOOT SHA256
+9328ed5ee0ac16d1449f15bd75e589586c468e19fa57750a7732a5d440999e23
+successfully uploaded by Heimdall, 100%, reboot, exit 0; no independent
+partition readback. Phone now booting 0004-poll. Requested final A03 STEP
+marker/panic, outcome pending. Diagnostic patch bypasses normal logging
+at lockdown phase completion; startup operations are not skipped.
+Previous 0003-trace stopped literally mid-line reached phas[e]. No claim
+of root cause yet. No iOS rootfs/storage/USB. Preserve recovery/EFS/NV.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

@@ -547,3 +547,22 @@ User transcribed (minor spelling differences preserved in original chat):
 - Diagnostic patch committed/pushed ac2b362. New CI run 43507759809
   queued on macos-15-intel. Phone ready in Download; no diagnostic
   binary available yet and no additional flash performed.
+
+### Trial 0004-poll: diagnostic kernel built and BOOT uploaded
+
+- CI 43507759809 succeeded at 21:22:51 UTC (source ac2b362), plain arm64
+  diagnostic kernel SHA256
+  59cae8432f5664f083b771517eb3d1bebfe575ae9520b0a7b9136dc2a14fab41
+  matches CI manifest. Checkpoint labels present; disassembly of
+  a03_startup_checkpoint confirms polling serial_putc and interrupt state
+  save/restore calls. Compiler unrolled the literal prefix into character
+  calls, so searching for contiguous A03 STEP string alone was insufficient.
+- Built shim/a03/out/a03-xnu-0004-poll.img with same native16K loader,
+  ADT and trace flags. 64 MiB SHA256
+  9328ed5ee0ac16d1449f15bd75e589586c468e19fa57750a7732a5d440999e23.
+  XNU entry PA 0x10346c488, ADT PA 0x103ffc000. Packer checks passed.
+- Phone remained in user-confirmed fresh Download mode. Host image hash
+  rechecked; Heimdall retrieved PIT, uploaded boot to 100%, reported boot
+  upload successful, rebooted device, exit 0. No independent readback.
+- Current BOOT is trial 0004-poll. Requested final A03 STEP marker/panic
+  or partial line from display. No runtime result yet; only BOOT written.
