@@ -8,7 +8,8 @@ at mask restore is possible, not proven. Added opt-in a03_lockdown_mask=1
 (default false): saves DAIF, masks only through dispatcher, logs HPPIR1/
 CNTV_CTL and callback addresses, restores original DAIF immediately after.
 This is a diagnostic experiment, not an IRQ fix or security bypass.
-Next CI pending. Phone detected in Download mode; no new image flashed.
+Commit 0b21f6a; CI 43514823420 dispatched. Next test must add
+a03_lockdown_mask=1 to payload command line. Phone detected in Download mode; no new image flashed.
 Current BOOT 0005 1e47cec3...f1829e2, kernel 9113ca66...b739f7c.
 No iOS rootfs/storage/USB. Preserve recovery/bootloaders/EFS/NV.
 

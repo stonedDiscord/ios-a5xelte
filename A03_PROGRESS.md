@@ -624,3 +624,7 @@ User transcribed (minor spelling differences preserved in original chat):
   IOKit startup. Masking can change timing/semantics: diagnostic only.
 - Patch reverse-application/profile staging pass. Phone USB currently in
   Download mode; no additional image written. Next kernel build pending.
+
+- Opt-in diagnostic committed 0b21f6a, CI 43514823420 dispatched on
+  macos-15-intel. Package its test with a03_lockdown_mask=1; otherwise
+  default behavior stays unmasked. No candidate artifact/flash yet.
