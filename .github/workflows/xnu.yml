@@ -15,7 +15,7 @@ on:
       board_profile:
         description: Patch profile (dreamlte = minimal S8 early bring-up)
         type: choice
-        options: [herolte, dreamlte]
+        options: [herolte, dreamlte, a03]
         default: herolte
       keep_going:
         description: make -k (collect all compile errors in one run)
@@ -62,7 +62,11 @@ jobs:
           git -C dxb fetch -q --depth 1 "$DXB_REPO" "$DXB_SHA"
           git -C dxb checkout -q FETCH_HEAD
           # 12.5-14.3 use the top-level patches dir; ours go next to blacktop's
-          if [ "$BOARD_PROFILE" = dreamlte ]; then
+          if [ "$BOARD_PROFILE" = a03 ]; then
+            [ "$MACHINE_CONFIG" = SWEET ] || { echo 'a03 requires native 16K SWEET config'; exit 1; }
+            python3 tools/a03-build-profile.py a03-patches
+            cp a03-patches/*.patch dxb/patches/
+          elif [ "$BOARD_PROFILE" = dreamlte ]; then
             [ "$MACHINE_CONFIG" = HEROLTE ] || { echo 'dreamlte requires HEROLTE config'; exit 1; }
             python3 tools/dreamlte-build-profile.py dreamlte-patches
             cp dreamlte-patches/*.patch dreamlte-patches/*.sh dxb/patches/
