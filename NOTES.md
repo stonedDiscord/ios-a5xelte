@@ -2,15 +2,16 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: user confirms trial 0002 stays at Guarded vnode policy output.
-No exact stalled function known. Prepared same-kernel trial 0003-trace
-with existing flags -enable_kprintf_spam startup_debug=1 -show_pointers;
-no CI/source changes. DEVELOPMENT normally suppresses kprintf, so earlier
-boot lacked initializer traces. Image shim/a03/out/a03-xnu-0003-trace.img
-SHA256 14bcd388383700ed4818e6c6f80de5a8ddb15b7d8746e3996a7d29fec58ec98f.
-Trial 0003-trace FLASHED: Heimdall boot upload 100%, success, reboot, exit 0.
-No independent readback. Current BOOT 0003-trace; final screen lines
-requested, outcome pending. Next: symbolicate last initializer/step.
+Latest trial 0003-trace screen passes vnguard and dtrace_early_init,
+then trust_cache_init / "SWEET: trust caches unavailable (Image4/AMFI not
+installed)", then "kernel_startup_initialize_upto: reached phas" (truncated
+user transcription). Asked full phase number/continuation and later lines.
+Expected phase after trust-cache path is LOCKDOWN (~0u printed %d = -1),
+but completion unconfirmed. Next normal steps: OSKextRemoveKextBootstrap,
+machine_lockdown, XNUPOST, PE_lockdown_iokit. No cause identified yet;
+do not bypass these based on the last incomplete line. No additional CI.
+Current BOOT 0003-trace SHA256
+14bcd388383700ed4818e6c6f80de5a8ddb15b7d8746e3996a7d29fec58ec98f.
 Kernel 94247210...19a6e0d from run 43500930431 has portable crypto fix.
 No rootfs/storage/USB driver. Preserve recovery/bootloaders/EFS/NV/USERDATA.
 

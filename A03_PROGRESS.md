@@ -499,3 +499,29 @@ User reports the following visible lines (no new panic reason supplied):
 - Current BOOT is trial 0003-trace. Requested final 5-10 physical display
   lines, particularly bootstrap step/initializer address or panic. Runtime
   outcome remains pending. No other partition write.
+
+### Trial 0003-trace progresses past policy and trust-cache initialization
+
+User transcribed (minor spelling differences preserved in original chat):
+
+    kernel_bootstrap: mac_policy_initmatch
+    kernel_bootstrap: vnguard_policiy_init
+    calling mpo_policy_init for vnguard
+    Security policy loaded: Guarded vnode policy (vnguard)
+    kernel_bootstrap: dtrace_early_init
+    kernel_bootstrap: trust_cache_init
+    SWEET: trust caches unavailable (Image4/AMFI not installed)
+    kernel_startup_initialize_upto: reached phas
+
+- Existing trace flags work. Earlier policy line was not the exact stop:
+  subsequent DTrace and trust-cache paths were reached. Missing trust-cache
+  provider is explicitly handled by selected patch 0015; this message does
+  not alone imply a panic or need to bypass security initialization.
+- In startup.c the reached-phase message after trust-cache init corresponds
+  to kernel_startup_initialize_upto(STARTUP_SUB_LOCKDOWN), whose enum is
+  unsigned ~0u and printed with %d (expected -1). The user has not yet
+  supplied the end of the line, so exact completion remains unconfirmed.
+- Next normal checkpoints are OSKextRemoveKextBootstrap, machine_lockdown,
+  XNUPOST and PE_lockdown_iokit. Requested full final line/continuations
+  and any later text before choosing another code change. Do not infer
+  which call hangs from a truncated console string. Current BOOT unchanged.
