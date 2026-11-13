@@ -1,5 +1,16 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+## Active A03 handoff — 2026-11-13
+
+Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
+Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
+Read `A03_PROGRESS.md` and `docs/a03-bringup.md`. A locally built static
+ARM64 EL0 diagnostic ran on Android and printed `A03_EL0_PROBE_OK`; timer
+26 MHz. No boot shim/XNU execution or partition writes. Stock Android
+refuses root and raw BOOT/FDT reads. Next: exact stock BOOT/DTB/DTBO and
+verified restore route, then a returning pre-Linux probe. Previous S8
+handoff and SWEET donor history remain below as historical reference.
+
 ## Active S8 handoff — 2026-11-13
 
 Current work is on dreamlte-bringup, based on origin/herolte from

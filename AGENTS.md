@@ -1,3 +1,15 @@
+# Working on the A03 adaptation (Galaxy A03 SM-A035G, UNISOC T606)
+
+- Read `A03_PROGRESS.md` and `docs/a03-bringup.md` first. The connected
+  device is now an A03; S8/S7/A5 notes describe different phones.
+- Record A03 evidence in `A03_PROGRESS.md`, update the active handoff in
+  `NOTES.md`, and commit completed work. Keep private dumps out of git.
+- Preserve all partitions. Prior donor BOOT flash permissions do not
+  authorize A03 writes. Prepare a verified stock restore artifact and
+  obtain explicit A03 BOOT-only permission before a flash test.
+- Distinguish Android EL0 diagnostic success from boot-shim execution,
+  XNU progress, physical display observations and iOS runtime behavior.
+
 # Working on the DREAMLTE adaptation (Galaxy S8 SM-G950F, Exynos 8895)
 
 - Read DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md first. The connected
