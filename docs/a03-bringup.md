@@ -75,3 +75,25 @@ Success t=0x16384 means alias read/write and unmapped-VA AT check passed.
 Other markers: l=CurrentEL, q=TCR, u=SCTLR with MMU on, a=alias PAR,
 y=EL2 return ESR (expected HVC64 0x5a000a03). The reporter regression
 check stubs hardware results; it tests FDT mutation, not MMU emulation.
+
+## First XNU-only trial (2026-11-13)
+
+CI run 43485850320 produced a plain arm64 XNU 8796 DEVELOPMENT kernel.
+See A03_PROGRESS.md for its SHA256, exact device write and observations.
+To reproduce host packaging with that private downloaded artifact:
+
+    python3 tools/mkadt_a03.py shim/a03/out/a03.adt
+    python3 tools/mkpayload.py xnu/out-a03-43485850320/kernel.development.sweet shim/a03/out/a03.adt shim/a03/out/xnu-first.payload --cmdline 'debug=0x14e serial=3 cpus=1 keepsyms=1 -v -noprogress'
+    python3 tools/a03-xnu-image.py backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img shim/a03/out/xnu-first.payload shim/a03/out/a03-xnu-NEW.img
+
+The packer builds the freestanding EL2-to-EL1 loader and preserves the
+verified BOOT v2 base's ramdisk and DT table. Only the kernel component
+is replaced. It retains stale AVB metadata, as accepted by the unlocked
+phone, and refuses any other base or an existing output path. XNU RAM
+starts at 0x102000000 (32 MiB aligned), size 256 MiB. All payload segment
+and entry bounds are checked before any copy. BOOT p39 is the only
+partition authorized for these trials; retain matching stock/Magisk restore.
+
+This profile has no rootfs or A03 storage/USB drivers. Absent ADB is not
+proof of kernel progress. The 0x9e000000 logo RAM display candidate and
+32-bit format are unverified; a blank screen is inconclusive too.

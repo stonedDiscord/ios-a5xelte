@@ -320,3 +320,28 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
   this trial targets early XNU only. Stale AVB signature needs unlocked boot.
 - Before flash: Android boot-complete 1, root works, BOOT resolves to p39,
   current hash matches successful probe 0003. BOOT-only flash pending.
+
+### Trial 0001 written and reboot requested
+
+- Flashed only /dev/block/by-name/boot, verified resolved p39 and exact
+  64 MiB size, model and previous probe hash before writing. Uploaded and
+  full post-write partition hashes match candidate 2313ba80...84284fe.
+- ADB reboot requested successfully. Physical screen report pending;
+  no evidence yet of XNU entry, MMU startup or iOS runtime. Recovery,
+  bootloaders, vbmeta, EFS/NV and USERDATA were not written.
+- ADB absent at the first check. This kernel has no A03 USB driver;
+  absent ADB does not distinguish kernel progress from a hang.
+
+### Trial 0001 physical display report: XNU panic path reached
+
+- User transcribed the panic.apple.com report footer, then the exact line
+  "handshake structure not initialized" from the phone screen.
+- Source match: osfmk/kdp/output_stages/out_shmem.c, panic_spin_shmcon(),
+  emits the latter when hwsd_info is NULL. It is a secondary panic-time
+  hardware shared-memory debugger diagnostic, not the original panic cause.
+- This is user-reported visible XNU panic output after trial 0001, distinct
+  from host build success. It establishes XNU execution/display progress;
+  no saved kernel log, original panic reason, IRQ success or iOS runtime
+  is established. Requested earlier panic(cpu...)/SWEET EARLY PANIC text.
+- Keep the current screen intact while reading it. No second BOOT trial
+  has been written and no speculative debugger-handshake fix applied.
