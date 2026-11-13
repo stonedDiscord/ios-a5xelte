@@ -291,3 +291,7 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
 - Run 43485104681 remained queued before replacement with this fix.
   Local XNU loader/ADT files are still uncommitted work in progress,
   not a validated flash candidate. Phone remains at successful probe 0003.
+
+- Follow-up workflow fix committed as 3cea933 and pushed. Dispatched
+  run 43485850320 on macos-15-intel for DEVELOPMENT ARM64 SWEET/a03;
+  awaiting runner allocation. No device write in this CI correction.

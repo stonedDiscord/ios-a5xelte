@@ -8,7 +8,7 @@ committed c179b90; supported-runner correction 9178d8a. Follow-up CI fix
 pins ARM64 explicitly, verifies plain arm64 output, fixes Xcode discovery
 under pipefail and adds current runner choices. macos-15-intel is an x64
 host cross-compiling an ARM64 kernel. Run 43485104681 was queued before
-replacement. See A03_PROGRESS.md for the new run. No XNU artifact or A03
+replacement. New run 43485850320 at 3cea933 awaits allocation. No XNU artifact or A03
 XNU execution yet. Untracked shim/a03/xnu-* and tools/mkadt_a03.py are
 unfinished loader work; do not flash before validation.
 
