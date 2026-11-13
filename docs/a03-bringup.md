@@ -1,5 +1,11 @@
 # Galaxy A03 SM-A035G initial checkpoint
 
+Probe 0001 returned successfully. Experimental --mmu16k probe 0002d
+bootlooped on 2026-11-13; do not repeat it without diagnosing the return
+failure. No 16 KiB translation success is established. Restore the verified
+Magisk BOOT through Download mode before further tests. See the latest
+A03_PROGRESS.md entry for the current recovery state.
+
 Read `A03_PROGRESS.md` first. The A03 is UNISOC ums9230/T606, not an
 Exynos phone. Do not boot donor S8/S7/A5 images or reuse their MMIO,
 partition paths, image wrappers or partition-write authorization.

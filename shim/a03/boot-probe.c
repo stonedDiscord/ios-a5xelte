@@ -2,6 +2,10 @@
  * Replace only /chosen/bootargs tokens already observed on this A03.
  */
 #include <stdint.h>
+#ifdef A03_MMU16K
+extern void a03_test_el1(void);
+extern volatile uint64_t a03_mmu_result[12];
+#endif
 static uint32_t be32(const unsigned char *p)
 {
     return (uint32_t)p[0]<<24 | (uint32_t)p[1]<<16 | (uint32_t)p[2]<<8 | p[3];
@@ -72,4 +76,18 @@ void a03_boot_probe(unsigned char *fdt)
     REPORT("androidboot.sales.param.offset=9437648",'e',CurrentEL);
     REPORT("androidboot.sn.param.offset=9437392",'s',sctlr_el1);
     REPORT("androidboot.ddrsize.range=[4096,5120)",'f',cntfrq_el0);
+#ifdef A03_MMU16K
+    a03_test_el1();
+#define RESULT(needle,key,index) report(args,size,needle,sizeof(needle)-1,key,a03_mmu_result[index])
+    RESULT("androidboot.sb.debug0=0x0",'t',0);
+    RESULT("androidboot.carrierid=EUX",'l',1);
+    RESULT("androidboot.sales_code=DBT",'q',2);
+    RESULT("androidboot.debug_level=0x4f4c",'u',3);
+    RESULT("androidboot.dram_info=D1,35,F5,4G",'a',5);
+    RESULT("androidboot.lwfq.type=1",'v',6);
+    RESULT("androidboot.vbmeta.avb_version=1.1",'n',7);
+    RESULT("androidboot.vbmeta.invalidate_on_error=yes",'x',8);
+    RESULT("androidboot.vbmeta.hash_alg=sha256",'y',10);
+#undef RESULT
+#endif
 }

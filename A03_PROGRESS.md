@@ -186,3 +186,24 @@ Qualcomm/Adreno hardware drivers are not A03 drivers. Actual 16 KiB MMU
 operation, other CPUs, EL1 transition and IRQs still need device tests.
 This records the target architecture; no A03 XNU build profile or
 replacement build has yet been implemented.
+
+## 2026-11-13: EL1/16 KiB round-trip probe 0002 failed to return
+
+- Added opt-in --mmu16k and --elf diagnostic output to the exact A03 image
+  builder. Temporary EL2/EL1 vectors, saved registers, masked EL1 entry
+  and HVC return; intended mapping uses aligned 16 KiB tables, Normal
+  non-cacheable probe RAM, alias read/write and an unmapped-address check.
+  No GIC, timer control or peripheral MMIO is written.
+- Host build passed warnings-as-errors, linked ELF relocation, entry,
+  table/vector alignment, memory bound and kernel/ramdisk/DT preservation
+  checks. Preliminary section alignment corrected before device write.
+  Candidates 0002/0002b/0002c were host-only; only 0002d was flashed.
+- BOOT p39 written/readback verified with 0002d SHA256
+  5b6f46f7b23bf813fe558d5717257b3d250067bf8bfbe3ca35300de84b7e6b3e.
+- ADB did not return after reboot. User reports bootlooping with brief
+  early text described as prtval and whatnot. No exact panic text or
+  recovered markers. EL1/16 KiB execution is unproven; root cause unknown.
+  Distinguish probe failure from Linux failure after return. CPU capability
+  from 0001 remains valid; actual 16 KiB translation is not established.
+- Manual Download mode requested to restore verified Magisk BOOT. Restore
+  pending USB enumeration; no further experiment until Android is recovered.

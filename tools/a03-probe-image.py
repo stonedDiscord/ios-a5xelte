@@ -10,6 +10,7 @@ from pathlib import Path
 import struct
 import subprocess
 import tempfile
+import shutil
 
 BASE_SHA256 = '94fa7c5347b00e49fe1dc60a4edae958ddd5dac9accdbcddbeb743b5215e9ce7'
 ROOT = Path(__file__).resolve().parent.parent
@@ -19,12 +20,16 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('base', type=Path)
     p.add_argument('output', type=Path)
+    p.add_argument('--mmu16k', action='store_true', help='test EL1 and a 16K mapping before Linux')
+    p.add_argument('--elf', type=Path, help='keep linked diagnostic ELF in a private output directory')
     a = p.parse_args()
     b = a.base.read_bytes()
     if hashlib.sha256(b).hexdigest() != BASE_SHA256:
         p.error('requires exact verified A035GXXS5CXA1 Magisk base')
     if a.output.exists():
         p.error('output exists; choose another private path')
+    if a.elf and a.elf.exists():
+        p.error('ELF output exists')
     ks, _, rs, _, ss, _, _, page, version = struct.unpack_from('<9I', b, 8)
     assert b[:8] == b'ANDROID!' and version == 2 and page == 2048 and not ss
     kernel = b[page:page+ks]
@@ -38,23 +43,32 @@ def main():
     probe_off = (ks+15)&~15
     with tempfile.TemporaryDirectory(prefix='a03-probe-') as tmp:
         t = Path(tmp)
-        for name in ('boot-entry.S', 'boot-probe.c'):
+        names=['boot-entry.S','boot-probe.c']
+        if a.mmu16k:
+            names += ['mmu16k.S','mmu16k.c']
+        for name in names:
             subprocess.run(['clang','--target=aarch64-none-elf','-march=armv8-a',
                 '-O2','-ffreestanding','-fno-builtin','-fno-stack-protector',
                 '-mgeneral-regs-only','-mstrict-align','-fno-pic',
-                '-Wall','-Wextra','-Werror','-c',str(ROOT/'shim/a03'/name),
+                '-Wall','-Wextra','-Werror',*(['-DA03_MMU16K'] if a.mmu16k else []),
+                '-c',str(ROOT/'shim/a03'/name),
                 '-o',str(t/(name+'.o'))],check=True)
         (t/'probe.ld').write_text('ENTRY(a03_boot_probe_entry) SECTIONS { . = '+
-            str(probe_off)+'; .text : { *(.text.entry) *(.text*) *(.rodata*) } '+
+            str(probe_off)+'; .entry : { *(.text.entry) } '+
+            '.text : { *(.text*) *(.rodata*) } '+
+            'a03_probe_end = .; '+
             '/DISCARD/ : { *(.comment) *(.note*) *(.eh_frame*) } }')
         subprocess.run(['ld.lld','-T',str(t/'probe.ld'),
-            '--defsym=original_entry='+str(entry),str(t/'boot-entry.S.o'),
-            str(t/'boot-probe.c.o'),'-o',str(t/'probe.elf')],check=True)
+            '--defsym=original_entry='+str(entry),*[str(t/(n+'.o')) for n in names],
+            '-o',str(t/'probe.elf')],check=True)
         subprocess.run(['llvm-objcopy','-O','binary',str(t/'probe.elf'),
                         str(t/'probe.bin')],check=True)
         probe = (t/'probe.bin').read_bytes()
+        if a.elf:
+            a.elf.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copyfile(t/'probe.elf',a.elf)
     image_size,=struct.unpack_from('<Q',kernel,16)
-    assert len(probe)<0x6000 and probe_off+len(probe)<image_size
+    assert len(probe)<0x20000 and probe_off+len(probe)<image_size
     newkernel=bytearray(kernel+bytes(probe_off-ks)+probe)
     struct.pack_into('<I',newkernel,0,0x14000000 | (probe_off//4))
     # Android v2 ID covers kernel/ramdisk/second/recovery_dtbo/dtb.

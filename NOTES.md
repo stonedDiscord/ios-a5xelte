@@ -2,6 +2,13 @@
 
 ## Active A03 handoff — 2026-11-13
 
+LATEST: EL1/16 KiB probe 0002d bootloops (user observation), no recovered
+markers. BOOT p39 candidate SHA256:
+5b6f46f7b23bf813fe558d5717257b3d250067bf8bfbe3ca35300de84b7e6b3e.
+Manual Download mode requested; restore verified Magisk BOOT first.
+Pending USB enumeration. Earlier restored state below predates this test.
+No verified 16 KiB MMU operation or XNU boot. See latest A03 progress.
+
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
 Read `A03_PROGRESS.md` and `docs/a03-bringup.md`. A locally built static
