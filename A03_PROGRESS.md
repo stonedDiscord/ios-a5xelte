@@ -566,3 +566,23 @@ User transcribed (minor spelling differences preserved in original chat):
   upload successful, rebooted device, exit 0. No independent readback.
 - Current BOOT is trial 0004-poll. Requested final A03 STEP marker/panic
   or partial line from display. No runtime result yet; only BOOT written.
+
+### Trial 0004-poll last marker: before LOCKDOWN callbacks
+
+- User transcribed DTrace, trust-cache unavailable, then exactly
+  A03 STEP before LOCKDOWN callbacks, with no later marker supplied.
+- This brackets output but does not establish a failing callback: the
+  marker helper still called ml_set_interrupts_enabled(enabled) after
+  printing. Source shows that routine may run AST_URGENT scheduling before
+  returning; the dispatcher itself has not yet been proven entered.
+- Refine patch 0084: polling markers save/mask/restore DAIF directly,
+  avoiding scheduling/debug paths in the helper; clear interrupt-mask
+  timing accounting before restoring an originally enabled state, matching
+  the slow-console exemption used in kprintf. This is diagnostic timing
+  behavior only; it does not disable IRQs across startup callbacks.
+- Add dispatcher-entry, current phase, cursor/end, callback address/argument
+  and callback-return polling markers for LOCKDOWN. Avoid formatted
+  initializer logging for that phase. No initializer or lockdown skipped.
+- Extracted helper compiles locally for arm64-apple-darwin with warnings
+  as errors; patch application and profile staging pass. Kernel integration
+  and runtime still need CI/BOOT test. No new phone write yet.

@@ -2,16 +2,14 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: CI 43507759809 PASSED (ac2b362); polling diagnostic kernel
-59cae843...14fab41 verified against manifest and disassembly. Trial
-0004-poll BOOT SHA256
-9328ed5ee0ac16d1449f15bd75e589586c468e19fa57750a7732a5d440999e23
-successfully uploaded by Heimdall, 100%, reboot, exit 0; no independent
-partition readback. Phone now booting 0004-poll. Requested final A03 STEP
-marker/panic, outcome pending. Diagnostic patch bypasses normal logging
-at lockdown phase completion; startup operations are not skipped.
-Previous 0003-trace stopped literally mid-line reached phas[e]. No claim
-of root cause yet. No iOS rootfs/storage/USB. Preserve recovery/EFS/NV.
+Latest 0004-poll screen ends "A03 STEP before LOCKDOWN callbacks".
+Do not conclude a callback hangs: helper's interrupt restore can enter
+AST scheduling before dispatcher. Refined 0084 uses direct DAIF save/mask/
+restore plus slow-console accounting reset, and adds raw dispatcher phase,
+cursor/end, callback enter/arg/return addresses. Helper cross-compile and
+patch/profile checks pass. New kernel CI pending, no new flash.
+Current BOOT 0004-poll 9328ed5e...0999e23, kernel 59cae843...14fab41.
+No iOS rootfs/storage/USB. Preserve recovery/bootloaders/EFS/NV.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
