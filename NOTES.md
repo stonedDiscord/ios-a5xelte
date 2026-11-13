@@ -10,7 +10,8 @@ patches 0020/0023/0027/0032/0033 and required BearSSL staging script;
 patch application, source fetch and 20 SHA-1 digest tests pass locally.
 Fix be14062 pushed; CI 43491007355 STUCK in Set up job, no compile.
 Force-cancel HTTP 202 accepted 19:55:18 UTC; completion not yet confirmed.
-Runner-scoped concurrency change permits macos-15 ARM pool retry.
+Runner isolation a93ce7e pushed; new ARM run 43496849574 dispatched.
+User requests no further cancellation attempts on the old run.
 Download mode requested; no corrected kernel artifact yet.
 Phone still displays trial 0001; no recovery/other partition writes.
 BOOT hash 2313ba80...84284fe, CI kernel 91d3c7c3...f817dcf from run

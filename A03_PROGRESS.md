@@ -386,3 +386,7 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
   runner cannot hold the alternate ARM pool behind the same branch lock.
   Retry on macos-15 (arm64 host), retaining explicit ARM64 kernel target.
   Both runner labels are supported; this is a host provisioning workaround.
+
+- Runner isolation committed a93ce7e; new run 43496849574 dispatched on
+  macos-15 ARM64. User requests starting a new run rather than further
+  cancellation attempts. Leave old run alone; new group is independent.
