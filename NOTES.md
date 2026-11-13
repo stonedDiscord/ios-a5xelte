@@ -2,17 +2,17 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 2026-11-14: user reports 0009 before/after VM restrictions, then
-before kperf CPU wait; no after-wait marker. Source immediately waits for
-CPU driver publication. Definite config defect found: ADT arm,cortex-a55
-but SweetCPU IONameMatch qcom,kryo470. New A03-only patch 0087 fixes match
-and CPU display name; does not skip registration/SGI validation or wait.
-Source 4e90279 dispatched as CI 43526118698 with 0086 BSD fix and 0087 CPU match. Use this run for next flash, not BSD-only predecessor.
-Current phone BOOT remains 0009-cpubsd, normal IRQ masking, no rootfs.
-0009 image SHA256 26cf151d8b52ed9977e62e80d1535c46b900b2dae90a44ad27fd9ddb7d000edb.
-Previous CI 43524594391 has BSD fix only, CPU match still wrong there.
-Next: verify corrected artifact, BOOT trial, CPU/SGI/BSD progress, then
-RAM-backed test PID1 and actual iOS filesystem/display work.
+Latest 2026-11-14: BOOT 0010-cpumatch uploaded 100%, success, reboot,
+Heimdall exit 0. CI 43526118698 source 4e90279 passed; manifest matches.
+Kernel SHA256 f3b7de775b74b27d17c89c19081e5a9488988c8161292a7b75266e43c2b340f8.
+Image SHA256 7af08504a558c1517bf996535cb0670ddbded54f2157ebc85d9e93eb3f231543.
+Actual Cortex-A55 personality verified; complete CPU start/initCPU, kperf,
+BSD init and polling helpers verified SIMD-free. Normal IRQ mask, no rootfs.
+Runtime CPU/SGI/publication/after-kperf/BSD/panic lines requested. Labels
+still say 0009. No independent partition readback. Current BOOT 0010.
+Previous 0009 stopped before kperf CPU wait; CPU match was donor Kryo470
+while ADT was Cortex-A55. That mismatch fixed, device outcome pending.
+Next: CPU/timer + BSD, RAM-backed test PID1, then actual iOS root/display.
 Preserve non-BOOT partitions; private static test init not attached/run.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a

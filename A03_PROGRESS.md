@@ -798,3 +798,23 @@ User transcribed (minor spelling differences preserved in original chat):
 - Current phone BOOT remains 0009, no further device write in this step.
 
 - CPU-match fix committed/pushed 4e90279. New CI 43526118698 dispatched on macos-15-intel, includes BSD fix 0086. Ignore old BSD-only build for next flash.
+
+### 2026-11-14: trial 0010 CPU-match build verified and BOOT uploaded
+
+- CI 43526118698 passed at source 4e90279. Plain arm64 kernel SHA256
+  f3b7de775b74b27d17c89c19081e5a9488988c8161292a7b75266e43c2b340f8
+  matches artifact manifest. Actual personality matches arm,cortex-a55;
+  old qcom,kryo470 personality absent. BSD/CPU marker strings present.
+- Complete symbol disassembly checked: checkpoint/address 42/97,
+  SweetCPU::start/initCPU 200/65, kperf_init_early 32, bsd_init 1008
+  instructions. No FP/SIMD operands in these functions. This specifically
+  verifies that 0086 applied BSD's compiler flag in the correct make target.
+- Packaged 0010-cpumatch, normal IRQ masking, same ADT/loader/trace args,
+  no rootfs. Image SHA256
+  7af08504a558c1517bf996535cb0670ddbded54f2157ebc85d9e93eb3f231543.
+  Host checks passed; entry PA 0x103470488, ADT PA 0x104000000.
+- User confirmed fresh Download mode, USB detected 04e8:685d. Heimdall
+  retrieved PIT, uploaded boot 100%, success, reboot, exit 0. BOOT only;
+  no independent partition readback. Current BOOT 0010-cpumatch.
+- Requested CPU registration/SGI/publication, after-kperf/BSD or panic
+  lines/photo. Diagnostic labels still say 0009. Runtime result pending.
