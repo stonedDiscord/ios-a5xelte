@@ -2,23 +2,18 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: 0007 photo confirms progress past LOCKDOWN, original IRQ mask
-restoration, kext cleanup, machine lockdown and IOKit matching in a pass.
-User confirms physical BOTTOM lines remain trust-cache unavailable and
-diagnostic IRQ mask active. Do not conflate physical order with time.
-Console source wraps rows modulo height, clearing current+following row;
-blank band after platform expert registered fits that being newest in
-this pass. Still photo cannot exclude a repeated boot; current PC unknown.
-No panic visible. HPPIR1=0x3ff, CNTV_CTL=1; saved DAIF ends 0200;
-phase=0x10, cursor=end=fffffe0007c00a88 (no remaining callbacks there).
-XNUPOST returned with No POST boot-arg set (tests not proven executed).
-IOKit registration is asynchronous; next stall not yet located. Inspect
-vm_set_restrictions/kperf/bsd_init and CPU service waits next. No rootfs yet.
-Current BOOT remains 0007-nosimd, SHA256
-82ca0e5aea66bb4f8892cdc232d041b34cabd0b619bae0ba420432fff0dd7603.
-Kernel CI 43517629744 source 5a4cca7, actual helpers verified SIMD-free.
-Retained a03_lockdown_mask=1; test without mask still outstanding.
-Preserve recovery/bootloaders/EFS/NV/USERDATA.
+Latest: BOOT 0008-unmasked uploaded 100%, success, reboot, Heimdall exit 0.
+Same verified 0007 kernel but removed a03_lockdown_mask (default false).
+Image SHA256 998cf4de4d0f8d35c8e1ed5547a3da54d50ce23b9d1e0921425d938151ee2b81.
+Screen outcome pending. New 0085 patch prepared for CPU/BSD diagnostics:
+actual SweetCPU::start uses SIMD zeroing before processor registration;
+kperf waits for CPU publication. Suspect only, not proven runtime cause.
+0085 enforces general-register codegen on CPU/kperf/BSD objects and adds
+CPU registration/SGI/max-CPU + VM/kperf/BSD polling markers. CI pending.
+0007 photo includes lockdown/IRQ restoration/IOKit/platform registration;
+physical bottom trust-cache/IRQ-mask-active lines remain, console wraps.
+Next: CPU/timer + BSD, RAM-backed static PID1, then real iOS root/display.
+No rootfs attached; no iOS runtime yet. Preserve all non-BOOT partitions.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

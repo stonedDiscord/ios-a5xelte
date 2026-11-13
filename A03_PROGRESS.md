@@ -727,3 +727,28 @@ User transcribed (minor spelling differences preserved in original chat):
   unobserved reset. The visible later milestones establish that a pass
   reached them, but the exact current execution location remains unproven.
 - No build or flash performed for this clarification.
+
+### Trial 0008 normal IRQ comparison and CPU/BSD diagnostic preparation
+
+- Found actual 0007 SweetCPU::start code uses movi v0 and eight q0 stores
+  to zero ml_processor_info_t before ml_processor_register. Same unsafe
+  SIMD pattern as the corrected startup formatter. Not yet proven reached.
+- kperf_init_early calls ml_wait_max_cpus, which sleeps until CPU driver
+  publishes ml_set_max_cpus; no CPU completion marker appears in the photo.
+  CPU registration/codegen is a concrete next suspect, not a proven fault.
+- Added A03-only patch 0085: general-register codegen for SweetCPU.cpo,
+  kperf.o and bsd_init.o, polling markers for CPU identity/registration,
+  processor_start/SGI test/max-CPU publication, VM/kperf/BSD entry and BSD
+  initialization stages. No CPU/interrupt tests or startup waits bypassed.
+  Patch reverse application/profile staging pass; full compile pending.
+- While preparing CI, packaged existing verified 0007 kernel without
+  a03_lockdown_mask, leaving its default false. Trial 0008-unmasked SHA256
+  998cf4de4d0f8d35c8e1ed5547a3da54d50ce23b9d1e0921425d938151ee2b81.
+  Same ADT/loader/trace args otherwise, host bounds checks passed.
+- User put phone into Download mode; Heimdall retrieved PIT, uploaded boot
+  100%, reported success, rebooted, exit 0. Only BOOT written, no independent
+  readback. Current BOOT 0008-unmasked; screen result pending.
+- Route to userspace: establish CPU/timer scheduling and BSD startup;
+  use RAM-backed mockfs/static test init to prove PID1/syscalls first;
+  then filesystem and actual iOS userspace/display dependencies. Test init
+  is not iOS SpringBoard. Existing tools/mkinit.py and sweet-init.S reusable.
