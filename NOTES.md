@@ -2,14 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
-LATEST: corrected probe 0003 PASSED actual EL1 16 KiB MMU alias read/write
-and unmapped-address checks, HVC return to EL2, then Android boot-complete
-1. Current BOOT is working 0003 with Magisk retained, readback verified:
-39519780c9ceedaaeb922a7921085a331ba5e8f229d0460acc7e10b45d217b72.
-Earlier 0002d bootloop was reporter clobbering AVB hash_alg; diagnosed
-from saved pstore, fixed with regression test. Next: EL1 GICv3/timer IRQ
-probe, then A03 16K XNU build profile. No XNU or SMP claim. Later history
-below predates 0003; see latest A03 progress for definitive current state.
+LATEST: probe 0003 passed EL1 16 KiB translation and returned to Android.
+Current BOOT hash remains 39519780...d217b72. Native-16K A03 profile is
+committed c179b90; supported-runner correction 9178d8a. Follow-up CI fix
+pins ARM64 explicitly, verifies plain arm64 output, fixes Xcode discovery
+under pipefail and adds current runner choices. macos-15-intel is an x64
+host cross-compiling an ARM64 kernel. Run 43485104681 was queued before
+replacement. See A03_PROGRESS.md for the new run. No XNU artifact or A03
+XNU execution yet. Untracked shim/a03/xnu-* and tools/mkadt_a03.py are
+unfinished loader work; do not flash before validation.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

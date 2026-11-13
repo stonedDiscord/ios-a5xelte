@@ -271,3 +271,23 @@ a03y=000000005a000a03
 Next: verify GICv3 system-register access and virtual timer IRQ delivery
 at EL1 with a bounded returning probe, then build an A03 native-16K XNU
 profile. Do not infer XNU boot or all-core compatibility from 0003.
+
+## 2026-11-13: native-16K build profile and runner correction
+
+- c179b90 stages pinned SWEET core patches 0001..0018 plus newer iig
+  compatibility. Patches apply cleanly to xnu-8796.141.3; no kernel built yet.
+- 9178d8a replaced retired macOS 14 with macos-15-intel. GitHub's
+  runner-images issue 15226 confirms GitHub macOS 14 retirement on
+  November 2, 2026. Current README lists macos-15-intel as x64 and
+  macos-15 as arm64; host architecture does not select kernel architecture.
+- Explicitly set ARCH_CONFIG=ARM64 and check the SWEET kernel artifact
+  with lipo for plain arm64. The pinned build script already defaults to
+  ARM64; SWEET's machine patch selects ARMv8.2 without arm64e/PAC.
+- Add supported macos-26-intel, macos-26 and xcode-27 dispatch choices.
+  Alternative runners remain untested. Keep macos-15-intel as default.
+- Fix Xcode discovery under pipefail: absence of an Xcode_15 glob could
+  otherwise abort before the fallback. Workflow YAML, every embedded
+  shell step's syntax and Xcode Python syntax passed local validation.
+- Run 43485104681 remained queued before replacement with this fix.
+  Local XNU loader/ADT files are still uncommitted work in progress,
+  not a validated flash candidate. Phone remains at successful probe 0003.
