@@ -372,3 +372,17 @@ profile. Do not infer XNU boot or all-core compatibility from 0003.
   kernel integration; the CI build/device result remain pending.
 - Requested manual Download mode while building, because trial 0001 has
   no ADB driver. No subsequent partition write yet.
+
+### GitHub runner provisioning stalled; switch runner pool
+
+- User reports crypto build 43491007355 never started and cannot cancel.
+  API confirms only Set up job in progress since 19:18:53 UTC; no checkout,
+  dependency step or compilation. Previous handoff calling it in progress
+  described workflow status, not compiler activity. No corrected artifact.
+- At 19:55:18 UTC, POST force-cancel returned HTTP 202 Accepted. Immediate
+  follow-up still reported in_progress; cancellation not yet confirmed.
+  Logs endpoint returned 404 (no available job logs).
+- Include runner label in workflow concurrency group so the wedged Intel
+  runner cannot hold the alternate ARM pool behind the same branch lock.
+  Retry on macos-15 (arm64 host), retaining explicit ARM64 kernel target.
+  Both runner labels are supported; this is a host provisioning workaround.

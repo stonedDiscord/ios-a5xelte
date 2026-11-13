@@ -32,7 +32,8 @@ on:
       - ".github/workflows/xnu.yml"
 
 concurrency:
-  group: xnu-${{ github.ref }}
+  # Isolate runner pools so a stuck host cannot block a different runner.
+  group: xnu-${{ github.ref }}-${{ inputs.runner || 'macos-15-intel' }}
   cancel-in-progress: true
 
 env:

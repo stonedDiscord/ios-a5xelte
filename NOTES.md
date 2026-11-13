@@ -8,7 +8,10 @@ through g_crypto_funcs. Caller 0xfffffe0007a3caec is sleh_synchronous_sp1.
 Minimal profile omitted portable SHA-1 provider. Added pinned SWEET crypto
 patches 0020/0023/0027/0032/0033 and required BearSSL staging script;
 patch application, source fetch and 20 SHA-1 digest tests pass locally.
-Fix be14062 pushed; CI 43491007355 in progress. Download mode requested.
+Fix be14062 pushed; CI 43491007355 STUCK in Set up job, no compile.
+Force-cancel HTTP 202 accepted 19:55:18 UTC; completion not yet confirmed.
+Runner-scoped concurrency change permits macos-15 ARM pool retry.
+Download mode requested; no corrected kernel artifact yet.
 Phone still displays trial 0001; no recovery/other partition writes.
 BOOT hash 2313ba80...84284fe, CI kernel 91d3c7c3...f817dcf from run
 43485850320. Missing hardware-debugger handshake is secondary panic text.
