@@ -685,3 +685,29 @@ User transcribed (minor spelling differences preserved in original chat):
   Only BOOT written; no independent partition readback.
 - Current BOOT is 0007-nosimd. Requested final register/callback/panic or
   partial display lines. Physical runtime evidence pending.
+
+### Trial 0007 physical display evidence: past lockdown into IOKit
+
+- Inspected user photo IMG_20261113_233441_353.jpg directly (private local
+  photo, not added to git). Console wraps: older trust-cache/policy output
+  remains in the lower display; the last new visible marker is
+  SWEET: platform expert registered. No panic is visible in this photo.
+- Visible diagnostics: saved DAIF ends in 0200 (upper digits partly
+  obscured); pending Group1 00000000000003ff; virtual timer ctl
+  0000000000000001; phase before 0000000000000010; cursor and end both
+  fffffe0007c00a88. Thus this dispatcher invocation had no remaining entries.
+- Visible completion markers: LOCKDOWN init callbacks done, after LOCKDOWN
+  callbacks, restoring original IRQ mask, original IRQ mask restored,
+  after kext bootstrap cleanup, after machine lockdown, after XNUPOST,
+  after IOKit matching, SWEET starting device-tree platform expert, and
+  SWEET platform expert registered. XNUPOST reports No POST boot-arg set;
+  its return does not establish that the POST test suite ran.
+- Trial 0007 demonstrably progresses past the former diagnostic stop. This
+  is consistent with the SIMD correction, though the opt-in IRQ mask is
+  still enabled and has not been independently removed for comparison.
+- IOKit matching is asynchronous; platform-expert registration alone does
+  not locate the next stall. The photo does not establish bsd_init/root
+  mounting/userspace entry. Next diagnostic area: vm_set_restrictions,
+  kperf_init_early and bsd_init entry, plus CPU service publication/waits.
+- No additional build or phone write from this photo inspection. Current
+  BOOT remains 0007-nosimd; no rootfs/storage/USB driver yet.

@@ -2,17 +2,19 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest: CI 43517629744 PASSED (5a4cca7), plain arm64 kernel SHA256
-bc4431d7fb9727fb7d3cb750d1bf9f4a413bfae144ebf6075b58e6b8c9e3b386.
-Both complete diagnostic helpers checked in actual Mach-O: no SIMD,
-42/97 instructions, return present. Trial 0007-nosimd BOOT flashed:
-Heimdall PIT read, boot 100%, success, reboot, exit 0. Image SHA256
+Latest: 0007 photo confirms progress past LOCKDOWN, original IRQ mask
+restoration, kext cleanup, machine lockdown and IOKit matching. Last new
+visible line: SWEET: platform expert registered. Console wrapped; old
+trust-cache/IRQ-mask-active text below it is not the current stopping point.
+No panic visible. HPPIR1=0x3ff, CNTV_CTL=1; saved DAIF ends 0200;
+phase=0x10, cursor=end=fffffe0007c00a88 (no remaining callbacks there).
+XNUPOST returned with No POST boot-arg set (tests not proven executed).
+IOKit registration is asynchronous; next stall not yet located. Inspect
+vm_set_restrictions/kperf/bsd_init and CPU service waits next. No rootfs yet.
+Current BOOT remains 0007-nosimd, SHA256
 82ca0e5aea66bb4f8892cdc232d041b34cabd0b619bae0ba420432fff0dd7603.
-Current BOOT 0007-nosimd; final A03 STEP registers/callbacks/panic requested,
-physical runtime pending. No independent partition readback.
-0006 stopped at diagnostic IRQ mask active; its address formatter used SIMD
-for buffer initialization, a possible diagnostic trap (not proven IRQ fault).
-Retained a03_lockdown_mask=1 for comparison. No iOS rootfs/storage/USB.
+Kernel CI 43517629744 source 5a4cca7, actual helpers verified SIMD-free.
+Retained a03_lockdown_mask=1; test without mask still outstanding.
 Preserve recovery/bootloaders/EFS/NV/USERDATA.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
