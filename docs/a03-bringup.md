@@ -1,10 +1,10 @@
 # Galaxy A03 SM-A035G initial checkpoint
 
-Probe 0001 returned successfully. Experimental --mmu16k probe 0002d
-bootlooped on 2026-11-13; do not repeat it without diagnosing the return
-failure. No 16 KiB translation success is established. Restore the verified
-Magisk BOOT through Download mode before further tests. See the latest
-A03_PROGRESS.md entry for the current recovery state.
+Probe 0003 successfully ran EL1 with actual 16 KiB translation and returned
+through EL2 to Android on 2026-11-13. It is the current working BOOT, with
+Magisk retained. Probe 0002d bootlooped because its reporter removed an
+AVB argument needed by init; that reporter bug is fixed. See the latest
+A03_PROGRESS.md entry for exact results and hashes.
 
 Read `A03_PROGRESS.md` first. The A03 is UNISOC ums9230/T606, not an
 Exynos phone. Do not boot donor S8/S7/A5 images or reuse their MMIO,
@@ -54,7 +54,24 @@ CNTFRQ respectively. It preserves boot arguments x0..x3, SP, LR and DAIF,
 then branches back to the original kernel entry. It performs no MMIO or
 storage writes. Restore Magisk BOOT after collecting evidence.
 
-Actual boot entry is **EL2**, unlike the Samsung Exynos donors. The next
-probe must establish an EL1 transition before an XNU jump. Keep recovery,
+Actual boot entry is **EL2**, unlike the Samsung Exynos donors. Probe 0003
+established the EL1 transition and actual 16 KiB mapping before returning
+to EL2 and Linux. GIC/timer interrupts are the next checkpoint. Keep recovery,
 bootloaders, vbmeta and EFS/NV intact; no wipe is required for these tests.
 A03s/A03 Core and other variants are not interchangeable firmware targets.
+
+## Reproduce the successful 16 KiB host build
+
+```sh
+python3 tools/a03-test-reporter.py backup/galaxy-a03-2026-11-13/live/live.dtb
+python3 tools/a03-probe-image.py \
+  backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img \
+  shim/a03/out/a03-boot-probe-NEW.img --mmu16k \
+  --elf shim/a03/out/a03-boot-probe-NEW.elf
+```
+
+The EL1 test uses Normal NC pages, MMU enabled and caches disabled.
+Success t=0x16384 means alias read/write and unmapped-VA AT check passed.
+Other markers: l=CurrentEL, q=TCR, u=SCTLR with MMU on, a=alias PAR,
+y=EL2 return ESR (expected HVC64 0x5a000a03). The reporter regression
+check stubs hardware results; it tests FDT mutation, not MMU emulation.

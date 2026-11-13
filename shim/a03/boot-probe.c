@@ -70,24 +70,24 @@ void a03_boot_probe(unsigned char *fdt)
     uint32_t size=0;
     unsigned char *args=bootargs(fdt,&size);
     if (!args) return;
+#ifndef A03_MMU16K
     REPORT("androidboot.em.model=SM-A035G",'m',id_aa64mmfr0_el1);
     REPORT("androidboot.pcbainfo=EU_PCBA3_DCAM_MP",'i',midr_el1);
     REPORT("androidboot.carrierid.param.offset=9437644",'p',mpidr_el1);
     REPORT("androidboot.sales.param.offset=9437648",'e',CurrentEL);
     REPORT("androidboot.sn.param.offset=9437392",'s',sctlr_el1);
     REPORT("androidboot.ddrsize.range=[4096,5120)",'f',cntfrq_el0);
-#ifdef A03_MMU16K
+#else
     a03_test_el1();
 #define RESULT(needle,key,index) report(args,size,needle,sizeof(needle)-1,key,a03_mmu_result[index])
-    RESULT("androidboot.sb.debug0=0x0",'t',0);
-    RESULT("androidboot.carrierid=EUX",'l',1);
-    RESULT("androidboot.sales_code=DBT",'q',2);
-    RESULT("androidboot.debug_level=0x4f4c",'u',3);
-    RESULT("androidboot.dram_info=D1,35,F5,4G",'a',5);
-    RESULT("androidboot.lwfq.type=1",'v',6);
-    RESULT("androidboot.vbmeta.avb_version=1.1",'n',7);
-    RESULT("androidboot.vbmeta.invalidate_on_error=yes",'x',8);
-    RESULT("androidboot.vbmeta.hash_alg=sha256",'y',10);
+    /* Reuse only the six slots already tested in probe 0001. AVB and
+     * verity arguments are required by Android init and must survive. */
+    RESULT("androidboot.em.model=SM-A035G",'t',0);
+    RESULT("androidboot.pcbainfo=EU_PCBA3_DCAM_MP",'l',1);
+    RESULT("androidboot.carrierid.param.offset=9437644",'q',2);
+    RESULT("androidboot.sales.param.offset=9437648",'u',3);
+    RESULT("androidboot.sn.param.offset=9437392",'a',5);
+    RESULT("androidboot.ddrsize.range=[4096,5120)",'y',10);
 #undef RESULT
 #endif
 }

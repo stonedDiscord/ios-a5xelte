@@ -10,7 +10,8 @@ Pre-Linux probe 0001 read MMFR0 0x101122 on the boot Cortex-A55. Its
 TGran16 field is 1 (supported), TGran4 field 0 (supported). Prefer a
 native 16 KiB XNU for initial A03 bring-up. We have not yet installed
 16 KiB translation tables or sampled the two A75 CPUs before Linux.
-Validate translation and every additional CPU before claiming 16 KiB SMP.
+Probe 0003 subsequently verified actual 16 KiB translation on the boot
+A55. Validate every additional CPU before claiming 16 KiB SMP.
 
 A03 live DT has GICv3 and PSCI/SMC. SWEET's native 16 KiB/GICv3 direction
 fits this better than continuing the Exynos HEROLTE/A5XELTE 4 KiB/GICv2
@@ -60,8 +61,8 @@ expects EL1; our own EL2 setup is still required.
 
 ## Next execution checkpoint
 
-Use the cloned stock kernel's EL2 setup and live DT to verify EL1 entry
-and an actual 16 KiB mapping in a returning probe, then timer/GIC IRQs.
+EL1 entry and an actual 16 KiB mapping were subsequently verified by
+returning probe 0003. Next verify timer/GIC IRQs using the live DT.
 After that, implement a separately named A03 16 KiB build profile with
 the pinned donors and no unreviewed peripheral initialization. No kernel
 build, source rebase, donor-image flash or iOS version upgrade occurred

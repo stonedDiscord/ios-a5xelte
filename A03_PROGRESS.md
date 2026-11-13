@@ -207,3 +207,67 @@ replacement build has yet been implemented.
   from 0001 remains valid; actual 16 KiB translation is not established.
 - Manual Download mode requested to restore verified Magisk BOOT. Restore
   pending USB enumeration; no further experiment until Android is recovered.
+
+### Recovery and root cause of the 0002 bootloop
+
+- User entered stock recovery, then Download mode. Heimdall 2.2.2
+  restored only boot from the verified Magisk BOOT: upload 100%, success,
+  exit 0, reboot. ADB/root returned and BOOT SHA256 matched 94fa7c53...
+  Full boot-complete was subsequently 1 before the next test.
+- Preserved dmesg-ramoops-0 and console-ramoops-0 privately under
+  live/probe-0002-pstore. Panic was Linux init at 1.69 seconds:
+  libfs_avb reported Unknown hash algorithm (empty), then failed to create
+  AvbVerifier, mount /system, and panicked attempting to kill init.
+- Root cause: the probe reporter replaced androidboot.vbmeta.hash_alg
+  (and two other vbmeta arguments) with markers. This was an agent error
+  in diagnostic output selection, not evidence of failed 16 KiB hardware.
+  Linux did execute after the probe. Mapping success still unverified
+  until markers are recovered in the corrected test.
+- User explicitly authorized another boot attempt without requiring a
+  working phone between each test. Keep writes scoped to BOOT.
+
+### Corrected probe 0003
+
+- --mmu16k now reuses only the six in-place argument slots already tested
+  in 0001. AVB, verity and mount arguments are preserved. Host execution
+  of the reporter on the saved live FDT with a stubbed EL1 test confirmed
+  marker insertion and preservation of essential Android arguments.
+- Candidate 0003 SHA256
+  39519780c9ceedaaeb922a7921085a331ba5e8f229d0460acc7e10b45d217b72.
+  Built, checked alignment, flashed BOOT p39, verified complete readback
+  hash and rebooted. Markers now t=status, l=CurrentEL, q=TCR_EL1,
+  u=SCTLR_EL1 while enabled, a=alias PAR_EL1, y=EL2 return ESR.
+  Device result: **PASS**, all six markers recovered, Android boot-complete
+  1 and boot animation stopped. BOOT readback still matches candidate.
+
+```text
+a03t=0000000000016384
+a03l=0000000000000004
+a03q=00000001409cb01c
+a03u=0000000030d00801
+a03a=4400000081734b00
+a03y=000000005a000a03
+```
+
+- t=0x16384 is emitted only after alias read, alias write visible through
+  identity mapping, and an unmapped VA AT fault check succeed.
+- l=4 confirms execution at EL1; TCR 0x1409cb01c gives TG0=2 (16 KiB),
+  T0SZ=28 (36-bit VA, L2 start). SCTLR_EL1 M=1, C=I=0 during the test.
+- PAR alias output maps to the test word PA 0x81734000 with Normal NC
+  attributes. Probe identity RAM was 0x8171c000..0x81738000; alias word
+  VA 0x41734000. Only probe pages were mapped.
+- ESR_EL2 0x5a000a03 is HVC64 with the expected immediate 0xa03, proving
+  the intended return to EL2. Register state restored before Linux entry.
+- Actual 16 KiB MMU operation and EL2->EL1->EL2 round trip now verified
+  on the boot A55. Caches, GIC/timer interrupts, other CPUs and XNU remain
+  untested. Raw support and mapping operation are separate checkpoints.
+- Current on-phone BOOT is **successful probe 0003**, retaining Magisk,
+  not the unmodified Magisk image. User authorizes ongoing test BOOTs.
+  No additional restore reboot needed for this working checkpoint.
+- Added tools/a03-test-reporter.py: runs the compiled C reporter against
+  private live FDT with stub hardware results; asserts only six approved
+  slots change, with all AVB and remaining bytes preserved. Passed.
+
+Next: verify GICv3 system-register access and virtual timer IRQ delivery
+at EL1 with a bounded returning probe, then build an A03 native-16K XNU
+profile. Do not infer XNU boot or all-core compatibility from 0003.
