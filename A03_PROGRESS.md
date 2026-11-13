@@ -796,3 +796,5 @@ User transcribed (minor spelling differences preserved in original chat):
 - Patch reverse validation passes. Rebuild includes existing BSD flag fix
   0086; inspect CPU match and BSD codegen in resulting artifact.
 - Current phone BOOT remains 0009, no further device write in this step.
+
+- CPU-match fix committed/pushed 4e90279. New CI 43526118698 dispatched on macos-15-intel, includes BSD fix 0086. Ignore old BSD-only build for next flash.

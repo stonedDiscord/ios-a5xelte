@@ -7,7 +7,7 @@ before kperf CPU wait; no after-wait marker. Source immediately waits for
 CPU driver publication. Definite config defect found: ADT arm,cortex-a55
 but SweetCPU IONameMatch qcom,kryo470. New A03-only patch 0087 fixes match
 and CPU display name; does not skip registration/SGI validation or wait.
-Next build must include 0086 BSD make-target fix plus 0087 CPU match.
+Source 4e90279 dispatched as CI 43526118698 with 0086 BSD fix and 0087 CPU match. Use this run for next flash, not BSD-only predecessor.
 Current phone BOOT remains 0009-cpubsd, normal IRQ masking, no rootfs.
 0009 image SHA256 26cf151d8b52ed9977e62e80d1535c46b900b2dae90a44ad27fd9ddb7d000edb.
 Previous CI 43524594391 has BSD fix only, CPU match still wrong there.
