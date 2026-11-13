@@ -12,8 +12,10 @@ Magisk setup/root works, and live BOOT/recovery/EFS/NV/DTBO/vbmeta backups
 have matching device hashes. First pre-Linux probe 0001 booted and returned
 six cmdline markers: EL2, A55 r2p0, MMFR0 0x101122 (4K/16K), 26 MHz. User
 confirmed Android home/lock screen. Restored Magisk BOOT, readback hash
-matched; clean reboot requested. No XNU yet. Next: inspect user's separate
-kernel clone, prove EL2-to-EL1 and GIC/timer before XNU. See A03 progress
+matched; clean reboot confirmed (`sys.boot_completed=1`, bootanim stopped).
+No XNU yet. User's separate kernel clone b48e9ddfd73a is clean; its head.S
+has the expected EL2 setup. Next: prove EL2-to-EL1 and GIC/timer before XNU.
+See A03 progress
 for hashes, live RAM/reservations and exact test results. Previous S8
 handoff and SWEET donor history remain below as historical reference.
 

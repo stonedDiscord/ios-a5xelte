@@ -153,11 +153,17 @@ later read 1. This is custom pre-Linux code execution, **not XNU boot**.
 
 - Restored known-working Magisk BOOT and independently verified readback
   SHA256 `94fa7c5347b00e49fe1dc60a4edae958ddd5dac9accdbcddbeb743b5215e9ce7`.
-  Requested a clean reboot after restore. Recovery/EFS/NV and all other
+  Clean reboot after restore verified: ADB/root returned, readback hash
+  matched, probe markers absent, `sys.boot_completed=1`, bootanim stopped.
+  Recovery/EFS/NV and all other
   partitions were not written. Stock BOOT remains available for Odin or
   `heimdall flash --boot <stock-boot.img>` (PIT name is lowercase `boot`).
 - User is cloning A03 kernel source into `android_kernel_samsung_a03/`;
   keep the separate source checkout ignored and do not stage it.
+- Clone completed at `b48e9ddfd73a` with clean status. Read-only inspection
+  of `arch/arm64/kernel/head.S` confirms `stext` calls `el2_setup`, whose
+  non-VHE path initializes HCR_EL2 and timer access before entering EL1.
+  The source was not changed or included in the parent commit.
 
 ### Next step after first probe
 
