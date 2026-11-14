@@ -1224,3 +1224,16 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   Manifest beside image. Restore Magisk BOOT hash verified. NOT flashed yet;
   live Download session retained after PIT retrieval, flash needs --resume.
   Trial intentionally pauses before XNU; runtime GPT/BOOT success unproven.
+
+### 2026-11-14: 0018 GPT/current-BOOT diagnostic flashed
+
+- Commit9327668 contains loader/parser and actual-C host tests. Resumed
+  live Download session from PIT read. Heimdall retrieved PIT, uploaded only
+  boot100%, reported boot upload successful/reboot, exit0. No independent
+  partition readback. Flashed candidate SHA256
+  2b6683c9cd2d29a1536a7037b02d5e681b038a6ddb32ed457218cc42029d0d67.
+- Current BOOT0018. Await physical screen through row77: GPT array stored/
+  computed CRC, result code, boot/userdata start/count, BOOT header/payload
+  match or exact guard/failure. No GPT-entry/known-BOOT runtime success yet.
+  Only BOOT was written; no filesystem/card-sector writes by probe, no
+  recovery/bootloader/EFS/NV/USERDATA writes. XNU provider still pending.

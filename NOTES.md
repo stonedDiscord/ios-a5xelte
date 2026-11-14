@@ -2,6 +2,16 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0018 FLASHED: Heimdall --resume PIT/boot100%/reboot successful, exit0.
+Current BOOT0018 image SHA256
+2b6683c9cd2d29a1536a7037b02d5e681b038a6ddb32ed457218cc42029d0d67.
+No independent readback. Code/tests commit9327668. Await physical full
+screen through row77: GPT array CRCs/result, BOOT+USERDATA starts/counts,
+BOOT header and512 payload-byte match or guard/failure. No runtime success
+inferred from flash. XNU storage provider and Apple runtime remain pending.
+Prior PREPARED/NOT FLASHED notes below are historical.
+
+
 Latest0018 PREPARED: mode5 primary-GPT entry CRC/range/overlap checks, live
 PIT boot483328+131072/index38 and userdata15929344/index54, then current
 BOOT header plus512 payload bytes. Bounded read-only CMD17, pauses before
