@@ -69,6 +69,13 @@ BOOT0030 was then uploaded100% to `boot` and rebooted with Heimdall.
 USERDATA/protected partitions untouched. After8s no Download/ADB; await
 display/PID1 catalog output.
 
+User reports PHOTO171705 still shows catalog bytes zero. Raw/block reads
+complete but return zeros at offset0x2cd82000; no header result yet. Added
+opt-in header probe at USERDATA offset1024, locally compiled in header-only
+and combined modes. Not in CI or flashed. Inspect partition-LBA/SDMA transfer
+addressing and obtain header raw/block evidence before any USERDATA rewrite.
+No HFS mount, iOS launchd, or SpringBoard result.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

@@ -65,6 +65,9 @@ _start:
 #ifdef A03_CATALOG_TEST
 	bl	a03_catalog_test
 #endif
+#ifdef A03_HEADER_TEST
+	bl	a03_header_test
+#endif
 tick:
 	/* select(0, NULL, NULL, NULL, &5s) as a portable sleep */
 	mov	x0, #0
@@ -104,9 +107,12 @@ hello_tail:
 alive:
 	.ascii	"SWEET init: still alive\n"
 alive_end:
-#if defined(A03_STORAGE_TEST) || defined(A03_CATALOG_TEST)
+#if defined(A03_STORAGE_TEST) || defined(A03_CATALOG_TEST) || defined(A03_HEADER_TEST)
 #include "a03-storage-test.inc"
 #endif
 #ifdef A03_CATALOG_TEST
 #include "a03-catalog-test.inc"
+#endif
+#ifdef A03_HEADER_TEST
+#include "a03-header-test.inc"
 #endif

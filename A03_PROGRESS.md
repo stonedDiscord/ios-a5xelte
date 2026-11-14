@@ -1978,3 +1978,19 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Eight seconds later no Download or ADB USB interface was visible. Await a
   display photo containing the catalog probe output; no iOS userspace claim
   is made from this reboot alone.
+
+### 2026-11-14: BOOT0030 catalog probe still reads zero
+
+- User reports `IMG_20261114_171705_276.jpg` shows the catalog still reads
+  zero. This is consistent with BOOT0028's completed raw and block reads
+  returning sixteen zero bytes instead of the verified image prefix. It does
+  not establish the HFS volume-header contents or explain whether USERDATA
+  was written at the expected byte offset.
+- Added opt-in `A03_HEADER_TEST` to read512 bytes at USERDATA-relative offset
+  1024 through raw and block nodes, print the first16 bytes, and check the HFSX
+  `HX` signature. Local `clang` and `tools/mkinit.py` pass for header-only and
+  combined catalog+header modes; `git diff --check` passes.
+- This header probe has not yet run in CI or on the device. USERDATA and
+  protected partitions remain unchanged. Next, reconcile partition-relative
+  SDMA LBA translation and header bytes before considering another filesystem
+  write. No HFS mount, Apple launchd, or SpringBoard result is established.
