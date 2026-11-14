@@ -11,11 +11,21 @@ BOOT0012-hfs FLASHED successfully, SHA256
 RAM root0x104078000/32MiB; ADT0x106078000; entry0x10347c488.
 Manifest shim/a03/out/a03-xnu-0012-hfs.json. Exact segment/payload verified.
 User confirmed Download; USB detected. Heimdall boot100%, success, reboot,
-exit0. Current BOOT0012; no independent readback. HFS mount/PID1/heartbeat
-or panic/photo requested; runtime pending. Previous0011 mockfs PID1 works.
+exit0. Current BOOT0012; no independent readback. User now confirms md0/rmd0,
+A03TestRoot HFS mount, /sbin/launchd, static test PID1 and heartbeat.
+This establishes HFS RAM-root userspace execution. Previous0011 mockfs
+PID1 is retained as fallback. No Apple launchd/SpringBoard/GUI yet.
 Root edits reuse kernel; no XNU rebuild. Compiler cache seeded1050misses,
 0hits, saved; warm reuse untested. Preserve all non-BOOT partitions.
 This is test HFS root, not Apple launchd/iOS GUI. eMMC work still pending.
+Linux root builder added: mkfs.hfsplus -s, temporary loop mount, root-owned
+rsync copy, unmount/fsck, existing-kernel packaging. Local init matches
+working SHA256 exactly. Formatter HasFolderCount defect reproduced and
+repaired on a fresh temporary image; read-only fsck then passes. Complete
+Linux copy/mount test awaits interactive sudo (noninteractive password
+unavailable); docs/a03-filesystem.md has terminal commands. No new flash.
+Next hardware checkpoint: bounded read-only eMMC register/state inspection
+at 0x201d0000, then validated block reads; preserve all non-BOOT partitions.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

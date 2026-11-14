@@ -973,3 +973,19 @@ User transcribed (minor spelling differences preserved in original chat):
 - Current BOOT0012-hfs contains verified 32MiB HFSX RAM root and test init.
   Asked user HFS mount/PID1/heartbeat/panic lines or photo. Runtime pending;
   previous mockfs0011 PID1 success is not proof this HFS trial mounted.
+
+### 2026-11-14 MILESTONE: HFSX RAM root mounts and executes PID 1
+
+- User physically reports BOOT 0012: Added memory device md0/rmd0;
+  BSD root md0, major 1, minor 0; hfs mounted A03TestRoot on b(1,0);
+  load_init_program attempts /sbin/launchd; SWEET userspace init running
+  as PID 1; SWEET init still alive. Names normalized from transcription.
+- This confirms the real HFSX RAM filesystem mounted and supplied the
+  static test executable as PID 1. It is not Apple launchd, SpringBoard
+  or an iOS GUI; persistent eMMC access is still unimplemented.
+- Current BOOT remains 0012-hfs, SHA256
+  4951efd8eae4493980ba0b9fdb7495bfb2a06f88e44206f603f5c7ff1814b60d.
+  No further phone writes are needed to record this result.
+- Root file edits can reuse kernel c4c4e4a707ca4da82bd68318dfd187d7984d65fe4482999775e329af65ba942a
+  with a03-pack-root.py. Adding Linux HFSX creation removes macOS CI
+  from that loop; kernel changes still need the separate XNU build.
