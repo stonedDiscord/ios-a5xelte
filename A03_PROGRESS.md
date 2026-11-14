@@ -1872,7 +1872,6 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - BOOT0028 SHA256 is
   `e99ec4100f5a00028b5d24fc29b80e1e1ab5acd74c447af8100062923ede38ae`.
   Kernel/root/ADT inputs are unchanged and catalog reads remain read-only.
-  BOOT0028 is not flashed; the phone is currently not enumerating USB.
 
 ### 2026-11-14: second HFS catalog failure photo
 
@@ -1888,3 +1887,15 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   image transfer, sector read, or HFS mapping is responsible. BOOT0028's
   RAM-root catalog diagnostic remains the next discriminator, but has not
   been flashed. Latest host check had no Download/ADB USB enumeration.
+
+### 2026-11-14: BOOT0028 RAM-root catalog probe flashed
+
+- A03CORE reappeared in Download mode. Verified BOOT0028 SHA, then Heimdall
+  initialized, downloaded PIT (recoverable empty-bulk warning), uploaded
+  only lowercase `boot` at100%, and reported `boot upload successful`.
+  No USERDATA or protected partition write.
+- `heimdall close-pc-screen --resume` completed reboot. Ten seconds later
+  neither Download nor ADB USB was enumerated. No host console/catalog bytes
+  are available yet; physical screen report is pending. BOOT0028 selects the
+  validated RAM root (`rd=md0`) with eMMC enabled, so its PID1 probe can run
+  independently of a USERDATA HFS mount.
