@@ -1772,3 +1772,19 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Fresh Download detected; BOOT0026/kernel/stock-Magisk restore hashes
   revalidated.16GiB image33554432sectors fits verified USERDATA106213336
   sectors (54381228032bytes). Ready USERDATA-only install then BOOT0026.
+
+### 2026-11-14: iOS16.0 HFSX USERDATA installed; BOOT0026 flashed
+
+- After final source/geometry/fsck/cache checks, Heimdall2.2.2 transferred
+  the exact16GiB HFSX image to lowercase PIT `userdata` ID55, without PIT,
+  repartition, or reboot. Progress100%, `userdata upload successful`.
+  The transfer does not independently read back/hash USERDATA.
+- Heimdall `--resume` then downloaded fresh PIT and wrote only BOOT0026;
+  progress100%, `boot upload successful`, no reboot. Image SHA256
+  e012784bf236bae131029b02c0a5239546081eebb039852e9de64a465528086b.
+  Cmdline selects rd=a03userdata0, a03emmc_rw=1, rootrw=1,
+  ignition_level=1, -nobsdmgroot; opt-in Apple entitlements profile.
+- Both upload results are host/device protocol confirmations, not partition
+  readback. Phone remains Download after both --no-reboot operations. Next
+  user-controlled hardware power-on/reboot, observe kernel HFS mount and
+  userspace output/panic; no SpringBoard/runtime claim until observed.

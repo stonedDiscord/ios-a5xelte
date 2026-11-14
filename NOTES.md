@@ -2,18 +2,17 @@
 
 ## Active A03 handoff — 2026-11-14
 
-REAL IOS ROOT READY: shim/a03/out/ios-root-43604313047/a03-ios16-root.img
-16GiB SHAeb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108.
-Retained artifact14118636510 from failed final-fsck-path CI43604313047;
-local forced read-only fsck -fn CLEAN exit0. SHA/HFSX geometry/journal +
-exact source launchd/dyld/SpringBoard bytes/mode0755 uid/gid0 +16.0/20A362
-526jobs +all40cachepart UUID/mapping/dependency checks PASS. Primary clean,
-alternate older unmount bit is normal; guard corrected and rejects dirty
-primary/missing journal/location mismatch. Root byte payload unchanged.
-Next USERDATA-only16GiB install --no-reboot, then BOOT0026 --resume/reboot.
-BOOT0026 SHAe012784bf236bae131029b02c0a5239546081eebb039852e9de64a465528086b,
-kernel43602657100 SHA124d32ca...605f1d80. Both +Magisk restore rehashed.
-Phone fresh Download detected; current0025. No full filesystem flash yet.
+CURRENT0026 FLASHED, DOWNLOAD MODE (both transfers --no-reboot): USERDATA
+ID55 16GiB HFSX upload100%, then BOOT0026 upload100%. Heimdall logged
+`userdata upload successful` and `boot upload successful`; no independent
+partition readback/hash. USERDATA image SHAeb72c14a...89da108 and full
+read-only fsck/catalog/cache/binary/hash checks PASS. BOOT0026 SHA
+e012784bf236bae131029b02c0a5239546081eebb039852e9de64a465528086b.
+Kernel43602657100 SHA124d32ca...605f1d80; cmdline rd=a03userdata0,
+a03emmc_rw=1, rootrw=1, ignition_level=1, -nobsdmgroot.
+Both writes authorized, no GPT/recovery/bootloaders/EFS/NV touched. Next
+power on/boot and observe XNU root mount + launchd; Apple runtime still
+unverified. Preserve0024,0025 and stock Magisk restore94fa7c53...15e9ce7.
 
 MILESTONE0025 USER CONFIRMED USERDATA WRITE PASS changed/readback/restored/
 fsync sector16GiB, raw+block BOOT reads/write-open EROFS PASS. Preserve0024
