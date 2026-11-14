@@ -1888,6 +1888,39 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   RAM-root catalog diagnostic remains the next discriminator, but has not
   been flashed. Latest host check had no Download/ADB USB enumeration.
 
+### 2026-11-14: BOOT0028 catalog probe returned zero data
+
+- User reports BOOT0028 PID1 output: both raw and block reads at USERDATA
+  byte offset `0x2cd82000` completed but returned sixteen zero bytes and
+  reported `MISMATCH`.
+- The verified 16GiB HFSX image contains
+  `00000000000000000100000300000003` at that offset. Therefore both BSD
+  interfaces agree on an all-zero sector; this is below HFS and points to
+  eMMC SDMA/addressing or the installed USERDATA contents. No write was
+  performed by the probe.
+- The probe's expected constant has been corrected to the verified bytes.
+  Before any USERDATA rewrite, add a read of the HFS volume header at byte
+  offset1024 and compare it with the verified image, then inspect the driver
+  partition-LBA arithmetic.
+
+### 2026-11-14: RAM-root catalog probe returned zero sectors
+
+- User supplied the BOOT0028 PID1 output: both
+  `A03 CATALOG raw first16` and `A03 CATALOG block first16` report
+  `MISMATCH` followed by sixteen zero bytes. Both interfaces therefore
+  completed a 512-byte read at USERDATA-relative byte offset `0x2cd82000`,
+  but returned an all-zero sector rather than the verified image's actual
+  HFSX catalog prefix `00000000000000000100000300000003`.
+- This is decisive storage-path evidence below HFS: raw and buffered BSD
+  paths agree on zero data. It rules out a catalog parser-only issue and
+  points to eMMC SDMA/addressing, partition offset, or on-device transfer
+  contents. No USERDATA write was performed by the probe.
+- The probe's original expected prefix was also corrected to the verified
+  image bytes. Further reads should include the HFS volume header at byte
+  offset1024 to distinguish an empty/offset partition from a catalog-only
+  problem. Do not rewrite USERDATA until those reads and the driver address
+  calculation are reconciled.
+
 ### 2026-11-14: BOOT0028 RAM-root catalog probe flashed
 
 - A03CORE reappeared in Download mode. Verified BOOT0028 SHA, then Heimdall

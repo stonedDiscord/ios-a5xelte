@@ -33,6 +33,21 @@ show BSD eMMC devices ready. A03 returned to Download; BOOT0028 transferred
 enumeration. Await screen log for RAM-root PID1 raw/block catalog result;
 do not alter USERDATA before that comparison.
 
+USER PID1 RESULT: BOOT0028 printed raw and block catalog first16 as MISMATCH
+with sixteen zero bytes. Both reads completed at offset0x2cd82000; verified
+image bytes there are 00000000000000000100000300000003. This isolates the
+failure below HFS and implicates SDMA/addressing or installed USERDATA data.
+No USERDATA write occurred. Next read/compare volume header at offset1024,
+then inspect partition-LBA translation before rewriting the filesystem.
+
+USER PID1 RESULT: BOOT0028 catalog probe printed raw and block first16 both
+MISMATCH plus 16 zero bytes. Reads completed but returned all-zero data at
+offset0x2cd82000, while verified image bytes there are
+00000000000000000100000300000003. This isolates the failure below HFS and
+implicates SDMA/addressing or installed USERDATA contents. Correct the probe
+constant (the prior expected bytes were wrong), then read volume header at
+offset1024 before any USERDATA rewrite.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA
