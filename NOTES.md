@@ -12,11 +12,15 @@ Correction: inspection of workflow43620198151's actual build-tree proves it
 omitted patch0093 (`a03_usb.c`, file-list entry and init call absent); its
 `a03_ios_userspace` input was false. BOOT0032 therefore had no MUSB probe, so
 “A03 USB nowhere visible” is expected and gives no controller-state evidence.
-Corrected workflow43622283937 was dispatched with `a03_ios_userspace=true`.
-Inspect kernel and build-tree for `A03 USB:` strings before packaging or
-flashing. Host currently sees no Download/ADB device. Preserve GPT, recovery,
-bootloaders, EFS/NV; continue BOOT-only trials. The MUSB enumeration/log
-channel is not yet implemented.
+Workflow43622283937 did stage0093 with `a03_ios_userspace=true`, but its
+build script silently skipped the patch because the `bsd/dev/mem.c` context
+had one fewer tab than the target; its successful kernel still lacks the
+probe. Fixed 0093 and verified `git apply --check` against the actual
+post-0092 build tree. Added a workflow post-build gate requiring
+`A03 USB: AON` in the kernel. Next commit and dispatch a new build, then
+verify its kernel/build-tree before a new BOOT image. Host currently sees no
+Download/ADB device. Preserve GPT, recovery, bootloaders, EFS/NV; continue
+BOOT-only trials. The MUSB enumeration/log channel is not yet implemented.
 
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /

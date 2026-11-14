@@ -2086,7 +2086,7 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   device write was performed. This gives a ready BOOT-only test state once a
   validated image is packaged.
 
-### 2026-11-14: BOOT0032 MUSB state probe deployed
+### 2026-11-14: BOOT0032 RAM-root storage probe deployed
 
 - XNU workflow `43620198151` completed successfully. Kernel
   `kernel.development.sweet` SHA256:
@@ -2097,6 +2097,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   `4ace15fb349f9c669f4a6bd51c5c7c84c25cb47f5ae0a1b05d37bfa65cdab287`.
   Cmdline enables `a03usb_probe=1 a03emmc=1` and keeps `rd=md0`; USERDATA
   writes remain disabled. The RAM-root PID1 runs catalog/header diagnostics.
+  The USB argument was present, but the actual kernel did not link the probe
+  (see correction below).
 - Heimdall's first attempts failed before transfer during USB protocol setup.
   After Download-mode USB re-enumeration, Heimdall freshly initialized,
   downloaded PIT and uploaded only lowercase `boot` to100%, reporting
@@ -2104,7 +2106,7 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   write occurred. `close-pc-screen --resume` completed reboot, exit0.
 - Twelve seconds after reboot neither Download nor ADB USB was enumerated.
   This does not establish XNU USB enumeration. Physical BOOT0032 display and
-  `A03 USB:` / catalog/header output are pending. A host-visible XNU USB data
+  catalog/header output were pending at that time. A host-visible XNU USB data
   channel is still not implemented.
 - User subsequently reports catalog raw/block still zero, both HFS header
   reads begin `48580005800021004846534a00000081`, and `SWEET init: still alive`.
@@ -2120,5 +2122,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   used as controller-state evidence. BOOT0032's RAM-root storage diagnostics
   remain valid. Corrected workflow `43622283937` was dispatched from commit
   `8ad196a` with `a03_ios_userspace=true`, board `a03`, machine `SWEET`,
-  DEVELOPMENT and macOS 13.5; it is in progress. Its artifact must be checked
-  for `A03 USB:` strings before packaging or flashing.
+  DEVELOPMENT and macOS 13.5. It staged 0093, but completed with the patch
+  silently skipped: its `bsd/dev/mem.c` context had one fewer tab than the
+  target. The resulting artifact again lacks `bsd/dev/a03_usb.c`, the init
+  call and `A03 USB:` strings. This is a false-positive build for the probe;
+  BOOT0032 remains current.
+- Corrected 0093's context to match the target tab alignment. `git apply
+  --check` now passes against the actual post-0092 source from workflow
+  43622283937's build-tree artifact. Added a workflow post-build check that
+  fails an A03 iOS-userspace build if its kernel lacks `A03 USB: AON`. A new
+  build and artifact/string verification are required before replacement BOOT.
+  No phone write was performed for this correction.

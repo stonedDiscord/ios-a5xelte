@@ -95,7 +95,7 @@
  bsd/dev/a03_emmc.c			standard
 +bsd/dev/a03_usb.c			standard
  bsd/dev/memdev.c			standard
- bsd/dev/mem.c			standard
+ bsd/dev/mem.c				standard
 --- a/iokit/bsddev/IOKitBSDInit.cpp
 +++ b/iokit/bsddev/IOKitBSDInit.cpp
 @@ -774,3 +774,5 @@

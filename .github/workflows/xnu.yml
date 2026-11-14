@@ -159,6 +159,17 @@ jobs:
           set -o pipefail
           bash build.sh 2>&1 | tee ../build.log
 
+      - name: Verify requested A03 USB probe is linked
+        if: success() && inputs.board_profile == 'a03' && inputs.a03_ios_userspace
+        run: |
+          kernel="dxb/fakeroot/System/Library/Kernels/kernel.$(echo "$KERNEL_CONFIG" | tr A-Z a-z).$(echo "$MACHINE_CONFIG" | tr A-Z a-z)"
+          test -f "$kernel"
+          if ! strings "$kernel" | grep -Fq 'A03 USB: AON'; then
+            echo 'A03 USB probe was requested but its diagnostic string is absent from the kernel' >&2
+            exit 1
+          fi
+          echo "A03 USB state probe linked: $kernel"
+
       - name: Compiler cache statistics
         if: always()
         run: ccache --show-stats
