@@ -65,6 +65,10 @@ image SHAa4b545af50a80a5613c461e0e02404b784d489778af22d1a27bb66190c6d28fc.
 Phone was not in Download after PHOTO170949, so no flash yet; USERDATA
 untouched. Flash BOOT0030 only when Download returns.
 
+BOOT0030 was then uploaded100% to `boot` and rebooted with Heimdall.
+USERDATA/protected partitions untouched. After8s no Download/ADB; await
+display/PID1 catalog output.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

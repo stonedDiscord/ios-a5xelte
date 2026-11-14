@@ -1968,3 +1968,13 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - The phone was not in Download mode after the PID1 photo, so BOOT0030 was
   not flashed. USERDATA remains untouched. Next hardware step is BOOT-only
   BOOT0030 transfer when Download mode returns.
+
+### 2026-11-14: BOOT0030 catalog-enabled probe flashed
+
+- A03CORE returned to Download mode. Heimdall downloaded PIT and uploaded
+  only BOOT0030 to lowercase `boot` at100%, reporting `boot upload successful`.
+  `close-pc-screen --resume` then completed reboot. USERDATA and all protected
+  partitions were untouched.
+- Eight seconds later no Download or ADB USB interface was visible. Await a
+  display photo containing the catalog probe output; no iOS userspace claim
+  is made from this reboot alone.
