@@ -38,8 +38,9 @@ SDMA/address fault. No iOS root, launchd or SpringBoard result.
 Added opt-in XNU eMMC trace patch0094, gated by `a03emmc_trace=1`, to print
 absolute command LBA and first four data bytes for high-LBA reads. It changes no
 storage state and applies to the corrected post-0092 build tree. Packer/profile
-have the trace flag; it still needs build, artifact verification, and BOOT-only
-test. The reported local image's expected catalog bytes remain nonzero.
+have the trace flag. Workflow43625945895 linked the trace strings; BOOT0034
+was flashed BOOT-only and rebooted. The reported local image's expected
+catalog bytes remain nonzero; physical trace output is still missing.
 
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /

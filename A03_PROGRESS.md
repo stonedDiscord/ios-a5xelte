@@ -2164,12 +2164,11 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   LBA >= `0x100000`, including absolute LBA and first four bytes. This will
   expose the exact command LBA used for the catalog read without enabling
   writes or changing controller timing. It applies cleanly to the corrected
-  post-0092 source; profile and packer now expose the trace flag. It is not
-  built or flashed yet.
+  post-0092 source; profile and packer now expose the trace flag.
 - XNU workflow `43625945895` was dispatched from commit `e130de1` with the
-  A03/SWEET DEVELOPMENT profile and iOS-userspace patches, including0094.
-  Build and kernel string verification are pending; phone remains on BOOT0033
-  and no device write was made.
+  A03/SWEET DEVELOPMENT profile and iOS-userspace patches, including0094;
+  it completed successfully and its trace strings were verified in the
+  kernel. Phone remained on BOOT0033 until the BOOT0034 flash below.
 - Workflow `43625945895` completed successfully. Patch0094 is linked; the
   kernel contains `A03 eMMC TRACE` and `A03 USB: AON` strings. Kernel SHA256
   `8d4cdf854e6d887549a62010832e75bec8daa7467da06637714974089cd8f1df`.
