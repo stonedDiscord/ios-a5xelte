@@ -16,7 +16,7 @@ first. Final image guard tools/a03-verify-userdata-root.py added; require
 inventory/fsck/hash/geometry. Filesystem43602490133 staged10GiB/~298k inodes; file inventory PASS
 (dynamicarm64 launchd/dyld/SpringBoard,526jobs,16.0). Final fsck on regular
 file failed ENOTTY. Fixed readonly/nomount rawdevice check. Latest root
-CI43604313047 atfb27fcf pending/live; superseded43604260923 cancelled.
+CI43604313047 atfb27fcf terminal final-fsck invocation FAILURE; superseded43604260923 cancelled.
 Completed raw conversions now retained even on verification failure;
 require logs/fsck/host final guard before install. BOOT0026 ready.
 No full filesystem flash yet. Phone Download detected, current0025.
@@ -26,7 +26,11 @@ research/a03-ios16-source/{os,sysos}/root. New cache verifier9893c60 passes
 launchd/SpringBoard dependency paths. Run tools/a03-verify-ios-cache.py
 --hfs-image FINAL_ROOT after download too. launchd/SpringBoard actual XML
 entitlement slots present (supported optional0035). Source checks are not
-runtime/signature trust proof. Root43604313047 confirmed live/staging.
+runtime/signature trust proof. Root43604313047 retained artifact14118636510 (5.66GB ZIP); download session
+18144 live, temp ZIP>4GB. Failure was literal escaped /dev/rdisk8 path,
+not a filesystem check result. Fixed portable prefix removal; do not rerun
+full staging just for this. Verify retained image locally (fsck -n, root
+geometry/hash, cache UUIDs, core binaries) before USERDATA install.
 Scope authorized USERDATAp55 +BOOT; preserve GPT/recovery/bootloaders/EFS/NV.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS

@@ -70,7 +70,7 @@ assert len(devices)==1,devices # raw layoutNONE HFSX, no partition table
 print(devices[0])
 PYDEVICE
 )
-sudo fsck_hfs -fn "${check_device/\/dev\/disk/\/dev\/rdisk}"
+sudo fsck_hfs -fn "/dev/r${check_device#/dev/}"
 hdiutil detach "$check_device"
 check_device=
 mv "$work/raw.cdr" "$output"

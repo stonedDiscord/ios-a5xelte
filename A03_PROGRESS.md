@@ -1738,3 +1738,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   (dynamic remainder); fork skips partition-size check when PIT count0.
   Final image16GiB must be bounded against validated GPT USERDATA separately.
   No --skip-size-check or repartition option needed. No new phone write.
+
+- Root43604313047 is terminal FAILURE in final fsck invocation, with a
+  retained completed artifact14118636510 (5657683395bytes). Log shows
+  literal escaped path \/dev\/rdisk8 reached fsck, so fsck did not inspect
+  the volume. Use portable prefix removal /dev/r${check_device#/dev/}
+  instead of escaped replacement (macOS bash3.2 keeps replacement escapes).
+  Shell syntax and exact /dev/disk8 -> /dev/rdisk8 expansion checked.
+- Artifact download18144 live, temporary ZIP grew past4GiB; no source build
+  restart. Root contents/inventory unchanged by this invocation fix. Run
+  Linux read-only fsck, HFSX geometry/SHA, core-binary/source and full declared
+  cache checks locally before any USERDATA flash. Phone remains Download.
