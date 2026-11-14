@@ -2230,3 +2230,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   `d_psize` is the device block size (`v_specsize`), so the experimental
   partition-capacity patch0097 was incorrect and has been removed; `512` is
   restored. The storage harness passes again with the original geometry.
+- User reports the high-LBA trace is driving the other messages off-screen.
+  Bounded the next diagnostic: patch0094 now emits at most 12 high-LBA trace
+  lines, and patch0096 emits at most 12 UIO offset/LBA lines, including the
+  initial low-offset requests. This keeps the HFS header, catalog result and
+  decisive offset transition visible without changing storage behavior.
