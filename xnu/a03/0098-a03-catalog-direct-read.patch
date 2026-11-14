@@ -1,14 +1,17 @@
 --- a/bsd/dev/a03_emmc.c
 +++ b/bsd/dev/a03_emmc.c
-@@ -346,6 +346,12 @@
+@@ -327,6 +327,15 @@
      uint32_t crc=0;unsigned result=a03_gpt_entries(&ae.gpt,gpt_read,NULL,&crc);
      printf("A03 eMMC: GPT result=%u CRC=%x/%x\n",result,crc,ae.gpt.array_crc);
      if(result)return;
 +    if (a03_trace) {
 +        unsigned char cat[512];
-+        if (data_read(17,0x01097c10,cat)==0)
-+            printf("A03 CATALOG direct lba=1097c10 first16=%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n",
++        int direct_error=data_read(17,0x01097c10,cat);
++        if (direct_error==0)
++            printf("A03 CATALOG direct result=0 lba=1097c10 first16=%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n",
 +                cat[0],cat[1],cat[2],cat[3],cat[4],cat[5],cat[6],cat[7],cat[8],cat[9],cat[10],cat[11],cat[12],cat[13],cat[14],cat[15]);
++        else
++            printf("A03 CATALOG direct result=%d lba=1097c10\n",direct_error);
 +    }
      if(data_read(17,ae.gpt.boot,sector)||a03_le64(sector)!=0x2144494f52444e41ULL||
         a03_le32(sector+36)!=2048||a03_le32(sector+40)!=2)return;
