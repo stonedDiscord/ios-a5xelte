@@ -2,24 +2,19 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 2026-11-14: filesystem work underway, BOOT0011 PID1 remains working.
-Added pinned generic HFS0026 + A03 0089 general-regs; local patches pass.
-Independent a03-root CI builds 32MiB HFSX test root, no XNU build. Root-only
-changes repack via tools/a03-pack-root.py with fixed kernel and hash manifest.
-XNU CI now CCACHE=ccache with persistent scoped compiler cache; cold build
-first, hit rate not verified. Not saved make incremental objects.
-Live eMMC: sprd,sdhc-r11p1 PA0x201d0000/0x1000, SPI10,8bit, USERDATAp55.
-No storage writes/MMIO test. First HFS RAM-root, then read-only eMMC driver.
-See docs/a03-filesystem.md. HFS kernel CI43534803374 queued at9e73e9e.
-Actions reenabled by user; independent root CI43535227249 PASSED in24s
-(d1ca9ab), artifact root-43535227249/a03-test-root.img downloaded/validated.
-32MiB HFSX SHA256 b886b433b988b410cd643683b93db1553d769ecddaf6ca73af3c68e910dbed1e.
-Earlier hdiutil format/type failures corrected by default image creation.
-Old HFS kernel CI43534803374 stuck queued/jobs=[]; fresh CI43536143024
-is now in Build. No additional phone flash.
-Host HFS tools installed. ldid built/tested locally against openssl-3;
-ignored binary shim/a03/out/host-tools/ldid. See filesystem doc.
-Preserve non-BOOT partitions. Real iOS root/display remains future work.
+Latest2026-11-14: HFS kernel CI43536143024 PASSED(source16b3177).
+Kernel SHA256 c4c4e4a707ca4da82bd68318dfd187d7984d65fe4482999775e329af65ba942a.
+Named HFS mount/read/register + BSD/pthread funcs verified SIMD-free.
+Root32MiB HFSX fsck clean; catalog/sbin/launchd exact static init match.
+Prepared BOOT0012-hfs (NOT FLASHED), SHA256
+4951efd8eae4493980ba0b9fdb7495bfb2a06f88e44206f603f5c7ff1814b60d.
+RAM root0x104078000/32MiB; ADT0x106078000; entry0x10347c488.
+Manifest shim/a03/out/a03-xnu-0012-hfs.json. Exact segment/payload verified.
+Phone not USB-visible; fresh Download requested. Current BOOT still0011.
+Next: BOOT-only0012, collect HFS mount/PID1/heartbeat/panic report.
+Root edits reuse kernel; no XNU rebuild. Compiler cache seeded1050misses,
+0hits, saved; warm reuse untested. Preserve all non-BOOT partitions.
+This is test HFS root, not Apple launchd/iOS GUI. eMMC work still pending.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.

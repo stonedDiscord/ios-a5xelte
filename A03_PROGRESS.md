@@ -942,3 +942,23 @@ User transcribed (minor spelling differences preserved in original chat):
   with installed OpenSSL3 headers/libs succeeds. Local ignored tool at
   shim/a03/out/host-tools/ldid, linked libcrypto.so.3, successfully signs
   disposable init copy and prints CDHash. No original init/system change.
+
+### 2026-11-14: HFS kernel verified; trial 0012 prepared, not flashed
+
+- CI43536143024 passed at source16b3177. Plain arm64 kernel SHA256
+  c4c4e4a707ca4da82bd68318dfd187d7984d65fe4482999775e329af65ba942a
+  matches manifest. Full-symbol disassembly SIMD-free: HFS register86,
+  mountfs1103, vnop_read215, mockfs_mountroot139, BSD init1009,
+  pthread register26 instructions. Named function checks only.
+- Root artifact from CI43535227249 passes host fsck.hfsplus -n, including
+  extents/catalog/hierarchy/xattrs/bitmap. Read-only Python HFS catalog
+  lookup resolves /sbin/launchd, mode100755, exact16635-byte test init match.
+- Packaged fixed kernel +32MiB HFSX via tools/a03-pack-root.py, no kernel
+  rebuild for packaging. BOOT0012-hfs SHA256
+  4951efd8eae4493980ba0b9fdb7495bfb2a06f88e44206f603f5c7ff1814b60d.
+  RAM rootPA0x104078000 size0x2000000; ADTPA0x106078000;
+  entryPA0x10347c488. Packer bounds/exact root segment/BOOT payload pass.
+- First compiler-cache run:1050 cacheable calls,0hits/1050misses; cache
+  saved successfully. Warm reuse not yet measured; no claimed hit speedup.
+- Phone absent from USB/ADB at check. Asked user fresh Download mode.
+  NO0012 flash yet; current BOOT remains working0011-pid1. Non-BOOT intact.
