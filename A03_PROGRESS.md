@@ -2061,3 +2061,21 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   path and a simple host protocol so XNU can stream logs and sector reads.
 - BOOT0031's post-USERDATA-reflash catalog result remains unknown. No new
   device write was performed for the USB work.
+
+### 2026-11-14: post-reflash HFS header present, catalog still zero
+
+- User reports the catalog still reads zero in both raw and block views. The
+  raw HFS header begins `48580005800021004846534a00000081` (HFSX); the block
+  view has the same HFS header, and SWEET PID 1 remains alive. This confirms
+  the USERDATA HFSX volume header is readable through both XNU paths, while
+  the catalog read at `0x2cd82000` still disagrees with the verified image.
+- The report did not identify the exact BOOT image running, so it cannot yet
+  be tied conclusively to BOOT0031 or the opt-in MUSB state probe. It does not
+  establish an HFS mount or Apple userspace. No new device write was made.
+- Linux source review confirms the MUSB peripheral cannot be assumed ready
+  from the controller clock alone: Qogirl6 setup also powers/configures the
+  analog PHY, supplies VBUS-valid, selects UTMI width and resets the core.
+  Headers confirm the probe's AON offsets (`APB_EB1=0x4`, `RST1=0x10`, PHY
+  registers `0x204`-`0x214`) and OTG clock bit8. The opt-in XNU build that
+  includes the read-only MUSB state probe is workflow `43620198151`, still
+  in progress at handoff. USB enumeration/log transport is not implemented.

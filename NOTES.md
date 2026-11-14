@@ -2,6 +2,16 @@
 
 ## Active A03 handoff — 2026-11-14
 
+LATEST USER REPORT: USERDATA raw/block HFS header both begin
+`48580005800021004846534a00000081` (HFSX), but catalog still reads zero;
+SWEET PID1 is alive. Exact BOOT image not identified, so don't attribute this
+to the MUSB-probe build. This confirms the volume header only, not catalog,
+HFS mount, launchd or SpringBoard. MUSB controller is Qogirl6 peripheral;
+state-probe build43620198151 remains in progress. Next: finish that build,
+run opt-in state probe with the RAM root, then implement PHY/core setup and a
+host-visible log/read transport. Keep BOOT-only test flashes; preserve GPT,
+recovery, bootloaders, EFS/NV. No new device write since the reported pass.
+
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /
 hfs_mountroot errno5 / cannot mount root errno19. eMMC later reports ready,
