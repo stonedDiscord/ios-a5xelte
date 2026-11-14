@@ -2,18 +2,19 @@
 
 ## Active A03 handoff — 2026-11-14
 
-USERDATA filesystem/write preparation authorized2026-11-14; current0024.
-User supplied iPhone10,3/iPhone10,6 iOS16.0/20A362 IPSW found repository
-root (ignored); SHAa99575cc...332acc19 matches metadata. Root workflow
-switched to this build; fallback16.7.16 run43601400573 cancelled.
-Kernel43600857274 SUCCESS at earlier e729f64; artifact downloaded.
-Cache-flush revision7ee47d9 needs full CI. Host BSD/MMIO tests pass.
-Opt-in PID1 USERDATA save/change/readback/restore/fsync at16GiB prepared;
-ARM64 emulation +errors/short/mismatch PASS. Root43601678578 SUCCESS,
-fsck/catalog/exact init/hash verified:7a2379b0...20dfc4d. Kernel43601676154
-(cache flush) and iOS filesystem43601667181 live; await these artifacts.
-No USERDATA write/new flash yet. Preserve GPT/recovery/bootloaders/EFS/NV.
-Real USERDATA root selection/mount and Apple launchd remain unfinished.
+CURRENT0025 FLASHED: USERDATA save/change/readback/restore/fsync test at
+relative16GiB, RAM root. Heimdall fresh PIT/boot100%/success/reboot exit0.
+BOOT SHA051304ad437d305cdd77890dbffb3f73763c74e26f2a24355ce1bab951b4dd3c.
+Kernel43601676154 SUCCESS SHA1186c331...72fedf7; root43601678578 verified
+SHA7a2379b0...20dfc4d. Compiled storage integer-only; cached writes flush.
+Await physical A03 USERDATA WRITE PASS or exact WRITE FAIL stage/value/
+panic. No full filesystem flash yet.0024 checkpoint preserved.
+User supplied16.0 IPSW hash verified; filesystem43602490133 live after
+fixing invalid hdiutil type and canonical macOS mount paths. Root-selection
+kernel43602657100 live at051206f includes0092. Keep polling these builds;
+verify root inventory/fsck and kernel before full USERDATA install/root boot.
+Scope authorized USERDATAp55 +BOOT; preserve GPT/recovery/bootloaders/EFS/NV.
+No Apple launchd/SpringBoard execution established.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
 PID1 PASS. XNU SDMA/cache/BSD read path established. Preserve0024 image

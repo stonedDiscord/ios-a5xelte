@@ -1643,3 +1643,26 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   failed at hdiutil create: UDRW is not a valid -type argument. Remove it
   (default writable UDIF, matching tested small-root builder) and rebuild.
   No filesystem artifact or phone write resulted from this failure.
+
+### 2026-11-14: BOOT0025 USERDATA write diagnostic flashed
+
+- Cache-flush kernel43601676154 SUCCESS at a9251a7, SHA256
+  1186c33171c20fb66de7236ea0401a7fc614158c25c9e7c559a9429ee72fedf7.
+  Storage disassembly operands integer-only; CMD24/CMD6flush/CMD13 constants
+  verified. Early broad SIMD regex falsely matched instruction hex d2800000;
+  instruction-operand-only check passes. Artifact plain-arm64 subtype0.
+- Root43601678578 SHA2567a2379b0b6699cb9751b861456f3d22170527e7fb2f46332bd79cc37220dfc4d
+  passed read-only fsck/catalog/exact emulated-init checks.
+- BOOT0025 shim/a03/out/a03-xnu-0025-userdata-write.img SHA256
+  051304ad437d305cdd77890dbffb3f73763c74e26f2a24355ce1bab951b4dd3c.
+  rd=md0 a03emmc=1 a03emmc_rw=1; diagnostic sector USERDATA-relative16GiB.
+  Supplied D22AP product identity extracted privately into research/ipsw-x;
+  A03 hardware nodes retained. Current restore hash94fa7c53...15e9ce7 verified.
+- Heimdall fresh protocol/PIT, boot100%/upload successful/reboot exit0.
+  No independent readback. On-device diagnostic may now write one USERDATA
+  sector and restore it; physical result pending. No full filesystem flashed.
+  Await A03 USERDATA WRITE PASS, or exact WRITE FAIL stage/value/panic.
+- Filesystem43602020594 failed invalid hdiutil -type; fixed default UDIF and
+  canonical /private mount paths. Superseded43602464223 cancelled; corrected
+  supplied16.0 HFSX root43602490133 live. Root-selection kernel43602657100
+  dispatched at051206f (includes0092);0025 itself retains RAM root.
