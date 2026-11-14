@@ -36,6 +36,9 @@ storage_test:
 	mov x24, x0
 	cmp x0, #30
 	b.ne a03_test_failed
+#ifdef A03_STORAGE_WRITE_TEST
+	bl a03_userdata_test
+#endif
 	adr x1, a03_storage_pass
 	adr x2, a03_storage_pass_end
 	b a03_storage_report
@@ -169,3 +172,7 @@ a03_stage_label_end:
 a03_value_label:
 	.ascii "A03 STORAGE FAIL value=0x"
 a03_value_label_end:
+
+#ifdef A03_STORAGE_WRITE_TEST
+#include "a03-storage-write-test.inc"
+#endif

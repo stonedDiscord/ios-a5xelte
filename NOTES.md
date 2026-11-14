@@ -2,16 +2,16 @@
 
 ## Active A03 handoff — 2026-11-14
 
-USERDATA filesystem/write preparation authorized2026-11-14. Guarded
-CMD24 USERDATA-only writes include enabled-card-cache CMD6 FLUSH_CACHE
-and fresh CMD13 ready/TRAN before completion. BOOT remains readonly.
-Host sanitizer tests pass; hardware writes still untested; current0024.
-Pinned Apple16.7.16/20H392 IPSW downloaded and SHA256 verified privately.
-New macOS workflow prepares16GiB journaled HFSX root with launchd/dyld/
-SpringBoard inventory. No USERDATA format/write or new flash yet.
-Kernel CI43600857274 tests earlier cache-disabled write implementation
-and optional Apple entitlement profile; newer flush code needs fresh CI.
-Preserve GPT/recovery/bootloaders/EFS/NV and0024 checkpoint.
+USERDATA filesystem/write preparation authorized2026-11-14; current0024.
+User supplied iPhone10,3/iPhone10,6 iOS16.0/20A362 IPSW found repository
+root (ignored); SHAa99575cc...332acc19 matches metadata. Root workflow
+switched to this build; fallback16.7.16 run43601400573 cancelled.
+Kernel43600857274 SUCCESS at earlier e729f64; artifact downloaded.
+Cache-flush revision7ee47d9 needs full CI. Host BSD/MMIO tests pass.
+Opt-in PID1 USERDATA save/change/readback/restore/fsync at16GiB prepared;
+run assembled-instruction emulation before diagnostic root CI/pack/flash.
+No USERDATA write/new flash yet. Preserve GPT/recovery/bootloaders/EFS/NV.
+Real USERDATA root selection/mount and Apple launchd remain unfinished.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
 PID1 PASS. XNU SDMA/cache/BSD read path established. Preserve0024 image

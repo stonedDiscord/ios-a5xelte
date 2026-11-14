@@ -20,11 +20,15 @@ from pathlib import Path
 p=Path(sys.argv[1]);h=hashlib.sha256()
 with p.open('rb') as f:
  for b in iter(lambda:f.read(8<<20),b''):h.update(b)
-assert h.hexdigest()=='b3882291a92ecf8763239a026813b3bafae66b7e317dee67011d90c202ccafef','wrong IPSW'
+sources={
+ 'a99575ccdab8bd576e16bc08efe0f8a5c18f0e7bdea522376235f5d5332acc19':('20A362','d22ap'),
+ 'b3882291a92ecf8763239a026813b3bafae66b7e317dee67011d90c202ccafef':('20H392','d21ap')}
+assert h.hexdigest() in sources,'wrong IPSW'
+build,device=sources[h.hexdigest()]
 with zipfile.ZipFile(p) as z:
  m=plistlib.loads(z.read('BuildManifest.plist'))
- assert m['ProductBuildVersion']=='20H392'
- identity=next(i for i in m['BuildIdentities'] if i['Info']['DeviceClass']=='d21ap')
+ assert m['ProductBuildVersion']==build
+ identity=next(i for i in m['BuildIdentities'] if i['Info']['DeviceClass']==device)
  for key,name in [('OS','os'),('Cryptex1,SystemOS','sysos'),('Cryptex1,AppOS','appos')]:
   source=identity['Manifest'][key]['Info']['Path'];print(key,source,flush=True)
   with z.open(source) as src,(Path(sys.argv[2])/(name+'.dmg')).open('xb') as dst:

@@ -1605,3 +1605,19 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   This prepares an image only; execution/CI result not yet established.
 - Current phone0024 in Download mode; no new flash or USERDATA write.
   Kernel43600857274 still building earlier no-card-cache revision.
+
+### 2026-11-14: supplied iOS16.0 source located; write diagnostic prepared
+
+- User identifies iPhone10,3,iPhone10,6_16.0_20A362_Restore.ipsw, found at
+  repository root but ignored. SHA256 matches public metadata:
+  a99575ccdab8bd576e16bc08efe0f8a5c18f0e7bdea522376235f5d5332acc19.
+  d22ap manifest confirmed OS098-08778-001, SystemOS098-09479-001,
+  AppOS098-09552-001. Filesystem workflow now uses this supplied build;
+  16.7.16 download run43601400573 cancelled to avoid duplicate staging.
+- Kernel43600857274 SUCCESS: earlier guarded write implementation and
+  optional portable entitlement profile compile. Cache-flush revision still
+  needs full build. Current phone0024; no new flash or USERDATA write.
+- Add separately opt-in static PID1 USERDATA test: save512B at relative
+  16GiB (beyond planned16GiB root), XOR pattern, readback, restore, verify,
+  fsync. Bounds enforced again by driver. Failure attempts restore if saved;
+  poisoned controller can prevent restoration. Never claims PASS on failure.

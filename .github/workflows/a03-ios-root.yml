@@ -16,7 +16,7 @@ jobs:
       - name: Download pinned plain-arm64 iOS 16 source
         run: |
           mkdir -p research/ipsw out
-          curl --fail --location --retry 3 --output research/ipsw/source.ipsw https://updates.cdn-apple.com/2025FallFCS/fullrestores/122-76738/B6C604B4-548E-401F-BBFF-916E3FFDF235/iPhone_5.5_P3_16.7.16_20H392_Restore.ipsw
+          curl --fail --location --retry 3 --output research/ipsw/source.ipsw https://updates.cdn-apple.com/2022FallFCS/fullrestores/012-65861/0A0400A0-2174-4D49-91B7-43FC9DE24272/iPhone10,3,iPhone10,6_16.0_20A362_Restore.ipsw
       - name: Stage and verify journaled HFSX root
         run: bash tools/a03-build-ios-root-macos.sh research/ipsw/source.ipsw out/a03-ios16-root.img
       - name: Compress root for transfer
