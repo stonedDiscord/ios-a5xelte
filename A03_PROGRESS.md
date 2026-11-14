@@ -1496,3 +1496,11 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   Download mode available. Wait for existing CI; do not redispatch.
   Next download/inspect kernel, package0024, BOOT-only flash and require
   physical raw+block BOOT/EROFS PASS. Current0023 remains diagnostic.
+
+- While existing CI43598578558 remains live/Build, expanded actual-handler
+  sanitizer coverage to disk ioctls:512-byte logical/physical sizes,
+  accepted512/rejected4096 set-size, independent BOOT/USERDATA capacities,
+  read/write limits and readonly/invalid ioctl behavior. Full16KiB buffered
+  request passes. Diagnostic root revalidated with read-only fsck and
+  actual ARM64 PASS+14 failure-stage emulation;0024 ADT prepared only.
+  Kernel artifact still pending; current phone remains0023 Download.

@@ -17,6 +17,8 @@ def main():
     begin = source.index('static uint32_t part_first(')
     end = source.index('static int emmc_ioctl(', begin)
     handlers = source[begin:end]
+    ioctl_end = source.index('/* XNU specfs', end)
+    handlers += source[end:ioctl_end]
     raw_begin = source.index('static int emmc_read(')
     raw_end = source.index('static int emmc_write(', raw_begin)
     handlers += source[raw_begin:raw_end]
@@ -32,6 +34,7 @@ def main():
 #include <string.h>
 #define __unused __attribute__((unused))
 typedef unsigned dev_t;
+typedef unsigned long u_long;
 typedef char *caddr_t;
 struct proc;
 #define minor(d) (d)
@@ -42,6 +45,10 @@ struct proc;
 #define EROFS 30
 #define EINVAL 22
 #define EIO 5
+#define ENOTTY 25
+enum {DKIOCGETBLOCKSIZE=1,DKIOCGETPHYSICALBLOCKSIZE,DKIOCSETBLOCKSIZE,
+      DKIOCGETBLOCKCOUNT,DKIOCISWRITABLE,DKIOCGETMAXBLOCKCOUNTREAD,
+      DKIOCGETMAXBLOCKCOUNTWRITE};
 #define MIN(a,b) ((a)<(b)?(a):(b))
 struct request {
     dev_t dev;int flags,error,completed,mapped;int64_t block;
@@ -102,6 +109,20 @@ int main(void) {
     assert(emmc_open(1,FWRITE,0,NULL)==EROFS);
     assert(emmc_open(2,0,0,NULL)==ENXIO);
     assert(emmc_close(0,0,0,NULL)==0);
+    uint32_t geometry=0;uint64_t capacity=0;
+    assert(emmc_ioctl(0,DKIOCGETBLOCKSIZE,(caddr_t)&geometry,0,NULL)==0&&geometry==512);
+    assert(emmc_ioctl(1,DKIOCGETPHYSICALBLOCKSIZE,(caddr_t)&geometry,0,NULL)==0&&geometry==512);
+    assert(emmc_ioctl(0,DKIOCSETBLOCKSIZE,(caddr_t)&geometry,FWRITE,NULL)==0);
+    geometry=4096;
+    assert(emmc_ioctl(0,DKIOCSETBLOCKSIZE,(caddr_t)&geometry,FWRITE,NULL)==EINVAL);
+    assert(emmc_ioctl(0,DKIOCGETBLOCKCOUNT,(caddr_t)&capacity,0,NULL)==0&&capacity==ae.gpt.boot_count);
+    assert(emmc_ioctl(1,DKIOCGETBLOCKCOUNT,(caddr_t)&capacity,0,NULL)==0&&capacity==ae.gpt.userdata_count);
+    geometry=1;
+    assert(emmc_ioctl(0,DKIOCISWRITABLE,(caddr_t)&geometry,0,NULL)==0&&geometry==0);
+    assert(emmc_ioctl(0,DKIOCGETMAXBLOCKCOUNTWRITE,(caddr_t)&capacity,0,NULL)==0&&capacity==0);
+    assert(emmc_ioctl(0,DKIOCGETMAXBLOCKCOUNTREAD,(caddr_t)&capacity,0,NULL)==0&&capacity==128);
+    assert(emmc_ioctl(2,DKIOCGETBLOCKCOUNT,(caddr_t)&capacity,0,NULL)==ENXIO);
+    assert(emmc_ioctl(0,999,(caddr_t)&capacity,0,NULL)==ENOTTY);
     /* XNU specfs d_psize returns sector bytes, not partition capacity. */
     assert(emmc_psize(0)==512&&emmc_psize(1)==512&&emmc_psize(2)==-1);
     ae.ready=false;assert(emmc_psize(0)==-1);ae.ready=true;
@@ -160,6 +181,7 @@ int main(void) {
     puts("PASS: actual BSD handlers; BOOT/USERDATA translation, bounds, overflow,");
     puts("writes rejected without reads, partial errors, map failure, lock/completion balance");
     puts("raw uiomove: unaligned/multisector, EOF, invalid offsets, copy fault and partial I/O");
+    puts("specfs geometry: 512-byte sectors, separate partition capacities, full16KiB buffered read");
 }
 '''
     with tempfile.TemporaryDirectory(prefix='a03-bsd-') as directory:
