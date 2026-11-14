@@ -1682,3 +1682,19 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   Apple launchd and SpringBoard remain unverified. Current0025 static PID1.
 - Continue supplied16.0 root43602490133 and root-selection kernel43602657100,
   verify artifacts, install only USERDATA then BOOT root-selection trial.
+
+- USERDATA root-selection kernel43602657100 at051206f SUCCESS, SHA256
+  124d32ca8812840a171e127c6a24dfaf5da85530eec810aa3f0f4e30605f1d80.
+  Plain-arm64 subtype0; storage/root predicates integer-only. Direct root
+  availability/writable predicates also host-tested for readonly/notready/
+  wrong-device/poisoned states. Default profile unaffected.
+- Prepared BOOT0026 shim/a03/out/a03-xnu-0026-userdata-root.img SHA256
+  e012784bf236bae131029b02c0a5239546081eebb039852e9de64a465528086b.
+  Explicit rd=a03userdata0 rootrw=1 ignition_level=1 -nobsdmgroot;
+  small diagnostic RAM image retained in payload. NOT FLASHED: USERDATA
+  filesystem must be installed first. Filesystem43602490133 still staging.
+  Phone Download detected after user returned it there; current0025.
+- Add read-only tools/a03-verify-userdata-root.py final install guard for
+  exact16GiB rawHFSX primary/alternate geometry, clean journal flags/hash.
+  Does not replace fsck or iOS file inventory. Actual filesystem artifact
+  validation pending; correctly rejects small nonjournaled diagnostic root.

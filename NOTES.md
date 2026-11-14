@@ -10,9 +10,11 @@ BOOT SHA051304ad437d305cdd77890dbffb3f73763c74e26f2a24355ce1bab951b4dd3c.
 Kernel43601676154 SUCCESS SHA1186c331...72fedf7; root43601678578 verified
 SHA7a2379b0...20dfc4d.0024 checkpoint also preserved.
 Supplied16.0 IPSW verified. Filesystem43602490133 staging; root-selection
-kernel43602657100 building at051206f includes0092. Verify inventory/fsck
-and kernel, install USERDATA root, BOOT root-selection trial. No full
-filesystem flash yet. Phone running0025, no ADB/Download currently.
+kernel43602657100 SUCCESS at051206f includes0092, SHA124d32ca...605f1d80.
+BOOT0026 prepared SHAe012784b...5528086b, NOT FLASHED; install filesystem
+first. Final image guard tools/a03-verify-userdata-root.py added; require
+inventory/fsck/hash/geometry. Filesystem43602490133 still staging.
+No full filesystem flash yet. Phone Download detected, current0025.
 Scope authorized USERDATAp55 +BOOT; preserve GPT/recovery/bootloaders/EFS/NV.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
