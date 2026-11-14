@@ -12,6 +12,17 @@ size as a 16-bit `0x7200` value before the 32-bit block count. Host build
 passes with `A03_EMMC_SNAPSHOT=5`; no device flash or USERDATA write has been
 made for this audit. Commit `f98d116`.
 
+## 2026-11-14: corrected kernel candidate
+
+XNU workflow 43641820579 succeeded from commit `4e4873e`; the linked A03
+USB/direct-catalog gates passed. Kernel SHA256 is
+`f19877e2842a7cff12433efd770910174307decae7d6c92c6ab39142d03454a5`.
+Using the verified iOS root image, I packaged
+`shim/a03/out/a03-xnu-0040.img` with `rd=a03userdata0 rootrw=1` and the
+existing USERDATA write-enabled path. Image SHA256 is
+`94e18760fe23c75b48f0ac17e1af42cde93d493645b2d3b9a8bfe348b709a9a2`.
+This is a host artifact only; no device write has been made for it.
+
 ## 2026-11-13: branch and first on-device diagnostic
 
 - Branch `a03-bringup`, based on `64b1067` (`dreamlte-bringup`).
