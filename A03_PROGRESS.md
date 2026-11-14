@@ -2079,3 +2079,9 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   registers `0x204`-`0x214`) and OTG clock bit8. The opt-in XNU build that
   includes the read-only MUSB state probe is workflow `43620198151`, still
   in progress at handoff. USB enumeration/log transport is not implemented.
+- Host now detects Samsung Download USB (`04e8:685d`). `heimdall detect`
+  succeeds and a fresh `heimdall print-pit --no-reboot` succeeds: live PIT
+  reports SPRD8735, 60 entries, USERDATA ID55 at block15929344 with count0
+  (dynamic remainder). The phone remains in Download mode; no flash or other
+  device write was performed. This gives a ready BOOT-only test state once a
+  validated image is packaged.
