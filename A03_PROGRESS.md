@@ -2131,5 +2131,7 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   --check` now passes against the actual post-0092 source from workflow
   43622283937's build-tree artifact. Added a workflow post-build check that
   fails an A03 iOS-userspace build if its kernel lacks `A03 USB: AON`. A new
-  build and artifact/string verification are required before replacement BOOT.
-  No phone write was performed for this correction.
+  corrected XNU build `43623709272` is now running from commit `eb7dd77`,
+  with `a03_ios_userspace=true`. Verify the gate and build-tree/kernel output
+  before packaging or flashing replacement BOOT. No phone write was performed
+  for these corrections.

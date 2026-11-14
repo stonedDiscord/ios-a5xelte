@@ -17,8 +17,9 @@ build script silently skipped the patch because the `bsd/dev/mem.c` context
 had one fewer tab than the target; its successful kernel still lacks the
 probe. Fixed 0093 and verified `git apply --check` against the actual
 post-0092 build tree. Added a workflow post-build gate requiring
-`A03 USB: AON` in the kernel. Next commit and dispatch a new build, then
-verify its kernel/build-tree before a new BOOT image. Host currently sees no
+`A03 USB: AON` in the kernel. Corrected XNU run43623709272 is now building
+from eb7dd77 with `a03_ios_userspace=true`; verify its kernel/build-tree
+before a new BOOT image. Host currently sees no
 Download/ADB device. Preserve GPT, recovery, bootloaders, EFS/NV; continue
 BOOT-only trials. The MUSB enumeration/log channel is not yet implemented.
 
