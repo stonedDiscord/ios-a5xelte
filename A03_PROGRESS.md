@@ -2223,3 +2223,10 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   bootloader, EFS or NV partition was written. Fifteen seconds later the host
   had no Download or ADB enumeration; physical display and UIO/TRACE output
   are pending. This does not establish an XNU or iOS userspace result.
+- User reports BOOT0036 still prints the HFS header successfully and produces
+  many high-LBA eMMC trace lines whose payload bytes are `00`. This confirms
+  the trace path executes, but the requested UIO offset/LBA line remains the
+  needed discriminator. Inspection of the actual XNU `specfs` source shows
+  `d_psize` is the device block size (`v_specsize`), so the experimental
+  partition-capacity patch0097 was incorrect and has been removed; `512` is
+  restored. The storage harness passes again with the original geometry.

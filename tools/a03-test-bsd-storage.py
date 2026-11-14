@@ -139,11 +139,11 @@ int main(void) {
     assert(emmc_ioctl(0,DKIOCGETMAXBLOCKCOUNTREAD,(caddr_t)&capacity,0,NULL)==0&&capacity==128);
     assert(emmc_ioctl(2,DKIOCGETBLOCKCOUNT,(caddr_t)&capacity,0,NULL)==ENXIO);
     assert(emmc_ioctl(0,999,(caddr_t)&capacity,0,NULL)==ENOTTY);
-    /* XNU specfs d_psize returns DEV_BSIZE sector capacity. */
-    assert((uint32_t)emmc_psize(0)==ae.gpt.boot_count&&(uint32_t)emmc_psize(1)==ae.gpt.userdata_count&&emmc_psize(2)==-1);
+    /* XNU specfs d_psize returns the device block size. */
+    assert(emmc_psize(0)==512&&emmc_psize(1)==512&&emmc_psize(2)==-1);
     ae.ready=false;assert(emmc_psize(0)==-1);ae.ready=true;
     const unsigned page_size=16384;
-    unsigned sector_size=512;
+    unsigned sector_size=(unsigned)emmc_psize(0);
     assert(sector_size<=page_size&&page_size%sector_size==0);
     unsigned bscale=page_size/sector_size;assert(bscale==32);
     struct request page=req(0,0,bscale*sector_size,B_READ);
