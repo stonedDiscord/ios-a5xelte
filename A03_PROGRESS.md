@@ -2255,3 +2255,11 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   second `f3100a` sequence, and no `A03 eMMC UIO:` lines. It cannot evaluate
   the catalog-focused changes in `322bcba`; workflow `43633349828` is the
   first build containing those changes and has not yet been flashed.
+- Workflow `43633349828` built commit `322bcba` successfully. Kernel SHA256:
+  `9cf66f9624b94a8a7b0f5837027ab5fcf016c70111869f33b5231572d94f4c6f`.
+  Packaged BOOT0038 with catalog-focused trace, image SHA256
+  `875033bc9c0948421919ea0e8bc41b94fbff3d7903a11c075b49e52403f740c4`.
+  Heimdall detected Download mode, read the PIT, uploaded only `boot` to
+  100%, reported success, and rebooted. No other partition was written.
+  Host Download/ADB enumeration is absent after reboot; the new screen photo
+  should contain the catalog-window UIO/LBA evidence.
