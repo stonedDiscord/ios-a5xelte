@@ -846,3 +846,27 @@ User transcribed (minor spelling differences preserved in original chat):
   or SpringBoard. No additional phone write yet. Current BOOT remains 0010.
 
 - Integration committed/pushed a8e2da7; CI 43530972730 dispatched on macos-15-intel. Verify pthread registration provider and BSD codegen before test-init packaging.
+
+### 2026-11-14: trial 0011 pthread/RAM-init build verified and BOOT uploaded
+
+- CI 43530972730 passed at a8e2da7. Plain arm64 kernel SHA256
+  00028c59d5c543c32e2c13e1e6229ede236140027a205c79c1e003a9f5ea585d
+  matches artifact manifest. Cortex-A55 match and pthread registration
+  string present. Built-in pthread startup entry and mockfs symbols present.
+- Actual complete-symbol disassembly checked SIMD-free: checkpoint 42,
+  CPU start 200, BSD init 1008, pthread register/start 26/10, AMFI register 9,
+  mockfs_mountroot 97, provider __pthread_init 47 instructions. These checks
+  validate named functions, not all future paths or runtime registration.
+- Packaged 0011-pid1 with prepared static arm64 test init as --ramdisk,
+  rd=md0, normal IRQ masking and existing trace arguments. RAM image at
+  PA 0x104008000, padded size 0x8000; ADT PA 0x104010000; entry 0x103470488.
+  Init SHA256 f5de3714ff95e6a3b9ece30723f677de0f3f74ec5eb985a00c5ae872f0ac9bf1.
+  Init segment byte-match and exact payload embedded in BOOT verified.
+- BOOT image SHA256
+  4bdf15d5a4c66321783f193d5c72fef33bbebd520eb07087da8b650e9b6fb0c9.
+  Packer host bounds checks passed. This contains a test executable served
+  by mockfs, not a real iOS filesystem/launchd/SpringBoard.
+- USB was Download mode 04e8:685d. Heimdall retrieved PIT, uploaded boot
+  100%, reported success, rebooted, exit 0. Only BOOT written; no independent
+  readback. Current BOOT 0011-pid1; asked for pthread/md0/PID1/heartbeat
+  or panic lines/photo. No userspace success inferred before device report.

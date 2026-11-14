@@ -2,19 +2,18 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 2026-11-14: 0010 PHOTO CONFIRMS CPU 0 registration, SGI1 verified,
-CPU initialization complete and BSD startup through aio_init. Primary panic
-cpu0 caller 0xfffffe0007a62a50: pthread kernel extension not loaded
-(function table is NULL), pthread_shims.c:318. Handshake text is secondary.
-Missing profile integration: donor 0019 built-in pthread provider excluded.
-Now staged 0019 + pinned stage-libpthread, 0021/22/24 mockfs RAM-root,
-0025 minimal AMFI interface; 0088 makes new provider objects general-regs.
-Local patches/profile/syntax checks pass; source a8e2da7 dispatched as CI 43530972730 on macos-15-intel.
-Next trial: verify providers/codegen, attach private static test init with
---ramdisk and rd=md0. Test PID1 is not real iOS launchd/SpringBoard.
-Current phone BOOT remains 0010-cpumatch, no new flash in photo analysis.
-0010 image SHA256 7af08504a558c1517bf996535cb0670ddbded54f2157ebc85d9e93eb3f231543.
-Preserve non-BOOT partitions. No real iOS rootfs or storage/USB drivers.
+Latest 2026-11-14: BOOT 0011-pid1 flashed 100%, success, reboot, exit 0.
+CI 43530972730 source a8e2da7 passed; kernel manifest verified SHA256
+00028c59d5c543c32e2c13e1e6229ede236140027a205c79c1e003a9f5ea585d.
+Named CPU/BSD/pthread/AMFI/mockfs functions disassembled SIMD-free.
+BOOT SHA256 4bdf15d5a4c66321783f193d5c72fef33bbebd520eb07087da8b650e9b6fb0c9.
+Attached private static test init via --ramdisk and rd=md0, RAM PA
+0x104008000 size0x8000; ADT0x104010000. Segment/payload byte-match passed.
+Runtime pthread/md0/PID1/heartbeat or panic/photo requested; no success yet.
+This is mockfs test init, not real iOS launchd/rootfs/SpringBoard.
+0010 confirmed CPU registration/SGI1 and BSD, panicked missing pthread
+provider; built-in provider + RAM-root + minimal AMFI included in 0011.
+Current phone BOOT0011, normal IRQ masking. Preserve non-BOOT partitions.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
