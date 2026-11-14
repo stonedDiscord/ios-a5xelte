@@ -2125,13 +2125,25 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   DEVELOPMENT and macOS 13.5. It staged 0093, but completed with the patch
   silently skipped: its `bsd/dev/mem.c` context had one fewer tab than the
   target. The resulting artifact again lacks `bsd/dev/a03_usb.c`, the init
-  call and `A03 USB:` strings. This is a false-positive build for the probe;
-  BOOT0032 remains current.
+  call and `A03 USB:` strings. This was a false-positive build for the probe;
+  BOOT0032 remained current until the later corrected BOOT0033 test below.
 - Corrected 0093's context to match the target tab alignment. `git apply
   --check` now passes against the actual post-0092 source from workflow
   43622283937's build-tree artifact. Added a workflow post-build check that
-  fails an A03 iOS-userspace build if its kernel lacks `A03 USB: AON`. A new
-  corrected XNU build `43623709272` is now running from commit `eb7dd77`,
-  with `a03_ios_userspace=true`. Verify the gate and build-tree/kernel output
-  before packaging or flashing replacement BOOT. No phone write was performed
-  for these corrections.
+  fails an A03 iOS-userspace build if its kernel lacks `A03 USB: AON`. XNU
+  build `43623709272` completed successfully from commit `eb7dd77` with
+  `a03_ios_userspace=true`; the gate passed. CI log confirms patch0093 applied,
+  build-tree contains `xnu/bsd/dev/a03_usb.c`, and the kernel contains the
+  `A03 USB: AON`, clock-gated, map-failed and MUSB-state strings. Kernel SHA256
+  `8611e248a6b6ade4c95e9c77649d18b0d95cb8beba8a1cfc1e09263b37d9f006`.
+- Packaged BOOT0033 using RAM root
+  `b266c456151780842025a1e14137f5b416650d2feca71677dc34a13131f34893`,
+  A03 eMMC ADT, verified Magisk BOOT base, and cmdline
+  `rd=md0 a03usb_probe=1 a03emmc=1`. Image SHA256
+  `48eb01ea5428c3e2eab9e5c69c4c7cedb9013d6ec9b6baf3b6612ab4862bf842`.
+- Fresh Download detection and Heimdall protocol/PIT succeeded. Heimdall
+  uploaded only lowercase `boot` to100% and reported `boot upload successful`,
+  then rebooted. No USERDATA or protected partition was written. Twelve
+  seconds later neither Download nor ADB was enumerated. BOOT0033's physical
+  `A03 USB:` and catalog/header output are pending. USB state probe is linked;
+  actual MUSB enumeration/log channel is still not implemented.
