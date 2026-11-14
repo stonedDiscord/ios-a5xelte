@@ -1,0 +1,359 @@
+--- a/bsd/conf/files
++++ b/bsd/conf/files
+@@ -103,6 +103,7 @@
+ 
+ bsd/dev/random/randomdev.c		standard
+ 
++bsd/dev/a03_emmc.c			standard
+ bsd/dev/memdev.c			standard
+ bsd/dev/mem.c				standard
+ bsd/dev/munge.c 			optional config_requires_u32_munging
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -95,6 +95,7 @@
+ 
+ # A03: BSD is a separate make target from osfmk.
+ bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
++a03_emmc.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ # A03 built-in userspace providers execute without kernel FP/SIMD state.
+ sweet_pthread_init.o_CFLAGS_ADD += -mgeneral-regs-only
+--- a/iokit/bsddev/IOKitBSDInit.cpp
++++ b/iokit/bsddev/IOKitBSDInit.cpp
+@@ -766,6 +766,14 @@
+ 		}
+ 	}
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    /* A03-only ADT + explicit boot-arg gate; retain rd=md0. */
++    {
++        extern void a03_emmc_probe(void);
++        a03_emmc_probe();
++    }
++#endif
++
+ //
+ //	Now check if we are trying to root on a memory device
+ //
+--- /dev/null
++++ b/bsd/dev/a03_emmc.c
+@@ -0,0 +1,221 @@
++/* A03 ums9230 SDHC v4, polled read-only SDMA.
++ * Register sequence: local Samsung sprd-sdhcr11 and loader trials0017..0020.
++ * No card configuration, clocks, resets, writes, recovery or NV access.
++ * Opt-in a03emmc=1, while rd=md0 retains the independent HFS RAM root.
++ */
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <sys/param.h>
++#include <sys/systm.h>
++#include <sys/buf.h>
++#include <sys/conf.h>
++#include <sys/disk.h>
++#include <sys/errno.h>
++#include <sys/proc.h>
++#include <sys/uio.h>
++#include <miscfs/devfs/devfs.h>
++#include <kern/locks.h>
++#include <vm/pmap.h>
++#include <vm/vm_kern.h>
++#include <pexpert/pexpert.h>
++#include <pexpert/device_tree.h>
++#include <libkern/libkern.h>
++#include "a03_gpt_readonly.h"
++
++extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
++extern uint64_t kvtophys(vm_offset_t);
++void a03_emmc_probe(void);
++static struct {
++    vm_offset_t regs, dma;
++    uint64_t pa;
++    uint32_t sectors;
++    struct a03_gpt gpt;
++    bool poisoned, ready;
++} ae;
++static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
++static LCK_MTX_DECLARE(a03_emmc_lock, &a03_emmc_grp);
++static inline void barrier(void) { __asm__ volatile("dsb sy" ::: "memory"); }
++static uint32_t rd(unsigned off) {
++    uint32_t v=*(volatile uint32_t *)(ae.regs+off);barrier();return v;
++}
++static void wr(unsigned off,uint32_t value) {
++    *(volatile uint32_t *)(ae.regs+off)=value;barrier();
++}
++/* Private page owns all touched cache lines. Prepare clean+invalidate;
++ * after FROM_DEVICE completion invalidate only, never clean stale data. */
++static void dma_sync(bool before) {
++    uint64_t ctr;__asm__ volatile("mrs %0,ctr_el0":"=r"(ctr));
++    vm_offset_t line=4UL<<((ctr>>16)&15);
++    for(vm_offset_t v=ae.dma;v<ae.dma+512;v+=line) {
++        if(before)__asm__ volatile("dc civac,%0"::"r"(v):"memory");
++        else __asm__ volatile("dc ivac,%0"::"r"(v):"memory");
++    }
++    barrier();
++}
++static bool poll(unsigned mask) {
++    uint64_t start,now,freq;
++    __asm__ volatile("mrs %0,cntpct_el0":"=r"(start));
++    __asm__ volatile("mrs %0,cntfrq_el0":"=r"(freq));
++    for(unsigned i=0;i<10000000;i++) {
++        uint32_t s=rd(0x30);
++        if(s&0xffff8000u)return false;
++        if((s&mask)==mask)return true;
++        __asm__ volatile("mrs %0,cntpct_el0":"=r"(now));
++        if(now-start>=freq)return false;
++    }
++    return false;
++}
++static int card_status(void) {
++    uint32_t arg=rd(8),command=rd(0xc)>>24,response=rd(0x10);
++    if((rd(0x24)&3)||(rd(0x2c)&7)!=7||rd(0x30)||
++       ! (arg>>16)||(arg&0xffff)||(command!=11&&command!=13)||
++       (response&0x1f00)!=0x900)return ENXIO;
++    uint32_t enable=rd(0x34),signal=rd(0x38);
++    wr(0x38,0);wr(0x34,enable|0xf8001);wr(8,arg);wr(0xc,0x0d1a0000);
++    bool ok=poll(1);response=rd(0x10);
++    wr(0x30,rd(0x30)&0xffff8001);wr(0x34,enable);wr(0x38,signal);
++    if(!ok||(response&0xffffe180u)!=0x100||
++       (response&0x1e00)!=0x800||(rd(0x24)&3))return EIO;
++    return 0;
++}
++static int data_read(unsigned cmd,uint32_t lba,unsigned char *out) {
++    if(ae.poisoned||(cmd!=8&&cmd!=17)||(cmd==8&&lba)||
++       (cmd==17&&lba>=ae.sectors)||(rd(0x24)&3)||rd(0x30))return EIO;
++    if((rd(0x3c)&0x30000000)!=0x30000000||
++       *(volatile uint16_t *)(ae.regs+0xfe)!=4)return ENXIO;
++    uint32_t enable=rd(0x34),signal=rd(0x38),block=rd(4),count=rd(0);
++    uint32_t host=rd(0x28),lo=rd(0x58),hi=rd(0x5c);
++    /* Invalidate full owned lines before device writes; no sentinel needed. */
++    dma_sync(true);
++    *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)(host&~0x18u);barrier();
++    wr(0x38,0);wr(0x34,enable|0x037f8033);
++    wr(0x58,(uint32_t)ae.pa);wr(0x5c,(uint32_t)(ae.pa>>32));
++    wr(4,0x17200);wr(0,1);wr(8,lba);
++    wr(0xc,(cmd<<24)|0x003a0011);
++    bool ok=poll(1);uint32_t response=rd(0x10);
++    if(response&0xffffe080u)ok=false;
++    if(ok) {wr(0x30,1);ok=poll(2);}
++    if(rd(0x24)&3)ok=false;
++    if(!ok) {
++        /* A timed-out DMA may still own the buffer: retain it permanently,
++         * stop all further commands, mask IRQs, never reset/retry/free. */
++        ae.poisoned=true;wr(0x38,0);
++        printf("A03 eMMC: READ FAILED cmd=%u lba=%x int=%x r1=%x present=%x; disabled\n",
++            cmd,lba,rd(0x30),response,rd(0x24));return EIO;
++    }
++    dma_sync(false);
++    const volatile unsigned char *p=(const volatile unsigned char *)ae.dma;
++    for(unsigned i=0;i<512;i++)out[i]=p[i];
++    wr(0x30,rd(0x30)&0xffff8033);wr(0x58,lo);wr(0x5c,hi);
++    *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)host;barrier();
++    wr(4,block);wr(0,count);wr(0x34,enable);wr(0x38,signal);return 0;
++}
++static unsigned gpt_read(void *context,uint32_t lba,unsigned char *out) {
++    (void)context;return data_read(17,lba,out)==0;
++}
++/* Minor0 exposes validated BOOT read-only for an independent userspace
++ * check; minor1 exposes validated USERDATA read-only for later root work. */
++static uint32_t part_first(dev_t dev) {return minor(dev)?ae.gpt.userdata:ae.gpt.boot;}
++static uint32_t part_count(dev_t dev) {return minor(dev)?ae.gpt.userdata_count:ae.gpt.boot_count;}
++static int emmc_open(dev_t dev,int flags,__unused int type,__unused struct proc *p) {
++    if(!ae.ready||ae.poisoned||minor(dev)>1)return ENXIO;
++    return flags&FWRITE?EROFS:0;
++}
++static int emmc_close(__unused dev_t dev,__unused int flags,__unused int type,__unused struct proc *p) {return 0;}
++static void emmc_strategy(buf_t bp) {
++    int error=0;caddr_t addr=NULL;uint32_t count=buf_count(bp),done=0;
++    dev_t dev=buf_device(bp);uint64_t offset=0;
++    buf_setresid(bp,count);
++    if(!ae.ready||ae.poisoned||minor(dev)>1)error=ENXIO;
++    else if(!(buf_flags(bp)&B_READ))error=EROFS;
++    else if(buf_blkno(bp)<0)error=EINVAL;
++    else {
++        offset=(uint64_t)buf_blkno(bp)*512;
++        uint64_t size=(uint64_t)part_count(dev)*512;
++        if((uint64_t)buf_blkno(bp)>UINT64_MAX/512||offset>size||count>size-offset)error=EINVAL;
++    }
++    if(error||!count)goto finish;
++    if(buf_map(bp,&addr)) {error=EIO;goto finish;}
++    lck_mtx_lock(&a03_emmc_lock);
++    while(done<count) {
++        unsigned char sector[512];uint64_t pos=offset+done;
++        unsigned skip=pos&511,take=MIN(count-done,512-skip);
++        error=data_read(17,part_first(dev)+(uint32_t)(pos/512),sector);
++        if(error)break;
++        for(unsigned i=0;i<take;i++)addr[done+i]=sector[skip+i];
++        done+=take;buf_setresid(bp,count-done);
++    }
++    lck_mtx_unlock(&a03_emmc_lock);buf_unmap(bp);
++finish:
++    if(error)buf_seterror(bp,error);
++    buf_biodone(bp);
++}
++static int emmc_ioctl(dev_t dev,u_long cmd,caddr_t data,__unused int flag,__unused struct proc *p) {
++    if(!ae.ready||minor(dev)>1)return ENXIO;
++    switch(cmd) {
++    case DKIOCGETBLOCKSIZE:case DKIOCGETPHYSICALBLOCKSIZE:*(uint32_t *)data=512;return 0;
++    case DKIOCSETBLOCKSIZE:return *(uint32_t *)data==512?0:EINVAL;
++    case DKIOCGETBLOCKCOUNT:*(uint64_t *)data=part_count(dev);return 0;
++    case DKIOCISWRITABLE:*(uint32_t *)data=0;return 0;
++    case DKIOCGETMAXBLOCKCOUNTREAD:*(uint64_t *)data=128;return 0;
++    case DKIOCGETMAXBLOCKCOUNTWRITE:*(uint64_t *)data=0;return 0;
++    default:return ENOTTY;
++    }
++}
++static int emmc_psize(dev_t dev) {return ae.ready&&minor(dev)<2?(int)part_count(dev):-1;}
++static int emmc_read(dev_t dev,struct uio *uio,__unused int flags) {return physio(emmc_strategy,NULL,dev,B_READ,minphys,uio,512);}
++static int emmc_write(__unused dev_t dev,__unused struct uio *uio,__unused int flags) {return EROFS;}
++static const struct bdevsw emmc_bdevsw={
++    .d_open=emmc_open,.d_close=emmc_close,.d_strategy=emmc_strategy,
++    .d_ioctl=emmc_ioctl,.d_dump=eno_dump,.d_psize=emmc_psize,.d_type=D_DISK
++};
++static const struct cdevsw emmc_cdevsw={
++    .d_open=emmc_open,.d_close=emmc_close,.d_read=emmc_read,.d_write=emmc_write,
++    .d_ioctl=emmc_ioctl,.d_stop=eno_stop,.d_reset=eno_reset,.d_ttys=NULL,
++    .d_select=eno_select,.d_mmap=eno_mmap,.d_strategy=eno_strat,
++    .d_reserved_1=eno_getc,.d_reserved_2=eno_putc,.d_type=D_DISK
++};
++void a03_emmc_probe(void) {
++    static bool attempted;uint32_t opt=0;
++    PE_parse_boot_argn("a03emmc",&opt,sizeof(opt));
++    if(opt!=1||attempted)return;
++    attempted=true;DTEntry node;const uintptr_t *reg=NULL;unsigned size=0;
++    if(SecureDTLookupEntry(NULL,"/a03-emmc",&node)!=kSuccess||
++       SecureDTGetProperty(node,"reg",(const void **)&reg,&size)!=kSuccess||
++       size!=2*sizeof(uintptr_t)||reg[0]!=0x201d0000||reg[1]!=0x1000) {
++        printf("A03 eMMC: absent/invalid opt-in ADT node\n");return;
++    }
++    ae.regs=ml_io_map(reg[0],reg[1]);if(!ae.regs)return;
++    printf("A03 eMMC: XNU SDMA probe, retained timing, read-only\n");
++    if(card_status()) {printf("A03 eMMC: retained CMD13 guard failed\n");return;}
++    if(kmem_alloc_contig(kernel_map,&ae.dma,PAGE_SIZE,PAGE_MASK,0,0,
++        KMA_KOBJECT|KMA_PERMANENT,VM_KERN_MEMORY_IOKIT)!=KERN_SUCCESS)return;
++    ae.pa=kvtophys(ae.dma);
++    if(!ae.pa||(ae.pa&511)||((ae.pa&0x7ffff)>0x7fe00)||
++       kvtophys(ae.dma+511)!=ae.pa+511)return;
++    printf("A03 eMMC: DMA PA=%llx, private permanent page\n",ae.pa);
++    unsigned char sector[512];
++    if(data_read(8,0,sector))return;
++    ae.sectors=a03_le32(sector+212);
++    if((sector[179]&7)||sector[61]||sector[192]<5||sector[192]>8||ae.sectors<2) {
++        printf("A03 eMMC: EXT_CSD guard failed\n");return;
++    }
++    if(data_read(17,0,sector)||sector[510]!=0x55||sector[511]!=0xaa||
++       data_read(17,1,sector)||!a03_gpt_header(sector,ae.sectors,&ae.gpt)) {
++        printf("A03 eMMC: MBR/GPT header validation failed\n");return;
++    }
++    uint32_t crc=0;unsigned result=a03_gpt_entries(&ae.gpt,gpt_read,NULL,&crc);
++    printf("A03 eMMC: GPT result=%u CRC=%x/%x\n",result,crc,ae.gpt.array_crc);
++    if(result)return;
++    if(data_read(17,ae.gpt.boot,sector)||a03_le64(sector)!=0x2144494f52444e41ULL||
++       a03_le32(sector+36)!=2048||a03_le32(sector+40)!=2)return;
++    int bmajor=bdevsw_add(-1,&emmc_bdevsw);if(bmajor<0)return;
++    int cmajor=cdevsw_add_with_bdev(-1,&emmc_cdevsw,bmajor);
++    if(cmajor<0) {(void)bdevsw_remove(bmajor,&emmc_bdevsw);return;}
++    ae.ready=true;
++    devfs_make_node(makedev(bmajor,0),DEVFS_BLOCK,UID_ROOT,GID_OPERATOR,0440,"a03boot0");
++    devfs_make_node(makedev(cmajor,0),DEVFS_CHAR,UID_ROOT,GID_OPERATOR,0440,"ra03boot0");
++    devfs_make_node(makedev(bmajor,1),DEVFS_BLOCK,UID_ROOT,GID_OPERATOR,0440,"a03userdata0");
++    devfs_make_node(makedev(cmajor,1),DEVFS_CHAR,UID_ROOT,GID_OPERATOR,0440,"ra03userdata0");
++    printf("A03 eMMC: BOOT + USERDATA BSD devices ready READ ONLY; RAM root unchanged\n");
++}
++#endif
+--- /dev/null
++++ b/bsd/dev/a03_gpt_readonly.h
+@@ -0,0 +1,95 @@
++/* Bounded primary-GPT validation. No I/O or card-state changes here. */
++#ifndef A03_GPT_READONLY_H
++#define A03_GPT_READONLY_H
++#include <stdint.h>
++struct a03_gpt {
++    uint32_t array_lba, count, array_crc, first, last;
++    uint32_t boot, boot_count, userdata, userdata_count;
++    uint32_t boot_index, userdata_index, identity_errors;
++};
++static uint32_t a03_le32(const unsigned char *p) {
++    return p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);
++}
++static uint64_t a03_le64(const unsigned char *p) {
++    return a03_le32(p)|((uint64_t)a03_le32(p+4)<<32);
++}
++static uint32_t a03_crc_update(uint32_t crc,const unsigned char *p,unsigned n) {
++    for(unsigned i=0;i<n;i++) {
++        crc^=p[i];
++        for(unsigned b=0;b<8;b++)crc=(crc>>1)^(0xedb88320u&(0u-(crc&1)));
++    }
++    return crc;
++}
++static unsigned a03_gpt_header(const unsigned char *p,uint32_t sectors,struct a03_gpt *g) {
++    unsigned n=a03_le32(p+12);
++    if(a03_le64(p)!=0x5452415020494645ULL||a03_le32(p+8)!=0x10000||
++       n<92||n>512||a03_le32(p+20)||a03_le64(p+24)!=1||sectors<3)return 0;
++    uint32_t crc=a03_crc_update(~0u,p,16);
++    const unsigned char z[4]={0,0,0,0};
++    crc=a03_crc_update(crc,z,4);crc=a03_crc_update(crc,p+20,n-20);
++    if(~crc!=a03_le32(p+16))return 0;
++    uint64_t first=a03_le64(p+40),last=a03_le64(p+48),array=a03_le64(p+72);
++    uint64_t backup=a03_le64(p+32);
++    uint32_t count=a03_le32(p+80);
++    /* The A03 layout uses 128-byte entries, at most 128 (32 sectors). */
++    if(a03_le32(p+84)!=128||count<55||count>128||array<2||
++       first>=last||backup>=sectors||backup<=last||first>=sectors||
++       array>=first||(count+3)/4>first-array||
++       (count+3)/4>=backup-last)return 0;
++    *g=(struct a03_gpt){(uint32_t)array,count,a03_le32(p+88),
++        (uint32_t)first,(uint32_t)last,0,0,0,0,0,0,0};
++    return 1;
++}
++static unsigned a03_gpt_name(const unsigned char *entry,const char *name) {
++    for(unsigned i=0;i<36;i++) {
++        if(entry[56+i*2]!=(unsigned char)*name||entry[57+i*2])return 0;
++        if(!*name)return 1;
++        name++;
++    }
++    return 0;
++}
++/* Reader returns a single 512-byte sector, stopping immediately on failure.
++ * Error 1=read, 2=range/overlap, 3=identity, 4=array CRC, 5=missing labels. */
++static unsigned a03_gpt_entries(struct a03_gpt *g,
++    unsigned (*read_sector)(void *,uint32_t,unsigned char *),void *context,
++    uint32_t *computed) {
++    unsigned char sector[512];
++    uint32_t starts[128],ends[128],crc=~0u;unsigned used=0;
++    for(unsigned i=0;i<g->count;i++) {
++        if(!(i%4)) {
++            if(!read_sector(context,g->array_lba+i/4,sector))return 1;
++            unsigned remain=g->count-i;
++            crc=a03_crc_update(crc,sector,remain<4?remain*128:512);
++        }
++        const unsigned char *e=sector+(i%4)*128;unsigned type=0,guid=0;
++        for(unsigned j=0;j<16;j++) {type|=e[j];guid|=e[16+j];}
++        if(!type)continue;
++        uint64_t start=a03_le64(e+32),end=a03_le64(e+40);
++        if(!guid||start<g->first||end>g->last||end<start)return 2;
++        for(unsigned j=0;j<used;j++)if(start<=ends[j]&&starts[j]<=end)return 2;
++        starts[used]=(uint32_t)start;ends[used++]=(uint32_t)end;
++        if(a03_gpt_name(e,"boot")) {
++            if(g->boot)g->identity_errors|=1;
++            if(i!=38)g->identity_errors|=2;
++            if(start!=483328)g->identity_errors|=4;
++            if(end-start+1!=131072)g->identity_errors|=8;
++            g->boot_index=i;
++            g->boot=(uint32_t)start;g->boot_count=(uint32_t)(end-start+1);
++        }
++        if(a03_gpt_name(e,"userdata")) {
++            if(g->userdata)g->identity_errors|=16;
++            if(i!=54)g->identity_errors|=32;
++            if(start!=15929344)g->identity_errors|=64;
++            /* Last-usable bounds were checked above. GPT may leave a tail
++             * gap: PIT's zero 'remainder' count does not prove exact end. */
++            g->userdata_index=i;
++            g->userdata=(uint32_t)start;g->userdata_count=(uint32_t)(end-start+1);
++        }
++    }
++    *computed=~crc;
++    if(*computed!=g->array_crc)return 4;
++    if(g->identity_errors)return 3;
++    if(!g->boot||!g->userdata)return 5;
++    return 0;
++}
++#endif

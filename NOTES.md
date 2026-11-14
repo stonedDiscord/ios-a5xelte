@@ -2,6 +2,24 @@
 
 ## Active A03 handoff — 2026-11-13
 
+XNU integration staged (NOT BUILT/FLASHED): profile0090 adds opt-in
+a03emmc=1 plus explicit ADT --emmc-readonly node, private permanent DMA
+page/cache maintenance, bounded retained-state SDMA, GPT validation and
+read-only BOOT/USERDATA BSD nodes. Keep rd=md0/HFS RAM root. High-address
+DMA (>4GiB), XNU cache/MMU and BSD access remain physically untested.
+Timeout poisons reader permanently; no reset/retry/card configuration or
+sector writes. Local patch/ADT/parser checks pass; next CI compile.
+Current0020 confirmed storage identity PASS + BOOT512-byte match; gap7.
+
+
+MILESTONE0020 USER CONFIRMED: STORAGE IDENTITY PASS, BOOT HEADER +512
+PAYLOAD BYTES MATCH; USERDATA tail gap7 sectors. GPT integrity/ranges/
+identities and current BOOT sample verified. Not full BOOT readback or
+XNU driver yet. Current0020 paused before XNU. Next: opt-in bounded SDMA
+XNU reader with cache/physical-address handling, preserve HFS RAM root.
+All non-BOOT partitions preserved. Prior pending0020 notes historical.
+
+
 Latest0020 FLASHED: Heimdall protocol/PIT/boot100%/reboot exit0. Current
 BOOT0020, no independent readback. SHA256
 e7b647a5d7ff4fd7658bd4cedc8c77010652762306fb62dfd54c43d7b1ade896.

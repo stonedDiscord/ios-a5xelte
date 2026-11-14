@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stage pinned native-16K SWEET core for A03 single-core kernel bring-up.
 
-No Qualcomm storage, USB, power, GPU or Wi-Fi patches. No iOS rootfs yet.
+No Qualcomm storage, USB, power, GPU or Wi-Fi patches. A03 SDMA is opt-in.
 """
 import argparse
 import hashlib
@@ -77,13 +77,14 @@ def main():
     shutil.copyfile(ROOT/'xnu/patches/0087-a03-cortex-a55-cpu-match.patch', a.destination/'0087-a03-cortex-a55-cpu-match.patch')
     shutil.copyfile(ROOT/'xnu/patches/0088-a03-userspace-provider-codegen.patch', a.destination/'0088-a03-userspace-provider-codegen.patch')
     shutil.copyfile(ROOT/'xnu/patches/0089-a03-hfs-general-register-codegen.patch', a.destination/'0089-a03-hfs-general-register-codegen.patch')
+    shutil.copyfile(ROOT/'xnu/patches/0090-a03-readonly-sdma-bsd.patch', a.destination/'0090-a03-readonly-sdma-bsd.patch')
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
         'Portable crypto 0020/0023/0027/0032/0033 and pinned BearSSL stage script.',
         'A03 GICv3 timer INTID27; logo candidate 0x9e000000 720x1600 stride2880.',
         'Pinned libpthread, mockfs/HFS RAM-root and minimal AMFI interface for test init.',
-        'No iOS rootfs/storage/peripheral drivers. Display needs device test.', '']))
-    print('A03 profile staged:', len(patches)+7, 'patches; MACHINE_CONFIG=SWEET')
+        'Opt-in A03 read-only SDMA BSD provider; runtime integration unverified.', '']))
+    print('A03 profile staged:', len(patches)+8, 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':

@@ -1303,3 +1303,36 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   gap.0019 already proves array integrity;0020 sampled BOOT read is pending.
   Trial pauses before XNU. No non-BOOT partition was written; no storage
   writes by diagnostic. XNU block provider and Apple runtime remain pending.
+
+### 2026-11-14 MILESTONE: 0020 storage identity passes
+
+- User transcribed0020: USERDATA TAIL GAP SECTORS=00000007, STORAGE
+  IDENTITY PASS, BOOT HEADER +512 PAYLOAD BYTES MATCH. This proves full
+  primary entry-array CRC/range/non-overlap/identity validation followed
+  by current BOOT header and exact512-byte immutable payload sample.
+- USERDATA leaves7 sectors before last usable; earlier count transcription
+  from0019 was uncertain. Do not use that OCR count as exact geometry.
+  No full64MiB BOOT hash/readback, XNU DMA/block access or eMMC filesystem
+  mount is established. Current0020 pauses before XNU. Next integrate
+  bounded read-only SDMA into XNU while retaining known HFS RAM root.
+
+### 2026-11-14: first opt-in XNU SDMA/BSD implementation staged
+
+- Added xnu/a03/a03_emmc.c and profile patch0090 with the same guarded
+  retained-state CMD13, EXT_CSD, single-block SDMA CMD17 sequence. Mapping
+  requires explicit /a03-emmc ADT reg201d0000+1000 AND a03emmc=1. Normal
+  ADT lacks this node. IOFindBSDRoot calls probe, rd=md0 remains RAM-root.
+- XNU owns a permanent contiguous page, translates VA using kvtophys,
+  checks512-byte physical continuity/boundary, cleans+invalidates before
+  FROM_DEVICE DMA and invalidates only after completion. Allocation is in
+  XNU's upper bank (above4GiB); controller64bit mode required. High-address
+  DMA/cache/MMU behavior is not yet physically tested. No low-bank guessing.
+- Single mutex serializes BSD reads. Fresh GPT header/array/identity and
+  BOOT header checks precede read-only block/char nodes a03boot0/ra03boot0
+  and a03userdata0/ra03userdata0. Write open/strategy/write syscall rejected.
+  Timeout/error poisons reader, masks controller IRQ and retains DMA page
+  permanently, no reset/retry/free or further command. Device nodes remain
+  absent on initialization failure; RAM-root startup can continue.
+- Local patch dry-run against current prepared XNU, actual GPT tests, ADT
+  default/opt-in gating and Python syntax passed. Full XNU compile pending;
+  no new flash. Current0020 is confirmed loader storage checkpoint only.

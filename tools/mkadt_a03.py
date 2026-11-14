@@ -9,7 +9,7 @@ import mkadt as sweet
 PHYS_BASE=0x102000000  # 32 MiB aligned for XNU's bootstrap L2 block mappings.
 MEM_SIZE=0x10000000
 
-def build():
+def build(emmc=False):
     root=sweet.build(seed=os.urandom(64),qemu=True)
     def prop(n,k,v):
         n.props=[(a,f,v if a==k else b) for a,f,b in n.props]
@@ -27,11 +27,13 @@ def build():
     prop(gic,'virtual-timer-intid',sweet.u32(27))
     fb=by['sweet-fbcon'];prop(fb,'reg',sweet.u64(0x9e000000,0xab0000))
     prop(fb,'width',sweet.u32(720));prop(fb,'height',sweet.u32(1600));prop(fb,'stride',sweet.u32(2880))
+    if emmc:
+        root.children.append(sweet.node('a03-emmc', [('reg',sweet.u64(0x201d0000,0x1000))]))
     return root
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('output',type=Path);a=p.parse_args()
-    blob=adt.serialize(build());root,end=adt.parse(blob);assert end==len(blob)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('output',type=Path);p.add_argument('--emmc-readonly',action='store_true');a=p.parse_args()
+    blob=adt.serialize(build(a.emmc_readonly));root,end=adt.parse(blob);assert end==len(blob)
     assert not any(n.name=='sweet-ufs' for n in root.children)
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_bytes(blob)
     print('A03 ADT',len(blob),'bytes; 256 MiB upper-bank window; single A55')
