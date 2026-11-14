@@ -1504,3 +1504,17 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   request passes. Diagnostic root revalidated with read-only fsck and
   actual ARM64 PASS+14 failure-stage emulation;0024 ADT prepared only.
   Kernel artifact still pending; current phone remains0023 Download.
+
+### 2026-11-14: sector-size correction built; BOOT0024 ready
+
+- XNU run43598578558 at39d7a06 completed SUCCESS. Plain ARM64 subtype0
+  kernel SHA2566880a6c035baf67e2023033c81e0716670b9f4e7e0ad853e8392ab5b4d30dc41.
+  Storage text integer-only; raw uiomove call retained. emmc_psize compiled
+  mov w8,#0x200 atfffffe00074d9180, conditional512/-1 as intended.
+- BOOT0024 shim/a03/out/a03-xnu-0024-sector-size.img SHA256
+  a4240b2222a59099fe436a6b33348b9c6ebbed768d9a98ec2f00168e73b53b9c.
+  Same verified diagnostic root43597035152, normal loader, opt-in ADT
+  a03emmc=1 rd=md0. Exact payload bytes/header/bounds and restore hash
+  verified; BSD sanitizer geometry/full16K and GPT regressions pass.
+- Ready for authorized BOOT-only test. Current0023; complete storage
+  PID1 PASS or exact next failure still requires physical evidence.

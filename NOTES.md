@@ -2,6 +2,13 @@
 
 ## Active A03 handoff — 2026-11-14
 
+0024 READY: CI43598578558 SUCCESS; kernel SHA6880a6c0...d30dc41.
+Compiled emmc_psize512 verified, integer-only storage+uiomove retained.
+Image shim/a03/out/a03-xnu-0024-sector-size.img SHA256
+a4240b2222a59099fe436a6b33348b9c6ebbed768d9a98ec2f00168e73b53b9c.
+Same diagnostic root43597035152, ADT+a03emmc=1 rd=md0. Next BOOT-only
+flash and physical raw+block/EROFS PASS. Current0023. Older CI notes historical.
+
 FIX39d7a06 PUSHED; kernel CI43598578558 confirmed live/Deps. Phone
 Download available. Reuse diagnostic root43597035152(hash revalidated).
 On CI success inspect integer-only storage code and emmc_psize512, package
