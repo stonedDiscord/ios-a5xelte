@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0020 FLASHED: Heimdall protocol/PIT/boot100%/reboot exit0. Current
+BOOT0020, no independent readback. SHA256
+e7b647a5d7ff4fd7658bd4cedc8c77010652762306fb62dfd54c43d7b1ade896.
+Code/tests4046c65. Await photo lower rows64..78: GPT CRC/result, BOOT header
++512 payload-byte match or failure and USERDATA tail-gap value.0019 proves
+array CRCbb4c2987 + partition ranges; only exact-end assumption was wrong.
+No XNU provider/Apple runtime yet. Prior prepared/current0019 notes historical.
+
+
 0019 photo IMG_20261114_115151_999.jpg CONFIRMS GPT array CRCbb4c2987
 match, all bounds/nonoverlap, boot/start/size/index and userdata/start/index.
 Only mismatch80: unsupported assumption userdata ends exactly last-usable.

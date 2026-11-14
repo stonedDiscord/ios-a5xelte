@@ -1291,3 +1291,15 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   exact0012 kernel/HFS payload verified. Ready0020 candidate SHA256
   e7b647a5d7ff4fd7658bd4cedc8c77010652762306fb62dfd54c43d7b1ade896
   at shim/a03/out/a03-xnu-0020-gpt-boot.img. Not flashed at this entry.
+
+### 2026-11-14: 0020 GPT/current-BOOT probe flashed
+
+- Code/tests commit4046c65. Fresh Download detected; candidate SHA256
+  e7b647a5d7ff4fd7658bd4cedc8c77010652762306fb62dfd54c43d7b1ade896.
+  Heimdall protocol/PIT/only boot100%/successful upload/reboot exit0.
+  No independent readback. Current BOOT0020.
+- Await physical result rows64..78: array CRCs/result, BOOT header +512
+  payload-byte match or exact failure, and directly printed USERDATA tail
+  gap.0019 already proves array integrity;0020 sampled BOOT read is pending.
+  Trial pauses before XNU. No non-BOOT partition was written; no storage
+  writes by diagnostic. XNU block provider and Apple runtime remain pending.
