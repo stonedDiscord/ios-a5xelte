@@ -42,6 +42,13 @@ have the trace flag. Workflow43625945895 linked the trace strings; BOOT0034
 was flashed BOOT-only and rebooted. The reported local image's expected
 catalog bytes remain nonzero; physical trace output is still missing.
 
+BOOT0035 deployed from workflow43627631857 (kernel
+`3a53e8216150a78584022c5a9cb2ab696241ff72292d83cee71175e7e2b09bad`, image
+`0956a223313ef84cd09744f7a0b20d135e9aa52518400576f986195c9594666d`). It adds
+the UIO offset trace and an unconditional USB probe-entry marker. Heimdall
+uploaded BOOT-only successfully and rebooted; await `A03 eMMC UIO`, `TRACE`,
+and `A03 USB` lines. No USERDATA/protected write.
+
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /
 hfs_mountroot errno5 / cannot mount root errno19. eMMC later reports ready,

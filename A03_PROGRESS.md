@@ -2178,3 +2178,10 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   Fresh Download/PIT succeeded and Heimdall uploaded only BOOT to100%, then
   rebooted. No USERDATA or protected partition write. Host had no Download or
   ADB enumeration 12 seconds later; physical trace lines are pending.
+- Workflow `43627631857` completed successfully with patches0093-0096. Its
+  kernel contains `A03 USB: probe entered` and `A03 eMMC UIO`; kernel SHA256
+  `3a53e8216150a78584022c5a9cb2ab696241ff72292d83cee71175e7e2b09bad`.
+  BOOT0035 SHA256 is
+  `0956a223313ef84cd09744f7a0b20d135e9aa52518400576f986195c9594666d`.
+  Heimdall uploaded BOOT0035 BOOT-only at100% and rebooted; no USERDATA or
+  protected partition write. UIO and USB marker output are pending.
