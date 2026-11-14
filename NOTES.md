@@ -48,6 +48,11 @@ implicates SDMA/addressing or installed USERDATA contents. Correct the probe
 constant (the prior expected bytes were wrong), then read volume header at
 offset1024 before any USERDATA rewrite.
 
+BOOT0029 fixes that expected catalog prefix and was flashed BOOT-only from
+CI root43613676224. SHA
+`fffe78294bb3639f1db0fa1caf6420c0ec44649a160fea18f108a6ba00d900a6`.
+Reboot completed; after10s no Download/ADB. Await corrected probe output.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

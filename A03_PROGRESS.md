@@ -1932,3 +1932,13 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   are available yet; physical screen report is pending. BOOT0028 selects the
   validated RAM root (`rd=md0`) with eMMC enabled, so its PID1 probe can run
   independently of a USERDATA HFS mount.
+
+### 2026-11-14: BOOT0029 corrected catalog comparison flashed
+
+- CI root build `43613676224` includes the corrected actual catalog prefix
+  `00000000000000000100000300000003`. BOOT0029 SHA256:
+  `fffe78294bb3639f1db0fa1caf6420c0ec44649a160fea18f108a6ba00d900a6`.
+- Heimdall downloaded PIT and uploaded only lowercase `boot` at100%, then
+  `close-pc-screen --resume` completed reboot. USERDATA and protected
+  partitions were untouched. Ten seconds later no Download/ADB interface was
+  visible. Await display/PID1 output for the corrected catalog result.
