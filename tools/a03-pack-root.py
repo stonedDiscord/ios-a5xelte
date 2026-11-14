@@ -12,6 +12,7 @@ def main():
     ap.add_argument('--userdata-writable',action='store_true',help='enable USERDATA-only writes; requires --emmc-readonly controller opt-in')
     ap.add_argument('--userdata-root',action='store_true',help='select validated USERDATA HFS root; requires --userdata-writable and kernel root-selection patch; positional root remains small RAM fallback')
     ap.add_argument('--catalog-probe',action='store_true',help='keep RAM HFS root while enabling A03 eMMC for PID1 catalog reads')
+    ap.add_argument('--usb-probe',action='store_true',help='print read-only A03 MUSB controller state from XNU')
     ap.add_argument('--base',type=Path,default=ROOT/'backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img')
     a=ap.parse_args();payload=a.output.with_suffix('.payload');manifest=a.output.with_suffix('.json')
     if a.userdata_writable and not a.emmc_readonly:
@@ -33,6 +34,7 @@ def main():
     if block<512 or block&(block-1) or block*count!=len(data):ap.error('invalid root volume bounds')
     if len(data)>32*1024*1024:ap.error('RAM-root trial limited to 32 MiB; full iOS needs storage')
     args='debug=0x14e serial=3 cpus=1 keepsyms=1 -v -noprogress -enable_kprintf_spam startup_debug=1 -show_pointers rd=md0'
+    if a.usb_probe:args+=' a03usb_probe=1'
     if a.emmc_readonly:
         import sys
         sys.path.insert(0,str(ROOT/'tools'))

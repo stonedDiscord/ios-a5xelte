@@ -111,6 +111,16 @@ PIT read and upload100%/`boot upload successful`, then reboot. Waiting for
 post-reflash catalog/header output. This is the required XNU shim after the
 Magisk restore; no other partition was written.
 
+User requested USB in XNU to eliminate photo transcription. A03 is Qogirl6
+MUSB (`sprd,qogirl6-musb`) at0x64900000, PHY0x64570000, AON APB0x64000000;
+Linux source confirms `dr-mode=peripheral` and OTG UTMI clock gate APB_EB1
+bit8. Do not reuse donor DWC3/Qualcomm code. Added opt-in read-only kernel
+register probe patch0093 plus `--usb-probe` boot-arg support, validated patch
+application after0090/0092. It is not enumeration or data transport yet.
+Build/device check the probe, then implement MUSB EP0 and a bulk vendor
+channel for logs/sectors. Post-reflash BOOT0031 catalog result is still
+missing; no USB-related flash has occurred.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

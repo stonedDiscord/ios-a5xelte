@@ -1,0 +1,106 @@
+--- /dev/null
++++ b/bsd/dev/a03_usb.c
+@@ -0,0 +1,86 @@
++/* Read-only Qogirl6 MUSB state probe. No controller or PHY writes. */
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <sys/param.h>
++#include <sys/systm.h>
++#include <pexpert/pexpert.h>
++#include <vm/vm_kern.h>
++
++extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
++void a03_usb_probe(void);
++
++#define AON_APB_PA      0x64000000
++#define AON_APB_EB1     0x004
++#define AON_APB_RST1    0x010
++#define AON_OTG_PHY_TEST 0x204
++#define AON_OTG_PHY_CTRL 0x208
++#define AON_OTG_CTRL1    0x210
++#define AON_USB_CLK_REF  0x214
++#define CLK_OTG_UTMI_EB  (1u << 8)
++#define MUSB_PA          0x64900000
++#define MUSB_SIZE        0x2000
++
++static uint32_t
++a03_usb_rd32(vm_offset_t base, uint32_t off)
++{
++	uint32_t value = *(volatile uint32_t *)(base + off);
++	__asm__ volatile("dsb sy" ::: "memory");
++	return value;
++}
++
++static uint16_t
++a03_usb_rd16(vm_offset_t base, uint32_t off)
++{
++	uint16_t value = *(volatile uint16_t *)(base + off);
++	__asm__ volatile("dsb sy" ::: "memory");
++	return value;
++}
++
++static uint8_t
++a03_usb_rd8(vm_offset_t base, uint32_t off)
++{
++	uint8_t value = *(volatile uint8_t *)(base + off);
++	__asm__ volatile("dsb sy" ::: "memory");
++	return value;
++}
++
++void
++a03_usb_probe(void)
++{
++	uint32_t enable = 0;
++	PE_parse_boot_argn("a03usb_probe", &enable, sizeof(enable));
++	if (enable != 1) {
++		return;
++	}
++	vm_offset_t aon = ml_io_map(AON_APB_PA, 0x1000);
++	if (aon == 0) {
++		printf("A03 USB: AON APB map failed\n");
++		return;
++	}
++	uint32_t eb1 = a03_usb_rd32(aon, AON_APB_EB1);
++	uint32_t rst1 = a03_usb_rd32(aon, AON_APB_RST1);
++	uint32_t phy_test = a03_usb_rd32(aon, AON_OTG_PHY_TEST);
++	uint32_t phy_ctrl = a03_usb_rd32(aon, AON_OTG_PHY_CTRL);
++	uint32_t ctrl1 = a03_usb_rd32(aon, AON_OTG_CTRL1);
++	uint32_t clk_ref = a03_usb_rd32(aon, AON_USB_CLK_REF);
++	printf("A03 USB: AON EB1=%08x RST1=%08x PHY_TEST=%08x PHY_CTRL=%08x CTRL1=%08x CLK_REF=%08x\n",
++	    eb1, rst1, phy_test, phy_ctrl, ctrl1, clk_ref);
++	if (!(eb1 & CLK_OTG_UTMI_EB)) {
++		printf("A03 USB: MUSB clock gated; controller not accessed\n");
++		return;
++	}
++	vm_offset_t musb = ml_io_map(MUSB_PA, MUSB_SIZE);
++	if (musb == 0) {
++		printf("A03 USB: MUSB map failed\n");
++		return;
++	}
++	/* Avoid interrupt-status registers: some MUSB revisions clear them on read. */
++	uint32_t faddr = a03_usb_rd8(musb, 0x00);
++	uint32_t power = a03_usb_rd8(musb, 0x01);
++	uint32_t index = a03_usb_rd8(musb, 0x0e);
++	uint32_t devctl = a03_usb_rd8(musb, 0x60);
++	uint32_t frame = a03_usb_rd16(musb, 0x0c);
++	uint32_t hwvers = a03_usb_rd16(musb, 0x6c);
++	printf("A03 USB: MUSB FADDR=%02x POWER=%02x INDEX=%02x DEVCTL=%02x FRAME=%04x HWVERS=%04x\n",
++	    faddr, power, index, devctl, frame, hwvers);
++}
++#endif
+--- a/bsd/conf/files
++++ b/bsd/conf/files
+@@ -106,5 +106,6 @@
+ bsd/dev/random/randomdev.c		standard
+ 
+ bsd/dev/a03_emmc.c			standard
++bsd/dev/a03_usb.c			standard
+ bsd/dev/memdev.c			standard
+ bsd/dev/mem.c			standard
+--- a/iokit/bsddev/IOKitBSDInit.cpp
++++ b/iokit/bsddev/IOKitBSDInit.cpp
+@@ -774,3 +774,5 @@
+         extern void a03_emmc_probe(void);
+         a03_emmc_probe();
++        extern void a03_usb_probe(void);
++        a03_usb_probe();
+         if (!strcmp(rdBootVar, "a03userdata0")) {

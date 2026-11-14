@@ -2038,3 +2038,26 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   written. Download/ADB are absent immediately after reboot; awaiting the
   read-only raw/block catalog and header output. No iOS HFS mount or Apple
   userspace is established by the transfer.
+
+### 2026-11-14: A03 XNU USB diagnostic path identified
+
+- User requested USB access from XNU to replace photo transcription with
+  direct logs/data. The live A03 device tree identifies a Spreadtrum
+  `sprd,qogirl6-musb` peripheral controller at `0x64900000`, with the
+  Qogirl6 HS PHY at `0x64570000` and AON APB registers at `0x64000000`.
+  Linux's matching `musb_sprd.c` and `phy-sprd-qogirl6.c` confirm the role,
+  clock gate (`APB_EB1` bit8), PHY reset, and analog initialization. Older
+  SWEET DWC3/Qualcomm USB patches do not match this A03 hardware.
+- Added opt-in XNU patch `0093-a03-usb-state-probe.patch`. It reads AON
+  clock/reset/PHY state and, only when the MUSB clock is enabled, reads
+  non-interrupt MUSB identity/state registers. It performs no register writes
+  and avoids interrupt status registers that may clear on read. Boot arg
+  `a03usb_probe=1` gates the probe; `a03-pack-root.py --usb-probe` adds it.
+  The A03 profile stages it after the opt-in USERDATA root-selection patch.
+- Validated patch application after A03 patches0090 and0092 against the local
+  pinned XNU baseline; profile staging and Python syntax pass. This is only a
+  safe state probe, not USB enumeration or a host data channel. XNU build and
+  device validation remain pending. Next extend the MUSB endpoint0/device
+  path and a simple host protocol so XNU can stream logs and sector reads.
+- BOOT0031's post-USERDATA-reflash catalog result remains unknown. No new
+  device write was performed for the USB work.

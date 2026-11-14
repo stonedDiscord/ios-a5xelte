@@ -86,6 +86,8 @@ def main():
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0092-a03-userdata-root-selection.patch'
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
+        name = '0093-a03-usb-state-probe.patch'
+        shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
         'Portable crypto 0020/0023/0027/0032/0033 and pinned BearSSL stage script.',
