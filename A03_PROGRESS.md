@@ -1427,3 +1427,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - No0022 flash at this entry. Next authorized BOOT-only trial expects
   A03 STORAGE PID1 PASS: raw+block BOOT reads, write-open EROFS.
   Current0021 panic; no Apple launchd or eMMC filesystem-root claim.
+
+### 2026-11-14: BOOT0022 corrected raw uiomove trial flashed
+
+- Heimdall fresh protocol/PIT succeeded, uploaded only boot to100%,
+  reported boot upload successful, rebooted and exited0. No independent
+  readback. Current0022 SHA256
+  df392a526999866b4c170dbc612955a900952191519223d0f444635a597c4a34.
+- Await physical A03 STORAGE PID1 PASS: raw+block BOOT reads, write-open
+  EROFS, or exact panic/last line. Build/flash success does not establish
+  corrected raw copy or buffered-read runtime success. HFS RAM root remains;
+  no Apple launchd/iOS GUI or eMMC filesystem-root result. No non-BOOT writes.

@@ -2,6 +2,14 @@
 
 ## Active A03 handoff — 2026-11-14
 
+CURRENT0022 FLASHED: Heimdall PIT/boot100%/successful upload/reboot exit0.
+Image SHA256df392a526999866b4c170dbc612955a900952191519223d0f444635a597c4a34.
+No independent readback. Await physical A03 STORAGE PID1 PASS:
+raw+block BOOT reads, write-open EROFS; or exact panic/last line.
+Raw uiomove fix3f77331, kernel CI43590138639 SUCCESS. Same verified HFS
+RAM root; no Apple launchd/eMMC-root result. Prior READY notes historical.
+
+
 CORRECTED0022 READY: CI43590138639 SUCCESS; raw uiomove call verified,
 integer-only storage text, BSD/GPT tests pass. Image
 shim/a03/out/a03-xnu-0022-sdma-uiomove.img SHA256
