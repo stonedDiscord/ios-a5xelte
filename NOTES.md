@@ -2,19 +2,18 @@
 
 ## Active A03 handoff — 2026-11-14
 
-CURRENT0025 FLASHED: USERDATA save/change/readback/restore/fsync test at
-relative16GiB, RAM root. Heimdall fresh PIT/boot100%/success/reboot exit0.
+MILESTONE0025 USER CONFIRMED: USERDATA WRITE PASS changed/readback/
+restored/fsync sector at16GiB; raw+block BOOT read +write-open EROFS PASS.
+Physical XNU single-sector USERDATA writes now established; no filesystem
+mount/Apple launchd/SpringBoard yet. Current0025 static RAM-root PID1.
 BOOT SHA051304ad437d305cdd77890dbffb3f73763c74e26f2a24355ce1bab951b4dd3c.
 Kernel43601676154 SUCCESS SHA1186c331...72fedf7; root43601678578 verified
-SHA7a2379b0...20dfc4d. Compiled storage integer-only; cached writes flush.
-Await physical A03 USERDATA WRITE PASS or exact WRITE FAIL stage/value/
-panic. No full filesystem flash yet.0024 checkpoint preserved.
-User supplied16.0 IPSW hash verified; filesystem43602490133 live after
-fixing invalid hdiutil type and canonical macOS mount paths. Root-selection
-kernel43602657100 live at051206f includes0092. Keep polling these builds;
-verify root inventory/fsck and kernel before full USERDATA install/root boot.
+SHA7a2379b0...20dfc4d.0024 checkpoint also preserved.
+Supplied16.0 IPSW verified. Filesystem43602490133 staging; root-selection
+kernel43602657100 building at051206f includes0092. Verify inventory/fsck
+and kernel, install USERDATA root, BOOT root-selection trial. No full
+filesystem flash yet. Phone running0025, no ADB/Download currently.
 Scope authorized USERDATAp55 +BOOT; preserve GPT/recovery/bootloaders/EFS/NV.
-No Apple launchd/SpringBoard execution established.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
 PID1 PASS. XNU SDMA/cache/BSD read path established. Preserve0024 image

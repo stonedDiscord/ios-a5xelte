@@ -1666,3 +1666,19 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   canonical /private mount paths. Superseded43602464223 cancelled; corrected
   supplied16.0 HFSX root43602490133 live. Root-selection kernel43602657100
   dispatched at051206f (includes0092);0025 itself retains RAM root.
+
+### 2026-11-14 MILESTONE: BOOT0025 USERDATA writes physically confirmed
+
+- User reports A03 STORAGE block BOOT header PASS, A03 USERDATA WRITE PASS:
+  changed/readback/restored/fsync sector at16GiB, then A03 STORAGE PID1 PASS:
+  raw+block BOOT reads/write-open EROFS. Image051304ad...1b4dd3c,
+  kernel43601676154/root43601678578.
+- Actual XNU raw USERDATA pread/pwrite, modified-sector readback, restoration
+  readback and fsync succeeded. BOOT raw write-only open remains EROFS.
+  The driver completes each write before acknowledging it; physical report
+  does not reveal CACHE_CTRL, so CMD6 execution specifically is not inferred.
+- This confirms single-sector physical writes in the validated USERDATA
+  range. Full filesystem install/mount, buffered filesystem writes, real
+  Apple launchd and SpringBoard remain unverified. Current0025 static PID1.
+- Continue supplied16.0 root43602490133 and root-selection kernel43602657100,
+  verify artifacts, install only USERDATA then BOOT root-selection trial.
