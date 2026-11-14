@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-14
 
+Kernel-source audit of `android_kernel_samsung_a03/drivers/mmc/host/sprd-sdhcr11.{c,h}` found the existing SDMA command encoding was already correct: Linux's `set_trans_and_cmd()` produces `(cmd<<24)|0x003a0011` for a single-block read (data-present + R1 + read + DMA). The loader now follows two source-backed details that were missing: it enables SDHCI v4 64-bit system-address mode via HOST_CTRL2 (0x3e) bit 13, as Linux does in `sprd_sdhc_set_64bit_addr()`, and programs block size with the controller's 16-bit write at 0x04 (`0x7200`) before the 32-bit block count. Host build `A03_EMMC_SNAPSHOT=5 sh shim/a03/build-xnu.sh` passes. This is not yet device evidence; flash a BOOT-only diagnostic and inspect the new controller mode/SDMA result before changing USERDATA.
+
+CI optimization commit `6d0edaa` now caches the pinned `darwin-xnu-build`
+checkout and the macOS 13.5 `KDK_13.5_22G74.kdk` (compressed under
+`.kdk-cache`), while retaining ccache and parallel make. The first run after
+this change seeds both caches; later A03 builds should avoid the XNU clone and
+KDK DMG/install work. Kernel verification and BOOT-only bring-up scope are
+unchanged.
+
 BOOT0038 (commit da135e5; source 322bcba) was uploaded BOOT-only after workflow 43633349828 succeeded. Kernel SHA256 9cf66f9624b94a8a7b0f5837027ab5fcf016c70111869f33b5231572d94f4c6f; image SHA256 875033bc9c0948421919ea0e8bc41b94fbff3d7903a11c075b49e52403f740c4. Its eMMC trace is restricted to USERDATA base 0xf31000 and expected catalog LBA 0x1097c10; UIO prints the first four requests and catalog-window offsets around 0x2cd82000. Heimdall uploaded only boot at 100% and rebooted. No new photo is present in /home/stoned/ocr; the only photo remains BOOT0037's older broad trace. Await BOOT0038 screen output, especially A03 eMMC UIO and catalog-range TRACE lines.
 
 

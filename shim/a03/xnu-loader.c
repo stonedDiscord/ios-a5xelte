@@ -33,6 +33,14 @@ static void emmc_write32(unsigned off,uint32_t v) {
     *(volatile uint32_t*)(0x201d0000UL+off)=v;
     __asm__ volatile("dsb sy"::: "memory");
 }
+static uint16_t emmc_read16(unsigned off) {
+    uint16_t v=*(volatile uint16_t*)(0x201d0000UL+off);
+    __asm__ volatile("dsb sy"::: "memory");return v;
+}
+static void emmc_write16(unsigned off,uint16_t v) {
+    *(volatile uint16_t*)(0x201d0000UL+off)=v;
+    __asm__ volatile("dsb sy"::: "memory");
+}
 static void hexline(const char *label,uint32_t value,unsigned row) {
     char line[80];unsigned n=0;
     while(*label && n<65)line[n++]=*label++;
@@ -126,7 +134,17 @@ static unsigned emmc_data_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned 
     uint32_t host=emmc_read32(0x28),host2=emmc_read32(0x3c);
     uintptr_t target=(uintptr_t)dma_buffer;
     /* Match the observed v4/64-bit-address configuration, preserve timing. */
+    /* Linux enables the v4 64-bit system address mode through HOST_CTRL2
+     * bit 13 (the 16-bit register at 0x3e).  Keep the same mode even though
+     * this probe's buffer currently lies below 4 GiB. */
+    uint16_t ctrl2=emmc_read16(0x3e);
+    if(!(ctrl2&0x2000u)) {
+        /* sprd_sdhc_set_64bit_addr(host, 1), done by Linux reset_ios. */
+        emmc_write16(0x3e,(uint16_t)(ctrl2|0x2000u));
+        ctrl2=emmc_read16(0x3e);
+    }
     if((sctlr&5)||(host2&0x30000000u)!=0x30000000u||
+       !(ctrl2&0x2000u)||
        (*(volatile uint16_t*)0x201d00feUL)!=4||(target&511)||
        (target&0x7ffff)>0x7fe00u)return 0;
     uint32_t addrlo=emmc_read32(0x58),addrhi=emmc_read32(0x5c);
@@ -140,7 +158,9 @@ static unsigned emmc_data_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned 
 #endif
     emmc_write32(0x38,0);
     emmc_write32(0x34,enable|0x037f8033u);
-    emmc_write32(0x04,0x00017200u); /* one 512-byte block, boundary 512K */
+    /* sprd_sdhc_set_blk_size(): a 16-bit write, preserving the adjacent
+     * block-count halfword at 0x06. */
+    emmc_write16(0x04,0x7200u); /* one 512-byte block, boundary 512K */
     emmc_write32(0x00,1); /* v4 32-bit block-count register, DMA disabled */
     emmc_write32(0x08,arg);
     hexline("READ CMD",cmd,row);
