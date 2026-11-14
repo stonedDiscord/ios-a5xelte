@@ -2,6 +2,14 @@
 
 ## Active A03 handoff — 2026-11-13
 
+XNU SDMA run43588264792 at b3d9772 is in_progress/Build (verified).
+Opt-in PID1 raw+block BOOT-header/EROFS-open check prepared; compiles
+without relocations, default init hash unchanged. Next root workflow with
+storage_probe=true, download kernel on success, inspect a03_emmc codegen,
+package with --emmc-readonly ADT + a03emmc=1 rd=md0. Current0020 PASS.
+No XNU SDMA/runtime claim yet; do not flash while CI/artifact unverified.
+
+
 XNU integration staged (NOT BUILT/FLASHED): profile0090 adds opt-in
 a03emmc=1 plus explicit ADT --emmc-readonly node, private permanent DMA
 page/cache maintenance, bounded retained-state SDMA, GPT validation and

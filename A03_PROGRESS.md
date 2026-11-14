@@ -1336,3 +1336,16 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Local patch dry-run against current prepared XNU, actual GPT tests, ADT
   default/opt-in gating and Python syntax passed. Full XNU compile pending;
   no new flash. Current0020 is confirmed loader storage checkpoint only.
+
+### 2026-11-14: SDMA kernel CI and userspace verification prepared
+
+- b3d9772 pushed; XNU run43588264792 confirmed in_progress/Build.
+  No device flash; current0020 remains hardware identity checkpoint.
+- Added opt-in A03_STORAGE_TEST static PID1 check: reads512 BOOT header
+  bytes via /dev/ra03boot0(physio) and /dev/a03boot0(buffered), verifies
+  Android magic/v2/page2048 on both, then requires write-only OPEN return
+  EROFS. Never issues a write syscall to block storage. Heartbeat survives
+  failure. Root workflow storage_probe=true builds this variant separately.
+- Linux ARM64 assembly and mkinit no-relocation/signature checks pass.
+  Default init remains byte-identical SHA256f5de3714ff95e6a3b9ece30723f677de0f3f74ec5eb985a00c5ae872f0ac9bf1.
+  Runtime test unverified, HFS root artifact still to build.

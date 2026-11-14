@@ -58,6 +58,9 @@ _start:
 	sub	x2, x2, x1
 	bl	write_console
 
+#ifdef A03_STORAGE_TEST
+	bl	storage_test
+#endif
 tick:
 	/* select(0, NULL, NULL, NULL, &5s) as a portable sleep */
 	mov	x0, #0
@@ -97,3 +100,6 @@ hello_tail:
 alive:
 	.ascii	"SWEET init: still alive\n"
 alive_end:
+#ifdef A03_STORAGE_TEST
+#include "a03-storage-test.inc"
+#endif
