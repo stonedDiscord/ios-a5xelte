@@ -1,10 +1,18 @@
-# Galaxy A03 SM-A035G initial checkpoint
+# Galaxy A03 SM-A035G bring-up
 
-Probe 0003 successfully ran EL1 with actual 16 KiB translation and returned
-through EL2 to Android on 2026-11-13. It is the current working BOOT, with
-Magisk retained. Probe 0002d bootlooped because its reporter removed an
-AVB argument needed by init; that reporter bug is fixed. See the latest
-A03_PROGRESS.md entry for exact results and hashes.
+As of 2026-11-14, BOOT0021 is flashed: the first opt-in XNU read-only
+SDMA/BSD storage trial, retaining the HFS RAM root. Its physical result is
+pending. BOOT0020 established GPT integrity/partition identity and a
+matching current-BOOT header plus512-byte payload sample; USERDATA has a
+7-sector tail gap. BOOT0012 separately established HFS RAM-root/static
+PID1 execution. Apple launchd, an eMMC filesystem root and iOS GUI are
+not established. See the latest A03_PROGRESS.md entry for authoritative
+image hashes and runtime evidence; the instructions below retain earlier
+checkpoint reproduction details, not claims about the currently flashed image.
+
+Historical probe0003 ran EL1 with actual16KiB translation and returned
+through EL2 to Android on2026-11-13. Probe0002d bootlooped because its
+reporter removed an AVB argument needed by init; that bug is fixed.
 
 Read `A03_PROGRESS.md` first. The A03 is UNISOC ums9230/T606, not an
 Exynos phone. Do not boot donor S8/S7/A5 images or reuse their MMIO,

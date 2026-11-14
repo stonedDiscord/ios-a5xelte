@@ -127,6 +127,7 @@ static void emmc_strategy(buf_t bp) {
     buf_setresid(bp,count);
     if(!ae.ready||ae.poisoned||minor(dev)>1)error=ENXIO;
     else if(!(buf_flags(bp)&B_READ))error=EROFS;
+    else if(buf_flags(bp)&B_PHYS)error=EINVAL; /* raw uses uiomove below */
     else if(buf_blkno(bp)<0)error=EINVAL;
     else {
         offset=(uint64_t)buf_blkno(bp)*512;
@@ -162,7 +163,28 @@ static int emmc_ioctl(dev_t dev,u_long cmd,caddr_t data,__unused int flag,__unus
     }
 }
 static int emmc_psize(dev_t dev) {return ae.ready&&minor(dev)<2?(int)part_count(dev):-1;}
-static int emmc_read(dev_t dev,struct uio *uio,__unused int flags) {return physio(emmc_strategy,NULL,dev,B_READ,minphys,uio,512);}
+/* physio marks B_PHYS and supplies user addresses; buf_map does not map
+ * those into kernel space. Keep raw I/O in the calling thread and let
+ * uiomove perform the protected user/kernel copy (including partial I/O). */
+static int emmc_read(dev_t dev,struct uio *uio,__unused int flags) {
+    if(!ae.ready||ae.poisoned||minor(dev)>1)return ENXIO;
+    if(uio_offset(uio)<0||uio_resid(uio)<0)return EINVAL;
+    uint64_t size=(uint64_t)part_count(dev)*512;
+    if((uint64_t)uio_offset(uio)>size)return EINVAL;
+    int error=0;
+    while(uio_resid(uio)>0&&(uint64_t)uio_offset(uio)<size) {
+        unsigned char sector[512];uint64_t pos=(uint64_t)uio_offset(uio);
+        unsigned skip=pos&511,take=512-skip;
+        if((uint64_t)uio_resid(uio)<take)take=(unsigned)uio_resid(uio);
+        lck_mtx_lock(&a03_emmc_lock);
+        error=data_read(17,part_first(dev)+(uint32_t)(pos/512),sector);
+        lck_mtx_unlock(&a03_emmc_lock);
+        if(error)break;
+        error=uiomove((const char *)sector+skip,(int)take,uio);
+        if(error)break;
+    }
+    return error;
+}
 static int emmc_write(__unused dev_t dev,__unused struct uio *uio,__unused int flags) {return EROFS;}
 static const struct bdevsw emmc_bdevsw={
     .d_open=emmc_open,.d_close=emmc_close,.d_strategy=emmc_strategy,

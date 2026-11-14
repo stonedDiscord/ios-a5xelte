@@ -1385,3 +1385,26 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   error/last line. No runtime SDMA/BSD success inferred from flash.
   No non-BOOT partition written; root remains HFS RAM image. Apple launchd/
   SpringBoard and eMMC filesystem root remain future checkpoints.
+
+### 2026-11-14: 0021 panic localized to raw user-buffer store; fix prepared
+
+- User reports kernel data abort PCfffffe00074d8fb0. Verified exact0021
+  kernel SHA4784e6ef...af6ba09. PC is emmc_strategy+1c4, instruction
+  strb w11,[x12,w10,uxtw], copying a successful data_read result into
+  buf_map-returned destination. Execution passed GPT/BOOT initialization,
+  node registration and a CMD17 data_read in strategy. This is stronger
+  XNU progress evidence, but no complete userspace storage PASS yet.
+- Local XNU vfs_bio.c buf_map_range_internal returns b_datap unchanged
+  for non-B_CLUSTER. kern_physio supplies the user iovec address and
+  B_PHYS; direct kernel stores through that user pointer are invalid.
+  Root cause is our raw-path copy integration, not evidence of SDMA failure.
+  FAR/ESR/registers were not supplied; exact fault syndrome unverified.
+- Raw cdev now reads into512-byte kernel stack sector and calls uiomove
+  in caller context, outside hardware mutex. Buffered strategy retains
+  buf_map but explicitly rejects B_PHYS. No DMA/MMIO/card sequence changes.
+- Added sanitizer-backed host harness extracting production handlers
+  verbatim. Covers partition translation, bounds/overflow, write rejection,
+  map failure, read failures/residuals/completion/mutex balance; raw unaligned
+  multisector/EOF/negative+huge offsets/copyout fault/partial I/O. All pass.
+  Harness is not a XNU/MMIO/DMA emulator. Patch dry-run and GPT tests pass.
+  Current phone0021 panic; corrected kernel build next, no new flash yet.

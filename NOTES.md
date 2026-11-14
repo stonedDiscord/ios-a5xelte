@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
+0021 PANIC user PCfffffe00074d8fb0 maps exact kernel to emmc_strategy
+byte store into buf_map raw user pointer, after data_read success. Local
+XNU buf_map leaves noncluster b_datap unchanged; physio uses user iovec.
+Fix raw cdev to uiomove, reject B_PHYS in buffered strategy; hardware
+sequence unchanged. Host actual-handler ASan/UBSan tests + GPT pass.
+Next CI corrected kernel, reuse verified HFS root43588996330, package0022.
+Current0021; no complete storage PID1 PASS/Apple launchd yet.
+
+
 Latest0021 FLASHED: Heimdall PIT/boot100%/successful upload/reboot exit0.
 Current0021 SHA2567753f418de5b7dd8c5db245e49c439d743c76691ee350a96d6fac22c289aafe7.
 No independent readback. Await XNU SDMA probe/DMA PA/GPT result0/nodes
