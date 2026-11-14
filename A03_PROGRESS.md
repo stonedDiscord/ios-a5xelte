@@ -1448,3 +1448,26 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Adding root-only stage/value diagnostics and independent raw/block header
   PASS markers. Reuse corrected kernel43590138639; no hardware-driver
   change or XNU rebuild needed to expose the failure.
+
+- Diagnostic init64a3cf8 assembled with no relocations. Optional Unicorn
+  executes actual ARM64 instructions through PASS and all14 failure stages,
+  preserving exact stage/value and confirming console-only write syscalls.
+  Default init remains byte-identical. Diagnostic init SHA256
+  a3afcaaf5d8a56a73610f0252234753ea510569e1594b913e000ae7d13b900cc.
+- storage_probe=true root workflow43597035152 at64a3cf8 SUCCESS; duplicate
+  push43597035468 cancelled by concurrency. Fresh Download USB detected.
+
+- Root43597035152 read-only fsck clean; catalog launchd100755 exactly
+  matches diagnostic init SHAa3afcaaf...3b900cc. Root SHA256
+  9d27cf4f09df5ee7a1dc122fb265aedea1f9a578db38be4467fdf64cb99fd0a4.
+  BOOT0023 shim/a03/out/a03-xnu-0023-storage-stage.img SHA256
+  31a19aeb5aa25bccbd18a577bd38694e60dddc10bd8cdee664b974610e28d143.
+  Exact loader/payload verified, same kernel43590138639, opt-in ADT and
+  a03emmc=1 rd=md0; restore hash verified. Ready for BOOT-only trial.
+
+- BOOT0023 FLASHED: fresh Heimdall protocol/PIT, boot-only upload100%,
+  upload successful/reboot exit0. No independent readback. Await raw/block
+  PASS lines plus exact FAIL stage/value (hex) or complete storage PASS.
+  This is root diagnostics only; no hardware-driver change, XNU rebuild
+  or non-BOOT write. Actual storage failure remains undiagnosed until
+  physical output arrives.

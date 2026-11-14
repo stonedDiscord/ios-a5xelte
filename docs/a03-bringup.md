@@ -1,9 +1,10 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-14, corrected BOOT0022 is flashed. BOOT0021's raw
-user-buffer copy panicked at emmc_strategy+0x1c4; BOOT0022 uses uiomove
-for raw reads. CI, host checks and BOOT upload passed; physical raw+block
-PID1 storage results remain pending. Both retain the HFS RAM root.
+As of 2026-11-14, BOOT0023 is flashed with storage failure-stage
+diagnostics and the unchanged corrected kernel. BOOT0021 panicked during
+a raw user-buffer copy; BOOT0022 uses uiomove and reaches static PID1,
+but the user reports storage FAIL. BOOT0023 prints exact stage/value and
+raw/block PASS markers; physical output pending. HFS RAM root retained.
 BOOT0020 established GPT integrity/partition identity and a
 matching current-BOOT header plus512-byte payload sample; USERDATA has a
 7-sector tail gap. BOOT0012 separately established HFS RAM-root/static

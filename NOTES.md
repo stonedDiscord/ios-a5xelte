@@ -2,6 +2,21 @@
 
 ## Active A03 handoff — 2026-11-14
 
+CURRENT0023 FLASHED: Heimdall boot100%/success/reboot exit0. Image
+shim/a03/out/a03-xnu-0023-storage-stage.img SHA256
+31a19aeb5aa25bccbd18a577bd38694e60dddc10bd8cdee664b974610e28d143.
+Same corrected kernel43590138639; diagnostic root43597035152 verified
+fsck/catalog/hash. Await raw/block PASS lines and FAIL stage/value in hex.
+Stages10..15 raw,20..25 block: open/read errno, short bytes, magic,
+page size, header version.30 write-open errno(expected1e),31 unexpected
+write-open success. No sector write. Prior pending root/build notes historical.
+
+
+ROOT DIAGNOSTIC CI43597035152 at64a3cf8 SUCCESS(storage_probe=true).
+Actual ARM64 emulation PASS+14 failure stages; default init unchanged.
+Fresh Download USB detected. Reuse kernel43590138639, package0023 once
+root fsck/catalog hash verified. No new flash.
+
 0022 USER REPORT: static PID1 prints generic A03 STORAGE PID1 FAIL.
 No raw/block PASS established, no new panic reported. Preparing root-only
 stage/value diagnostics for0023 with unchanged corrected kernel43590138639.
