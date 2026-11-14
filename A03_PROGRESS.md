@@ -1118,3 +1118,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   830bf41e70460aeed768aaf0af86fcbf1caf175d1eb3ecb435d37f78e3a41fb9.
   shim/a03/out/a03-xnu-0016-pio-stage.{img,json}. No XNU rebuild.
   NOT flashed: Download USB absent at check. Current phone remains0015.
+
+### 2026-11-14: BOOT 0016 polling-stage diagnostic flashed
+
+- User confirmed Download ready; heimdall detect independently succeeded.
+  Image SHA256 rechecked against manifest:
+  830bf41e70460aeed768aaf0af86fcbf1caf175d1eb3ecb435d37f78e3a41fb9.
+- Heimdall protocol/PIT succeeded, uploaded only boot100%, reported
+  successful upload/reboot and exit0. No independent readback.
+- Current BOOT0016; await failure-stage, POLL SEEN/LAST/PRESENT, FIFO
+  WORDS, INT ENABLE LIVE and COMMAND LIVE (rows65..71), plus any EXT_CSD
+  or GPT results. Runtime pending; no PIO success inferred from flash.

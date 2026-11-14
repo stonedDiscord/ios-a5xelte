@@ -2,6 +2,13 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0016 FLASHED successfully: detected, SHA verified
+830bf41e70460aeed768aaf0af86fcbf1caf175d1eb3ecb435d37f78e3a41fb9,
+Heimdall PIT/boot100%/reboot exit0, no independent readback. Current0016.
+Await full-screen photo including low rows65..71: FAIL STAGE, POLL SEEN,
+POLL LAST, POLL PRESENT, FIFO WORDS, INT ENABLE LIVE, COMMAND LIVE.
+No runtime claim yet; NOT FLASHED notes below are historical.
+
 Latest physical0015 photo IMG_20261114_112553_338.jpg: CMD13 OK, CMD8
 READ R1=900 INT=2 PRESENT01f000f0, EXT_CSD FAILED/STOPPED. Transfer-complete
 bit without error bits, but helper failure; stage/FIFO progress unknown.
