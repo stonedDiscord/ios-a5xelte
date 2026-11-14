@@ -2,20 +2,21 @@
 
 ## Active A03 handoff — 2026-11-14
 
-LATEST USER REPORT: USERDATA raw/block HFS header both begin
-`48580005800021004846534a00000081` (HFSX), but catalog still reads zero;
-SWEET PID1 is alive. Exact BOOT image not identified, so don't attribute this
-to the MUSB-probe build. This confirms the volume header only, not catalog,
-HFS mount, launchd or SpringBoard. MUSB controller is Qogirl6 peripheral.
-XNU workflow43620198151 PASS. BOOT0032
-(`4ace15fb349f9c669f4a6bd51c5c7c84c25cb47f5ae0a1b05d37bfa65cdab287`)
-was uploaded BOOT-only after fresh Download/PIT; Heimdall reported100%,
-`boot upload successful`, then `close-pc-screen --resume` rebooted. It uses
-RAM HFS root, read-only eMMC, catalog/header tests and opt-in MUSB state probe.
-Await physical `A03 USB:` and catalog/header output. Twelve seconds after
-reboot neither Download nor ADB enumerated; this alone is inconclusive. MUSB
-enumeration/channel not implemented. Preserve GPT,
-recovery, bootloaders, EFS/NV. No USERDATA write was made.
+BOOT0032 (`4ace15fb349f9c669f4a6bd51c5c7c84c25cb47f5ae0a1b05d37bfa65cdab287`)
+was uploaded BOOT-only and rebooted. User reports raw/block catalog still
+zero, both HFS headers `48580005800021004846534a00000081` (HFSX), and SWEET PID1
+alive. This confirms readable HFSX header and storage data disagreement; no
+HFS mount, launchd or SpringBoard. No USERDATA write was made.
+
+Correction: inspection of workflow43620198151's actual build-tree proves it
+omitted patch0093 (`a03_usb.c`, file-list entry and init call absent); its
+`a03_ios_userspace` input was false. BOOT0032 therefore had no MUSB probe, so
+“A03 USB nowhere visible” is expected and gives no controller-state evidence.
+Corrected workflow43622283937 was dispatched with `a03_ios_userspace=true`.
+Inspect kernel and build-tree for `A03 USB:` strings before packaging or
+flashing. Host currently sees no Download/ADB device. Preserve GPT, recovery,
+bootloaders, EFS/NV; continue BOOT-only trials. The MUSB enumeration/log
+channel is not yet implemented.
 
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /

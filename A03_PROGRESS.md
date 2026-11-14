@@ -2106,3 +2106,19 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   This does not establish XNU USB enumeration. Physical BOOT0032 display and
   `A03 USB:` / catalog/header output are pending. A host-visible XNU USB data
   channel is still not implemented.
+- User subsequently reports catalog raw/block still zero, both HFS header
+  reads begin `48580005800021004846534a00000081`, and `SWEET init: still alive`.
+  This matches successful RAM-root/PID1 execution with a readable HFSX
+  volume header but catalog data disagreement. Host check after reboot still
+  has no A03 Download or ADB device. User did not include the `A03 USB:`
+  probe lines in this report, so controller clock/PHY state remains unknown.
+- Correction: inspection of workflow `43620198151`'s actual build-tree
+  artifact shows `bsd/dev/a03_usb.c`, the 0093 file-list entry, and the
+  `IOKitBSDInit` call are all absent. Its kernel has no `A03 USB:` cstrings.
+  The `a03_ios_userspace` input was false, so BOOT0032 did **not** contain the
+  MUSB probe; the user's `A03 USB nowhere visible` is expected and cannot be
+  used as controller-state evidence. BOOT0032's RAM-root storage diagnostics
+  remain valid. Corrected workflow `43622283937` was dispatched from commit
+  `8ad196a` with `a03_ios_userspace=true`, board `a03`, machine `SWEET`,
+  DEVELOPMENT and macOS 13.5; it is in progress. Its artifact must be checked
+  for `A03 USB:` strings before packaging or flashing.
