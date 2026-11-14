@@ -1438,3 +1438,13 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   EROFS, or exact panic/last line. Build/flash success does not establish
   corrected raw copy or buffered-read runtime success. HFS RAM root remains;
   no Apple launchd/iOS GUI or eMMC filesystem-root result. No non-BOOT writes.
+
+### 2026-11-14: BOOT0022 reaches PID1 but storage self-test fails
+
+- User reports A03 STORAGE PID1 FAIL (generic diagnostic). This establishes
+  static PID1 execution with0022 instead of the0021 raw-copy panic, but
+  does not identify raw/block/open/read/header/EROFS stage. No storage
+  userspace PASS inferred. Exact SDMA/GPT kernel lines are not yet supplied.
+- Adding root-only stage/value diagnostics and independent raw/block header
+  PASS markers. Reuse corrected kernel43590138639; no hardware-driver
+  change or XNU rebuild needed to expose the failure.

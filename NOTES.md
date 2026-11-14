@@ -2,6 +2,13 @@
 
 ## Active A03 handoff — 2026-11-14
 
+0022 USER REPORT: static PID1 prints generic A03 STORAGE PID1 FAIL.
+No raw/block PASS established, no new panic reported. Preparing root-only
+stage/value diagnostics for0023 with unchanged corrected kernel43590138639.
+Need exact syscall/check failure before hardware changes. Current0022.
+Prior pending physical-result lines below are historical.
+
+
 CURRENT0022 FLASHED: Heimdall PIT/boot100%/successful upload/reboot exit0.
 Image SHA256df392a526999866b4c170dbc612955a900952191519223d0f444635a597c4a34.
 No independent readback. Await physical A03 STORAGE PID1 PASS:

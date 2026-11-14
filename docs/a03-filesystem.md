@@ -179,3 +179,21 @@ Run python3 tools/a03-test-bsd-storage.py for actual-handler host ASan/
 UBSan boundary, partial-I/O and copy-fault checks. These tests do not
 emulate XNU or hardware. Reuse the same verified storage-test root for
 the corrected-kernel trial; no filesystem rebuild is required.
+
+### PID1 failure-stage diagnostics (root-only update)
+
+BOOT0022 reached static PID1 but the user reports generic storage FAIL.
+The diagnostic init now prints separate raw/block header PASS lines and
+hexadecimal stage/value on failure. Base0x10 is raw, base0x20 is block:
++0 open errno, +1 read errno, +2 short byte count, +3 observed magic,
++4 observed page size, +5 observed header version. Stage0x30 is the
+write-only-open errno (expected30 decimal/EROFS);0x31 is an unexpected
+successful write-only open, with the returned descriptor. No sector write
+is attempted. Heartbeat continues after failure.
+
+Compile sweet-init.S with -DA03_STORAGE_TEST, wrap with mkinit.py, then
+optionally run tools/a03-test-storage-init.py INIT_MACHO (Python unicorn).
+Instruction emulation covers PASS and all14 failure stages with stubbed
+Darwin syscalls; it does not emulate XNU/device behavior. Default init
+remains byte-identical. Rebuild only a03-root.yml(storage_probe=true),
+then reuse corrected kernel43590138639 and the opt-in emmc ADT.
