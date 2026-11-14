@@ -2,6 +2,19 @@
 
 ## Active A03 handoff — 2026-11-13
 
+MILESTONE0017 confirmed by photo IMG_20261114_113809_312.jpg: SDMA reads
+EXT_CSD + user-area LBA0/1. EXT REV8 PARTITION_CONFIG8 SECTOR_COUNT0747c000
+DATA_SECTOR_SIZE0; MBRaa55; GPT header stored/computed CRC040a1bb6 MATCH.
+All CMD8/17 R1900 INT2 PRESENT01f000f0. First validated eMMC sector access!
+Current0017 paused before XNU; no new flash or writes.0012 HFS RAM PID1
+remains separate checkpoint; no XNU block provider/Apple launchd/GUI yet.
+Next read-only: bounded GPT array CRC/labels/sizes validation, then known
+BOOT sector match against CURRENT0017 image (BOOT changed since backups).
+Do not use Magisk BOOT bytes as expected current content. Keep storage
+writes disabled, preserve all non-BOOT partitions. Local downstream source
+is authoritative; unsupported generic PIO route superseded by SDMA.
+Prior pending-runtime notes below are historical.
+
 Latest0017 SDMA diagnostic FLASHED: reviewed v2 SHA matched
 3b15409996e43a52729383f1c06f37bbe242d04c5fa9958732899ac22ed3c8a4,
 heimdall detect/PIT/boot100%/reboot successful, exit0. No readback.

@@ -1174,3 +1174,26 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Current BOOT0017. Await EXT_CSD/MBR/GPT or failure diagnostics,
   including DMA WORDS COPIED, buffer address and poll/status markers.
   SDMA behavior and card data remain unverified until physical report.
+
+### 2026-11-14 MILESTONE: first eMMC sector reads, GPT header CRC matches
+
+- Inspected user's private photo IMG_20261114_113809_312.jpg. BOOT0017
+  shows CMD13 INT1/RESPONSE900/PRESENT01f000f0, then successful CMD8
+  and two CMD17 transactions (each READ R1=900, INT2, PRESENT01f000f0).
+- EXT REV=0x00000008; PARTITION_CONFIG=0x00000008 (access bits0 = user
+  area); SECTOR_COUNT=0x0747c000; DATA_SECTOR_SIZE=0x00000000.
+  LBA0 MBR SIGNATURE=0x0000aa55. LBA1 GPT HEADER CRC STORED and COMPUTED
+  both0x040a1bb6; final GPT HEADER CRC MATCH - FIRST SECTORS READ.
+- This is physical evidence of eMMC metadata and user-area sector0/1
+  reads via single-buffer SDMA into loader RAM, not merely command status
+  or a host simulation. Bounds/MBR/GPT header checksum guards passed.
+  No sector writes, partition selection changes or non-BOOT flash.
+- Distinguish scope: no GPT entry-array CRC/partition-name validation,
+  full BOOT-backup comparison, XNU block provider, filesystem on eMMC or
+  Apple launchd yet. Trial deliberately pauses before XNU.0012 remains
+  the separate HFS RAM-root/static PID1 checkpoint.
+- Current phone remains0017; no new flash. Next bounded read-only test:
+  parse/checksum primary GPT entry array, check boot/userdata labels and
+  sizes against captured PIT/by-name evidence, then compare a known BOOT
+  sector with the exact currently flashed0017 image (not old Magisk BOOT).
+  Only after identity/reads validate should XNU block integration start.

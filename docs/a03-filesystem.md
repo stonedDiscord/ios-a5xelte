@@ -110,7 +110,12 @@ HOST DMA select0, v4 count0x00, buffer0x58/0x5c, read transfer0x11.
 DMA writes only a dedicated loader-owned512B RAM buffer; commands still
 read-only. No card configuration, sector write, clock change or reset.
 MMU/cache/version/address guards and bounded polls precede parsing; metadata
-must pass before LBA0/1. Prepared0017-sdma-read-v2, not flashed yet.
+must pass before LBA0/1.0017-sdma-read-v2 flashed and physically confirmed:
+EXT revision8, partition config8 (user area selected), sector count0747c000,
+512-byte sectors, MBRaa55, GPT header CRC040a1bb6 matches computed value.
+This proves metadata and first-sector reads via SDMA, not yet a mounted
+eMMC filesystem or XNU block driver. Next validate GPT entry-array CRC,
+partition identities/bounds and known current BOOT bytes before integration.
 
 ## CachyOS ldid compatibility
 
