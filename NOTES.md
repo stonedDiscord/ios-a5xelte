@@ -8,6 +8,8 @@ Corrected XNU build 43641820579 (commit 4e4873e) succeeded with the A03 USB/dire
 
 BOOT0040 was subsequently flashed BOOT-only after a clean Download-mode retry. Heimdall transferred the full 64 MiB image to `boot` at 100% and reported `boot upload successful`, then rebooted. USERDATA, GPT, recovery, bootloaders, EFS and NV were not written. At the first 10-second check no ADB or USB diagnostic enumeration was present; physical XNU/display output is still required. 
 
+Workflow 43651725931 passed after repairing the dependent patch hunks and all A03 link gates (USB, direct catalog, and USERDATA-root guard). Kernel SHA256 `a3d8125d0a49290116a4ba1e3d7e1fe2d98276f5be4cf6f8df5f3840b356091d`. BOOT0041 was packaged with the emmc-enabled ADT and flashed BOOT-only; image SHA256 `428deca6e75ccccf1a38b0deada5ae152d756b045effe2ac1da05dcc55b67c35`. Heimdall reached 100% and rebooted. USERDATA/GPT/recovery/bootloaders/EFS/NV were untouched. Await physical or USB runtime evidence.
+
 CI optimization commit `6d0edaa` now caches the pinned `darwin-xnu-build`
 checkout and the macOS 13.5 `KDK_13.5_22G74.kdk` (compressed under
 `.kdk-cache`), while retaining ccache and parallel make. The first run after

@@ -2316,3 +2316,15 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   reported success, then rebooted. No USERDATA or protected partition write.
   After reboot there is no host Download/ADB enumeration and no newer photo
   in `/home/stoned/ocr`; direct catalog bytes remain unobserved.
+
+## 2026-11-15: BOOT0041 corrected provider and ADT
+
+Workflow `43651725931` succeeded from commit `cd137a8`; link gates confirmed
+the A03 USB probe, direct catalog diagnostic, and USERDATA-root panic guard
+are present in the kernel. Kernel SHA256 is
+`a3d8125d0a49290116a4ba1e3d7e1fe2d98276f5be4cf6f8df5f3840b356091d`.
+BOOT0041 image SHA256 is
+`428deca6e75ccccf1a38b0deada5ae152d756b045effe2ac1da05dcc55b67c35`.
+It was flashed only to `boot`, reached 100% and rebooted. USERDATA, GPT,
+recovery, bootloaders, EFS and NV were untouched. Runtime iOS progress is
+not yet observed.
