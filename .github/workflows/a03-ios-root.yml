@@ -20,8 +20,11 @@ jobs:
       - name: Stage and verify journaled HFSX root
         run: bash tools/a03-build-ios-root-macos.sh research/ipsw/source.ipsw out/a03-ios16-root.img
       - name: Compress root for transfer
-        run: gzip -1 out/a03-ios16-root.img
+        if: ${{ always() }}
+        run: |
+          if [ -f out/a03-ios16-root.img ]; then gzip -1 out/a03-ios16-root.img; fi
       - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
         with:
           name: a03-ios16-hfs-root
           retention-days: 1

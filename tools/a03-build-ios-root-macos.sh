@@ -11,10 +11,18 @@ work=$(mktemp -d)
 work=$(cd "$work" && pwd -P)
 check_device=
 cleanup() {
+    build_status=$?
     if [[ -n $check_device ]]; then hdiutil detach "$check_device" || true; fi
     for name in root appos sysos os; do
         if mount | grep -F " on $work/$name (" >/dev/null; then hdiutil detach "$work/$name" || true; fi
     done
+    # Retain a completed conversion even if final device verification fails.
+    # CI logs/conclusion remain authoritative about whether fsck passed.
+    if [[ $build_status != 0 && -f $work/raw.cdr && ! -e $output ]]; then
+        mv "$work/raw.cdr" "$output"
+        shasum -a 256 "$output" > "$output.sha256"
+        echo 'Converted image retained for diagnosis; final verification FAILED.'
+    fi
     echo "Build workspace retained: $work"
 }
 trap cleanup EXIT
