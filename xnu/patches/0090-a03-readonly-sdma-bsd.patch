@@ -37,7 +37,7 @@
  //
 --- /dev/null
 +++ b/bsd/dev/a03_emmc.c
-@@ -0,0 +1,245 @@
+@@ -0,0 +1,323 @@
 +/* A03 ums9230 SDHC v4, polled read-only SDMA.
 + * Register sequence: local Samsung sprd-sdhcr11 and loader trials0017..0020.
 + * No card configuration, clocks, resets, writes, recovery or NV access.
@@ -69,7 +69,8 @@
 +    uint64_t pa;
 +    uint32_t sectors;
 +    struct a03_gpt gpt;
-+    bool poisoned, ready;
++    bool poisoned, ready, writable;
++    uint32_t rca;
 +} ae;
 +static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
 +static LCK_MTX_DECLARE(a03_emmc_lock, &a03_emmc_grp);
@@ -152,13 +153,52 @@
 +static unsigned gpt_read(void *context,uint32_t lba,unsigned char *out) {
 +    (void)context;return data_read(17,lba,out)==0;
 +}
++/* Single-sector writes are confined again here, below every BSD entry point.
++ * Writes are enabled only when EXT_CSD reports the card cache disabled;
++ * no unimplemented flush can falsely acknowledge durable data. */
++static int data_write(uint32_t lba,const unsigned char *in) {
++    if(!ae.writable)return EROFS;
++    if(ae.poisoned||lba<ae.gpt.userdata||
++       (uint64_t)lba-ae.gpt.userdata>=ae.gpt.userdata_count||
++       lba>=ae.sectors||(rd(0x24)&3)||rd(0x30))return EIO;
++    if((rd(0x3c)&0x30000000)!=0x30000000||
++       *(volatile uint16_t *)(ae.regs+0xfe)!=4)return ENXIO;
++    uint32_t enable=rd(0x34),signal=rd(0x38),block=rd(4),count=rd(0);
++    uint32_t host=rd(0x28),lo=rd(0x58),hi=rd(0x5c);
++    volatile unsigned char *p=(volatile unsigned char *)ae.dma;
++    for(unsigned i=0;i<512;i++)p[i]=in[i];
++    dma_sync(true); /* clean CPU data before TO_DEVICE DMA */
++    *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)(host&~0x18u);barrier();
++    wr(0x38,0);wr(0x34,enable|0x037f8033);
++    wr(0x58,(uint32_t)ae.pa);wr(0x5c,(uint32_t)(ae.pa>>32));
++    wr(4,0x17200);wr(0,1);wr(8,lba);
++    wr(0xc,0x183a0001); /* CMD24, R1, data present, single SDMA write */
++    bool ok=poll(1);uint32_t response=rd(0x10);
++    if(response&0xffffe080u)ok=false;
++    if(ok) {wr(0x30,1);ok=poll(2);}
++    if(rd(0x24)&3)ok=false;
++    if(ok) {
++        wr(0x30,rd(0x30)&0xffff8033);
++        wr(8,ae.rca);wr(0xc,0x0d1a0000);
++        ok=poll(1);response=rd(0x10);
++        if((response&0xffffe180u)!=0x100||(response&0x1e00)!=0x800)ok=false;
++    }
++    if(!ok) {
++        ae.poisoned=true;wr(0x38,0);
++        printf("A03 eMMC: WRITE FAILED lba=%x int=%x r1=%x; disabled\n",lba,rd(0x30),response);
++        return EIO;
++    }
++    wr(0x30,rd(0x30)&0xffff8033);wr(0x58,lo);wr(0x5c,hi);
++    *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)host;barrier();
++    wr(4,block);wr(0,count);wr(0x34,enable);wr(0x38,signal);return 0;
++}
 +/* Minor0 exposes validated BOOT read-only for an independent userspace
 + * check; minor1 exposes validated USERDATA read-only for later root work. */
 +static uint32_t part_first(dev_t dev) {return minor(dev)?ae.gpt.userdata:ae.gpt.boot;}
 +static uint32_t part_count(dev_t dev) {return minor(dev)?ae.gpt.userdata_count:ae.gpt.boot_count;}
 +static int emmc_open(dev_t dev,int flags,__unused int type,__unused struct proc *p) {
 +    if(!ae.ready||ae.poisoned||minor(dev)>1)return ENXIO;
-+    return flags&FWRITE?EROFS:0;
++    return (flags&FWRITE)&&(!ae.writable||minor(dev)!=1)?EROFS:0;
 +}
 +static int emmc_close(__unused dev_t dev,__unused int flags,__unused int type,__unused struct proc *p) {return 0;}
 +static void emmc_strategy(buf_t bp) {
@@ -166,7 +206,7 @@
 +    dev_t dev=buf_device(bp);uint64_t offset=0;
 +    buf_setresid(bp,count);
 +    if(!ae.ready||ae.poisoned||minor(dev)>1)error=ENXIO;
-+    else if(!(buf_flags(bp)&B_READ))error=EROFS;
++    else if(!(buf_flags(bp)&B_READ)&&(!ae.writable||minor(dev)!=1))error=EROFS;
 +    else if(buf_flags(bp)&B_PHYS)error=EINVAL; /* raw uses uiomove below */
 +    else if(buf_blkno(bp)<0)error=EINVAL;
 +    else {
@@ -180,9 +220,17 @@
 +    while(done<count) {
 +        unsigned char sector[512];uint64_t pos=offset+done;
 +        unsigned skip=pos&511,take=MIN(count-done,512-skip);
-+        error=data_read(17,part_first(dev)+(uint32_t)(pos/512),sector);
-+        if(error)break;
-+        for(unsigned i=0;i<take;i++)addr[done+i]=sector[skip+i];
++        uint32_t lba=part_first(dev)+(uint32_t)(pos/512);
++        bool reading=(buf_flags(bp)&B_READ)!=0;
++        if(reading||skip||take!=512) {
++            error=data_read(17,lba,sector);if(error)break;
++        }
++        if(reading) {
++            for(unsigned i=0;i<take;i++)addr[done+i]=sector[skip+i];
++        } else {
++            for(unsigned i=0;i<take;i++)sector[skip+i]=addr[done+i];
++            error=data_write(lba,sector);if(error)break;
++        }
 +        done+=take;buf_setresid(bp,count-done);
 +    }
 +    lck_mtx_unlock(&a03_emmc_lock);buf_unmap(bp);
@@ -191,14 +239,18 @@
 +    buf_biodone(bp);
 +}
 +static int emmc_ioctl(dev_t dev,u_long cmd,caddr_t data,__unused int flag,__unused struct proc *p) {
-+    if(!ae.ready||minor(dev)>1)return ENXIO;
++    if(!ae.ready||ae.poisoned||minor(dev)>1)return ENXIO;
 +    switch(cmd) {
 +    case DKIOCGETBLOCKSIZE:case DKIOCGETPHYSICALBLOCKSIZE:*(uint32_t *)data=512;return 0;
 +    case DKIOCSETBLOCKSIZE:return *(uint32_t *)data==512?0:EINVAL;
 +    case DKIOCGETBLOCKCOUNT:*(uint64_t *)data=part_count(dev);return 0;
-+    case DKIOCISWRITABLE:*(uint32_t *)data=0;return 0;
++    case DKIOCISWRITABLE:*(uint32_t *)data=ae.writable&&minor(dev)==1;return 0;
 +    case DKIOCGETMAXBLOCKCOUNTREAD:*(uint64_t *)data=128;return 0;
-+    case DKIOCGETMAXBLOCKCOUNTWRITE:*(uint64_t *)data=0;return 0;
++    case DKIOCGETMAXBLOCKCOUNTWRITE:*(uint64_t *)data=ae.writable&&minor(dev)==1?128:0;return 0;
++    case DKIOCSYNCHRONIZECACHE:case DKIOCSYNCHRONIZE:
++        /* Every CMD24 waits for transfer completion and ready/TRAN status.
++         * Writable mode requires EXT_CSD CACHE_CTRL=0. */
++        return 0;
 +    default:return ENOTTY;
 +    }
 +}
@@ -227,7 +279,27 @@
 +    }
 +    return error;
 +}
-+static int emmc_write(__unused dev_t dev,__unused struct uio *uio,__unused int flags) {return EROFS;}
++static int emmc_write(dev_t dev,struct uio *uio,__unused int flags) {
++    if(!ae.ready||ae.poisoned||minor(dev)>1)return ENXIO;
++    if(!ae.writable||minor(dev)!=1)return EROFS;
++    if(uio_offset(uio)<0||uio_resid(uio)<0)return EINVAL;
++    uint64_t size=(uint64_t)part_count(dev)*512,pos=(uint64_t)uio_offset(uio);
++    /* Keep raw writes sector aligned; filesystem strategy handles partials. */
++    if((pos&511)||(uio_resid(uio)&511)||pos>size||(uint64_t)uio_resid(uio)>size-pos)return EINVAL;
++    int error=0;
++    while(uio_resid(uio)>0) {
++        unsigned char sector[512];
++        uio_t copy=uio_duplicate(uio);if(!copy)return ENOMEM;
++        error=uiomove((const char *)sector,512,copy);uio_free(copy);
++        if(error)break;
++        lck_mtx_lock(&a03_emmc_lock);
++        error=data_write(part_first(dev)+(uint32_t)((uint64_t)uio_offset(uio)/512),sector);
++        lck_mtx_unlock(&a03_emmc_lock);
++        if(error)break;
++        uio_update(uio,512);
++    }
++    return error;
++}
 +static const struct bdevsw emmc_bdevsw={
 +    .d_open=emmc_open,.d_close=emmc_close,.d_strategy=emmc_strategy,
 +    .d_ioctl=emmc_ioctl,.d_dump=eno_dump,.d_psize=emmc_psize,.d_type=D_DISK
@@ -251,6 +323,7 @@
 +    ae.regs=ml_io_map(reg[0],reg[1]);if(!ae.regs)return;
 +    printf("A03 eMMC: XNU SDMA probe, retained timing, read-only\n");
 +    if(card_status()) {printf("A03 eMMC: retained CMD13 guard failed\n");return;}
++    ae.rca=rd(8);
 +    if(kmem_alloc_contig(kernel_map,&ae.dma,PAGE_SIZE,PAGE_MASK,0,0,
 +        KMA_KOBJECT|KMA_PERMANENT,VM_KERN_MEMORY_IOKIT)!=KERN_SUCCESS)return;
 +    ae.pa=kvtophys(ae.dma);
@@ -259,6 +332,9 @@
 +    printf("A03 eMMC: DMA PA=%llx, private permanent page\n",ae.pa);
 +    unsigned char sector[512];
 +    if(data_read(8,0,sector))return;
++    uint32_t rw=0;PE_parse_boot_argn("a03emmc_rw",&rw,sizeof(rw));
++    bool allow_write=rw==1&&sector[33]==0; /* CACHE_CTRL */
++    if(rw==1&&!allow_write)printf("A03 eMMC: writes refused, card cache enabled/unknown\n");
 +    ae.sectors=a03_le32(sector+212);
 +    if((sector[179]&7)||sector[61]||sector[192]<5||sector[192]>8||ae.sectors<2) {
 +        printf("A03 eMMC: EXT_CSD guard failed\n");return;
@@ -276,10 +352,12 @@
 +    int cmajor=cdevsw_add_with_bdev(-1,&emmc_cdevsw,bmajor);
 +    if(cmajor<0) {(void)bdevsw_remove(bmajor,&emmc_bdevsw);return;}
 +    ae.ready=true;
++    ae.writable=allow_write;
 +    devfs_make_node(makedev(bmajor,0),DEVFS_BLOCK,UID_ROOT,GID_OPERATOR,0440,"a03boot0");
 +    devfs_make_node(makedev(cmajor,0),DEVFS_CHAR,UID_ROOT,GID_OPERATOR,0440,"ra03boot0");
-+    devfs_make_node(makedev(bmajor,1),DEVFS_BLOCK,UID_ROOT,GID_OPERATOR,0440,"a03userdata0");
-+    devfs_make_node(makedev(cmajor,1),DEVFS_CHAR,UID_ROOT,GID_OPERATOR,0440,"ra03userdata0");
++    devfs_make_node(makedev(bmajor,1),DEVFS_BLOCK,UID_ROOT,GID_OPERATOR,ae.writable?0640:0440,"a03userdata0");
++    devfs_make_node(makedev(cmajor,1),DEVFS_CHAR,UID_ROOT,GID_OPERATOR,ae.writable?0640:0440,"ra03userdata0");
++    printf("A03 eMMC: USERDATA %s; BOOT always READ ONLY\n",ae.writable?"READ WRITE":"READ ONLY");
 +    printf("A03 eMMC: BOOT + USERDATA BSD devices ready READ ONLY; RAM root unchanged\n");
 +}
 +#endif

@@ -8,6 +8,10 @@
   is disposable. Matching stock BOOT restore is now available; BOOT-only
   Magisk flash succeeded. Keep tests scoped to BOOT; preserve recovery,
   bootloaders and EFS/NV. Do not wipe merely because data is disposable.
+- On 2026-11-14 the user explicitly authorized filesystem preparation and
+  storage write support, accepting loss of disposable phone data. Scope
+  filesystem writes to validated USERDATA p55; preserve GPT, recovery,
+  bootloaders and EFS/NV. BOOT test/restore authorization remains active.
 - Distinguish Android EL0 diagnostic success from boot-shim execution,
   XNU progress, physical display observations and iOS runtime behavior.
 

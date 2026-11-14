@@ -250,3 +250,30 @@ UFS drivers and their write paths are not A03 eMMC implementations.
   and portable entitlement/platform-binary services, then validate Apple
   launchd/dyld before SpringBoard/backboardd graphics integration.
   No additional flash needed for this milestone.
+
+## Authorized USERDATA write development
+
+On2026-11-14 the user explicitly requested filesystem preparation and
+storage write support, accepting loss of disposable data. Scope is USERDATA
+p55; GPT, recovery, bootloaders and EFS/NV remain preserved. BOOT remains
+available for test flashes/restores. No broad erase is needed.
+
+The staged driver accepts a03emmc_rw=1 only after existing GPT/identity
+validation and EXT_CSD CACHE_CTRL=0. BOOT stays readonly. CMD24 bounds are
+checked again at hardware entry, single-sector DMA completion plus CMD13
+ready/TRAN precede success, and errors permanently disable commands.
+Raw writes are sector aligned, copy through duplicate uio and advance only
+on successful completion. Buffered partial-sector writes use locked RMW.
+Card-cache-enabled write support/flush is not yet implemented; this mode
+refuses write enable in that state. No hardware write success is claimed.
+
+Packer --userdata-writable requires --emmc-readonly controller opt-in and
+adds a03emmc_rw=1, retaining rd=md0. Filesystem-root selection is a separate
+change. Run tools/a03-test-bsd-storage.py and tools/a03-test-sdma-write.py
+for host sanitizer checks. These are not hardware emulation/validation.
+
+An optional --ios-userspace profile (workflow a03_ios_userspace=true)
+adds pinned XML entitlements/platform-binary/CS_SIGNED support0035/0036.
+Default patch bytes remain unchanged; SweetEntitlements uses integer-only
+codegen. This donor development policy does not implement Apple trust-chain
+enforcement. No Apple launchd/runtime result is established by compilation.

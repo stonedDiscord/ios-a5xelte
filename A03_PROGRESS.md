@@ -1560,3 +1560,29 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   and portable entitlement/platform-binary services, then validate Apple
   launchd/dyld before SpringBoard/backboardd graphics integration.
   No additional flash needed for this milestone.
+
+### 2026-11-14: USERDATA filesystem/write support explicitly authorized
+
+- User requests filesystem preparation and write support, accepts loss of
+  disposable phone data and recovery through Download mode. Scope new
+  filesystem writes to validated USERDATA p55, preserving GPT, recovery,
+  bootloaders and EFS/NV. No wipe requested or required.
+- Implement opt-in USERDATA-only SDMA writes, completion/status and cache
+  flush handling, leaving BOOT nodes read-only. Real Apple source asset
+  location is still needed; current0024 storage checkpoint remains intact.
+
+- USERDATA-only CMD24 support staged behind a03emmc_rw=1. Default reads
+  unchanged; BOOT nodes always readonly. Lowest write layer rechecks GPT
+  USERDATA bounds. Raw writes require512-byte alignment and duplicate uio
+  before copyin, advancing original only after device completion. Buffered
+  writes serialize partial-sector read/modify/write. CMD24 transfer complete
+  plus CMD13 ready/TRAN required; any failure poisons permanently/no retry.
+- Write enable currently requires EXT_CSD CACHE_CTRL=0; enabled card cache
+  refuses writes rather than falsely acknowledge an unimplemented flush.
+  Synchronize ioctls are no-op only under this no-card-cache write contract.
+  Host ASan/UBSan BSD and actual CMD24 fake-register tests pass; not physical
+  hardware proof. Apple-userspace profile remains optional/default off.
+- Matching iOS16.7.16/20H392 iPhone10,2 IPSW found via ipsw.me metadata,
+  downloading from Apple's CDN privately to research/ipsw. Expected SHA256
+  b3882291a92ecf8763239a026813b3bafae66b7e317dee67011d90c202ccafef.
+  No USERDATA write/format or new flash performed yet.

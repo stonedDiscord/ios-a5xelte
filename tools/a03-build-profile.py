@@ -22,7 +22,10 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('destination', type=Path)
     p.add_argument('--source', type=Path, help='local pinned SWEET source for offline staging')
+    p.add_argument('--ios-userspace', action='store_true',
+                   help='add portable XML entitlement/platform-binary support for later iOS trials')
     a = p.parse_args()
+    selected = EXTRA_PATCHES | ({35, 36} if a.ios_userspace else set())
     if a.destination.exists():
         p.error('destination exists')
     if a.source:
@@ -34,22 +37,22 @@ def main():
         source = None
     a.destination.mkdir(parents=True)
     if source:
-        patches = [(x.name, x.read_bytes()) for x in sorted((source/'xnu/patches').glob('*.patch')) if int(x.name[:4])<=18 or int(x.name[:4]) in EXTRA_PATCHES]
+        patches = [(x.name, x.read_bytes()) for x in sorted((source/'xnu/patches').glob('*.patch')) if int(x.name[:4])<=18 or int(x.name[:4]) in selected]
         stage = (source/'xnu/patches/0020-stage-bearssl.sh').read_bytes()
         pthread_stage = (source/'xnu/patches/0019-stage-libpthread.sh').read_bytes()
         hfs_stage = (source/'xnu/patches/0026-stage-hfs.sh').read_bytes()
     else:
         patches = [(Path(m.name).name, archive.extractfile(m).read()) for m in archive.getmembers()
                    if '/xnu/patches/' in m.name and m.name.endswith('.patch') and
-                   (int(Path(m.name).name[:4])<=18 or int(Path(m.name).name[:4]) in EXTRA_PATCHES)]
+                   (int(Path(m.name).name[:4])<=18 or int(Path(m.name).name[:4]) in selected)]
         member = next(m for m in archive.getmembers() if m.name.endswith('/xnu/patches/0020-stage-bearssl.sh'))
         stage = archive.extractfile(member).read()
         member = next(m for m in archive.getmembers() if m.name.endswith('/xnu/patches/0019-stage-libpthread.sh'))
         pthread_stage = archive.extractfile(member).read()
         member = next(m for m in archive.getmembers() if m.name.endswith('/xnu/patches/0026-stage-hfs.sh'))
         hfs_stage = archive.extractfile(member).read()
-    if len(patches)!=29:
-        raise SystemExit('expected 18 core, 5 crypto and 6 pthread/RAM-root/HFS patches')
+    if len(patches)!=(31 if a.ios_userspace else 29):
+        raise SystemExit('unexpected core/crypto/userspace patch count')
     (a.destination/'0020-stage-bearssl.sh').write_bytes(stage)
     (a.destination/'0019-stage-libpthread.sh').write_bytes(pthread_stage)
     (a.destination/'0026-stage-hfs.sh').write_bytes(hfs_stage)
@@ -78,13 +81,17 @@ def main():
     shutil.copyfile(ROOT/'xnu/patches/0088-a03-userspace-provider-codegen.patch', a.destination/'0088-a03-userspace-provider-codegen.patch')
     shutil.copyfile(ROOT/'xnu/patches/0089-a03-hfs-general-register-codegen.patch', a.destination/'0089-a03-hfs-general-register-codegen.patch')
     shutil.copyfile(ROOT/'xnu/patches/0090-a03-readonly-sdma-bsd.patch', a.destination/'0090-a03-readonly-sdma-bsd.patch')
+    if a.ios_userspace:
+        name = '0091-a03-entitlements-general-register-codegen.patch'
+        shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
         'Portable crypto 0020/0023/0027/0032/0033 and pinned BearSSL stage script.',
         'A03 GICv3 timer INTID27; logo candidate 0x9e000000 720x1600 stride2880.',
-        'Pinned libpthread, mockfs/HFS RAM-root and minimal AMFI interface for test init.',
-        'Opt-in A03 read-only SDMA BSD provider; runtime integration unverified.', '']))
-    print('A03 profile staged:', len(patches)+8, 'patches; MACHINE_CONFIG=SWEET')
+        'Pinned libpthread and mockfs/HFS RAM-root.',
+        'Experimental XML entitlements/platform CS_SIGNED support (0035/0036).' if a.ios_userspace else 'Minimal AMFI interface for static test init.',
+        'Opt-in A03 read-only SDMA BSD provider; BOOT0024 physically confirmed.', '']))
+    print('A03 profile staged:', len(patches)+8+int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':

@@ -1,0 +1,10 @@
+--- a/iokit/conf/Makefile.template
++++ b/iokit/conf/Makefile.template
+@@ -58,6 +58,7 @@
+ 
+ # A03 CPU registration must not use kernel FP/SIMD registers.
+ SweetCPU.cpo_CFLAGS_ADD += -mgeneral-regs-only
++SweetEntitlements.cpo_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ #
+ # Diagnostic opt-outs.  We need to make this list empty.

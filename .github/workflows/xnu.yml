@@ -20,6 +20,10 @@ on:
       keep_going:
         description: make -k (collect all compile errors in one run)
         default: "true"
+      a03_ios_userspace:
+        description: Experimental A03 XML entitlements and platform-binary support
+        type: boolean
+        default: false
       runner:
         description: Supported GitHub runner image (macOS 14 retired 2026-11-02)
         type: choice
@@ -45,6 +49,7 @@ env:
   ARCH_CONFIG: ARM64
   MACHINE_CONFIG: ${{ inputs.machine_config || 'HEROLTE' }}
   BOARD_PROFILE: ${{ inputs.board_profile || 'herolte' }}
+  A03_IOS_USERSPACE: ${{ inputs.a03_ios_userspace || 'false' }}
 
 jobs:
   build:
@@ -68,7 +73,9 @@ jobs:
           # 12.5-14.3 use the top-level patches dir; ours go next to blacktop's
           if [ "$BOARD_PROFILE" = a03 ]; then
             [ "$MACHINE_CONFIG" = SWEET ] || { echo 'a03 requires native 16K SWEET config'; exit 1; }
-            python3 tools/a03-build-profile.py a03-patches
+            profile_flags=()
+            if [ "$A03_IOS_USERSPACE" = true ]; then profile_flags+=(--ios-userspace); fi
+            python3 tools/a03-build-profile.py a03-patches "${profile_flags[@]}"
             cp a03-patches/*.patch a03-patches/*.sh dxb/patches/
           elif [ "$BOARD_PROFILE" = dreamlte ]; then
             [ "$MACHINE_CONFIG" = HEROLTE ] || { echo 'dreamlte requires HEROLTE config'; exit 1; }

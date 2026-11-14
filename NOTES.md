@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-14
 
+USER AUTHORIZED USERDATA filesystem preparation/write support2026-11-14.
+Preserve GPT/recovery/bootloaders/EFS/NV. Guarded CMD24+BSD writes staged,
+a03emmc_rw=1, BOOT always readonly, cache-enabled card refuses writes.
+Host handler+MMIO sequence sanitizer tests pass; hardware untested.
+Apple16.7.16/20H392 IPSW downloading to ignored research/ipsw, SHA expected
+b3882291...02ccafef. No USERDATA write/new flash yet; current0024 PASS.
+Optional portable0035/0036 entitlement profile staged, default off.
+
+
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
 PID1 PASS. XNU SDMA/cache/BSD read path established. Preserve0024 image
 SHAa4240b22...73b53b9c, kernel43598578558/root43597035152. Still HFS RAM

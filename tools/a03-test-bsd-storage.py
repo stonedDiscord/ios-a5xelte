@@ -20,7 +20,7 @@ def main():
     ioctl_end = source.index('/* XNU specfs', end)
     handlers += source[end:ioctl_end]
     raw_begin = source.index('static int emmc_read(')
-    raw_end = source.index('static int emmc_write(', raw_begin)
+    raw_end = source.index('static const struct bdevsw', raw_begin)
     handlers += source[raw_begin:raw_end]
     size_begin = source.index('static int emmc_psize(')
     size_end = source.index(chr(10), size_begin)
@@ -32,6 +32,7 @@ def main():
 #include <assert.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #define __unused __attribute__((unused))
 typedef unsigned dev_t;
 typedef unsigned long u_long;
@@ -46,9 +47,10 @@ struct proc;
 #define EINVAL 22
 #define EIO 5
 #define ENOTTY 25
+#define ENOMEM 12
 enum {DKIOCGETBLOCKSIZE=1,DKIOCGETPHYSICALBLOCKSIZE,DKIOCSETBLOCKSIZE,
       DKIOCGETBLOCKCOUNT,DKIOCISWRITABLE,DKIOCGETMAXBLOCKCOUNTREAD,
-      DKIOCGETMAXBLOCKCOUNTWRITE};
+      DKIOCGETMAXBLOCKCOUNTWRITE,DKIOCSYNCHRONIZECACHE,DKIOCSYNCHRONIZE};
 #define MIN(a,b) ((a)<(b)?(a):(b))
 struct request {
     dev_t dev;int flags,error,completed,mapped;int64_t block;
@@ -56,18 +58,26 @@ struct request {
 };
 typedef struct request *buf_t;
 static struct {
-    bool ready,poisoned;
+    bool ready,poisoned,writable;
     struct {uint32_t boot,boot_count,userdata,userdata_count;} gpt;
 } ae;
 static int a03_emmc_lock,lock_depth,read_calls,fail_call,map_fail;
+static int write_calls,write_fail;static uint32_t write_lba;static unsigned char written[512];
 static uint32_t requested[40];
 struct uio {int64_t offset,resid;unsigned copied;int fail;char data[16896];};
+typedef struct uio *uio_t;
+static bool copying_in;
+static uio_t uio_duplicate(uio_t u) {uio_t c=malloc(sizeof(*c));if(c)*c=*u;return c;}
+static void uio_free(uio_t u) {free(u);}
+static void uio_update(uio_t u,unsigned n) {u->offset+=n;u->resid-=n;u->copied+=n;}
 static int64_t uio_offset(struct uio *u) {return u->offset;}
 static int64_t uio_resid(struct uio *u) {return u->resid;}
 static int uiomove(const char *p,int n,struct uio *u) {
     assert(lock_depth==0);assert(n>0);assert(u->copied+(unsigned)n<=sizeof(u->data));
     if(u->fail)return 14;
-    memcpy(u->data+u->copied,p,(unsigned)n);u->copied+=(unsigned)n;
+    if(copying_in)memcpy((char *)p,u->data+u->copied,(unsigned)n);
+    else memcpy(u->data+u->copied,p,(unsigned)n);
+    u->copied+=(unsigned)n;
     u->resid-=n;u->offset+=n;return 0;
 }
 static uint32_t buf_count(buf_t b) {return b->count;}
@@ -90,6 +100,12 @@ static int data_read(unsigned cmd,uint32_t lba,unsigned char *p) {
     if(read_calls==fail_call)return EIO;
     for(unsigned i=0;i<512;i++)p[i]=(unsigned char)(lba+i);
     return 0;
+}
+static int data_write(uint32_t lba,const unsigned char *p) {
+    assert(lock_depth==1);assert(ae.writable);
+    assert(lba>=ae.gpt.userdata&&lba-ae.gpt.userdata<ae.gpt.userdata_count);
+    write_calls++;if(write_calls==write_fail)return EIO;
+    write_lba=lba;memcpy(written,p,512);return 0;
 }
 '''
     tests = r'''
@@ -173,6 +189,28 @@ int main(void) {
     assert(emmc_read(0,&u,0)==14&&u.resid==512&&read_calls==1&&lock_depth==0);
     u=(struct uio){.resid=1024};read_calls=0;fail_call=2;
     assert(emmc_read(1,&u,0)==EIO&&u.resid==512&&u.copied==512);
+    ae.writable=true;copying_in=true;fail_call=0;read_calls=0;
+    assert(emmc_open(0,FWRITE,0,NULL)==EROFS);
+    assert(emmc_open(1,FWRITE,0,NULL)==0);
+    assert(emmc_ioctl(1,DKIOCISWRITABLE,(caddr_t)&geometry,0,NULL)==0&&geometry==1);
+    assert(emmc_ioctl(0,DKIOCISWRITABLE,(caddr_t)&geometry,0,NULL)==0&&geometry==0);
+    u=(struct uio){.offset=512,.resid=512};memset(u.data,0x39,512);
+    assert(emmc_write(1,&u,0)==0&&u.resid==0&&write_calls==1);
+    assert(write_lba==ae.gpt.userdata+1&&written[511]==0x39);
+    u=(struct uio){.resid=512,.fail=1};
+    assert(emmc_write(1,&u,0)==14&&u.resid==512&&write_calls==1);
+    u=(struct uio){.resid=512};write_fail=2;
+    assert(emmc_write(1,&u,0)==EIO&&u.resid==512&&u.offset==0);
+    assert(emmc_write(0,&u,0)==EROFS);
+    u=(struct uio){.offset=1,.resid=512};assert(emmc_write(1,&u,0)==EINVAL);
+    u=(struct uio){.offset=(int64_t)ae.gpt.userdata_count*512,.resid=512};
+    assert(emmc_write(1,&u,0)==EINVAL);
+    b=req(1,0,513,0);memset(b.data,0x57,513);write_fail=0;write_calls=0;
+    emmc_strategy(&b);check_done(&b,0,0,1);assert(write_calls==2);
+    assert(written[0]==0x57&&written[1]==(unsigned char)(ae.gpt.userdata+2));
+    b=req(0,0,512,0);emmc_strategy(&b);check_done(&b,EROFS,512,0);
+    assert(emmc_ioctl(1,DKIOCSYNCHRONIZECACHE,NULL,0,NULL)==0);
+    ae.writable=false;copying_in=false;write_calls=0;
     ae.poisoned=true;assert(emmc_read(0,&u,0)==ENXIO);
     assert(emmc_open(0,0,0,NULL)==ENXIO);
     b=req(0,0,512,B_READ);emmc_strategy(&b);check_done(&b,ENXIO,512,0);
