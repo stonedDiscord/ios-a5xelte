@@ -1,6 +1,6 @@
 --- a/bsd/dev/a03_emmc.c
 +++ b/bsd/dev/a03_emmc.c
-@@ -335,6 +335,12 @@
+@@ -346,6 +346,12 @@
      uint32_t crc=0;unsigned result=a03_gpt_entries(&ae.gpt,gpt_read,NULL,&crc);
      printf("A03 eMMC: GPT result=%u CRC=%x/%x\n",result,crc,ae.gpt.array_crc);
      if(result)return;

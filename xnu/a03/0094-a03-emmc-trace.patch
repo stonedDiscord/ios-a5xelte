@@ -1,15 +1,15 @@
 --- a/bsd/dev/a03_emmc.c
 +++ b/bsd/dev/a03_emmc.c
-@@ -32,6 +32,8 @@
-     bool poisoned, ready, writable, cache_enabled;
+@@ -35,6 +35,8 @@
      uint32_t rca;
+     dev_t userdata_dev;
  } ae;
 +static bool a03_trace;
 +static unsigned a03_trace_count;
  static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
  static LCK_MTX_DECLARE(a03_emmc_lock, &a03_emmc_grp);
  static inline void barrier(void) { __asm__ volatile("dsb sy" ::: "memory"); }
-@@ -106,6 +108,13 @@
+@@ -109,6 +111,13 @@
      dma_sync(false);
      const volatile unsigned char *p=(const volatile unsigned char *)ae.dma;
      for(unsigned i=0;i<512;i++)out[i]=p[i];
@@ -23,7 +23,7 @@
      wr(0x30,rd(0x30)&0xffff8033);wr(0x58,lo);wr(0x5c,hi);
      *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)host;barrier();
      wr(4,block);wr(0,count);wr(0x34,enable);wr(0x38,signal);return 0;
-@@ -283,7 +292,9 @@
+@@ -294,7 +303,9 @@
      static bool attempted;uint32_t opt=0;
      PE_parse_boot_argn("a03emmc",&opt,sizeof(opt));
      if(opt!=1||attempted)return;
