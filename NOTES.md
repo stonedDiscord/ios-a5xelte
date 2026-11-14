@@ -2,7 +2,19 @@
 
 ## Active A03 handoff — 2026-11-14
 
-CURRENT0026 FLASHED, DOWNLOAD MODE (both transfers --no-reboot): USERDATA
+NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
+vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /
+hfs_mountroot errno5 / cannot mount root errno19. eMMC later reports ready,
+USERDATA RW and BOOT RO. Root selection is confirmed; HFS mount and userspace
+are not. No Apple launchd/SpringBoard claim. Added opt-in RAM-root PID1
+catalog probe: pread 512 bytes at USERDATA offset0x2cd82000 via raw+block,
+print first16, compare known image prefix. AArch64 build+mkinit validation
+PASS; not yet built/tested on device. Next run this diagnostic with existing
+root-selection kernel, then isolate transfer vs block mapping vs HFS.
+
+BOOT0026 and the USERDATA image were installed as described below. The
+162431 photo proves the phone subsequently booted far enough to reach XNU's
+HFS root-mount path; current physical/USB state is unknown. USERDATA
 ID55 16GiB HFSX upload100%, then BOOT0026 upload100%. Heimdall logged
 `userdata upload successful` and `boot upload successful`; no independent
 partition readback/hash. USERDATA image SHAeb72c14a...89da108 and full
@@ -12,11 +24,12 @@ Kernel43602657100 SHA124d32ca...605f1d80; cmdline rd=a03userdata0,
 a03emmc_rw=1, rootrw=1, ignition_level=1, -nobsdmgroot.
 Both writes authorized, no GPT/recovery/bootloaders/EFS/NV touched.
 Heimdall close-pc-screen protocol init failed; --resume retry and BOOT-only
-reflash/normal reboot also failed session startup. Device remains detected in
-Download mode. Physical key power-cycle requested; afterward Samsung USB disappeared and
-no ADB/Download interface re-enumerated through15:23UTC. Could be powering
-off/rebooting; no screen/serial evidence. Avoid another write until state is
-known. XNU mount/launchd/SpringBoard runtime not observed. Preserve0024,0025 and stock Magisk restore94fa7c53...15e9ce7.
+reflash/normal reboot also failed session startup. USB disappeared after the
+physical key power-cycle and had not re-enumerated by15:23UTC. The later
+162431 photo establishes a subsequent XNU boot attempt and failed HFS mount;
+it does not establish current USB state. Avoid another write until state is
+known. Apple launchd/SpringBoard runtime not observed. Preserve0024,0025 and
+stock Magisk restore94fa7c53...15e9ce7.
 
 MILESTONE0025 USER CONFIRMED USERDATA WRITE PASS changed/readback/restored/
 fsync sector16GiB, raw+block BOOT reads/write-open EROFS PASS. Preserve0024

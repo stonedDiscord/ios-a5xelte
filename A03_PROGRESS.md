@@ -1798,3 +1798,27 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   has re-enumerated through15:23 UTC. This is not evidence of a successful
   boot or panic; display/serial result is still needed. Avoid further flashes
   until its physical state is known.
+
+### 2026-11-14: XNU selects USERDATA; HFS catalog read fails
+
+- User supplied photo `IMG_20261114_162431_124.jpg`. The visible XNU log
+  identifies `a03userdata0` as BSD root (major2/minor1), enters
+  `vfs_mountroot`, then reports an invalid catalog B-tree node (fileID4),
+  `BTOpenPath` error5, `hfs_mountroot failed: 5`, and `cannot mount root,
+  errno = 19`. Later diagnostics show eMMC ready, USERDATA read/write and
+  BOOT read-only. This confirms root selection and the failed HFS mount; it
+  does not establish successful Apple launchd or SpringBoard execution.
+- The image was locally verified before upload, but Heimdall did not read
+  USERDATA back. The log alone cannot distinguish an incomplete transfer,
+  raw/block read mapping issue, or HFS interpretation issue.
+- Added opt-in `catalog_probe` to `a03-root.yml`. Its RAM-root PID1 helper
+  reads 512 bytes at USERDATA byte offset `0x2cd82000` (catalog fork starts
+  at allocation block183682 * 4096) via `pread` on raw and block USERDATA
+  nodes, prints each observed first16 bytes, and marks whether they match
+  `00000000000001000003000000011200` from the verified image. Read-only;
+  it does not alter the installed filesystem or storage driver behavior.
+- Local AArch64 assembly and `mkinit.py` validation passed, producing a
+  16,635-byte diagnostic PID1. Not yet run under XNU or on the phone. Next:
+  build the diagnostic root, use the known root-selection kernel, and
+  compare both reported prefixes with the image before changing HFS or
+  storage code. Physical USB/device state remains unconfirmed.

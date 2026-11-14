@@ -14,6 +14,7 @@
 #define SYS_open	5
 #define SYS_getpid	20
 #define SYS_select	93
+#define SYS_pread	153
 #define O_RDWR		2
 
 	.text
@@ -61,6 +62,9 @@ _start:
 #ifdef A03_STORAGE_TEST
 	bl	storage_test
 #endif
+#ifdef A03_CATALOG_TEST
+	bl	a03_catalog_test
+#endif
 tick:
 	/* select(0, NULL, NULL, NULL, &5s) as a portable sleep */
 	mov	x0, #0
@@ -100,6 +104,9 @@ hello_tail:
 alive:
 	.ascii	"SWEET init: still alive\n"
 alive_end:
-#ifdef A03_STORAGE_TEST
+#if defined(A03_STORAGE_TEST) || defined(A03_CATALOG_TEST)
 #include "a03-storage-test.inc"
+#endif
+#ifdef A03_CATALOG_TEST
+#include "a03-catalog-test.inc"
 #endif

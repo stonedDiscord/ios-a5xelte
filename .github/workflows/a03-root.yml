@@ -6,13 +6,17 @@ on:
         description: Add read-only A03 BOOT raw/block PID1 checks
         type: boolean
         default: false
+      catalog_probe:
+        description: Add read-only USERDATA catalog-sector PID1 check
+        type: boolean
+        default: false
       userdata_write_probe:
         description: Save/change/readback/restore USERDATA sector at16GiB (requires rw kernel)
         type: boolean
         default: false
   push:
     branches: [a03-bringup]
-    paths: [tools/a03-build-hfs-root.sh, tools/sweet-init.S, tools/a03-storage-test.inc, tools/a03-storage-write-test.inc, tools/mkinit.py, a03-root/**, .github/workflows/a03-root.yml]
+    paths: [tools/a03-build-hfs-root.sh, tools/sweet-init.S, tools/a03-storage-test.inc, tools/a03-storage-write-test.inc, tools/a03-catalog-test.inc, tools/mkinit.py, a03-root/**, .github/workflows/a03-root.yml]
 concurrency:
   group: a03-root
   cancel-in-progress: true
@@ -26,10 +30,12 @@ jobs:
         env:
           USERDATA_WRITE_PROBE: ${{ inputs.userdata_write_probe || 'false' }}
           STORAGE_PROBE: ${{ inputs.storage_probe || 'false' }}
+          CATALOG_PROBE: ${{ inputs.catalog_probe || 'false' }}
         run: |
           mkdir -p out root/sbin root/dev root/private/var/tmp
           flags=()
           if [ "$STORAGE_PROBE" = true ]; then flags+=(-DA03_STORAGE_TEST); fi
+          if [ "$CATALOG_PROBE" = true ]; then flags+=(-DA03_CATALOG_TEST); fi
           if [ "$USERDATA_WRITE_PROBE" = true ]; then flags+=(-DA03_STORAGE_TEST -DA03_STORAGE_WRITE_TEST); fi
           xcrun clang -target arm64-apple-ios16.0 "${flags[@]}" -c tools/sweet-init.S -o out/init.o
           python3 tools/mkinit.py out/init.o root/sbin/launchd
