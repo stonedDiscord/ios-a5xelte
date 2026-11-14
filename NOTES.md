@@ -13,8 +13,10 @@ a03emmc_rw=1, rootrw=1, ignition_level=1, -nobsdmgroot.
 Both writes authorized, no GPT/recovery/bootloaders/EFS/NV touched.
 Heimdall close-pc-screen protocol init failed; --resume retry and BOOT-only
 reflash/normal reboot also failed session startup. Device remains detected in
-Download mode. Physical key power-cycle requested; XNU mount/launchd and
-SpringBoard runtime not yet observed. Preserve0024,0025 and stock Magisk restore94fa7c53...15e9ce7.
+Download mode. Physical key power-cycle requested; afterward Samsung USB disappeared and
+no ADB/Download interface re-enumerated through15:23UTC. Could be powering
+off/rebooting; no screen/serial evidence. Avoid another write until state is
+known. XNU mount/launchd/SpringBoard runtime not observed. Preserve0024,0025 and stock Magisk restore94fa7c53...15e9ce7.
 
 MILESTONE0025 USER CONFIRMED USERDATA WRITE PASS changed/readback/restored/
 fsync sector16GiB, raw+block BOOT reads/write-open EROFS PASS. Preserve0024

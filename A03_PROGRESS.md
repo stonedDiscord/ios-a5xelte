@@ -1793,3 +1793,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   also failed session startup. Device remained detected in Download mode.
   No third flash occurred and USERDATA root was not changed. Physical
   Download-mode key power-cycle requested; boot/runtime result pending.
+- After the failed Heimdall reboot attempts, host observations at15:22 UTC:
+  USB device disappeared from Download mode; no Samsung USB or ADB interface
+  has re-enumerated through15:23 UTC. This is not evidence of a successful
+  boot or panic; display/serial result is still needed. Avoid further flashes
+  until its physical state is known.
