@@ -37,7 +37,7 @@
  //
 --- /dev/null
 +++ b/bsd/dev/a03_emmc.c
-@@ -0,0 +1,334 @@
+@@ -0,0 +1,336 @@
 +/* A03 ums9230 SDHC v4, polled SDMA with opt-in USERDATA writes.
 + * Register sequence: local Samsung sprd-sdhcr11 and loader trials0017..0020.
 + * Retains timing/clocks; no resets or recovery/NV writes.
