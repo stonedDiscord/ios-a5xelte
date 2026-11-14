@@ -1356,3 +1356,21 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   local storage-test init SHA256979becf2f180d35c1b397b232754db884742f8818824f56e7bed2c7a4165cd0d.
   XNU43588264792 remains verified in_progress/Build. Added guarded packer
   --emmc-readonly option; missing-node rejection tested before any output.
+
+### 2026-11-14: XNU SDMA build succeeds; BOOT0021 prepared
+
+- XNU run43588264792 PASSED atb3d9772. Downloaded plain ARM64 subtype0
+  kernel SHA2564784e6ef2ee3dd0c709c37a23cd0a325bf15cce9bb4cda86d91d02d00af6ba09.
+  Entire storage text range a03_emmc_probe..emmc_write checked for SIMD;
+  all integer-only (1544 disassembly lines). Host build is not DMA proof.
+- Packaged verified storage-test HFSX root43588996330 with normal loader
+  (no pre-XNU diagnostic), opt-in ADT /a03-emmc, a03emmc=1 rd=md0.
+  BOOT0021 shim/a03/out/a03-xnu-0021-sdma-bsd.img SHA256
+  7753f418de5b7dd8c5db245e49c439d743c76691ee350a96d6fac22c289aafe7.
+  Entry10347c488/root104080000+2000000/ADT106080000; exact loader-payload
+  bytes, architecture and gated command line verified. Fresh Download
+  detected; no flash at this entry.
+- Expected first runtime evidence: XNU SDMA probe, DMA PA (above4GiB), GPT
+  result0 CRCbb4c2987/bb4c2987, BSD nodes ready, HFS RAM PID1, then A03
+  STORAGE PID1 PASS raw+block BOOT reads/write-open EROFS. Report actual
+  failure/last line rather than inferring success from absent USB.

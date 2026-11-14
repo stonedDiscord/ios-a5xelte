@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
+XNU43588264792 PASSED; storage text verified integer-only.0021 READY
+shim/a03/out/a03-xnu-0021-sdma-bsd.img SHA256
+7753f418de5b7dd8c5db245e49c439d743c76691ee350a96d6fac22c289aafe7.
+Normal loader + verified HFS storage-test root43588996330, explicit ADT
+node+a03emmc=1 rd=md0. Fresh Download detected; next BOOT-only flash.
+Await XNU DMA PA/GPT result/nodes and PID1 raw+block/EROFS PASS. Current
+0020. No XNU SDMA behavior or Apple launchd yet. Older CI notes historical.
+
+
 Root43588996330 SUCCESS: HFSX fsck clean, catalog launchd exact storage
 test init hash979becf2...65cd0d. Root under shim/a03/out/root-43588996330/.
 XNU43588264792 remains live/in_progress/Build. Packer --emmc-readonly
