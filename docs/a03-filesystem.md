@@ -102,6 +102,16 @@ reception: the failed stage/FIFO count were not visible in0015. Trial0016
 keeps the read path and adds stage/status/FIFO diagnostics at rows65..71,
 pending flash. No XNU rebuild or extra controller reconfiguration.
 
+0016 confirms fail-stage2/read-ready, FIFO0, seen interrupt3/final2.
+Downstream sprd_send_cmd always enables DMA for data; it has no PIO path.
+Live transfer mode also reads0x13 rather than requested0x10. Trial0017
+uses mode4, following sprd_sdmd_mode's single-buffer SDMA registers:
+HOST DMA select0, v4 count0x00, buffer0x58/0x5c, read transfer0x11.
+DMA writes only a dedicated loader-owned512B RAM buffer; commands still
+read-only. No card configuration, sector write, clock change or reset.
+MMU/cache/version/address guards and bounded polls precede parsing; metadata
+must pass before LBA0/1. Prepared0017-sdma-read-v2, not flashed yet.
+
 ## CachyOS ldid compatibility
 
 The current AUR ldid-2.1.5-procursus7 source fails against this host's

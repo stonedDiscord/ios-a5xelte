@@ -2,6 +2,22 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0016 report: fail2(read-ready),seen3,last2,present01f000f0,FIFO0,
+enable037f000b,command083a0013. No data success. Downstream sprd_send_cmd
+always sets if_dma=1; no PIO data path. Generic PIO assumption was wrong.
+Live transfer-mode0x13 vs requested0x10 corroborates need for DMA path.
+Prepared0017 mode4 using sprd_sdmd_mode register sequence: SDMA select0,
+v4 buffer0x58/5c, aligned dedicated512B loader buffer, read direction only.
+Require MMU/cacheoff/version4/HOST2v4+64bit, bounded poll, halt after trial.
+CMD13->EXT_CSD->guarded LBA0/1 and GPT CRC unchanged; no card/storage writes.
+READY NOT FLASHED: shim/a03/out/a03-xnu-0017-sdma-read-v2.img SHA256
+3b15409996e43a52729383f1c06f37bbe242d04c5fa9958732899ac22ed3c8a4.
+Non-v2 candidate superseded, never flashed. No Download USB at check.
+Next fresh Download, BOOT-only flash v2; request metadata or fail stage,
+DMA WORDS COPIED/buffer address/poll lines. No CI/kernel build needed.
+Evidence/reference local android_kernel_samsung_a03 only. Current0016.
+Prior handoffs are historical.
+
 Latest0016 FLASHED successfully: detected, SHA verified
 830bf41e70460aeed768aaf0af86fcbf1caf175d1eb3ecb435d37f78e3a41fb9,
 Heimdall PIT/boot100%/reboot exit0, no independent readback. Current0016.

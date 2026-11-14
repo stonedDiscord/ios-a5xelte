@@ -1129,3 +1129,37 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Current BOOT0016; await failure-stage, POLL SEEN/LAST/PRESENT, FIFO
   WORDS, INT ENABLE LIVE and COMMAND LIVE (rows65..71), plus any EXT_CSD
   or GPT results. Runtime pending; no PIO success inferred from flash.
+
+### 2026-11-14: 0016 identifies unsupported PIO assumption; SDMA trial ready
+
+- User transcribed FAIL STAGE2 (read-ready wait), POLL SEEN3, LAST2,
+  PRESENT01f000f0, FIFO WORDS0, INT ENABLE LIVE037f000b, COMMAND LIVE083a0013.
+  Command-complete and transfer-complete occurred without sampled buffer-
+  ready; zero FIFO words read. No usable EXT_CSD/sector data established.
+- COMMAND low transfer-mode bits read back0x13 although probe requested
+  0x10; DMA-enable and block-count-enable read set. Read-ready enable0x20
+  also reads clear despite attempted enable. This contradicts treating
+  generic SDHCI PIO as a validated path on this IP. Exact hardware cause
+  is not proven, but downstream code supplies a supported DMA route.
+- User correctly points to cloned downstream source. sprd_send_cmd sets
+  if_dma=1 for every data command; no PIO data path. sprd_sdmd_mode selects
+  SDMA and programs v4 buffer address0x58/0x5c. Existing code had inspected
+  downstream register definitions but wrongly borrowed generic PIO.
+- Prepared mode4/BOOT0017 following that single-buffer SDMA setup, not
+  copying GPL driver implementation. Whitelist still CMD8/read CMD17 only,
+  CMD13 guard first; metadata/user-partition/MBR/GPT guards retained.
+  Host DMA select0; single read transfer0x11; v4 count at0; 512-byte
+  loader-owned aligned buffer, initialized sentinel, not stack memory.
+  Require MMU/data cache off, observed v4/64bit HOST2 bits and version4.
+  DMA is FROM card INTO RAM only; no storage writes/config commands.
+- Bounded command/transfer waits, no retry/reset on failure. Buffer stays
+  reserved and loader halts even if transfer times out. Restore original
+  DMA address/host selection only after inhibit bits clear. Reads verify
+  sentinel changed before interpreting metadata; no success claim yet.
+- Actual integer-only code, no relocations, aligned buffer beyond downward
+  stack/below loader end, exact0012 kernel/HFS payload verified. Normal
+  loader and older mode3 compile. No XNU build/CI.
+- Reviewed candidate is shim/a03/out/a03-xnu-0017-sdma-read-v2.img SHA256
+  3b15409996e43a52729383f1c06f37bbe242d04c5fa9958732899ac22ed3c8a4.
+  Earlier non-v2 host candidate superseded, never flashed. No Download
+  USB now;0017 NOT flashed. Current phone remains0016.

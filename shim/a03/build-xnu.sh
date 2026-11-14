@@ -7,7 +7,8 @@ case ${A03_EMMC_SNAPSHOT:-0} in
   1) diagnostic=-DA03_EMMC_SNAPSHOT=1 ;;
   2) diagnostic=-DA03_EMMC_SNAPSHOT=2 ;;
   3) diagnostic=-DA03_EMMC_SNAPSHOT=3 ;;
-  *) echo 'A03_EMMC_SNAPSHOT must be 0, 1, 2 or 3' >&2; exit 2 ;;
+  4) diagnostic=-DA03_EMMC_SNAPSHOT=4 ;;
+  *) echo 'A03_EMMC_SNAPSHOT must be 0, 1, 2, 3 or 4' >&2; exit 2 ;;
 esac
 for src in xnu-entry.S xnu-loader.c; do
  clang --target=aarch64-none-elf -march=armv8.2-a -O2 -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -fno-pie -nostdlib -mgeneral-regs-only -mstrict-align -Wall -Wextra -Werror $diagnostic -c "$src" -o "out/$src.o"
