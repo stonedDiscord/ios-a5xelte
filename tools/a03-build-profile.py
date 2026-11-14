@@ -88,8 +88,6 @@ def main():
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0093-a03-usb-state-probe.patch'
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
-        name = '0094-a03-emmc-trace.patch'
-        shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0095-a03-usb-probe-marker.patch'
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0096-a03-emmc-uio-trace.patch'
