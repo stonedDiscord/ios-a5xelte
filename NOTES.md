@@ -2,6 +2,9 @@
 
 ## Active A03 handoff — 2026-11-14
 
+BOOT0038 (commit da135e5; source 322bcba) was uploaded BOOT-only after workflow 43633349828 succeeded. Kernel SHA256 9cf66f9624b94a8a7b0f5837027ab5fcf016c70111869f33b5231572d94f4c6f; image SHA256 875033bc9c0948421919ea0e8bc41b94fbff3d7903a11c075b49e52403f740c4. Its eMMC trace is restricted to USERDATA base 0xf31000 and expected catalog LBA 0x1097c10; UIO prints the first four requests and catalog-window offsets around 0x2cd82000. Heimdall uploaded only boot at 100% and rebooted. No new photo is present in /home/stoned/ocr; the only photo remains BOOT0037's older broad trace. Await BOOT0038 screen output, especially A03 eMMC UIO and catalog-range TRACE lines.
+
+
 BOOT0032 (`4ace15fb349f9c669f4a6bd51c5c7c84c25cb47f5ae0a1b05d37bfa65cdab287`)
 was uploaded BOOT-only and rebooted. User reports raw/block catalog still
 zero, both HFS headers `48580005800021004846534a00000081` (HFSX), and SWEET PID1
