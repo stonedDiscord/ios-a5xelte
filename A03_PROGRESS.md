@@ -1722,3 +1722,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   bounds and2663-image table containing four core dependency paths. Injected
   missing part/UUID mismatch/out-of-file mapping rejected. No cryptographic
   signature validation or runtime proof. Run against final HFS artifact too.
+
+- Actual supplied launchd/SpringBoard signatures contain XML entitlement
+  slots as supported by optional0035; dyld has a code signature without
+  entitlements. No cryptographic trust claim. Root43604313047 rechecked
+  live/staging; phone Download detected. No new flash this continuation.

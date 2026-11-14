@@ -20,6 +20,13 @@ CI43604313047 atfb27fcf pending/live; superseded43604260923 cancelled.
 Completed raw conversions now retained even on verification failure;
 require logs/fsck/host final guard before install. BOOT0026 ready.
 No full filesystem flash yet. Phone Download detected, current0025.
+Local supplied source mounted readonly APFS-FUSE under ignored
+research/a03-ios16-source/{os,sysos}/root. New cache verifier9893c60 passes
+40subcache UUIDs +symbols +mapping/signature extents +2663image table/core
+launchd/SpringBoard dependency paths. Run tools/a03-verify-ios-cache.py
+--hfs-image FINAL_ROOT after download too. launchd/SpringBoard actual XML
+entitlement slots present (supported optional0035). Source checks are not
+runtime/signature trust proof. Root43604313047 confirmed live/staging.
 Scope authorized USERDATAp55 +BOOT; preserve GPT/recovery/bootloaders/EFS/NV.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
