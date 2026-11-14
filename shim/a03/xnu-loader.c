@@ -17,11 +17,69 @@ static void text(const char *s,unsigned row) {
     /* RAM logo candidate only. No display-controller register writes. */
 
     volatile uint32_t *fb=(volatile uint32_t*)0x9e000000UL;
+    for(unsigned y=0;y<16;y++)for(unsigned x=0;x<720;x++)
+        fb[(row*16+y)*720+x]=0xff000000;
     for(unsigned x=0;s[x]&&x<90;x++)for(unsigned y=0;y<16;y++)for(unsigned bit=0;bit<8;bit++)
-        fb[(row*16+y)*720+x*8+bit]=(font8x16[(unsigned char)s[x]-32][y]&(1<<bit))?0xffffffff:0xff000000;
+        fb[(row*16+y)*720+x*8+bit]=(font8x16[(unsigned char)s[x]-32][y]&(0x80u>>bit))?0xffffffff:0xff000000;
     __asm__ volatile("dsb sy":::"memory");
 }
 #ifdef A03_EMMC_SNAPSHOT
+#if A03_EMMC_SNAPSHOT == 2
+static uint32_t emmc_read32(unsigned off) {
+    uint32_t v=*(volatile uint32_t*)(0x201d0000UL+off);
+    __asm__ volatile("dsb sy"::: "memory");return v;
+}
+static void emmc_write32(unsigned off,uint32_t v) {
+    *(volatile uint32_t*)(0x201d0000UL+off)=v;
+    __asm__ volatile("dsb sy"::: "memory");
+}
+static void hexline(const char *label,uint32_t value,unsigned row) {
+    char line[80];unsigned n=0;
+    while(*label && n<65)line[n++]=*label++;
+    line[n++]='=';line[n++]='0';line[n++]='x';
+    for(int shift=28;shift>=0;shift-=4)line[n++]="0123456789abcdef"[(value>>shift)&15];
+    line[n]=0;text(line,row);
+}
+static void emmc_status_probe(void) {
+    uint32_t argument=emmc_read32(0x08),state=emmc_read32(0x24);
+    uint32_t modecmd=emmc_read32(0x0c),clock=emmc_read32(0x2c);
+    uint32_t oldstatus=emmc_read32(0x30),response=emmc_read32(0x10);
+    unsigned cmd=modecmd>>24;
+    /* RCA is only a candidate retained from the observed addressed command.
+     * Probe it with SEND_STATUS, never a state-changing selection command. */
+    if((state&3)||(clock&7)!=7||oldstatus||!(argument>>16)||
+       (argument&0xffff)||(cmd!=11 && cmd!=13)||
+       (response&0x1f00)!=0x0900) {
+        text("CMD13 SKIPPED - RETAINED STATE GUARD FAILED",24);return;
+    }
+    hexline("CMD13 CANDIDATE ARG",argument,24);
+    uint32_t enable=emmc_read32(0x34),signal=emmc_read32(0x38);
+    emmc_write32(0x38,0); /* poll; CPU IRQs already masked */
+    emmc_write32(0x34,enable|0x000f8001u);
+    emmc_write32(0x08,argument);
+    text("CMD13 SEND_STATUS - WAIT MAX 1 SECOND",25);
+    /* Atomic transfer-mode/command write: no data phase, no DMA. */
+    emmc_write32(0x0c,0x0d1a0000u);
+    uint64_t start,now,freq;
+    __asm__ volatile("mrs %0,cntpct_el0":"=r"(start));
+    __asm__ volatile("mrs %0,cntfrq_el0":"=r"(freq));
+    uint32_t status=0;
+    for(unsigned i=0;i<10000000;i++) {
+        status=emmc_read32(0x30);
+        if(status&0xffff8001u)break;
+        __asm__ volatile("mrs %0,cntpct_el0":"=r"(now));
+        if(now-start>=freq)break;
+    }
+    hexline("CMD13 INT",status,26);
+    hexline("CMD13 RESPONSE",emmc_read32(0x10),27);
+    hexline("CMD13 PRESENT",emmc_read32(0x24),28);
+    emmc_write32(0x34,enable);
+    emmc_write32(0x30,status&0xffff8001u);
+    emmc_write32(0x38,signal);
+    if((status&0xffff8001u)==1)text("CMD13 RESPONSE RECEIVED - CHECK CARD STATUS",30);
+    else text("CMD13 FAILED/TIMED OUT - NO RESET OR RETRY",30);
+}
+#endif
 /* Register addresses/widths checked against the A03 live DT and Linux
  * sprd-sdhcr11.h. No FIFO read, controller write, reset or card command.
  * Run before XNU takes ownership; pause so its console cannot erase evidence.
@@ -37,7 +95,11 @@ static void emmc_snapshot(void) {
         {"INT_ENABLE",0x34,4}, {"SIGNAL",0x38,4},
         {"DLL_CFG",0x200,4}, {"DLL_DELAY",0x204,4}
     };
+#if A03_EMMC_SNAPSHOT == 2
+    text("A03 EMMC 0014 SNAPSHOT + GUARDED CMD13",3);
+#else
     text("A03 EMMC 0013 READ-ONLY SNAPSHOT PA 201d0000",3);
+#endif
     for(unsigned i=0;i<sizeof(regs)/sizeof(regs[0]);i++) {
         char line[80]; unsigned n=0;
         for(const char *s=regs[i].name;*s;s++)line[n++]=*s;
@@ -55,8 +117,14 @@ static void emmc_snapshot(void) {
         for(int shift=28;shift>=0;shift-=4)line[n++]="0123456789abcdef"[(value>>shift)&15];
         line[n]=0;text(line,5+i);
     }
+#if A03_EMMC_SNAPSHOT == 2
+    emmc_status_probe();
+    text("STATUS PROBE COMPLETE - PAUSED FOR PHOTO",32);
+    text("NO SECTOR READS OR STORAGE WRITES",33);
+#else
     text("A03 EMMC SNAPSHOT COMPLETE - PAUSED FOR PHOTO",21);
     text("NO CARD COMMANDS OR STORAGE WRITES ISSUED",22);
+#endif
     for(;;)__asm__ volatile("wfe");
 }
 #endif

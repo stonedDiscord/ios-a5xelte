@@ -2,9 +2,25 @@
 
 ## Active A03 handoff — 2026-11-13
 
+0013 physical snapshot RECEIVED (all values in A03_PROGRESS.md). MMIO works,
+PRESENT01f000f0 CLOCK7 HOST20 HOST23005 VERSION4 ARG10000 CMD0b1a RSP900.
+Interpretation: clock enabled/stable, no inhibit,8-bit HS200, retained
+TRAN+ready response; candidate RCA1 not yet confirmed. Not sector access.
+User reports mirrored glyphs: loader MSB-first font rendering corrected.
+0014 prepared, NOT FLASHED (no Download USB at check), SHA256
+17b1299ee4387b52eeba7a1a25c15a85495a5b9e5a9f2d76896a6f11ac42f48f.
+shim/a03/out/a03-xnu-0014-emmc-status.img, opt-in A03_EMMC_SNAPSHOT=2.
+One guarded CMD13 SEND_STATUS, one-second/iteration bound; snapshots plus
+INT/RESPONSE/PRESENT; no card-state change/sector reads/DMA/storage writes.
+Mode2 DOES write command/interrupt registers; mode1 remains snapshot-only.
+Reuses exact0012 kernel/HFS payload, pauses before XNU, no CI. Next: fresh
+Download and authorized BOOT-only flash0014; request result and glyph check.
+
+Historical0013 flash handoff follows:
+
 Latest trial: BOOT0013-emmc-snapshot flashed/rebooted via Heimdall exit0,
 SHA256 c7465260e94e8ace4505595d254d8f5f589671a2c14bfec85575466e5d1836ae.
-Physical result pending. Opt-in A03_EMMC_SNAPSHOT=1 loader-only diagnostic
+Physical result now recorded above. Opt-in A03_EMMC_SNAPSHOT=1 loader-only diagnostic
 reads 14 selected registers at PA0x201d0000 before XNU; no MMIO stores,
 FIFO reads, resets or card commands. Deliberately pauses with all values
 on screen; request a photo/transcription, including any final read marker.

@@ -78,7 +78,17 @@ The option reads only the explicitly listed controller registers and pauses
 before XNU so a photo preserves the values. It sends no card commands and
 does not read sectors. The reused payload is unchanged. Ordinary packaging
 without the environment option retains the normal XNU boot path. The
-current snapshot register results are pending a physical screen report.
+snapshot is confirmed on hardware; exact values are in A03_PROGRESS.md.
+Clock is enabled/stable, no inhibit bits, 8-bit HS200. The retained
+response indicates TRAN/ready, but it is not a fresh card status.
+
+Mode A03_EMMC_SNAPSHOT=2 prepares trial0014: snapshot followed by one
+guarded CMD13 SEND_STATUS to the retained candidate RCA. It writes only
+controller command/interrupt registers, restores interrupt enables and
+pauses after a bounded poll. No sector read, DMA, reset, card selection or
+storage write. Interpret its response before implementing block reads.
+Loader glyph rendering now uses the font's MSB-first bit order to correct
+the individually mirrored characters reported on trial0013.
 
 ## CachyOS ldid compatibility
 

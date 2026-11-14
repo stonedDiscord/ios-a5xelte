@@ -1015,3 +1015,41 @@ User transcribed (minor spelling differences preserved in original chat):
   upload and reboot, exit0. No independent partition readback. Physical
   register results pending user photo/transcription. No eMMC reads of
   card sectors or functional block-device claim yet. BOOT0012 retained.
+
+### 2026-11-14: BOOT 0013 physical snapshot received; 0014 prepared
+
+User transcribed all 14 values from the phone:
+
+```text
+PRESENT=0x01f000f0 CLOCK=0x00000007 HOST=0x00000020
+POWER=0x00000000 HOST2=0x00003005 VERSION=0x00000004
+ARG=0x00010000 COMMAND=0x00000b1a RESPONSE0=0x00000900
+INT_STATE=0x00000000 INT_ENABLE=0x027f000d SIGNAL=0x027f000d
+DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
+```
+
+- Confirms pre-XNU MMIO reads on hardware. Against the local A03 Linux
+  register definitions: no command/data inhibit (PRESENT bits0/1 clear),
+  internal/stable/card clock bits set, 8-bit HOST, HS200 HOST2 mode5,
+  host version4 (4.10). POWER0 is not proof the card is unpowered: Linux
+  labels that register unused. Retained response0x900 encodes TRAN plus
+  ready-for-data; this is historical response, not a fresh status result.
+- ARG suggests candidate RCA1 from an addressed CMD11. Do not assume
+  selected hardware partition or verified sector access from these values.
+- User reports every glyph horizontally mirrored. Loader used bit0 as
+  leftmost pixel against an MSB-first font. Changed to 0x80>>bit and clear
+  each rendered row so replaced labels leave no trailing characters.
+- Prepared 0014 using A03_EMMC_SNAPSHOT=2, no XNU rebuild. It snapshots
+  first, then issues at most one CMD13 SEND_STATUS using retained argument
+  only if clock/inhibit/empty interrupt status/argument/addressed-command/
+  retained TRAN+ready guards pass. No CMD6/7/0, sector reads, DMA, reset,
+  clock programming or storage writes. This mode DOES write command and
+  interrupt-control registers; original enables restored after polling.
+- Poll bounded to one counter-second and 10 million iterations. Displays
+  CMD13 INT/RESPONSE/PRESENT, pauses before XNU, no reset/retry on failure.
+  Actual integer-only loader disassembly, no relocations and unchanged
+  kernel/HFS payload byte-match verified; corrected F glyph host-rendered.
+- BOOT0014 SHA256
+  17b1299ee4387b52eeba7a1a25c15a85495a5b9e5a9f2d76896a6f11ac42f48f.
+  Image/manifest shim/a03/out/a03-xnu-0014-emmc-status.{img,json}.
+  NOT flashed: phone absent from Download USB at check, still0013.
