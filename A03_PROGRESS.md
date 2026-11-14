@@ -2031,3 +2031,10 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   mode. Return to Download, flash BOOT0031 only, and compare the read-only raw
   and block catalog bytes to distinguish an incomplete original USERDATA
   upload from a high-LBA XNU SDMA read fault.
+- User returned the phone to Download mode. Reflashed the already-verified
+  BOOT0031 image (`ea83109030122cc23a7055e85f828f6a93fa479cd3262307f4ca3029cf3bade3`)
+  to lowercase `boot` only. Heimdall downloaded PIT, uploaded BOOT at100%,
+  reported `boot upload successful`, and rebooted. No other partition was
+  written. Download/ADB are absent immediately after reboot; awaiting the
+  read-only raw/block catalog and header output. No iOS HFS mount or Apple
+  userspace is established by the transfer.

@@ -105,6 +105,12 @@ boot has Magisk BOOT, not the shim. Return to Download, flash BOOT0031 only,
 and rerun the read-only catalog/header test. No GPT/recovery/bootloader/EFS/NV
 write.
 
+Returned to Download after the USERDATA reflash. BOOT0031 was re-flashed to
+`boot` only (same SHA ea83109030122cc23a7055e85f828f6a93fa479cd3262307f4ca3029cf3bade3);
+PIT read and upload100%/`boot upload successful`, then reboot. Waiting for
+post-reflash catalog/header output. This is the required XNU shim after the
+Magisk restore; no other partition was written.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA
