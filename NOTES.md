@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-14
 
+CURRENT0024 FLASHED: fresh Heimdall PIT/boot100%/upload success/reboot exit0.
+Image SHA256a4240b2222a59099fe436a6b33348b9c6ebbed768d9a98ec2f00168e73b53b9c.
+No independent readback. Corrected d_psize512 kernel43598578558 SUCCESS;
+same diagnostic root43597035152. Await raw+block header PASS and full
+PID1 storage PASS/write-open EROFS, or exact stage/value/panic. Current
+root is HFS RAM test init; no Apple launchd/eMMC-root/iOS GUI. Prior READY
+and live-CI notes historical.
+
+
 0024 READY: CI43598578558 SUCCESS; kernel SHA6880a6c0...d30dc41.
 Compiled emmc_psize512 verified, integer-only storage+uiomove retained.
 Image shim/a03/out/a03-xnu-0024-sector-size.img SHA256

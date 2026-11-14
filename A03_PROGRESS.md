@@ -1518,3 +1518,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   verified; BSD sanitizer geometry/full16K and GPT regressions pass.
 - Ready for authorized BOOT-only test. Current0023; complete storage
   PID1 PASS or exact next failure still requires physical evidence.
+
+### 2026-11-14: BOOT0024 sector-size correction flashed
+
+- Fresh Heimdall protocol/PIT, upload only boot100%, boot upload successful,
+  reboot and exit0. No independent readback. Current0024 SHA256
+  a4240b2222a59099fe436a6b33348b9c6ebbed768d9a98ec2f00168e73b53b9c.
+- Await physical raw/header PASS, block/header PASS, then A03 STORAGE PID1
+  PASS raw+block BOOT reads/write-open EROFS, or exact stage/value/panic.
+  CI/tests/flash alone do not establish full storage runtime success.
+  Root remains diagnostic HFS RAM; no Apple launchd/eMMC filesystem-root
+  or iOS GUI. No non-BOOT partition written.
