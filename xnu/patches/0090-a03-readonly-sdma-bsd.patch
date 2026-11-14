@@ -71,6 +71,8 @@
 +    struct a03_gpt gpt;
 +    bool poisoned, ready, writable, cache_enabled;
 +    uint32_t rca;
++    bool a03_trace;
++    unsigned a03_trace_count, a03_uio_trace_count;
 +} ae;
 +static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
 +static LCK_MTX_DECLARE(a03_emmc_lock, &a03_emmc_grp);
@@ -337,6 +339,7 @@
 +    PE_parse_boot_argn("a03emmc",&opt,sizeof(opt));
 +    if(opt!=1||attempted)return;
 +    attempted=true;DTEntry node;const uintptr_t *reg=NULL;unsigned size=0;
++    PE_parse_boot_argn("a03emmc_trace", &ae.a03_trace, sizeof(ae.a03_trace));
 +    if(SecureDTLookupEntry(NULL,"/a03-emmc",&node)!=kSuccess||
 +       SecureDTGetProperty(node,"reg",(const void **)&reg,&size)!=kSuccess||
 +       size!=2*sizeof(uintptr_t)||reg[0]!=0x201d0000||reg[1]!=0x1000) {

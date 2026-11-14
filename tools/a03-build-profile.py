@@ -90,8 +90,6 @@ def main():
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0095-a03-usb-probe-marker.patch'
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
-        name = '0096-a03-emmc-uio-trace.patch'
-        shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0098-a03-catalog-direct-read.patch'
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([

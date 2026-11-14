@@ -1,10 +1,7 @@
 --- a/bsd/dev/a03_emmc.c
 +++ b/bsd/dev/a03_emmc.c
-@@ -37,6 +37,7 @@
+@@ -37,3 +37,3 @@
  } ae;
- static bool a03_trace;
- static unsigned a03_trace_count;
-+static unsigned a03_uio_trace_count;
  static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
  static LCK_MTX_DECLARE(a03_emmc_lock, &a03_emmc_grp);
  static inline void barrier(void) { __asm__ volatile("dsb sy" ::: "memory"); }
@@ -12,12 +9,12 @@
          unsigned char sector[512];uint64_t pos=(uint64_t)uio_offset(uio);
          unsigned skip=pos&511,take=512-skip;
          if((uint64_t)uio_resid(uio)<take)take=(unsigned)uio_resid(uio);
-+        if (a03_trace &&
-+            (a03_uio_trace_count < 4 ||
++        if (ae.a03_trace &&
++            (ae.a03_uio_trace_count < 4 ||
 +             (uint64_t)uio_offset(uio) == 0x2cd82000 ||
 +             ((uint64_t)uio_offset(uio) >= 0x2cd82000 &&
 +              (uint64_t)uio_offset(uio) < 0x2cd82000 + 0x10000)) &&
-+            a03_uio_trace_count++ < 24)
++            ae.a03_uio_trace_count++ < 24)
 +            printf("A03 eMMC UIO: off=%llx lba=%x\n", (uint64_t)uio_offset(uio), part_first(dev)+(uint32_t)(pos/512));
          lck_mtx_lock(&a03_emmc_lock);
          error=data_read(17,part_first(dev)+(uint32_t)(pos/512),sector);
