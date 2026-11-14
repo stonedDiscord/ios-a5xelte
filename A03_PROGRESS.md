@@ -1489,3 +1489,10 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   and demonstrably rejects the original callback. GPT tests pass.
 - Reuse diagnostic root43597035152 for next corrected-kernel BOOT0024.
   Current0023; no new flash or complete storage PID1 PASS yet.
+
+- Fix39d7a06 pushed; corrected XNU run43598578558 confirmed live/Deps.
+  Reuse root43597035152 SHA9d27cf4f...99fd0a4 (revalidated), keep
+  a03emmc=1 rd=md0 and opt-in ADT. Restore hash revalidated; phone
+  Download mode available. Wait for existing CI; do not redispatch.
+  Next download/inspect kernel, package0024, BOOT-only flash and require
+  physical raw+block BOOT/EROFS PASS. Current0023 remains diagnostic.

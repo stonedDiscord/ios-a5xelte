@@ -2,6 +2,11 @@
 
 ## Active A03 handoff — 2026-11-14
 
+FIX39d7a06 PUSHED; kernel CI43598578558 confirmed live/Deps. Phone
+Download available. Reuse diagnostic root43597035152(hash revalidated).
+On CI success inspect integer-only storage code and emmc_psize512, package
+0024 with opt-in ADT+a03emmc=1 rd=md0, BOOT-only test. No new flash yet.
+
 0023 USER stage21/value16 = buffered read EINVAL. Raw BOOT header passed
 by diagnostic control flow. Root cause confirmed in specfs: d_psize means
 sector bytes, ours returned partition count131072>PAGE_SIZE. Fix512,

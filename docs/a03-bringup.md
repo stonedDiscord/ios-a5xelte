@@ -4,7 +4,10 @@ As of 2026-11-14, BOOT0023 is flashed with storage failure-stage
 diagnostics and the unchanged corrected kernel. BOOT0021 panicked during
 a raw user-buffer copy; BOOT0022 uses uiomove and reaches static PID1,
 but the user reports storage FAIL. BOOT0023 prints exact stage/value and
-raw/block PASS markers; physical output pending. HFS RAM root retained.
+raw/block PASS markers; user reports stage0x21/value0x16: buffered-read
+EINVAL after raw BOOT header validation passes. XNU specfs requires sector
+bytes from d_psize; correcting our partition-count return to512 is under
+CI43598578558. HFS RAM root retained; no new flash yet.
 BOOT0020 established GPT integrity/partition identity and a
 matching current-BOOT header plus512-byte payload sample; USERDATA has a
 7-sector tail gap. BOOT0012 separately established HFS RAM-root/static
