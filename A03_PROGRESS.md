@@ -1349,3 +1349,10 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Linux ARM64 assembly and mkinit no-relocation/signature checks pass.
   Default init remains byte-identical SHA256f5de3714ff95e6a3b9ece30723f677de0f3f74ec5eb985a00c5ae872f0ac9bf1.
   Runtime test unverified, HFS root artifact still to build.
+
+- Root run43588996330 at890055e PASSED; downloaded HFSX image SHA256
+  a1be341789ae438c00cc9a91999e8b4a923be1b7636924bf2b958a39599b0b76,
+  read-only fsck clean. Catalog/sbin/launchd mode100755 and contents match
+  local storage-test init SHA256979becf2f180d35c1b397b232754db884742f8818824f56e7bed2c7a4165cd0d.
+  XNU43588264792 remains verified in_progress/Build. Added guarded packer
+  --emmc-readonly option; missing-node rejection tested before any output.

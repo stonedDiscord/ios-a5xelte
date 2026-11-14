@@ -131,3 +131,38 @@ ad-hoc signed a disposable copy of the test init and printed its CDHash.
 No system package files or original test-init image were modified. Our
 static init tool already generates its own signature; ldid is optional
 for that checkpoint. Use a maintained package fix for a system install.
+
+## XNU read-only SDMA integration (2026-11-14, runtime pending)
+
+Trial0020 validates primary GPT entries/CRC, BOOT and USERDATA identities,
+then matches the current BOOT header and512 immutable payload bytes. User
+reports a7-sector gap after USERDATA before last-usable; a gap is legal and
+not evidence of corrupt geometry. This remains a loader checkpoint.
+
+A03 profile patch0090 adds an opt-in BSD reader using the validated SDMA
+register sequence. It maps only201d0000+1000, allocates a permanent private
+contiguous page and performs cache maintenance before/after device writes
+to RAM. Unlike the loader trial, this runs with the XNU MMU/cache and DMA
+above4GiB; those behaviors need physical validation. Any command failure
+disables the reader permanently and retains its DMA buffer.
+
+The first integration trial keeps `rd=md0` and the known HFS RAM root.
+Both an ADT node and `a03emmc=1` are required; ordinary ADTs omit the node.
+Read-only `/dev/a03boot0` and `/dev/ra03boot0` expose BOOT, with USERDATA
+on minor1 as `/dev/a03userdata0` and `/dev/ra03userdata0`. No storage write
+command is implemented. USERDATA does not become the root automatically.
+
+Prepare the ADT and package only after kernel and root artifacts validate:
+
+```sh
+python3 tools/mkadt_a03.py shim/a03/out/NEW-emmc.adt --emmc-readonly
+python3 tools/a03-pack-root.py KERNEL ROOT.img shim/a03/out/NEW.img \
+  --adt shim/a03/out/NEW-emmc.adt --emmc-readonly
+```
+
+Dispatch `a03-root.yml` with `storage_probe=true` for the matching PID1
+test. It reads one BOOT header through raw and buffered BSD paths, checks
+Android magic/v2/page2048, and requires write-only open to return EROFS.
+It never submits a storage write; the normal heartbeat continues after
+either PASS or FAIL. A successful root build alone does not establish
+XNU DMA, BSD reads or real Apple launchd execution.

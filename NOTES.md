@@ -2,6 +2,12 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Root43588996330 SUCCESS: HFSX fsck clean, catalog launchd exact storage
+test init hash979becf2...65cd0d. Root under shim/a03/out/root-43588996330/.
+XNU43588264792 remains live/in_progress/Build. Packer --emmc-readonly
+requires exact ADT node and adds a03emmc=1; rd=md0 retained. No flash.
+
+
 XNU SDMA run43588264792 at b3d9772 is in_progress/Build (verified).
 Opt-in PID1 raw+block BOOT-header/EROFS-open check prepared; compiles
 without relocations, default init hash unchanged. Next root workflow with

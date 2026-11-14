@@ -8,6 +8,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('kernel',type=Path);ap.add_argument('root',type=Path)
     ap.add_argument('output',type=Path);ap.add_argument('--adt',type=Path,required=True)
+    ap.add_argument('--emmc-readonly',action='store_true',help='opt-in XNU read-only SDMA probe; requires matching ADT node')
     ap.add_argument('--base',type=Path,default=ROOT/'backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img')
     a=ap.parse_args();payload=a.output.with_suffix('.payload');manifest=a.output.with_suffix('.json')
     for f in [a.output,payload,manifest]:
@@ -21,6 +22,15 @@ def main():
     if block<512 or block&(block-1) or block*count!=len(data):ap.error('invalid root volume bounds')
     if len(data)>32*1024*1024:ap.error('RAM-root trial limited to 32 MiB; full iOS needs storage')
     args='debug=0x14e serial=3 cpus=1 keepsyms=1 -v -noprogress -enable_kprintf_spam startup_debug=1 -show_pointers rd=md0'
+    if a.emmc_readonly:
+        import sys
+        sys.path.insert(0,str(ROOT/'tools'))
+        import adt
+        tree,end=adt.parse(a.adt.read_bytes())
+        nodes=[n for n in tree.children if n.name=='a03-emmc']
+        if end!=a.adt.stat().st_size or len(nodes)!=1 or nodes[0].prop('reg')!=struct.pack('<QQ',0x201d0000,0x1000):
+            ap.error('--emmc-readonly requires an A03 ADT with the exact controller window')
+        args+=' a03emmc=1'
     a.output.parent.mkdir(parents=True,exist_ok=True)
     subprocess.run(['python3',str(ROOT/'tools/mkpayload.py'),str(a.kernel),str(a.adt),str(payload),'--ramdisk',str(a.root),'--cmdline',args],check=True)
     subprocess.run(['python3',str(ROOT/'tools/a03-xnu-image.py'),str(a.base),str(payload),str(a.output)],check=True)
