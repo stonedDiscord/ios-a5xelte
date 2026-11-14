@@ -26,7 +26,11 @@ Correction: BOOT0027 selected USERDATA as root, so HFS failure could precede
 the diagnostic PID1. Prepared BOOT0028 with `rd=md0` RAM root plus `a03emmc=1`
 and the same read-only catalog probe. SHA
 `e99ec4100f5a00028b5d24fc29b80e1e1ab5acd74c447af8100062923ede38ae`.
-Not flashed; wait for USB/physical state before another BOOT-only transfer.
+Not flashed. New photo165241 again shows invalid catalog B-tree, HFS
+mount failure and no userspace; it adds no raw/block bytes. Lower diagnostics
+show BSD eMMC devices ready. USB still absent at last host check. Need flash
+BOOT0028 only after Download USB returns, then compare catalog bytes before
+any USERDATA changes.
 
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's

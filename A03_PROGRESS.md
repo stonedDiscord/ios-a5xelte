@@ -1873,3 +1873,18 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   `e99ec4100f5a00028b5d24fc29b80e1e1ab5acd74c447af8100062923ede38ae`.
   Kernel/root/ADT inputs are unchanged and catalog reads remain read-only.
   BOOT0028 is not flashed; the phone is currently not enumerating USB.
+
+### 2026-11-14: second HFS catalog failure photo
+
+- User supplied `IMG_20261114_165241_152.jpg`. The visible log again names
+  BSD root `a03userdata0` (major2/minor1), enters `vfs_mountroot`, and reports
+  invalid catalog B-tree node0 (`blockSize 0x200`, zero records),
+  `BTOpenPath` error5, HFS mount failure5 and root errno19. A repeated
+  attempt reports catalog node offset8 invalid (`0x8888`) and HFS error3;
+  HFS marks the volume inconsistent. The photo's lower diagnostic includes
+  `A03 eMMC: BOOT + USERDATA BSD devices ready; RAM root unchanged`.
+- This is another failed USERDATA root mount, not launchd/SpringBoard. It
+  still provides no raw/block catalog bytes and does not prove whether the
+  image transfer, sector read, or HFS mapping is responsible. BOOT0028's
+  RAM-root catalog diagnostic remains the next discriminator, but has not
+  been flashed. Latest host check had no Download/ADB USB enumeration.
