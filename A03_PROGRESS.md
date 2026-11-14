@@ -1706,3 +1706,9 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   fsck_hfs on regular-file path failed ENOTTY; no artifact/install resulted.
   Fix final check to attach raw image readonly/nomount and fsck its raw
   device, then detach. Rebuild needed; phone remains Download/current0025.
+
+- Corrected root build43604313047 atfb27fcf queued/live; superseded43604260923
+  cancelled after adding completed-conversion retention on final-check
+  failure. This avoids repeating all staging merely to diagnose verification.
+  Require fsck/logs/host image guard before USERDATA install. Phone remains
+  Download/current0025; BOOT0026 ready but not flashed.

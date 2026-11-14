@@ -13,7 +13,12 @@ Supplied16.0 IPSW verified. Filesystem43602490133 staging; root-selection
 kernel43602657100 SUCCESS at051206f includes0092, SHA124d32ca...605f1d80.
 BOOT0026 prepared SHAe012784b...5528086b, NOT FLASHED; install filesystem
 first. Final image guard tools/a03-verify-userdata-root.py added; require
-inventory/fsck/hash/geometry. Filesystem43602490133 still staging.
+inventory/fsck/hash/geometry. Filesystem43602490133 staged10GiB/~298k inodes; file inventory PASS
+(dynamicarm64 launchd/dyld/SpringBoard,526jobs,16.0). Final fsck on regular
+file failed ENOTTY. Fixed readonly/nomount rawdevice check. Latest root
+CI43604313047 atfb27fcf pending/live; superseded43604260923 cancelled.
+Completed raw conversions now retained even on verification failure;
+require logs/fsck/host final guard before install. BOOT0026 ready.
 No full filesystem flash yet. Phone Download detected, current0025.
 Scope authorized USERDATAp55 +BOOT; preserve GPT/recovery/bootloaders/EFS/NV.
 
