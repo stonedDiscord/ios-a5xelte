@@ -10,6 +10,8 @@ BOOT0040 was subsequently flashed BOOT-only after a clean Download-mode retry. H
 
 Workflow 43651725931 passed after repairing the dependent patch hunks and all A03 link gates (USB, direct catalog, and USERDATA-root guard). Kernel SHA256 `a3d8125d0a49290116a4ba1e3d7e1fe2d98276f5be4cf6f8df5f3840b356091d`. BOOT0041 was packaged with the emmc-enabled ADT and flashed BOOT-only; image SHA256 `428deca6e75ccccf1a38b0deada5ae152d756b045effe2ac1da05dcc55b67c35`. Heimdall reached 100% and rebooted. USERDATA/GPT/recovery/bootloaders/EFS/NV were untouched. Await physical or USB runtime evidence.
 
+BOOT0041 screenshot `IMG_20261115_002428_609.jpg` identifies the remaining failure: XNU storage validation and USERDATA root selection pass, then HFS reports `hfs_swap_BTNode: offset #8 invalid`, `blockSize 0x200`, and catalog B-tree error 5. The local decompressed 17 GiB image used for the earlier USERDATA flash was sparse/zero-filled at catalog fork byte `0x2cd82000`. Rebuilding from the recorded gzip artifact restores prefix `00000000000000000100000300000003` and full SHA256 `eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108`. Next action is USERDATA-only reflash of the rebuilt image, then BOOT0041; no XNU storage code change is indicated.
+
 CI optimization commit `6d0edaa` now caches the pinned `darwin-xnu-build`
 checkout and the macOS 13.5 `KDK_13.5_22G74.kdk` (compressed under
 `.kdk-cache`), while retaining ccache and parallel make. The first run after
