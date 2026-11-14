@@ -2217,3 +2217,9 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   base. Image SHA256:
   `34334f75b76dc5de4ce0256ce3d2ec49afba295f63c8b8870f1cefced3fb9256`.
   Candidate remains unflashed; no USERDATA or protected partition write.
+- BOOT0036 was flashed BOOT-only with Heimdall after a successful Download-mode
+  detection and PIT read. Upload reached 100% and reported `boot upload
+  successful`; Heimdall rebooted the phone. No USERDATA, GPT, recovery,
+  bootloader, EFS or NV partition was written. Fifteen seconds later the host
+  had no Download or ADB enumeration; physical display and UIO/TRACE output
+  are pending. This does not establish an XNU or iOS userspace result.
