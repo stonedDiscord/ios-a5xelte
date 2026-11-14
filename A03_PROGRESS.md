@@ -1258,3 +1258,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   Candidate shim/a03/out/a03-xnu-0019-gpt-details.img SHA256
   1cf7617b30af133355a64c884c3250602ebeffc3b96f552f33f86b62ca4d6388.
   Prepared only at this entry. Fresh Download USB available.
+
+### 2026-11-14: 0019 flashed, physical mismatch details pending
+
+- Fresh Heimdall detect succeeded; candidate hash independently rechecked.
+  Heimdall protocol/PIT/only boot100%/upload success/reboot exit0. No
+  independent readback. Current BOOT0019 SHA256
+  1cf7617b30af133355a64c884c3250602ebeffc3b96f552f33f86b62ca4d6388.
+- Await photo lower rows64..77: stored/computed array CRC, result, BOOT
+  and USERDATA start/count, identity bitmask, indices, last usable. Code
+  commit6a71956. No GPT-array/BOOT runtime success inferred from upload.
+  XNU integration remains gated on resolving actual identity evidence.

@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0019 FLASHED successfully: fresh detect, verified SHA256
+1cf7617b30af133355a64c884c3250602ebeffc3b96f552f33f86b62ca4d6388,
+Heimdall PIT/boot100%/reboot exit0; no independent readback. Current0019.
+Code/tests6a71956. Await photo lower rows64..77: array CRCs/result, BOOT
+and USERDATA starts/counts, identity mismatch bitmask, zero-based indices,
+last usable.0018 result3 remains unresolved; no XNU storage provider yet.
+Prior PREPARED/NOT FLASHED/current0018 notes below historical.
+
+
 0018 physical photo IMG_20261114_114702_077.jpg: GPT header CRC matches,
 array storedbb4c2987/computed0/result3. Parser stopped on identity before
 finishing array; computed0 is unset, not a real CRC. BOOT compare not reached.
