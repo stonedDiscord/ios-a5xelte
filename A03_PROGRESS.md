@@ -918,3 +918,18 @@ User transcribed (minor spelling differences preserved in original chat):
   43534803374 queued at 9e73e9e. New a03-root workflow dispatch is not yet
   registered on default branch (404); trigger its existing branch push
   event with a workflow update instead of editing default branch.
+
+### Independent HFS root workflow verified (no XNU rebuild)
+
+- First root CI43534898103 failed: hdiutil -format cannot create a blank
+  image. Correction 06b2679 incorrectly used -type UDRW, failed in
+  CI43535056579. Fixed d1ca9ab by omitting the unnecessary type/format and
+  using hdiutil's default writable image creation with -layout NONE.
+- Root-only CI43535227249 PASSED, root job 24 seconds, no kernel build.
+  Downloaded artifact shim/a03/out/root-43535227249/a03-test-root.img:
+  32MiB raw HFSX, SHA256
+  b886b433b988b410cd643683b93db1553d769ecddaf6ca73af3c68e910dbed1e.
+  Manifest hash, primary/alternate HX signatures and volume size verified.
+- HFS-capable kernel CI43534803374 remains queued. Do not attach this real
+  filesystem to old mockfs-only kernel and claim HFS support. No phone
+  flash or non-BOOT write performed. BOOT0011 remains working checkpoint.

@@ -11,8 +11,11 @@ first, hit rate not verified. Not saved make incremental objects.
 Live eMMC: sprd,sdhc-r11p1 PA0x201d0000/0x1000, SPI10,8bit, USERDATAp55.
 No storage writes/MMIO test. First HFS RAM-root, then read-only eMMC driver.
 See docs/a03-filesystem.md. HFS kernel CI43534803374 queued at9e73e9e.
-Actions reenabled by user; root workflow registration needs branch push
-trigger (dispatch404 until discovered). No additional phone flash.
+Actions reenabled by user; independent root CI43535227249 PASSED in24s
+(d1ca9ab), artifact root-43535227249/a03-test-root.img downloaded/validated.
+32MiB HFSX SHA256 b886b433b988b410cd643683b93db1553d769ecddaf6ca73af3c68e910dbed1e.
+Earlier hdiutil format/type failures corrected by default image creation.
+HFS kernel CI43534803374 still queued. No additional phone flash.
 Preserve non-BOOT partitions. Real iOS root/display remains future work.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
