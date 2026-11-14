@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-14
 
+MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
+PID1 PASS. XNU SDMA/cache/BSD read path established. Preserve0024 image
+SHAa4240b22...73b53b9c, kernel43598578558/root43597035152. Still HFS RAM
+static init, no USERDATA filesystem root/Apple launchd/SpringBoard. Next
+locate supplied iOS assets and adapt root+portable entitlements, then
+Apple userspace and graphics. No new flash; BOOT-only scope retained.
+Earlier pending physical-result entries below are historical.
+
+
 Offline root inventory tools/a03-inspect-ios-root.py added; actual test
 root correctly fails dynamic-launchd requirement. No iOS source assets in
 checked local paths; need existing IPSW/root location. Profile AMFI0025

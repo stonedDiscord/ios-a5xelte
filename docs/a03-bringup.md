@@ -5,7 +5,7 @@ callback and the same storage diagnostic RAM root. BOOT0023 established
 raw BOOT-header reads, then failed buffered read with EINVAL because
 d_psize returned partition count instead of sector bytes. Kernel
 CI43598578558 passed; compiled512-byte return, host regressions and
-BOOT upload verified. Physical full raw+block/EROFS PASS remains pending.
+BOOT upload verified. User now confirms full raw+block BOOT-header/EROFS PID1 PASS.
 BOOT0020 established GPT integrity/partition identity and a
 matching current-BOOT header plus512-byte payload sample; USERDATA has a
 7-sector tail gap. BOOT0012 separately established HFS RAM-root/static

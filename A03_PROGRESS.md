@@ -1542,3 +1542,21 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   or bootability. Local iOS source assets remain absent in checked paths.
 - Current profile still minimal AMFI0025; donor portable0035/0036 services
   are not integrated. No real Apple launchd or iOS GUI result inferred.
+
+### 2026-11-14 MILESTONE: BOOT0024 XNU BSD storage PID1 PASS
+
+- User confirms A03 STORAGE PID1 PASS: raw+block BOOT read, write-open
+  EROFS. Current0024 image SHA256
+  a4240b2222a59099fe436a6b33348b9c6ebbed768d9a98ec2f00168e73b53b9c.
+  Kernel43598578558, diagnostic root43597035152.
+- Test requires512-byte raw and buffered BOOT reads, Android magic,
+  page2048/header-v2 and write-only raw open returning EROFS. This proves
+  XNU SDMA/cache/BSD-to-userspace BOOT reads with d_psize512 corrected.
+  Buffered specfs requests16KiB internally; PID1 checks512 bytes only.
+- No full BOOT hash, USERDATA userspace read/mount, eMMC filesystem root,
+  Apple launchd or SpringBoard result. Root is HFS RAM/static diagnostic
+  init. No sector write submitted or non-BOOT permission implied.
+- Preserve0024. Next locate supplied iOS assets, adapt real-root access
+  and portable entitlement/platform-binary services, then validate Apple
+  launchd/dyld before SpringBoard/backboardd graphics integration.
+  No additional flash needed for this milestone.

@@ -132,7 +132,7 @@ No system package files or original test-init image were modified. Our
 static init tool already generates its own signature; ldid is optional
 for that checkpoint. Use a maintained package fix for a system install.
 
-## XNU read-only SDMA integration (2026-11-14, runtime pending)
+## XNU read-only SDMA integration (2026-11-14, BOOT0024 confirmed)
 
 Trial0020 validates primary GPT entries/CRC, BOOT and USERDATA identities,
 then matches the current BOOT header and512 immutable payload bytes. User
@@ -232,3 +232,21 @@ donor's later XML entitlement/platform-binary/CS_SIGNED integration0035/0036.
 These portable services, real root selection, writeable state and additional
 memory need separate adaptation and validation after storage PASS. The donor
 UFS drivers and their write paths are not A03 eMMC implementations.
+
+### 2026-11-14 MILESTONE: BOOT0024 XNU BSD storage PID1 PASS
+
+- User confirms A03 STORAGE PID1 PASS: raw+block BOOT read, write-open
+  EROFS. Current0024 image SHA256
+  a4240b2222a59099fe436a6b33348b9c6ebbed768d9a98ec2f00168e73b53b9c.
+  Kernel43598578558, diagnostic root43597035152.
+- Test requires512-byte raw and buffered BOOT reads, Android magic,
+  page2048/header-v2 and write-only raw open returning EROFS. This proves
+  XNU SDMA/cache/BSD-to-userspace BOOT reads with d_psize512 corrected.
+  Buffered specfs requests16KiB internally; PID1 checks512 bytes only.
+- No full BOOT hash, USERDATA userspace read/mount, eMMC filesystem root,
+  Apple launchd or SpringBoard result. Root is HFS RAM/static diagnostic
+  init. No sector write submitted or non-BOOT permission implied.
+- Preserve0024. Next locate supplied iOS assets, adapt real-root access
+  and portable entitlement/platform-binary services, then validate Apple
+  launchd/dyld before SpringBoard/backboardd graphics integration.
+  No additional flash needed for this milestone.
