@@ -2235,3 +2235,12 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   lines, and patch0096 emits at most 12 UIO offset/LBA lines, including the
   initial low-offset requests. This keeps the HFS header, catalog result and
   decisive offset transition visible without changing storage behavior.
+- XNU workflow `43631882575` completed successfully from `97cce65`; bounded
+  trace kernel SHA256 is
+  `d244b4b8e13a2c6df67e8eac6c2775613f580469de42cd55dbcae357a0d76d2e`.
+  Packaged BOOT0037 with image SHA256
+  `63ac4449549fe476b92ca74b4c4364632a2e2e46d66d003a6217921bb2a7dbb9`.
+  Heimdall detected Download mode, read the PIT, uploaded only `boot` to
+  100%, reported `boot upload successful`, and rebooted. No other partition
+  was written. Host Download/ADB enumeration was absent after reboot; user
+  output for the bounded UIO/TRACE lines is pending.
