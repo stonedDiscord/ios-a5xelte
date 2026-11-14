@@ -6,6 +6,8 @@ Kernel-source audit of `android_kernel_samsung_a03/drivers/mmc/host/sprd-sdhcr11
 
 Corrected XNU build 43641820579 (commit 4e4873e) succeeded with the A03 USB/direct-catalog gates. Kernel SHA256 `f19877e2842a7cff12433efd770910174307decae7d6c92c6ab39142d03454a5`. Packaged local USERDATA-root candidate `shim/a03/out/a03-xnu-0040.img` with the verified iOS root and `rd=a03userdata0 rootrw=1`; image SHA256 `94e18760fe23c75b48f0ac17e1af42cde93d493645b2d3b9a8bfe348b709a9a2`. No device write yet; Download-mode state is required before a BOOT-only flash.
 
+BOOT0040 was subsequently flashed BOOT-only after a clean Download-mode retry. Heimdall transferred the full 64 MiB image to `boot` at 100% and reported `boot upload successful`, then rebooted. USERDATA, GPT, recovery, bootloaders, EFS and NV were not written. At the first 10-second check no ADB or USB diagnostic enumeration was present; physical XNU/display output is still required. 
+
 CI optimization commit `6d0edaa` now caches the pinned `darwin-xnu-build`
 checkout and the macOS 13.5 `KDK_13.5_22G74.kdk` (compressed under
 `.kdk-cache`), while retaining ccache and parallel make. The first run after

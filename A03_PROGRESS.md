@@ -23,6 +23,16 @@ existing USERDATA write-enabled path. Image SHA256 is
 `94e18760fe23c75b48f0ac17e1af42cde93d493645b2d3b9a8bfe348b709a9a2`.
 This is a host artifact only; no device write has been made for it.
 
+## 2026-11-14: BOOT0040 written
+
+After a transient Heimdall protocol-init failure and USB re-enumeration, the
+candidate was transferred only to PIT entry `boot`. Heimdall reached 100%,
+reported `boot upload successful`, and rebooted the device. No USERDATA, GPT,
+recovery, bootloader, EFS or NV write occurred. Ten seconds after reboot the
+host saw neither ADB nor a USB diagnostic device; this does not distinguish a
+displayed XNU panic, a storage-root stall, or a silent early hang. Await
+physical output or later USB evidence before claiming iOS userspace progress.
+
 ## 2026-11-13: branch and first on-device diagnostic
 
 - Branch `a03-bringup`, based on `64b1067` (`dreamlte-bringup`).
