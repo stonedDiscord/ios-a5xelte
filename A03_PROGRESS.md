@@ -1788,3 +1788,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   readback. Phone remains Download after both --no-reboot operations. Next
   user-controlled hardware power-on/reboot, observe kernel HFS mount and
   userspace output/panic; no SpringBoard/runtime claim until observed.
+- First hardware reboot attempt via `heimdall close-pc-screen` failed protocol
+  initialization; `--resume` retry and BOOT-only reflash with normal reboot
+  also failed session startup. Device remained detected in Download mode.
+  No third flash occurred and USERDATA root was not changed. Physical
+  Download-mode key power-cycle requested; boot/runtime result pending.

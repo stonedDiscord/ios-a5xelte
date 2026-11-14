@@ -10,9 +10,11 @@ read-only fsck/catalog/cache/binary/hash checks PASS. BOOT0026 SHA
 e012784bf236bae131029b02c0a5239546081eebb039852e9de64a465528086b.
 Kernel43602657100 SHA124d32ca...605f1d80; cmdline rd=a03userdata0,
 a03emmc_rw=1, rootrw=1, ignition_level=1, -nobsdmgroot.
-Both writes authorized, no GPT/recovery/bootloaders/EFS/NV touched. Next
-power on/boot and observe XNU root mount + launchd; Apple runtime still
-unverified. Preserve0024,0025 and stock Magisk restore94fa7c53...15e9ce7.
+Both writes authorized, no GPT/recovery/bootloaders/EFS/NV touched.
+Heimdall close-pc-screen protocol init failed; --resume retry and BOOT-only
+reflash/normal reboot also failed session startup. Device remains detected in
+Download mode. Physical key power-cycle requested; XNU mount/launchd and
+SpringBoard runtime not yet observed. Preserve0024,0025 and stock Magisk restore94fa7c53...15e9ce7.
 
 MILESTONE0025 USER CONFIRMED USERDATA WRITE PASS changed/readback/restored/
 fsync sector16GiB, raw+block BOOT reads/write-open EROFS PASS. Preserve0024
