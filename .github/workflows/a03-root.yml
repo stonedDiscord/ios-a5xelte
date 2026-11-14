@@ -4,6 +4,9 @@ on:
   push:
     branches: [a03-bringup]
     paths: [tools/a03-build-hfs-root.sh, tools/sweet-init.S, tools/mkinit.py, a03-root/**, .github/workflows/a03-root.yml]
+concurrency:
+  group: a03-root
+  cancel-in-progress: true
 jobs:
   root:
     runs-on: macos-15-intel

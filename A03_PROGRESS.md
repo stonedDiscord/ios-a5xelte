@@ -912,3 +912,9 @@ User transcribed (minor spelling differences preserved in original chat):
   separate controller/clock/card-state validation. Donor UFS not selected.
 - New docs/a03-filesystem.md records packaging/next block checkpoint.
   Current phone still working BOOT0011; no additional flash in this phase.
+
+- Filesystem/cache split pushed as 9e73e9e. Initial kernel dispatch failed
+  HTTP422 Actions disabled; user reenabled Actions. Retry kernel run
+  43534803374 queued at 9e73e9e. New a03-root workflow dispatch is not yet
+  registered on default branch (404); trigger its existing branch push
+  event with a workflow update instead of editing default branch.

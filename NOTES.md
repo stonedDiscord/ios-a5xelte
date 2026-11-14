@@ -10,7 +10,9 @@ XNU CI now CCACHE=ccache with persistent scoped compiler cache; cold build
 first, hit rate not verified. Not saved make incremental objects.
 Live eMMC: sprd,sdhc-r11p1 PA0x201d0000/0x1000, SPI10,8bit, USERDATAp55.
 No storage writes/MMIO test. First HFS RAM-root, then read-only eMMC driver.
-See docs/a03-filesystem.md. Builds need dispatch; no additional phone flash.
+See docs/a03-filesystem.md. HFS kernel CI43534803374 queued at9e73e9e.
+Actions reenabled by user; root workflow registration needs branch push
+trigger (dispatch404 until discovered). No additional phone flash.
 Preserve non-BOOT partitions. Real iOS root/display remains future work.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
