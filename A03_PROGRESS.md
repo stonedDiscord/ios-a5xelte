@@ -1408,3 +1408,7 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   multisector/EOF/negative+huge offsets/copyout fault/partial I/O. All pass.
   Harness is not a XNU/MMIO/DMA emulator. Patch dry-run and GPT tests pass.
   Current phone0021 panic; corrected kernel build next, no new flash yet.
+
+- Fix3f77331 pushed; XNU CI43590138639 confirmed live/in_progress (Deps).
+  Same root43588996330 hash revalidated, no root rebuild. Phone is in
+  Download mode, detected via USB; wait for corrected kernel before0022.

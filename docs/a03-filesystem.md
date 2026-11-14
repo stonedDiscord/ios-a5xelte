@@ -166,3 +166,16 @@ Android magic/v2/page2048, and requires write-only open to return EROFS.
 It never submits a storage write; the normal heartbeat continues after
 either PASS or FAIL. A successful root build alone does not establish
 XNU DMA, BSD reads or real Apple launchd execution.
+
+### Raw BSD user-copy correction
+
+Trial0021's reported data-abort PCfffffe00074d8fb0 resolves in its exact
+kernel to emmc_strategy's destination byte store after successful SDMA
+read. XNU buf_map leaves a noncluster buffer's b_datap unchanged, and
+physio supplies a user address: direct kernel stores were incorrect.
+The corrected raw cdev uses uiomove in caller context after each bounded
+read, outside the hardware mutex. Buffered strategy rejects B_PHYS.
+Run python3 tools/a03-test-bsd-storage.py for actual-handler host ASan/
+UBSan boundary, partial-I/O and copy-fault checks. These tests do not
+emulate XNU or hardware. Reuse the same verified storage-test root for
+the corrected-kernel trial; no filesystem rebuild is required.

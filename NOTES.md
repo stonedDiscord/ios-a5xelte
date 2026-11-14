@@ -2,6 +2,14 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Fix3f77331 PUSHED; corrected-kernel CI43590138639 confirmed live/Deps.
+Phone Download USB available; no new flash. Reuse root43588996330
+(hash verified), explicit emmc ADT and a03emmc=1 rd=md0. Once CI passes,
+download kernel, inspect storage integer-only code/call to uiomove, package
+0022 and BOOT-only test. Current0021 panic PC proves strategy copy reached;
+full storage PID1 PASS pending.
+
+
 0021 PANIC user PCfffffe00074d8fb0 maps exact kernel to emmc_strategy
 byte store into buf_map raw user pointer, after data_read success. Local
 XNU buf_map leaves noncluster b_datap unchanged; physio uses user iovec.
