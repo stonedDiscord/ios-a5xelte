@@ -962,3 +962,14 @@ User transcribed (minor spelling differences preserved in original chat):
   saved successfully. Warm reuse not yet measured; no claimed hit speedup.
 - Phone absent from USB/ADB at check. Asked user fresh Download mode.
   NO0012 flash yet; current BOOT remains working0011-pid1. Non-BOOT intact.
+
+### 2026-11-14: BOOT 0012 HFS filesystem test flashed
+
+- User confirmed fresh Download ready. USB04e8:685d detected; host image
+  hash rechecked against manifest:
+  4951efd8eae4493980ba0b9fdb7495bfb2a06f88e44206f603f5c7ff1814b60d.
+- Heimdall retrieved PIT, uploaded boot100%, reported successful upload,
+  rebooted device, exit0. Only BOOT written; no independent readback.
+- Current BOOT0012-hfs contains verified 32MiB HFSX RAM root and test init.
+  Asked user HFS mount/PID1/heartbeat/panic lines or photo. Runtime pending;
+  previous mockfs0011 PID1 success is not proof this HFS trial mounted.

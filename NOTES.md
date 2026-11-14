@@ -6,12 +6,13 @@ Latest2026-11-14: HFS kernel CI43536143024 PASSED(source16b3177).
 Kernel SHA256 c4c4e4a707ca4da82bd68318dfd187d7984d65fe4482999775e329af65ba942a.
 Named HFS mount/read/register + BSD/pthread funcs verified SIMD-free.
 Root32MiB HFSX fsck clean; catalog/sbin/launchd exact static init match.
-Prepared BOOT0012-hfs (NOT FLASHED), SHA256
+BOOT0012-hfs FLASHED successfully, SHA256
 4951efd8eae4493980ba0b9fdb7495bfb2a06f88e44206f603f5c7ff1814b60d.
 RAM root0x104078000/32MiB; ADT0x106078000; entry0x10347c488.
 Manifest shim/a03/out/a03-xnu-0012-hfs.json. Exact segment/payload verified.
-Phone not USB-visible; fresh Download requested. Current BOOT still0011.
-Next: BOOT-only0012, collect HFS mount/PID1/heartbeat/panic report.
+User confirmed Download; USB detected. Heimdall boot100%, success, reboot,
+exit0. Current BOOT0012; no independent readback. HFS mount/PID1/heartbeat
+or panic/photo requested; runtime pending. Previous0011 mockfs PID1 works.
 Root edits reuse kernel; no XNU rebuild. Compiler cache seeded1050misses,
 0hits, saved; warm reuse untested. Preserve all non-BOOT partitions.
 This is test HFS root, not Apple launchd/iOS GUI. eMMC work still pending.
