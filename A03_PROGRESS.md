@@ -1727,3 +1727,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   slots as supported by optional0035; dyld has a code signature without
   entitlements. No cryptographic trust claim. Root43604313047 rechecked
   live/staging; phone Download detected. No new flash this continuation.
+
+- Checked installed Heimdall2.2.2 grimler fork (64-bit host) against its
+  exact v2.2.2 source d9554e7fa30a00abed7f0ac86b10e63c2c3b8e20, ignored
+  research/a03-heimdall-2.2.2. Transfer file size/progress use64-bit unsigned
+  long/ftello; TotalBytesPacket explicitly sends low/high32bits. Actual
+  packet class test encodes16GiB and16GiB+BOOT without truncation. Original
+  upstream's32-bit fileSize does not describe this installed fork.
+- Existing PIT identifies lowercase userdata, ID55, start15929344, count0
+  (dynamic remainder); fork skips partition-size check when PIT count0.
+  Final image16GiB must be bounded against validated GPT USERDATA separately.
+  No --skip-size-check or repartition option needed. No new phone write.
