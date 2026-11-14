@@ -191,7 +191,9 @@ jobs:
           key: xnu-kdk-v1-${{ env.MACOS_VERSION }}-${{ matrix.runner }}
 
       - name: Install cached Kernel Debug Kit
-        if: steps.kdk-cache.outputs.cache-hit == 'true' && env.MACOS_VERSION == '13.5'
+        # The existing archive cache is truncated on the runner; let
+        # darwin-xnu-build perform its normal KDK download/install instead.
+        if: ${{ false }}
         run: |
           archive=.kdk-cache/KDK_13.5_22G74.tar.zst
           if test -f "$archive" && zstd -t "$archive" >/dev/null 2>&1; then
