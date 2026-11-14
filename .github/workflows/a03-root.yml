@@ -1,0 +1,26 @@
+name: a03-root
+on:
+  workflow_dispatch:
+  push:
+    branches: [a03-bringup]
+    paths: [tools/a03-build-hfs-root.sh, tools/sweet-init.S, tools/mkinit.py, a03-root/**, .github/workflows/a03-root.yml]
+jobs:
+  root:
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build standalone test root
+        run: |
+          mkdir -p out root/sbin root/dev root/private/var/tmp
+          xcrun clang -target arm64-apple-ios16.0 -c tools/sweet-init.S -o out/init.o
+          python3 tools/mkinit.py out/init.o root/sbin/launchd
+          if [ -d a03-root ]; then ditto a03-root root; fi
+          bash tools/a03-build-hfs-root.sh root out/a03-test-root.img
+          (cd out && shasum -a 256 a03-test-root.img > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a03-hfs-test-root
+          path: |
+            out/a03-test-root.img
+            out/SHA256SUMS

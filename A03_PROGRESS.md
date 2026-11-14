@@ -892,3 +892,23 @@ User transcribed (minor spelling differences preserved in original chat):
   framebuffer/IOSurface and display services before any GUI claim. Current
   managed RAM window is 256 MiB, unsuitable for assuming full root fits in
   RAM. No authorization inferred to write non-BOOT partitions.
+
+### 2026-11-14: filesystem split and first HFS trial preparation
+
+- User requests filesystem work with no complete XNU rebuild per file edit.
+  Integrated pinned generic donor 0026 HFS provider/staging script and A03
+  0089 general-register codegen for all HFS objects. Local patch application,
+  reverse check, profile staging and Python syntax pass. Full CI pending.
+- Added independent a03-root workflow: macOS constructs raw 32 MiB HFSX
+  test root with static init; no XNU build. Added a03-pack-root.py to combine
+  existing kernel/ADT + changed root, preserving exact BOOT wrapper and
+  recording hashes, with no flash. Root contents optional overlay a03-root/.
+- XNU workflow now uses supported CCACHE=ccache plus compiler/profile/config
+  scoped persistent cache. First build cold; reuse/statistics unproven until
+  subsequent runs. It still configures/links; not a saved make object tree.
+- eMMC controller from live DT: sprd,sdhc-r11p1, PA0x201d0000 size0x1000,
+  SPI10/INTID42, 8bit. Linux sprd-sdhcr11 driver. USERDATA mmcblk0p55.
+  No MMIO probe or storage command/write yet. Read-only block access needs
+  separate controller/clock/card-state validation. Donor UFS not selected.
+- New docs/a03-filesystem.md records packaging/next block checkpoint.
+  Current phone still working BOOT0011; no additional flash in this phase.

@@ -2,19 +2,16 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 2026-11-14 MILESTONE: user confirms BOOT0011 executes static test
-userspace as PID1 and prints SWEET init: still alive. load_init_program
-tries development launchd then /sbin/launchd; mockfs serves test executable.
-This is physical user-reported A03 userspace/syscall/console evidence,
-NOT Apple launchd/SpringBoard/iOS GUI. One heartbeat, no duration claim.
-Current BOOT0011 SHA256
-4bdf15d5a4c66321783f193d5c72fef33bbebd520eb07087da8b650e9b6fb0c9.
-Kernel CI43530972730 source a8e2da7, hash
-00028c59d5c543c32e2c13e1e6229ede236140027a205c79c1e003a9f5ea585d.
-Next: actual iOS filesystem transport, generic HFS/AMFI entitlements and
-display services. A03 is eMMC, do not enable donor Qualcomm UFS driver.
-Managed RAM is only256MiB; full root cannot be assumed RAM-backed.
-No new flash; preserve non-BOOT partitions. No real iOS root attached.
+Latest 2026-11-14: filesystem work underway, BOOT0011 PID1 remains working.
+Added pinned generic HFS0026 + A03 0089 general-regs; local patches pass.
+Independent a03-root CI builds 32MiB HFSX test root, no XNU build. Root-only
+changes repack via tools/a03-pack-root.py with fixed kernel and hash manifest.
+XNU CI now CCACHE=ccache with persistent scoped compiler cache; cold build
+first, hit rate not verified. Not saved make incremental objects.
+Live eMMC: sprd,sdhc-r11p1 PA0x201d0000/0x1000, SPI10,8bit, USERDATAp55.
+No storage writes/MMIO test. First HFS RAM-root, then read-only eMMC driver.
+See docs/a03-filesystem.md. Builds need dispatch; no additional phone flash.
+Preserve non-BOOT partitions. Real iOS root/display remains future work.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
