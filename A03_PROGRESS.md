@@ -2263,3 +2263,11 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   100%, reported success, and rebooted. No other partition was written.
   Host Download/ADB enumeration is absent after reboot; the new screen photo
   should contain the catalog-window UIO/LBA evidence.
+- OCR of `/home/stoned/ocr/IMG_20261114_205400_349.jpg` shows BOOT0038 did
+  reach RAM-root PID1 and still reports raw/block catalog `MISMATCH`, while
+  both HFS headers remain valid HFSX. The photo contains no catalog-window
+  UIO/TRACE or direct-read result, so it cannot distinguish BSD offset loss
+  from an on-card zero region. Added patch0098 to perform one kernel-side
+  `CMD17` at verified absolute catalog LBA `0x1097c10` immediately after GPT
+  validation and print its first 16 bytes. This bypasses specfs, uio and HFS;
+  its single line is the next required discriminator. No device write.
