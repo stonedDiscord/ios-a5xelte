@@ -17,6 +17,11 @@ Subsequent PIT/flash protocol attempts time out at handshake (Result -7),
 before transfer. No partition write. Need clean Download USB session, then
 flash BOOT only, compare raw/block catalog bytes before changing USERDATA.
 
+USB reset re-enumerated the A03. BOOT0027 then transferred100% to `boot`
+(`boot upload successful`) and `close-pc-screen --resume` rebooted it. No
+USERDATA/GPT/recovery/bootloader/EFS/NV write. Eight seconds later no
+Download/ADB USB had re-enumerated; no catalog/PID1/HFS/userspace evidence.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

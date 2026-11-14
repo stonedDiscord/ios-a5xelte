@@ -1849,3 +1849,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   PID1 raw/block catalog bytes. Do not rewrite USERDATA before comparing
   those bytes against the verified image. No iOS HFS mount, launchd or
   SpringBoard success yet.
+
+### 2026-11-14: BOOT0027 transferred and reboot requested
+
+- After host USB reset/re-enumeration, Heimdall initialized successfully,
+  downloaded the PIT (one recoverable empty-bulk warning), uploaded only
+  `a03-xnu-0027-catalog-read.img` to lowercase `boot` at 100%, and reported
+  `boot upload successful`. USERDATA and all protected partitions were not
+  written.
+- `heimdall close-pc-screen --resume` completed `Rebooting device`. Eight
+  seconds later neither Download nor ADB USB was visible. This is not
+  evidence of PID1, catalog output, HFS mount, launchd or SpringBoard.
