@@ -1053,3 +1053,15 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   17b1299ee4387b52eeba7a1a25c15a85495a5b9e5a9f2d76896a6f11ac42f48f.
   Image/manifest shim/a03/out/a03-xnu-0014-emmc-status.{img,json}.
   NOT flashed: phone absent from Download USB at check, still0013.
+
+### 2026-11-14: BOOT 0014 CMD13 diagnostic flashed
+
+- User reports heimdall detect succeeds; independently detected device
+  and rechecked image SHA256 against manifest:
+  17b1299ee4387b52eeba7a1a25c15a85495a5b9e5a9f2d76896a6f11ac42f48f.
+- Heimdall protocol/PIT succeeded, uploaded only boot100%, reported
+  successful upload, rebooted and exited0. No independent readback.
+- Current BOOT0014. Await physical CMD13 INT/RESPONSE/PRESENT and result
+  (or guard-skip/final partial marker), plus confirmation of glyph fix.
+  Diagnostic deliberately pauses before XNU. No fresh card response or
+  sector-read success is inferred from the successful flash.

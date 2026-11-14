@@ -2,6 +2,13 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest: BOOT0014 CMD13 diagnostic FLASHED, Heimdall detected device, image
+hash matched17b1299ee4387b52eeba7a1a25c15a85495a5b9e5a9f2d76896a6f11ac42f48f,
+PIT/upload boot100%/reboot all successful, exit0; no independent readback.
+Await user CMD13 INT/RESPONSE/PRESENT/result or guard-skip/partial line,
+and glyph orientation. Intentional pause before XNU. No runtime result yet.
+Prior preparation notes follow; NOT FLASHED language below is historical.
+
 0013 physical snapshot RECEIVED (all values in A03_PROGRESS.md). MMIO works,
 PRESENT01f000f0 CLOCK7 HOST20 HOST23005 VERSION4 ARG10000 CMD0b1a RSP900.
 Interpretation: clock enabled/stable, no inhibit,8-bit HS200, retained
