@@ -84,6 +84,27 @@ only lowercase `boot` uploaded100%; reboot completed. USERDATA/protected
 partitions untouched. USB absent after reboot. Await physical raw/block HFS
 header and catalog output; do not infer mount or SpringBoard.
 
+After PHOTO171705, BOOT0031 output: user reports catalog still zero; HFS
+header raw first16 `48580005800021004846534a00000081`, and block reports HFSX;
+SWEET PID1 remains alive. This proves the expected volume header is present
+at USERDATA offset1024, but the catalog-sector mismatch remains. Restored the
+known Magisk BOOT only while attempting a direct Android raw-sector check.
+Correction: this replaced the XNU shim; no shim was reflashed afterward, so
+the recovery boot is expected and says nothing about XNU or Android `/data`.
+
+Image artifact `a03-ios16-root.img.gz` from CI43604313047 was downloaded and
+decompressed outside git. Full raw SHA
+`eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108`; fsck.hfsplus
+-fn PASS. Direct bytes: header@0x400=`48580005800021004846534a00000081`,
+catalog@0x2cd82000=`00000000000000000100000300000003` (allocation block183682,
+4096-byte blocks). Reflashed exact image to USERDATA only; display showed
+`SW REV CHECK FAIL : [userdata]`, transfer nonetheless reached100% and
+reported `userdata upload successful`. No readback, so catalog contents on
+device remain unknown. The transfer rebooted the phone; current recovery
+boot has Magisk BOOT, not the shim. Return to Download, flash BOOT0031 only,
+and rerun the read-only catalog/header test. No GPT/recovery/bootloader/EFS/NV
+write.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

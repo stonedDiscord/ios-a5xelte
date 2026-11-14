@@ -2006,3 +2006,28 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   interface was present immediately after reboot. Await the device display
   for raw/block header bytes and catalog result; no HFS root or iOS userspace
   is established.
+- User reports the subsequent verified Magisk BOOT-only restore booted into
+  Android recovery rather than Android. Heimdall uploaded only `boot` at100%
+  and rebooted. ADB briefly enumerated as unauthorized, then disappeared;
+  there is no rooted Android shell to read USERDATA directly. Correction:
+  the Magisk BOOT restore replaced the XNU shim, and no shim was flashed
+  afterward; therefore this recovery boot is not evidence about XNU or an
+  Android `/data` mount failure. Reflash BOOT0031 after returning to Download.
+- User returned the A03 to Download mode for a diagnostic test. The retained
+  CI image was decompressed outside the repository and verified at16GiB with
+  SHA256 `eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108`.
+  Direct image inspection confirms the HFSX header prefix at byte1024 and the
+  expected catalog B-tree prefix `00000000000000000100000300000003` at
+  USERDATA-relative byte `0x2cd82000`; `fsck.hfsplus -fn` reports the volume
+  OK. The catalog offset is allocation block183682 *4096.
+- Reflashed only USERDATA ID55 with that exact16GiB image. Heimdall downloaded
+  PIT; phone displayed `SW REV CHECK FAIL : [userdata]` during transfer, then
+  Heimdall reached100% and reported `userdata upload successful`. It rebooted
+  the phone. There is no independent storage readback; the reflash does not
+  prove catalog bytes on-device. GPT, BOOT, recovery, bootloaders, EFS and NV
+  were not written in this operation.
+- The phone then booted into recovery because the prior BOOT contents were
+  the Magisk restore. XNU was not active. Current USB state is not Download
+  mode. Return to Download, flash BOOT0031 only, and compare the read-only raw
+  and block catalog bytes to distinguish an incomplete original USERDATA
+  upload from a high-LBA XNU SDMA read fault.
