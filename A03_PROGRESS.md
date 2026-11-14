@@ -2250,3 +2250,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   and any request in the catalog 64KiB window around byte offset
   `0x2cd82000`, also capped at 24. This directly tests whether the catalog
   offset reaches BSD/eMMC without scrolling unrelated HFS traffic away.
+- OCR of `/home/stoned/ocr/IMG_20261114_203813_383.jpg` confirms that photo
+  is BOOT0037's older broad trace: it shows `f31013` through `f3101f`, then a
+  second `f3100a` sequence, and no `A03 eMMC UIO:` lines. It cannot evaluate
+  the catalog-focused changes in `322bcba`; workflow `43633349828` is the
+  first build containing those changes and has not yet been flashed.
