@@ -1712,3 +1712,13 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   failure. This avoids repeating all staging merely to diagnose verification.
   Require fsck/logs/host image guard before USERDATA install. Phone remains
   Download/current0025; BOOT0026 ready but not flashed.
+
+- Local readonly APFS-FUSE views of supplied20A362 OS/SystemOS opened under
+  ignored research/a03-ios16-source/{os,sysos}/root (no phone access).
+  Actual Mach-O load commands confirm launchd uses libSystem/libobjc;
+  SpringBoard also uses SpringBoard.framework/Foundation.
+- Add a03-verify-ios-cache.py for directory/rawHFS access: actual source
+  passes40 declared subcache UUIDs, symbols UUID, mapping/signature extent
+  bounds and2663-image table containing four core dependency paths. Injected
+  missing part/UUID mismatch/out-of-file mapping rejected. No cryptographic
+  signature validation or runtime proof. Run against final HFS artifact too.
