@@ -1630,3 +1630,6 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   read-only diagnostic retains success+14 exact-stage failure coverage.
 - Cache-flush kernel CI43601676154 and supplied-source filesystem root
   CI43601667181 live. No new phone write/flash; current0024 preserved.
+- Supplied16.0 source revealed donor tweak script hardcoded16.7.16 build
+  metadata. Fix migration/activation seeds to read staged SystemVersion;
+  host checks cover both builds. Restart filesystem job for this correction.

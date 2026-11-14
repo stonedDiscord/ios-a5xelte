@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [a03-bringup]
-    paths: [.github/workflows/a03-ios-root.yml, tools/a03-build-ios-root-macos.sh]
+    paths: [.github/workflows/a03-ios-root.yml, tools/a03-build-ios-root-macos.sh, tools/sweet-root-tweaks.py]
 concurrency:
   group: a03-ios-root
   cancel-in-progress: false
