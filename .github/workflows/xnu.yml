@@ -29,6 +29,10 @@ on:
         type: choice
         options: [macos-15-intel, macos-15, macos-26-intel, macos-26, xcode-27]
         default: macos-15-intel
+      upload_buildtree:
+        description: Upload the large patched build tree for local debugging
+        type: boolean
+        default: false
   push:
     branches: [main, herolte, codex/a5xelte-bringup]
     paths:
@@ -106,7 +110,9 @@ jobs:
 
       - name: Deps
         run: |
-          brew install jq gum bash cmake ninja ccache
+          for formula in jq gum bash cmake ninja ccache; do
+            brew list --versions "$formula" >/dev/null 2>&1 || brew install "$formula"
+          done
           # build.sh only checks that xcodes exists (Xcode is preinstalled); no bottle on macOS 14
           printf '#!/bin/sh\nexit 0\n' | sudo tee /usr/local/bin/xcodes >/dev/null
           sudo chmod +x /usr/local/bin/xcodes
@@ -140,7 +146,8 @@ jobs:
           echo "CCACHE=ccache" >> "$GITHUB_ENV"
           fingerprint=$(xcrun clang --version | shasum -a 256 | cut -c1-16)
           echo "A03_CCACHE_COMPILER=$fingerprint" >> "$GITHUB_ENV"
-          ccache --max-size 2G
+          ccache --max-size 5G
+          ccache --zero-stats
 
       - uses: actions/cache/restore@v4
         id: compiler-cache
@@ -156,6 +163,7 @@ jobs:
           # keep going after errors so one run reports every compile failure
           MAKEFLAGS: ${{ inputs.keep_going == 'false' && '' || '-k' }}
         run: |
+          export MAKEFLAGS="${MAKEFLAGS} -j$(sysctl -n hw.ncpu)"
           set -o pipefail
           bash build.sh 2>&1 | tee ../build.log
 
@@ -219,7 +227,7 @@ jobs:
           exit 1
 
       - name: Package build tree for local compiles
-        if: always()
+        if: always() && (inputs.upload_buildtree || failure())
         run: |
           # Generated headers, config option headers, mig output and the patched
           # source: enough to re-run any single compile command from the log locally.
@@ -234,7 +242,7 @@ jobs:
           ls -la buildtree.tgz
 
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && (inputs.upload_buildtree || failure())
         with:
           name: xnu-buildtree-${{ matrix.runner }}
           path: buildtree.tgz
