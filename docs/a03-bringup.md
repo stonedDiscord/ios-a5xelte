@@ -1,8 +1,9 @@
 # Galaxy A03 SM-A035G bring-up
 
 As of 2026-11-14, BOOT0021 is flashed: the first opt-in XNU read-only
-SDMA/BSD storage trial, retaining the HFS RAM root. Its physical result is
-pending. BOOT0020 established GPT integrity/partition identity and a
+SDMA/BSD storage trial, retaining the HFS RAM root. It panicked during
+a raw user-buffer copy at emmc_strategy+0x1c4. Corrected BOOT0022 uses
+uiomove for raw reads; CI and host checks pass, physical test pending. BOOT0020 established GPT integrity/partition identity and a
 matching current-BOOT header plus512-byte payload sample; USERDATA has a
 7-sector tail gap. BOOT0012 separately established HFS RAM-root/static
 PID1 execution. Apple launchd, an eMMC filesystem root and iOS GUI are

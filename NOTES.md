@@ -1,6 +1,16 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
-## Active A03 handoff — 2026-11-13
+## Active A03 handoff — 2026-11-14
+
+CORRECTED0022 READY: CI43590138639 SUCCESS; raw uiomove call verified,
+integer-only storage text, BSD/GPT tests pass. Image
+shim/a03/out/a03-xnu-0022-sdma-uiomove.img SHA256
+df392a526999866b4c170dbc612955a900952191519223d0f444635a597c4a34.
+Same verified root43588996330; explicit ADT+a03emmc=1 rd=md0. Restore
+hash verified, fresh Download detected. Next BOOT-only flash; current
+0021 panic. Await physical raw+block PID1 PASS or exact failure.
+Prior CI/pending0021 entries below are historical.
+
 
 Fix3f77331 PUSHED; corrected-kernel CI43590138639 confirmed live/Deps.
 Phone Download USB available; no new flash. Reuse root43588996330

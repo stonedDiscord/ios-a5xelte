@@ -1412,3 +1412,18 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Fix3f77331 pushed; XNU CI43590138639 confirmed live/in_progress (Deps).
   Same root43588996330 hash revalidated, no root rebuild. Phone is in
   Download mode, detected via USB; wait for corrected kernel before0022.
+
+### 2026-11-14: corrected raw-copy kernel passes CI; BOOT0022 prepared
+
+- XNU CI43590138639 at3f77331 completed SUCCESS. Plain ARM64 subtype0
+  kernel SHA25676b35546dba70b0e67cafd7ce77d6418409410424780c4f599a850e1c37acf41.
+  Storage text is integer-only; emmc_read calls uiomove atfffffe00074d9354.
+  Production-handler ASan/UBSan and GPT tests pass.
+- BOOT0022 shim/a03/out/a03-xnu-0022-sdma-uiomove.img SHA256
+  df392a526999866b4c170dbc612955a900952191519223d0f444635a597c4a34.
+  Same verified HFSX root43588996330, normal loader (snapshot env absent),
+  explicit emmc ADT and a03emmc=1 rd=md0. Exact loader/payload bytes,
+  BOOT v2 bounds, root and restore hashes verified. Fresh Download detected.
+- No0022 flash at this entry. Next authorized BOOT-only trial expects
+  A03 STORAGE PID1 PASS: raw+block BOOT reads, write-open EROFS.
+  Current0021 panic; no Apple launchd or eMMC filesystem-root claim.
