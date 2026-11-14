@@ -4,7 +4,7 @@
      uint32_t crc=0;unsigned result=a03_gpt_entries(&ae.gpt,gpt_read,NULL,&crc);
      printf("A03 eMMC: GPT result=%u CRC=%x/%x\n",result,crc,ae.gpt.array_crc);
      if(result)return;
-+    if (a03_trace) {
++    if (ae.a03_trace) {
 +        unsigned char cat[512];
 +        int direct_error=data_read(17,0x01097c10,cat);
 +        if (direct_error==0)
