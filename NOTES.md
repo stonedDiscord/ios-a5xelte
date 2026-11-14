@@ -9,7 +9,9 @@ switched to this build; fallback16.7.16 run43601400573 cancelled.
 Kernel43600857274 SUCCESS at earlier e729f64; artifact downloaded.
 Cache-flush revision7ee47d9 needs full CI. Host BSD/MMIO tests pass.
 Opt-in PID1 USERDATA save/change/readback/restore/fsync at16GiB prepared;
-run assembled-instruction emulation before diagnostic root CI/pack/flash.
+ARM64 emulation +errors/short/mismatch PASS. Root43601678578 SUCCESS,
+fsck/catalog/exact init/hash verified:7a2379b0...20dfc4d. Kernel43601676154
+(cache flush) and iOS filesystem43601667181 live; await these artifacts.
 No USERDATA write/new flash yet. Preserve GPT/recovery/bootloaders/EFS/NV.
 Real USERDATA root selection/mount and Apple launchd remain unfinished.
 

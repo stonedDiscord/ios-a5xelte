@@ -1621,3 +1621,12 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   16GiB (beyond planned16GiB root), XOR pattern, readback, restore, verify,
   fsync. Bounds enforced again by driver. Failure attempts restore if saved;
   poisoned controller can prevent restoration. Never claims PASS on failure.
+
+- Opt-in diagnostic root CI43601678578 SUCCESS at a9251a7. Downloaded
+  HFSX image SHA2567a2379b0b6699cb9751b861456f3d22170527e7fb2f46332bd79cc37220dfc4d.
+  Read-only fsck clean; catalog init mode0755 and bytes exactly match
+  locally emulated diagnostic. ARM64 emulation passes success plus syscall
+  errors, short I/O, mismatch, restore failure and fsync failure; original
+  read-only diagnostic retains success+14 exact-stage failure coverage.
+- Cache-flush kernel CI43601676154 and supplied-source filesystem root
+  CI43601667181 live. No new phone write/flash; current0024 preserved.
