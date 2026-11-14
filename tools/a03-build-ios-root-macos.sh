@@ -9,7 +9,9 @@ repo=$(cd "$(dirname "$0")/.." && pwd)
 work=$(mktemp -d)
 # hdiutil reports physical /private/var paths; keep mount checks consistent.
 work=$(cd "$work" && pwd -P)
+check_device=
 cleanup() {
+    if [[ -n $check_device ]]; then hdiutil detach "$check_device" || true; fi
     for name in root appos sysos os; do
         if mount | grep -F " on $work/$name (" >/dev/null; then hdiutil detach "$work/$name" || true; fi
     done
@@ -50,7 +52,19 @@ python3 "$repo/tools/a03-inspect-ios-root.py" "$work/root" | tee "$output.invent
 sync
 hdiutil detach "$work/root"
 hdiutil convert "$work/root.dmg" -format UDTO -o "$work/raw"
-fsck_hfs -fn "$work/raw.cdr"
+# macOS fsck_hfs requires a device ioctl; a regular-file path fails ENOTTY.
+hdiutil attach -readonly -nomount -plist "$work/raw.cdr" > "$work/check-device.plist"
+check_device=$(python3 - "$work/check-device.plist" <<'PYDEVICE'
+import plistlib,sys
+with open(sys.argv[1],'rb') as f:p=plistlib.load(f)
+devices=[e['dev-entry'] for e in p['system-entities'] if 'dev-entry' in e]
+assert len(devices)==1,devices # raw layoutNONE HFSX, no partition table
+print(devices[0])
+PYDEVICE
+)
+sudo fsck_hfs -fn "${check_device/\/dev\/disk/\/dev\/rdisk}"
+hdiutil detach "$check_device"
+check_device=
 mv "$work/raw.cdr" "$output"
 shasum -a 256 "$output" > "$output.sha256"
 echo 'Local iOS root prepared; no phone write. Runtime boot remains unverified.'

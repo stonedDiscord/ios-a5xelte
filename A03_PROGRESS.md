@@ -1698,3 +1698,11 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   exact16GiB rawHFSX primary/alternate geometry, clean journal flags/hash.
   Does not replace fsck or iOS file inventory. Actual filesystem artifact
   validation pending; correctly rejects small nonjournaled diagnostic root.
+
+- Filesystem43602490133 completed staging:16GiB HFSX,10GiB used/~298k
+  inodes. Inventory PASS: actual dynamic arm64 launchd/dyld/SpringBoard,
+ 16.0/20A362,526 launchd jobs, primary arm64 cache header (subcache coverage
+  still limited). Root detached and raw conversion completed. Final macOS
+  fsck_hfs on regular-file path failed ENOTTY; no artifact/install resulted.
+  Fix final check to attach raw image readonly/nomount and fsck its raw
+  device, then detach. Rebuild needed; phone remains Download/current0025.
