@@ -2207,3 +2207,13 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   raw UIO boundary cases. This is a plausible specfs geometry defect, not yet
   proven as the sole source of the observed 0x3e00 offset; retain the UIO
   trace in the next BOOT diagnostic. No device write was made.
+- XNU workflow `43630138690` completed successfully from commit `c5768cb` on
+  macOS 15 Intel. Kernel SHA256:
+  `3801f139a203256b448d36cc43df369365cb3f1259570f2cb86a41d5d9fd84af`.
+  Its strings include `A03 eMMC UIO`, `A03 eMMC TRACE`, and the USB probe
+  marker. Packaged BOOT0036 as
+  `shim/a03/out/a03-xnu-0036-psize-trace.img` using the validated A03 ADT,
+  RAM HFS root, catalog/USB/high-LBA trace flags, and the existing Magisk BOOT
+  base. Image SHA256:
+  `34334f75b76dc5de4ce0256ce3d2ec49afba295f63c8b8870f1cefced3fb9256`.
+  Candidate remains unflashed; no USERDATA or protected partition write.
