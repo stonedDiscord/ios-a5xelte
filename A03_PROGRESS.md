@@ -2170,3 +2170,12 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   A03/SWEET DEVELOPMENT profile and iOS-userspace patches, including0094.
   Build and kernel string verification are pending; phone remains on BOOT0033
   and no device write was made.
+- Workflow `43625945895` completed successfully. Patch0094 is linked; the
+  kernel contains `A03 eMMC TRACE` and `A03 USB: AON` strings. Kernel SHA256
+  `8d4cdf854e6d887549a62010832e75bec8daa7467da06637714974089cd8f1df`.
+- Packaged BOOT0034 with RAM root, catalog/header probes, MUSB state probe and
+  `a03emmc_trace=1`; image SHA256
+  `8f5f6fc40784bb80332dd8fc5fd0d68c73d6ed7a075e104a95d4b918443ec395`.
+  Fresh Download/PIT succeeded and Heimdall uploaded only BOOT to100%, then
+  rebooted. No USERDATA or protected partition write. Host had no Download or
+  ADB enumeration 12 seconds later; physical trace lines are pending.
