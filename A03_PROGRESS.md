@@ -1197,3 +1197,30 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   sizes against captured PIT/by-name evidence, then compare a known BOOT
   sector with the exact currently flashed0017 image (not old Magisk BOOT).
   Only after identity/reads validate should XNU block integration start.
+
+### 2026-11-14: 0018 GPT/current-BOOT validation prepared
+
+- Revalidated clean starting worktree at37285d9 and successful0017 evidence.
+  Read live PIT through Heimdall download-pit --no-reboot; private current.pit.
+  BOOT identifier39/start483328/count131072; USERDATA identifier55/start15929344,
+  PIT count0 means remainder, not a verified zero-length partition.
+  PIT SGPT location appears based on a smaller capacity than EXT_CSD; parser
+  permits a bounded backup GPT within media rather than assuming last LBA.
+- Mode5 reuses validated single-sector SDMA setup, CMD8/13/17 only. After
+  capacity and GPT-header CRC checks: at most32 primary entry-array sectors,
+  CRC over exact entry count, nonempty GUID/range/overlap checks, UTF16 boot
+  index38 and userdata index54 matching live PIT/by-name evidence. USERDATA
+  must end at last-usable; never read its contents or write card sectors.
+- Then reads BOOT header and one complete immutable payload sector against
+  THIS running image (0018 replaces0017). Checks Android magic/kernel size/
+  v2/page2048 and all512 bytes at BOOT-relative sector97524. This is a sampled
+  BOOT identity check, not a full64MiB partition readback or cryptographic hash.
+- Actual freestanding C parser passed synthetic valid/partial-array CRC and
+  I/O-failure/range/overlap/PIT-ID/missing-label/malformed-header tests. Modes
+  0/3/4/5 compile Werror;0018 no linked relocations or SIMD instructions. Exact
+ 0012 kernel/HFS payload retained SHA256a8f977a5bd0f00bfb24b7452aa38795a728f393e40201f7ddfd34b6ff8f38e75.
+- Candidate shim/a03/out/a03-xnu-0018-gpt-boot.img SHA256
+  2b6683c9cd2d29a1536a7037b02d5e681b038a6ddb32ed457218cc42029d0d67.
+  Manifest beside image. Restore Magisk BOOT hash verified. NOT flashed yet;
+  live Download session retained after PIT retrieval, flash needs --resume.
+  Trial intentionally pauses before XNU; runtime GPT/BOOT success unproven.

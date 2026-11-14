@@ -86,7 +86,11 @@ static unsigned emmc_status_probe(void) {
 /* Local references: A03 sprd-sdhcr11.{c,h}, sdhci.{c,h}, mmc_ops.c.
  * Read-only command whitelist; mode3 PIO, mode4 downstream SDMA path. */
 static uint32_t poll_seen, poll_last, poll_present;
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 5
+#include "gpt-readonly.h"
+static uint32_t read_limit=1;
+#endif
+#if A03_EMMC_SNAPSHOT >= 4
 /* Dedicated loader-owned buffer stays allocated even after a timeout.
  * EL1 identity access with MMU and data cache off is checked before DMA.
  * 512-byte alignment prevents crossing the SDMA 512K boundary. */
@@ -106,12 +110,18 @@ static unsigned emmc_poll(unsigned mask) {
     }
     return 0;
 }
-static unsigned emmc_pio_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned row) {
+static unsigned emmc_data_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned row) {
     if((cmd!=8 && cmd!=17)||(cmd==8 && arg)||
-       (cmd==17 && arg>1)||(emmc_read32(0x24)&3)||emmc_read32(0x30))return 0;
+       (cmd==17 && arg>
+#if A03_EMMC_SNAPSHOT >= 5
+       read_limit
+#else
+       1
+#endif
+       )||(emmc_read32(0x24)&3)||emmc_read32(0x30))return 0;
     uint32_t enable=emmc_read32(0x34),signal=emmc_read32(0x38);
     uint32_t block=emmc_read32(0x04),count=emmc_read32(0x00);
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 4
     uint64_t sctlr;__asm__ volatile("mrs %0,sctlr_el1":"=r"(sctlr));
     uint32_t host=emmc_read32(0x28),host2=emmc_read32(0x3c);
     uintptr_t target=(uintptr_t)dma_buffer;
@@ -135,7 +145,7 @@ static unsigned emmc_pio_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned r
     emmc_write32(0x08,arg);
     hexline("READ CMD",cmd,row);
     poll_seen=0;poll_last=0;poll_present=0;
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 4
     emmc_write32(0x0c,(cmd<<24)|0x003a0011u); /* single-block READ + DMA */
 #else
     emmc_write32(0x0c,(cmd<<24)|0x003a0010u); /* R1 + data, read, single, PIO */
@@ -145,7 +155,7 @@ static unsigned emmc_pio_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned r
     uint32_t response=emmc_read32(0x10);
     hexline("READ R1",response,row+1);
     if(response&0xffffe080u) {ok=0;stage=4;}
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 4
     if(ok) {emmc_write32(0x30,1);stage=3;ok=emmc_poll(2);}
     if(ok) {
         __asm__ volatile("dsb sy"::: "memory");
@@ -172,7 +182,7 @@ static unsigned emmc_pio_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned r
         hexline("POLL SEEN",poll_seen,66);
         hexline("POLL LAST",poll_last,67);
         hexline("POLL PRESENT",poll_present,68);
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 4
         hexline("DMA WORDS COPIED",words,69);
         hexline("DMA BUFFER LOW",(uint32_t)target,72);
         hexline("DMA BUFFER HIGH",(uint32_t)((uint64_t)target>>32),73);
@@ -184,7 +194,7 @@ static unsigned emmc_pio_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned r
     }
     emmc_write32(0x34,enable);
     emmc_write32(0x30,status&0xffff8033u);
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 4
     /* On busy/error retain dedicated DMA address and buffer, then halt. */
     if(!(emmc_read32(0x24)&3)) {
         emmc_write32(0x58,addrlo);emmc_write32(0x5c,addrhi);
@@ -207,10 +217,57 @@ static uint32_t header_crc(const unsigned char *p,unsigned n) {
     }
     return ~crc;
 }
+#if A03_EMMC_SNAPSHOT >= 5
+static unsigned gpt_sector(void *context,uint32_t lba,unsigned char *sector) {
+    (void)context;uint32_t words[128];
+    if(!emmc_data_read(17,lba,words,44))return 0;
+    for(unsigned i=0;i<512;i++)sector[i]=((unsigned char*)words)[i];
+    return 1;
+}
+static void emmc_gpt_probe(const unsigned char *header,uint32_t sectors) {
+    struct a03_gpt g;uint32_t crc=0;
+    if(!a03_gpt_header(header,sectors,&g)) {
+        text("GPT GEOMETRY/CRC GUARD FAILED",64);
+        hexline("GPT BACKUP LBA LOW",a03_le32(header+32),65);
+        hexline("GPT FIRST USABLE LOW",a03_le32(header+40),66);
+        hexline("GPT LAST USABLE LOW",a03_le32(header+48),67);
+        hexline("GPT ARRAY LBA LOW",a03_le32(header+72),68);
+        hexline("GPT ENTRY COUNT",a03_le32(header+80),69);
+        hexline("GPT ENTRY SIZE",a03_le32(header+84),70);return;
+    }
+    read_limit=sectors-1;
+    unsigned result=a03_gpt_entries(&g,gpt_sector,0,&crc);
+    if(result==1) {text("GPT ARRAY READ FAILED - SEE DMA DIAGNOSTICS",77);return;}
+    hexline("GPT ARRAY CRC STORED",g.array_crc,64);
+    hexline("GPT ARRAY CRC COMPUTED",crc,65);
+    hexline("GPT RESULT 0PASS 1IO 2RANGE 3ID 4CRC 5LABEL",result,66);
+    if(result)return;
+    hexline("BOOT FIRST LBA",g.boot,67);hexline("BOOT SECTORS",g.boot_count,68);
+    hexline("USERDATA FIRST LBA",g.userdata,69);
+    hexline("USERDATA SECTORS",g.userdata_count,70);
+    text("GPT ARRAY CRC + PIT BOOT/USERDATA MATCH",71);
+    uint32_t words[128];const unsigned char *b=(const unsigned char*)words;
+    uint64_t kernel=*(const uint64_t*)(_start+16);
+    if(!emmc_data_read(17,g.boot,words,44))return;
+    if(a03_le64(b)!=0x2144494f52444e41ULL||a03_le32(b+8)!=kernel||
+       a03_le32(b+36)!=2048||a03_le32(b+40)!=2) {
+        text("BOOT HEADER MISMATCH",73);return;
+    }
+    /* Compare THIS image's immutable payload, since the flash replaces 0017. */
+    uint64_t relative=4+kernel/512-1;
+    if(kernel<512||relative>=g.boot_count)return;
+    if(!emmc_data_read(17,g.boot+(uint32_t)relative,words,44))return;
+    const unsigned char *expected=(const unsigned char*)_start+(relative-4)*512;
+    unsigned diff=0;for(unsigned i=0;i<512;i++)diff|=b[i]^expected[i];
+    hexline("BOOT PAYLOAD RELATIVE SECTOR",(uint32_t)relative,73);
+    text(diff?"BOOT PAYLOAD SECTOR MISMATCH":"BOOT HEADER + 512 PAYLOAD BYTES MATCH",74);
+    if(!diff)text("0018 STORAGE IDENTITY PASS - NO STORAGE WRITES",76);
+}
+#endif
 static void emmc_read_probe(void) {
     uint32_t buf[128];
     text("READ EXT_CSD - NO CARD CONFIGURATION CHANGES",32);
-    if(!emmc_pio_read(8,0,buf,34)) {text("EXT_CSD FAILED - STOPPED, NO RETRY",39);return;}
+    if(!emmc_data_read(8,0,buf,34)) {text("EXT_CSD FAILED - STOPPED, NO RETRY",39);return;}
     const unsigned char *p=(const unsigned char*)buf;
     uint32_t sectors=le32(p+212);
     hexline("EXT REV",p[192],39);hexline("PARTITION_CONFIG",p[179],40);
@@ -218,10 +275,10 @@ static void emmc_read_probe(void) {
     if((p[179]&7)||p[61]||p[192]<5||p[192]>8||sectors<2) {
         text("SECTOR READ SKIPPED - EXT_CSD GUARD",44);return;
     }
-    if(!emmc_pio_read(17,0,buf,44)) {text("LBA0 FAILED - STOPPED",49);return;}
+    if(!emmc_data_read(17,0,buf,44)) {text("LBA0 FAILED - STOPPED",49);return;}
     hexline("MBR SIGNATURE",p[510]|((uint32_t)p[511]<<8),49);
     if(p[510]!=0x55||p[511]!=0xaa) {text("MBR GUARD FAILED - STOPPED",50);return;}
-    if(!emmc_pio_read(17,1,buf,51)) {text("LBA1 FAILED - STOPPED",56);return;}
+    if(!emmc_data_read(17,1,buf,51)) {text("LBA1 FAILED - STOPPED",56);return;}
     unsigned n=le32(p+12);
     if(le32(p)!=0x20494645u||le32(p+4)!=0x54524150u||
        n<92||n>512||le32(p+24)!=1||le32(p+28)) {
@@ -231,6 +288,9 @@ static void emmc_read_probe(void) {
     hexline("GPT HEADER CRC STORED",stored,56);
     hexline("GPT HEADER CRC COMPUTED",calculated,57);
     text(stored==calculated?"GPT HEADER CRC MATCH - FIRST SECTORS READ":"GPT HEADER CRC MISMATCH",59);
+#if A03_EMMC_SNAPSHOT >= 5
+    if(stored==calculated)emmc_gpt_probe(p,sectors);
+#endif
 }
 #endif
 #endif
@@ -249,7 +309,9 @@ static void emmc_snapshot(void) {
         {"INT_ENABLE",0x34,4}, {"SIGNAL",0x38,4},
         {"DLL_CFG",0x200,4}, {"DLL_DELAY",0x204,4}
     };
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 5
+    text("A03 EMMC 0018 GPT + CURRENT BOOT VALIDATION",3);
+#elif A03_EMMC_SNAPSHOT == 4
     text("A03 EMMC 0017 SDMA READ - DOWNSTREAM PATH",3);
 #elif A03_EMMC_SNAPSHOT == 3
     text("A03 EMMC 0016 PIO POLL-STAGE DIAGNOSTIC",3);
@@ -278,7 +340,7 @@ static void emmc_snapshot(void) {
 #if A03_EMMC_SNAPSHOT >= 3
     if(emmc_status_probe())emmc_read_probe();
     text("READ PROBE COMPLETE - PAUSED FOR PHOTO",61);
-#if A03_EMMC_SNAPSHOT == 4
+#if A03_EMMC_SNAPSHOT >= 4
     text("SDMA TO PRIVATE RAM - NO STORAGE WRITES",62);
 #else
     text("NO DMA OR STORAGE WRITES",62);

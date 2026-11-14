@@ -2,6 +2,19 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0018 PREPARED: mode5 primary-GPT entry CRC/range/overlap checks, live
+PIT boot483328+131072/index38 and userdata15929344/index54, then current
+BOOT header plus512 payload bytes. Bounded read-only CMD17, pauses before
+XNU. Host C parser malformed-input tests and modes0/3/4/5 Werror builds pass;
+no relocs/SIMD, exact0012 kernel/HFS payload unchanged. Image
+shim/a03/out/a03-xnu-0018-gpt-boot.img SHA256
+2b6683c9cd2d29a1536a7037b02d5e681b038a6ddb32ed457218cc42029d0d67.
+NOT FLASHED yet. Private live/current.pit retrieved --no-reboot; active
+Download session needs --resume for next BOOT-only flash. Request full
+screen through row77 after test. No XNU block provider/Apple launchd yet.
+Prior handoffs below historical.
+
+
 MILESTONE0017 confirmed by photo IMG_20261114_113809_312.jpg: SDMA reads
 EXT_CSD + user-area LBA0/1. EXT REV8 PARTITION_CONFIG8 SECTOR_COUNT0747c000
 DATA_SECTOR_SIZE0; MBRaa55; GPT header stored/computed CRC040a1bb6 MATCH.
