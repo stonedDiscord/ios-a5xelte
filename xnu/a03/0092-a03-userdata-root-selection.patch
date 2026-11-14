@@ -9,7 +9,7 @@
  static struct {
      vm_offset_t regs, dma;
      uint64_t pa;
-@@ -33,6 +35,7 @@
+@@ -33,7 +35,8 @@
      bool poisoned, ready, writable, cache_enabled;
      uint32_t rca;
      bool a03_trace;
