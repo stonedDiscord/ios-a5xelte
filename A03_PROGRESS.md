@@ -1994,3 +1994,15 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   protected partitions remain unchanged. Next, reconcile partition-relative
   SDMA LBA translation and header bytes before considering another filesystem
   write. No HFS mount, Apple launchd, or SpringBoard result is established.
+- Header/catalog root CI workflow `43615216691` passed. RAM-root image SHA256
+  `b266c456151780842025a1e14137f5b416650d2feca71677dc34a13131f34893`.
+  BOOT0031 uses existing kernel `43602657100`, the verified A03 ADT, and the
+  known Magisk BOOT base; its SHA256 is
+  `ea83109030122cc23a7055e85f828f6a93fa479cd3262307f4ca3029cf3bade3`.
+  Cmdline retains `rd=md0 a03emmc=1`; both probes are read-only.
+- Heimdall detected Download mode, downloaded PIT, uploaded only lowercase
+  `boot` to100%, reported `boot upload successful`, and rebooted. USERDATA,
+  GPT, recovery, bootloaders and EFS/NV were not written. No Download/ADB USB
+  interface was present immediately after reboot. Await the device display
+  for raw/block header bytes and catalog result; no HFS root or iOS userspace
+  is established.

@@ -72,9 +72,17 @@ display/PID1 catalog output.
 User reports PHOTO171705 still shows catalog bytes zero. Raw/block reads
 complete but return zeros at offset0x2cd82000; no header result yet. Added
 opt-in header probe at USERDATA offset1024, locally compiled in header-only
-and combined modes. Not in CI or flashed. Inspect partition-LBA/SDMA transfer
-addressing and obtain header raw/block evidence before any USERDATA rewrite.
-No HFS mount, iOS launchd, or SpringBoard result.
+and combined modes. See BOOT0031 below for the CI build and BOOT-only flash.
+Inspect partition-LBA/SDMA transfer addressing and obtain raw/block HFS-header
+evidence before any USERDATA rewrite. No HFS mount, iOS launchd, or SpringBoard
+result.
+
+Header+catalog CI43615216691 PASS. Root SHA b266c456151780842025a1e14137f5b416650d2feca71677dc34a13131f34893.
+BOOT0031 SHA ea83109030122cc23a7055e85f828f6a93fa479cd3262307f4ca3029cf3bade3,
+kernel43602657100, cmdline rd=md0 a03emmc=1. Heimdall PIT read succeeded and
+only lowercase `boot` uploaded100%; reboot completed. USERDATA/protected
+partitions untouched. USB absent after reboot. Await physical raw/block HFS
+header and catalog output; do not infer mount or SpringBoard.
 
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
