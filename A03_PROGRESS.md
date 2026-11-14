@@ -844,3 +844,5 @@ User transcribed (minor spelling differences preserved in original chat):
 - Next trial intended to attach prepared static test init via --ramdisk,
   rd=md0. This proves PID1/syscalls if successful; it is not iOS launchd
   or SpringBoard. No additional phone write yet. Current BOOT remains 0010.
+
+- Integration committed/pushed a8e2da7; CI 43530972730 dispatched on macos-15-intel. Verify pthread registration provider and BSD codegen before test-init packaging.

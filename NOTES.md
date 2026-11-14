@@ -9,7 +9,7 @@ cpu0 caller 0xfffffe0007a62a50: pthread kernel extension not loaded
 Missing profile integration: donor 0019 built-in pthread provider excluded.
 Now staged 0019 + pinned stage-libpthread, 0021/22/24 mockfs RAM-root,
 0025 minimal AMFI interface; 0088 makes new provider objects general-regs.
-Local patches/profile/syntax checks pass; full CI build pending.
+Local patches/profile/syntax checks pass; source a8e2da7 dispatched as CI 43530972730 on macos-15-intel.
 Next trial: verify providers/codegen, attach private static test init with
 --ramdisk and rd=md0. Test PID1 is not real iOS launchd/SpringBoard.
 Current phone BOOT remains 0010-cpumatch, no new flash in photo analysis.
