@@ -59,6 +59,12 @@ bb4c2987/bb4c2987 and BOOT+USERDATA devices ready. This proves XNU/PID1,
 not iOS launchd/SpringBoard or USERDATA HFS. BOOT0029 lacked explicit
 catalog_probe input; workflow43614257862 is dispatched for that test.
 
+Workflow43614257862 completed catalog-enabled root. BOOT0030 packaged with
+root SHA3b71db2687bfe6de8a3096157d973271de8f78e3817457aad05d8ad8595af519,
+image SHAa4b545af50a80a5613c461e0e02404b784d489778af22d1a27bb66190c6d28fc.
+Phone was not in Download after PHOTO170949, so no flash yet; USERDATA
+untouched. Flash BOOT0030 only when Download returns.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

@@ -1955,3 +1955,16 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - BOOT0029 came from the default root workflow and did not include the
   explicit catalog probe input. Catalog-enabled workflow `43614257862` is
   dispatched for the next read-only BOOT test.
+
+### 2026-11-14: catalog-enabled BOOT0030 prepared
+
+- Workflow `43614257862` completed successfully with `catalog_probe=true`.
+  The corrected RAM-root artifact SHA256 is
+  `3b71db2687bfe6de8a3096157d973271de8f78e3817457aad05d8ad8595af519`.
+- Packaged BOOT0030 with the verified kernel, A03 ADT and stock BOOT base;
+  image SHA256 is
+  `a4b545af50a80a5613c461e0e02404b784d489778af22d1a27bb66190c6d28fc`.
+  It retains `rd=md0` and eMMC-enabled read-only catalog probing.
+- The phone was not in Download mode after the PID1 photo, so BOOT0030 was
+  not flashed. USERDATA remains untouched. Next hardware step is BOOT-only
+  BOOT0030 transfer when Download mode returns.
