@@ -1,0 +1,50 @@
+#!/bin/bash
+# Build a local journaled HFSX iOS root. Never accesses a phone or partition.
+set -euo pipefail
+[[ $# == 2 && $(uname -s) == Darwin ]] || { echo 'usage (macOS): script IPSW OUTPUT.img' >&2; exit 2; }
+ipsw=$(cd "$(dirname "$1")" && pwd)/$(basename "$1")
+output=$(cd "$(dirname "$2")" && pwd)/$(basename "$2")
+[[ ! -e $output ]] || { echo 'output exists' >&2; exit 1; }
+repo=$(cd "$(dirname "$0")/.." && pwd)
+work=$(mktemp -d)
+cleanup() {
+    for name in root appos sysos os; do
+        if mount | grep -F " on $work/$name (" >/dev/null; then hdiutil detach "$work/$name" || true; fi
+    done
+    echo "Build workspace retained: $work"
+}
+trap cleanup EXIT
+python3 - "$ipsw" "$work" <<'PY'
+import sys,zipfile,plistlib,hashlib
+from pathlib import Path
+p=Path(sys.argv[1]);h=hashlib.sha256()
+with p.open('rb') as f:
+ for b in iter(lambda:f.read(8<<20),b''):h.update(b)
+assert h.hexdigest()=='b3882291a92ecf8763239a026813b3bafae66b7e317dee67011d90c202ccafef','wrong IPSW'
+with zipfile.ZipFile(p) as z:
+ m=plistlib.loads(z.read('BuildManifest.plist'))
+ assert m['ProductBuildVersion']=='20H392'
+ identity=next(i for i in m['BuildIdentities'] if i['Info']['DeviceClass']=='d21ap')
+ for key,name in [('OS','os'),('Cryptex1,SystemOS','sysos'),('Cryptex1,AppOS','appos')]:
+  source=identity['Manifest'][key]['Info']['Path'];print(key,source,flush=True)
+  with z.open(source) as src,(Path(sys.argv[2])/(name+'.dmg')).open('xb') as dst:
+   import shutil;shutil.copyfileobj(src,dst,8<<20)
+PY
+for name in os sysos appos; do
+    mkdir "$work/$name"
+    hdiutil attach -readonly -nobrowse -owners on -mountpoint "$work/$name" "$work/$name.dmg"
+done
+hdiutil create -size 16g -fs HFSX -fsargs '-J' -volname A03iOSRoot -layout NONE -type UDRW "$work/root.dmg"
+mkdir "$work/root"
+hdiutil attach -nobrowse -owners on -mountpoint "$work/root" "$work/root.dmg"
+# Reuse portable file staging only; no donor hardware or partition tool.
+sudo env STAGE_FULL=1 STAGE_ALL_APPS=1 bash "$repo/tools/a5xelte-stage-ios-root.sh" "$work/os" "$work/sysos" "$work/appos" "$work/root"
+sudo python3 "$repo/tools/sweet-root-tweaks.py" "$work/root"
+python3 "$repo/tools/a03-inspect-ios-root.py" "$work/root" | tee "$output.inventory.json"
+sync
+hdiutil detach "$work/root"
+hdiutil convert "$work/root.dmg" -format UDTO -o "$work/raw"
+fsck_hfs -fn "$work/raw.cdr"
+mv "$work/raw.cdr" "$output"
+shasum -a 256 "$output" > "$output.sha256"
+echo 'Local iOS root prepared; no phone write. Runtime boot remains unverified.'

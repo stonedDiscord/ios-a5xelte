@@ -1,6 +1,6 @@
-/* A03 ums9230 SDHC v4, polled read-only SDMA.
+/* A03 ums9230 SDHC v4, polled SDMA with opt-in USERDATA writes.
  * Register sequence: local Samsung sprd-sdhcr11 and loader trials0017..0020.
- * No card configuration, clocks, resets, writes, recovery or NV access.
+ * Retains timing/clocks; no resets or recovery/NV writes.
  * Opt-in a03emmc=1, while rd=md0 retains the independent HFS RAM root.
  */
 #if defined(ARM64_BOARD_CONFIG_SWEET)
@@ -29,7 +29,7 @@ static struct {
     uint64_t pa;
     uint32_t sectors;
     struct a03_gpt gpt;
-    bool poisoned, ready, writable;
+    bool poisoned, ready, writable, cache_enabled;
     uint32_t rca;
 } ae;
 static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
@@ -114,8 +114,7 @@ static unsigned gpt_read(void *context,uint32_t lba,unsigned char *out) {
     (void)context;return data_read(17,lba,out)==0;
 }
 /* Single-sector writes are confined again here, below every BSD entry point.
- * Writes are enabled only when EXT_CSD reports the card cache disabled;
- * no unimplemented flush can falsely acknowledge durable data. */
+ * A cached card is flushed after each sector before acknowledging completion. */
 static int data_write(uint32_t lba,const unsigned char *in) {
     if(!ae.writable)return EROFS;
     if(ae.poisoned||lba<ae.gpt.userdata||
@@ -139,6 +138,17 @@ static int data_write(uint32_t lba,const unsigned char *in) {
     if(rd(0x24)&3)ok=false;
     if(ok) {
         wr(0x30,rd(0x30)&0xffff8033);
+        if(ae.cache_enabled) {
+            /* MMC_SWITCH WRITE_BYTE EXT_CSD_FLUSH_CACHE=1, normal command set.
+             * No timing/partition/cache-enable configuration is changed. */
+            wr(8,0x03200100);wr(0xc,0x061b0000);
+            ok=poll(1);response=rd(0x10);
+            if(response&0xffffe080u)ok=false;
+            if(ok) {wr(0x30,1);ok=poll(2);}
+            wr(0x30,rd(0x30)&0xffff8033);
+        }
+    }
+    if(ok) {
         wr(8,ae.rca);wr(0xc,0x0d1a0000);
         ok=poll(1);response=rd(0x10);
         if((response&0xffffe180u)!=0x100||(response&0x1e00)!=0x800)ok=false;
@@ -153,7 +163,7 @@ static int data_write(uint32_t lba,const unsigned char *in) {
     wr(4,block);wr(0,count);wr(0x34,enable);wr(0x38,signal);return 0;
 }
 /* Minor0 exposes validated BOOT read-only for an independent userspace
- * check; minor1 exposes validated USERDATA read-only for later root work. */
+ * check; minor1 exposes validated USERDATA with separately gated writes. */
 static uint32_t part_first(dev_t dev) {return minor(dev)?ae.gpt.userdata:ae.gpt.boot;}
 static uint32_t part_count(dev_t dev) {return minor(dev)?ae.gpt.userdata_count:ae.gpt.boot_count;}
 static int emmc_open(dev_t dev,int flags,__unused int type,__unused struct proc *p) {
@@ -208,8 +218,8 @@ static int emmc_ioctl(dev_t dev,u_long cmd,caddr_t data,__unused int flag,__unus
     case DKIOCGETMAXBLOCKCOUNTREAD:*(uint64_t *)data=128;return 0;
     case DKIOCGETMAXBLOCKCOUNTWRITE:*(uint64_t *)data=ae.writable&&minor(dev)==1?128:0;return 0;
     case DKIOCSYNCHRONIZECACHE:case DKIOCSYNCHRONIZE:
-        /* Every CMD24 waits for transfer completion and ready/TRAN status.
-         * Writable mode requires EXT_CSD CACHE_CTRL=0. */
+        /* Every CMD24 waits for transfer completion, cache flush if enabled,
+         * and fresh ready/TRAN status before acknowledging bytes. */
         return 0;
     default:return ENOTTY;
     }
@@ -281,7 +291,7 @@ void a03_emmc_probe(void) {
         printf("A03 eMMC: absent/invalid opt-in ADT node\n");return;
     }
     ae.regs=ml_io_map(reg[0],reg[1]);if(!ae.regs)return;
-    printf("A03 eMMC: XNU SDMA probe, retained timing, read-only\n");
+    printf("A03 eMMC: XNU SDMA probe, retained timing, writes separately gated\n");
     if(card_status()) {printf("A03 eMMC: retained CMD13 guard failed\n");return;}
     ae.rca=rd(8);
     if(kmem_alloc_contig(kernel_map,&ae.dma,PAGE_SIZE,PAGE_MASK,0,0,
@@ -293,8 +303,9 @@ void a03_emmc_probe(void) {
     unsigned char sector[512];
     if(data_read(8,0,sector))return;
     uint32_t rw=0;PE_parse_boot_argn("a03emmc_rw",&rw,sizeof(rw));
-    bool allow_write=rw==1&&sector[33]==0; /* CACHE_CTRL */
-    if(rw==1&&!allow_write)printf("A03 eMMC: writes refused, card cache enabled/unknown\n");
+    ae.cache_enabled=(sector[33]&1)!=0;
+    bool allow_write=rw==1&&sector[33]<=1; /* known CACHE_CTRL encoding */
+    if(rw==1&&!allow_write)printf("A03 eMMC: writes refused, unknown CACHE_CTRL encoding\n");
     ae.sectors=a03_le32(sector+212);
     if((sector[179]&7)||sector[61]||sector[192]<5||sector[192]>8||ae.sectors<2) {
         printf("A03 eMMC: EXT_CSD guard failed\n");return;
@@ -318,6 +329,6 @@ void a03_emmc_probe(void) {
     devfs_make_node(makedev(bmajor,1),DEVFS_BLOCK,UID_ROOT,GID_OPERATOR,ae.writable?0640:0440,"a03userdata0");
     devfs_make_node(makedev(cmajor,1),DEVFS_CHAR,UID_ROOT,GID_OPERATOR,ae.writable?0640:0440,"ra03userdata0");
     printf("A03 eMMC: USERDATA %s; BOOT always READ ONLY\n",ae.writable?"READ WRITE":"READ ONLY");
-    printf("A03 eMMC: BOOT + USERDATA BSD devices ready READ ONLY; RAM root unchanged\n");
+    printf("A03 eMMC: BOOT + USERDATA BSD devices ready; RAM root unchanged\n");
 }
 #endif

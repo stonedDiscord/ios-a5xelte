@@ -1,0 +1,29 @@
+name: a03-ios-root
+on:
+  workflow_dispatch:
+concurrency:
+  group: a03-ios-root
+  cancel-in-progress: false
+jobs:
+  root:
+    runs-on: macos-15-intel
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download pinned plain-arm64 iOS 16 source
+        run: |
+          mkdir -p research/ipsw out
+          curl --fail --location --retry 3 --output research/ipsw/source.ipsw https://updates.cdn-apple.com/2025FallFCS/fullrestores/122-76738/B6C604B4-548E-401F-BBFF-916E3FFDF235/iPhone_5.5_P3_16.7.16_20H392_Restore.ipsw
+      - name: Stage and verify journaled HFSX root
+        run: bash tools/a03-build-ios-root-macos.sh research/ipsw/source.ipsw out/a03-ios16-root.img
+      - name: Compress root for transfer
+        run: gzip -1 out/a03-ios16-root.img
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a03-ios16-hfs-root
+          retention-days: 1
+          compression-level: 0
+          path: |
+            out/a03-ios16-root.img.gz
+            out/a03-ios16-root.img.sha256
+            out/a03-ios16-root.img.inventory.json

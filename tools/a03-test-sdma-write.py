@@ -13,7 +13,7 @@ code=r'''
 #define EIO 5
 #define EROFS 30
 #define ENXIO 6
-static struct {bool writable,poisoned;uint32_t sectors,rca;uint64_t pa;uintptr_t regs,dma;struct {uint32_t userdata,userdata_count;} gpt;} ae;
+static struct {bool writable,poisoned,cache_enabled;uint32_t sectors,rca;uint64_t pa;uintptr_t regs,dma;struct {uint32_t userdata,userdata_count;} gpt;} ae;
 static unsigned char mmio[4096],dma[512];static uint32_t values[1024],commands[4];
 static unsigned writes,ncmd,npoll,failpoll,syncs;
 static void barrier(void) {}
@@ -43,6 +43,11 @@ int main(void) {
  reset();assert(data_write(1000,sector)==0);assert(syncs==1&&ncmd==2);
  assert(commands[0]==0x183a0001&&commands[1]==0x0d1a0000);
  assert(memcmp(dma,sector,512)==0&&!ae.poisoned);
+ reset();ae.cache_enabled=true;assert(data_write(1000,sector)==0);
+ assert(ncmd==3&&commands[0]==0x183a0001&&commands[1]==0x061b0000&&commands[2]==0x0d1a0000);
+ for(unsigned i=1;i<=5;i++) {
+  reset();ae.cache_enabled=true;failpoll=i;assert(data_write(1000,sector)==EIO&&ae.poisoned);
+ }
  for(unsigned i=1;i<=3;i++) {
   reset();failpoll=i;assert(data_write(1099,sector)==EIO&&ae.poisoned);
   unsigned prev=writes;assert(data_write(1000,sector)==EIO&&writes==prev);

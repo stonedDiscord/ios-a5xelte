@@ -2,14 +2,16 @@
 
 ## Active A03 handoff — 2026-11-14
 
-USER AUTHORIZED USERDATA filesystem preparation/write support2026-11-14.
-Preserve GPT/recovery/bootloaders/EFS/NV. Guarded CMD24+BSD writes staged,
-a03emmc_rw=1, BOOT always readonly, cache-enabled card refuses writes.
-Host handler+MMIO sequence sanitizer tests pass; hardware untested.
-Apple16.7.16/20H392 IPSW downloading to ignored research/ipsw, SHA expected
-b3882291...02ccafef. No USERDATA write/new flash yet; current0024 PASS.
-Optional portable0035/0036 entitlement profile staged, default off.
-
+USERDATA filesystem/write preparation authorized2026-11-14. Guarded
+CMD24 USERDATA-only writes include enabled-card-cache CMD6 FLUSH_CACHE
+and fresh CMD13 ready/TRAN before completion. BOOT remains readonly.
+Host sanitizer tests pass; hardware writes still untested; current0024.
+Pinned Apple16.7.16/20H392 IPSW downloaded and SHA256 verified privately.
+New macOS workflow prepares16GiB journaled HFSX root with launchd/dyld/
+SpringBoard inventory. No USERDATA format/write or new flash yet.
+Kernel CI43600857274 tests earlier cache-disabled write implementation
+and optional Apple entitlement profile; newer flush code needs fresh CI.
+Preserve GPT/recovery/bootloaders/EFS/NV and0024 checkpoint.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
 PID1 PASS. XNU SDMA/cache/BSD read path established. Preserve0024 image

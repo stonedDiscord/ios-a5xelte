@@ -1586,3 +1586,22 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   downloading from Apple's CDN privately to research/ipsw. Expected SHA256
   b3882291a92ecf8763239a026813b3bafae66b7e317dee67011d90c202ccafef.
   No USERDATA write/format or new flash performed yet.
+
+### 2026-11-14: cached-write completion and real iOS root preparation
+
+- Extend opt-in USERDATA writes to known CACHE_CTRL=1 cards: every CMD24
+  completes transfer, then CMD6 WRITE_BYTE FLUSH_CACHE=1 waits R1b busy
+  completion, then fresh CMD13 ready/TRAN. Unknown encoding refused.
+  No cache-enable/timing change. Earlier cache-disabled restriction above
+  describes the previous revision. Host tests cover cached/noncached
+  sequences and terminal failure at each completion stage; not hardware proof.
+- Apple CDN iPhone10,2 iOS16.7.16/20H392 IPSW downloaded privately;
+  SHA256 b3882291a92ecf8763239a026813b3bafae66b7e317dee67011d90c202ccafef
+  verified. Manifest d21ap OS087-86694-044.dmg, SystemOS087-86588-047.dmg,
+  AppOS087-86715-047.dmg. No downloaded Apple binaries tracked.
+- Add macOS-only filesystem builder/workflow: pinned source, owner-preserving
+  staging on16GiB journaled HFSX, portable donor filesystem tweaks, required
+  dynamic plain-arm64 launchd/dyld/SpringBoard/cache inventory and fsck.
+  This prepares an image only; execution/CI result not yet established.
+- Current phone0024 in Download mode; no new flash or USERDATA write.
+  Kernel43600857274 still building earlier no-card-cache revision.
