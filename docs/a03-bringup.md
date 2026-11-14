@@ -115,3 +115,37 @@ For a DEVELOPMENT startup stall, first add the existing boot arguments
 payload. startup_debug alone does not override DEVELOPMENT kprintf
 suppression. This exposes initializer addresses without a kernel rebuild.
 A final printed policy line alone does not prove the next function hung.
+
+## Authorized USERDATA write/root preparation (2026-11-14)
+
+The user authorized filesystem preparation on USERDATA p55. BOOT remains
+read-only through the XNU provider; preserve GPT/recovery/bootloaders/EFS/NV.
+The existing `--emmc-readonly` option is the legacy controller opt-in name;
+`a03-pack-root.py --userdata-writable` separately enables `a03emmc_rw=1`.
+Every write is bounded again against validated GPT USERDATA geometry.
+CMD24 completes transfer, CMD6 FLUSH_CACHE handles enabled card cache,
+and fresh CMD13 checks ready/TRAN. A failed command permanently disables
+further I/O; host fake-MMIO tests do not establish hardware success.
+
+`a03-root.yml` input `userdata_write_probe=true` builds a diagnostic that
+saves one sector at USERDATA-relative16GiB, writes an XOR pattern, reads it
+back, restores the sector and verifies it, then fsyncs. It uses the raw node
+and requires the writable kernel. This location is beyond the proposed
+16GiB HFS image; original Android USERDATA is disposable under authorization.
+A restore failure is reported explicitly. Device evidence is still required.
+
+`a03-ios-root.yml` stages the supplied iPhone X iOS16.0/20A362 source as a
+16GiB journaled HFSX image. The builder verifies a pinned IPSW hash, preserves
+owners, copies stock applications and cryptex files, applies portable donor
+filesystem tweaks using the actual staged version, inventories dynamic
+plain-arm64 launchd/dyld/SpringBoard/cache prerequisites, and runs fsck.
+This workflow never writes a phone. Apple assets remain ignored/transient.
+
+The optional `--ios-userspace` profile also stages0092, selecting the BSD
+USERDATA device directly for explicit `rd=a03userdata0` without waiting for
+an absent IOMedia service. `rootrw=1` clears read-only only for the validated,
+write-enabled USERDATA device. HFS dirty-volume/journal checks remain active.
+`a03-pack-root.py --userdata-root` adds these arguments while retaining the
+small RAM image in the payload; repackage without the flag to use RAM root.
+This root-selection revision requires a fresh full build and runtime test.
+No Apple launchd or SpringBoard execution is established by image preparation.

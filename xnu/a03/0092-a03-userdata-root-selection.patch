@@ -1,0 +1,83 @@
+--- a/bsd/dev/a03_emmc.c
++++ b/bsd/dev/a03_emmc.c
+@@ -24,6 +24,8 @@
+ extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
+ extern uint64_t kvtophys(vm_offset_t);
+ void a03_emmc_probe(void);
++dev_t a03_emmc_userdata_root(void);
++int a03_emmc_writable_root(dev_t dev);
+ static struct {
+     vm_offset_t regs, dma;
+     uint64_t pa;
+@@ -31,6 +33,7 @@
+     struct a03_gpt gpt;
+     bool poisoned, ready, writable, cache_enabled;
+     uint32_t rca;
++    dev_t userdata_dev;
+ } ae;
+ static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
+ static LCK_MTX_DECLARE(a03_emmc_lock, &a03_emmc_grp);
+@@ -280,6 +283,13 @@
+     .d_select=eno_select,.d_mmap=eno_mmap,.d_strategy=eno_strat,
+     .d_reserved_1=eno_getc,.d_reserved_2=eno_putc,.d_type=D_DISK
+ };
++/* Called only after probe at explicit rd=a03userdata0 selection. */
++dev_t a03_emmc_userdata_root(void) {
++    return ae.ready&&!ae.poisoned?ae.userdata_dev:NODEV;
++}
++int a03_emmc_writable_root(dev_t dev) {
++    return ae.ready&&!ae.poisoned&&ae.writable&&dev==ae.userdata_dev;
++}
+ void a03_emmc_probe(void) {
+     static bool attempted;uint32_t opt=0;
+     PE_parse_boot_argn("a03emmc",&opt,sizeof(opt));
+@@ -322,6 +332,7 @@
+     int bmajor=bdevsw_add(-1,&emmc_bdevsw);if(bmajor<0)return;
+     int cmajor=cdevsw_add_with_bdev(-1,&emmc_cdevsw,bmajor);
+     if(cmajor<0) {(void)bdevsw_remove(bmajor,&emmc_bdevsw);return;}
++    ae.userdata_dev=makedev(bmajor,1);
+     ae.ready=true;
+     ae.writable=allow_write;
+     devfs_make_node(makedev(bmajor,0),DEVFS_BLOCK,UID_ROOT,GID_OPERATOR,0440,"a03boot0");
+--- a/iokit/bsddev/IOKitBSDInit.cpp
++++ b/iokit/bsddev/IOKitBSDInit.cpp
+@@ -771,6 +771,18 @@
+     {
+         extern void a03_emmc_probe(void);
+         a03_emmc_probe();
++        if (!strcmp(rdBootVar, "a03userdata0")) {
++            extern dev_t a03_emmc_userdata_root(void);
++            *root = a03_emmc_userdata_root();
++            if (*root == NODEV) {
++                panic("A03 USERDATA root requested but validated storage unavailable");
++            }
++            OSSafeReleaseNULL(matching);
++            strlcpy(rootName, "a03userdata0", rootNameSize);
++            *oflags = 0;
++            IOLog("A03 BSD root: %s, major %d, minor %d\n", rootName, major(*root), minor(*root));
++            goto iofrootx;
++        }
+     }
+ #endif
+ 
+--- a/bsd/vfs/vfs_subr.c
++++ b/bsd/vfs/vfs_subr.c
+@@ -1257,6 +1257,18 @@
+ 
+ 		mp = vfs_rootmountalloc_internal(vfsp, "root_device");
+ 		mp->mnt_devvp = rootvp;
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++        /* Explicit opt-in, only the validated writable A03 USERDATA device.
++         * Retain HFS journal/dirty-volume checks; no donor dirty-root bypass. */
++        {
++            extern int a03_emmc_writable_root(dev_t);
++            uint32_t rootrw = 0;
++            if (PE_parse_boot_argn("rootrw", &rootrw, sizeof(rootrw)) &&
++                rootrw == 1 && a03_emmc_writable_root(rootdev)) {
++                mp->mnt_flag &= ~MNT_RDONLY;
++            }
++        }
++#endif
+ 
+ 		if (vfsp->vfc_mountroot) {
+ 			error = (*vfsp->vfc_mountroot)(mp, rootvp, ctx);

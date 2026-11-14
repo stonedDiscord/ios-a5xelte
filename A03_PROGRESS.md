@@ -1633,3 +1633,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - Supplied16.0 source revealed donor tweak script hardcoded16.7.16 build
   metadata. Fix migration/activation seeds to read staged SystemVersion;
   host checks cover both builds. Restart filesystem job for this correction.
+- Prepare optional0092 direct USERDATA root selection plus guarded rootrw
+  (validated writable USERDATA device only; HFS journal checks unchanged).
+  RAM-root default preserved.0090+0092 patch application passes baseline.
+  Packager exposes explicit --userdata-root, retaining small RAM payload.
+  Not included in live43601676154 and not yet fully compiled or booted.

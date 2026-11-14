@@ -10,10 +10,13 @@ def main():
     ap.add_argument('output',type=Path);ap.add_argument('--adt',type=Path,required=True)
     ap.add_argument('--emmc-readonly',action='store_true',help='opt-in XNU read-only SDMA probe; requires matching ADT node')
     ap.add_argument('--userdata-writable',action='store_true',help='enable USERDATA-only writes; requires --emmc-readonly controller opt-in')
+    ap.add_argument('--userdata-root',action='store_true',help='select validated USERDATA HFS root; requires --userdata-writable and kernel root-selection patch; positional root remains small RAM fallback')
     ap.add_argument('--base',type=Path,default=ROOT/'backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img')
     a=ap.parse_args();payload=a.output.with_suffix('.payload');manifest=a.output.with_suffix('.json')
     if a.userdata_writable and not a.emmc_readonly:
         ap.error('--userdata-writable requires --emmc-readonly controller opt-in')
+    if a.userdata_root and not a.userdata_writable:
+        ap.error('--userdata-root requires --userdata-writable')
     for f in [a.output,payload,manifest]:
         if f.exists():ap.error('refusing existing output '+str(f))
     for f in [a.kernel,a.root,a.adt,a.base]:
@@ -35,6 +38,8 @@ def main():
             ap.error('--emmc-readonly requires an A03 ADT with the exact controller window')
         args+=' a03emmc=1'
         if a.userdata_writable:args+=' a03emmc_rw=1'
+    if a.userdata_root:
+        args=args.replace('rd=md0','rd=a03userdata0')+' rootrw=1 ignition_level=1 -nobsdmgroot'
     a.output.parent.mkdir(parents=True,exist_ok=True)
     subprocess.run(['python3',str(ROOT/'tools/mkpayload.py'),str(a.kernel),str(a.adt),str(payload),'--ramdisk',str(a.root),'--cmdline',args],check=True)
     subprocess.run(['python3',str(ROOT/'tools/a03-xnu-image.py'),str(a.base),str(payload),str(a.output)],check=True)
