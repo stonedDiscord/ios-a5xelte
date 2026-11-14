@@ -68,6 +68,18 @@ clocks, assume a card RCA, or issue storage writes from guessed state.
 No non-BOOT partition is authorized for the current trials. A real iOS root
 will need storage plus later signing/entitlement/display work.
 
+BOOT 0013 uses a local loader-only snapshot to inspect retained eMMC state:
+
+```sh
+A03_EMMC_SNAPSHOT=1 python3 tools/a03-xnu-image.py backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img shim/a03/out/a03-xnu-0012-hfs.payload shim/a03/out/NEW-snapshot.img
+```
+
+The option reads only the explicitly listed controller registers and pauses
+before XNU so a photo preserves the values. It sends no card commands and
+does not read sectors. The reused payload is unchanged. Ordinary packaging
+without the environment option retains the normal XNU boot path. The
+current snapshot register results are pending a physical screen report.
+
 ## CachyOS ldid compatibility
 
 The current AUR ldid-2.1.5-procursus7 source fails against this host's

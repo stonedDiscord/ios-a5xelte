@@ -2,6 +2,17 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest trial: BOOT0013-emmc-snapshot flashed/rebooted via Heimdall exit0,
+SHA256 c7465260e94e8ace4505595d254d8f5f589671a2c14bfec85575466e5d1836ae.
+Physical result pending. Opt-in A03_EMMC_SNAPSHOT=1 loader-only diagnostic
+reads 14 selected registers at PA0x201d0000 before XNU; no MMIO stores,
+FIFO reads, resets or card commands. Deliberately pauses with all values
+on screen; request a photo/transcription, including any final read marker.
+Does NOT boot XNU in this trial. Existing0012 kernel/root payload unchanged,
+normal loader builds exclude diagnostic. BOOT0012 HFS/PID1 fallback retained.
+Next: interpret VERSION/CLOCK/PRESENT/HOST2/COMMAND/RESPONSE0 before any
+read-only card command; don't assume RCA/selected partition/card state.
+
 Latest2026-11-14: HFS kernel CI43536143024 PASSED(source16b3177).
 Kernel SHA256 c4c4e4a707ca4da82bd68318dfd187d7984d65fe4482999775e329af65ba942a.
 Named HFS mount/read/register + BSD/pthread funcs verified SIMD-free.

@@ -2,8 +2,13 @@
 set -eu
 cd "$(dirname "$0")"
 mkdir -p out
+case ${A03_EMMC_SNAPSHOT:-0} in
+  0) diagnostic= ;;
+  1) diagnostic=-DA03_EMMC_SNAPSHOT=1 ;;
+  *) echo 'A03_EMMC_SNAPSHOT must be 0 or 1' >&2; exit 2 ;;
+esac
 for src in xnu-entry.S xnu-loader.c; do
- clang --target=aarch64-none-elf -march=armv8.2-a -O2 -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -fno-pie -nostdlib -mgeneral-regs-only -mstrict-align -Wall -Wextra -Werror -c "$src" -o "out/$src.o"
+ clang --target=aarch64-none-elf -march=armv8.2-a -O2 -ffreestanding -fno-builtin -fno-stack-protector -fno-pic -fno-pie -nostdlib -mgeneral-regs-only -mstrict-align -Wall -Wextra -Werror $diagnostic -c "$src" -o "out/$src.o"
 done
 ld.lld -T xnu-image.ld --build-id=none out/xnu-entry.S.o out/xnu-loader.c.o -o out/a03-xnu-loader.elf
 llvm-objcopy -O binary out/a03-xnu-loader.elf out/a03-xnu-loader.Image

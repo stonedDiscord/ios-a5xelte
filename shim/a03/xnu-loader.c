@@ -21,6 +21,45 @@ static void text(const char *s,unsigned row) {
         fb[(row*16+y)*720+x*8+bit]=(font8x16[(unsigned char)s[x]-32][y]&(1<<bit))?0xffffffff:0xff000000;
     __asm__ volatile("dsb sy":::"memory");
 }
+#ifdef A03_EMMC_SNAPSHOT
+/* Register addresses/widths checked against the A03 live DT and Linux
+ * sprd-sdhcr11.h. No FIFO read, controller write, reset or card command.
+ * Run before XNU takes ownership; pause so its console cannot erase evidence.
+ * A pre-access marker identifies the register if a bus access faults/stalls.
+ */
+static void emmc_snapshot(void) {
+    static const struct { char name[12]; unsigned off, width; } regs[] = {
+        {"PRESENT",0x24,4}, {"CLOCK",0x2c,2},
+        {"HOST",0x28,1}, {"POWER",0x29,1},
+        {"HOST2",0x3e,2}, {"VERSION",0xfe,2},
+        {"ARG",0x08,4}, {"COMMAND",0x0e,2},
+        {"RESPONSE0",0x10,4}, {"INT_STATE",0x30,4},
+        {"INT_ENABLE",0x34,4}, {"SIGNAL",0x38,4},
+        {"DLL_CFG",0x200,4}, {"DLL_DELAY",0x204,4}
+    };
+    text("A03 EMMC 0013 READ-ONLY SNAPSHOT PA 201d0000",3);
+    for(unsigned i=0;i<sizeof(regs)/sizeof(regs[0]);i++) {
+        char line[80]; unsigned n=0;
+        for(const char *s=regs[i].name;*s;s++)line[n++]=*s;
+        line[n++]=' ';line[n++]='r';line[n++]='e';line[n++]='a';
+        line[n++]='d';line[n++]=0;
+        text(line,5+i);
+        uintptr_t addr=0x201d0000UL+regs[i].off;
+        __asm__ volatile("dsb sy"::: "memory");
+        uint32_t value;
+        if(regs[i].width==1)value=*(volatile uint8_t*)addr;
+        else if(regs[i].width==2)value=*(volatile uint16_t*)addr;
+        else value=*(volatile uint32_t*)addr;
+        __asm__ volatile("dsb sy"::: "memory");
+        n-=5;line[n++]='=';line[n++]='0';line[n++]='x';
+        for(int shift=28;shift>=0;shift-=4)line[n++]="0123456789abcdef"[(value>>shift)&15];
+        line[n]=0;text(line,5+i);
+    }
+    text("A03 EMMC SNAPSHOT COMPLETE - PAUSED FOR PHOTO",21);
+    text("NO CARD COMMANDS OR STORAGE WRITES ISSUED",22);
+    for(;;)__asm__ volatile("wfe");
+}
+#endif
 struct handoff a03_load_xnu(uintptr_t fdt) {
     (void)fdt;
     struct handoff fail={0,0};text("A03 XNU LOADER - EL1",0);
@@ -45,6 +84,9 @@ struct handoff a03_load_xnu(uintptr_t fdt) {
     uintptr_t dt=p->phys+p->end-p->base,ba=(dt+p->adtlen+16383)&~16383UL;
     if(ba<dt||ba+16384>p->phys+p->mem)return fail;
     if(!entry_found)return fail;
+#ifdef A03_EMMC_SNAPSHOT
+    emmc_snapshot();
+#endif
     for(unsigned i=0;i<p->count;i++) {
         const struct segment *s=&p->seg[i];
         uintptr_t dst=p->phys+s->va-p->base;

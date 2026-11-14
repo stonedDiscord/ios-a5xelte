@@ -989,3 +989,29 @@ User transcribed (minor spelling differences preserved in original chat):
 - Root file edits can reuse kernel c4c4e4a707ca4da82bd68318dfd187d7984d65fe4482999775e329af65ba942a
   with a03-pack-root.py. Adding Linux HFSX creation removes macOS CI
   from that loop; kernel changes still need the separate XNU build.
+
+### 2026-11-14: BOOT 0013 read-only eMMC snapshot flashed
+
+- User authorized continuing toward eMMC and confirmed Download mode.
+  USB 04e8:685d detected. Added opt-in A03_EMMC_SNAPSHOT=1 to the local
+  loader build; normal builds exclude it. No XNU rebuild or CI required.
+- The diagnostic runs at EL1 before XNU, reads 14 explicit controller
+  registers at live-DT PA0x201d0000 using Linux-reference access widths:
+  PRESENT, CLOCK, HOST, POWER, HOST2, VERSION, ARG, COMMAND, RESPONSE0,
+  INT_STATE, INT_ENABLE, SIGNAL, DLL_CFG and DLL_DELAY. No FIFO read,
+  card command, reset, clock change or controller/storage write.
+- It prints a pre-access marker and each hex result, then deliberately
+  pauses at A03 EMMC SNAPSHOT COMPLETE - PAUSED FOR PHOTO. This trial
+  does not enter XNU/PID1; a fault/stall can leave the last read marker.
+- Freestanding compile passes warnings-as-errors; actual diagnostic
+  disassembly has integer-only code and byte/halfword/word MMIO loads.
+  Linked loader has no relocations; register labels use inline arrays
+  rather than unrebased absolute pointers in static data.
+- BOOT0013 SHA256
+  c7465260e94e8ace4505595d254d8f5f589671a2c14bfec85575466e5d1836ae.
+  Manifest shim/a03/out/a03-xnu-0013-emmc-snapshot.json. Exact unchanged
+  BOOT0012 kernel/HFS payload byte-match verified inside the new wrapper.
+- Heimdall retrieved PIT, uploaded only boot100%, reported successful
+  upload and reboot, exit0. No independent partition readback. Physical
+  register results pending user photo/transcription. No eMMC reads of
+  card sectors or functional block-device claim yet. BOOT0012 retained.
