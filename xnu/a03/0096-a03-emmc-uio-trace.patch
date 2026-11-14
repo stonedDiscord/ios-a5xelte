@@ -11,7 +11,12 @@
          unsigned char sector[512];uint64_t pos=(uint64_t)uio_offset(uio);
          unsigned skip=pos&511,take=512-skip;
          if((uint64_t)uio_resid(uio)<take)take=(unsigned)uio_resid(uio);
-+        if (a03_trace && a03_uio_trace_count++ < 12)
++        if (a03_trace &&
++            (a03_uio_trace_count < 4 ||
++             (uint64_t)uio_offset(uio) == 0x2cd82000 ||
++             ((uint64_t)uio_offset(uio) >= 0x2cd82000 &&
++              (uint64_t)uio_offset(uio) < 0x2cd82000 + 0x10000)) &&
++            a03_uio_trace_count++ < 24)
 +            printf("A03 eMMC UIO: off=%llx lba=%x\n", (uint64_t)uio_offset(uio), part_first(dev)+(uint32_t)(pos/512));
          lck_mtx_lock(&a03_emmc_lock);
          error=data_read(17,part_first(dev)+(uint32_t)(pos/512),sector);

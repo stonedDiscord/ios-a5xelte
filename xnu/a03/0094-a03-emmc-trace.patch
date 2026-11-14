@@ -13,7 +13,10 @@
      dma_sync(false);
      const volatile unsigned char *p=(const volatile unsigned char *)ae.dma;
      for(unsigned i=0;i<512;i++)out[i]=p[i];
-+    if (a03_trace && lba >= 0x100000 && a03_trace_count++ < 12) {
++    if (a03_trace &&
++        ((lba >= 0x00f31000 && lba < 0x00f31040) ||
++         (lba >= 0x01097be0 && lba < 0x01097d20)) &&
++        a03_trace_count++ < 24) {
 +        printf("A03 eMMC TRACE: cmd=%u lba=%x resp=%x data=%02x%02x%02x%02x\n",
 +            cmd, lba, response, out[0], out[1], out[2], out[3]);
 +    }

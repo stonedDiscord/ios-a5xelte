@@ -2244,3 +2244,9 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   100%, reported `boot upload successful`, and rebooted. No other partition
   was written. Host Download/ADB enumeration was absent after reboot; user
   output for the bounded UIO/TRACE lines is pending.
+- Refined the next diagnostic after the trace flood: low-level output now
+  covers only USERDATA base (`0xf31000`) and the expected catalog range around
+  `0x1097c10`, with a 24-line cap. UIO output keeps the first four requests
+  and any request in the catalog 64KiB window around byte offset
+  `0x2cd82000`, also capped at 24. This directly tests whether the catalog
+  offset reaches BSD/eMMC without scrolling unrelated HFS traffic away.
