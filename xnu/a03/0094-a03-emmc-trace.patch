@@ -1,0 +1,32 @@
+--- a/bsd/dev/a03_emmc.c
++++ b/bsd/dev/a03_emmc.c
+@@ -35,6 +35,7 @@
+     uint32_t rca;
+     dev_t userdata_dev;
+ } ae;
++static bool a03_trace;
+ static LCK_GRP_DECLARE(a03_emmc_grp, "a03_emmc");
+ static LCK_MTX_DECLARE(a03_emmc_lock, &a03_emmc_grp);
+ static inline void barrier(void) { __asm__ volatile("dsb sy" ::: "memory"); }
+@@ -109,6 +110,10 @@
+     dma_sync(false);
+     const volatile unsigned char *p=(const volatile unsigned char *)ae.dma;
+     for(unsigned i=0;i<512;i++)out[i]=p[i];
++    if (a03_trace && lba >= 0x100000) {
++        printf("A03 eMMC TRACE: cmd=%u lba=%x resp=%x data=%02x%02x%02x%02x\n",
++            cmd, lba, response, out[0], out[1], out[2], out[3]);
++    }
+     wr(0x30,rd(0x30)&0xffff8033);wr(0x58,lo);wr(0x5c,hi);
+     *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)host;barrier();
+     wr(4,block);wr(0,count);wr(0x34,enable);wr(0x38,signal);return 0;
+@@ -294,7 +299,9 @@
+     static bool attempted;uint32_t opt=0;
+     PE_parse_boot_argn("a03emmc",&opt,sizeof(opt));
+     if(opt!=1||attempted)return;
+-    attempted=true;DTEntry node;const uintptr_t *reg=NULL;unsigned size=0;
++    attempted=true;DTEntry node;
++    PE_parse_boot_argn("a03emmc_trace", &a03_trace, sizeof(a03_trace));
++    const uintptr_t *reg=NULL;unsigned size=0;
+     if(SecureDTLookupEntry(NULL,"/a03-emmc",&node)!=kSuccess||
+        SecureDTGetProperty(node,"reg",(const void **)&reg,&size)!=kSuccess||
+        size!=2*sizeof(uintptr_t)||reg[0]!=0x201d0000||reg[1]!=0x1000) {

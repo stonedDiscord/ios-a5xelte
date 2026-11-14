@@ -35,6 +35,12 @@ so next storage diagnostic should read adjacent catalog sectors and print both
 LBA forms. This distinguishes an incomplete USERDATA transfer from a high-LBA
 SDMA/address fault. No iOS root, launchd or SpringBoard result.
 
+Added opt-in XNU eMMC trace patch0094, gated by `a03emmc_trace=1`, to print
+absolute command LBA and first four data bytes for high-LBA reads. It changes no
+storage state and applies to the corrected post-0092 build tree. Packer/profile
+have the trace flag; it still needs build, artifact verification, and BOOT-only
+test. The reported local image's expected catalog bytes remain nonzero.
+
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /
 hfs_mountroot errno5 / cannot mount root errno19. eMMC later reports ready,

@@ -13,6 +13,7 @@ def main():
     ap.add_argument('--userdata-root',action='store_true',help='select validated USERDATA HFS root; requires --userdata-writable and kernel root-selection patch; positional root remains small RAM fallback')
     ap.add_argument('--catalog-probe',action='store_true',help='keep RAM HFS root while enabling A03 eMMC for PID1 catalog reads')
     ap.add_argument('--usb-probe',action='store_true',help='print read-only A03 MUSB controller state from XNU')
+    ap.add_argument('--emmc-trace',action='store_true',help='print selected high-LBA eMMC reads from XNU')
     ap.add_argument('--base',type=Path,default=ROOT/'backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img')
     a=ap.parse_args();payload=a.output.with_suffix('.payload');manifest=a.output.with_suffix('.json')
     if a.userdata_writable and not a.emmc_readonly:
@@ -21,6 +22,8 @@ def main():
         ap.error('--userdata-root requires --userdata-writable')
     if a.catalog_probe and not a.emmc_readonly:
         ap.error('--catalog-probe requires --emmc-readonly')
+    if a.emmc_trace and not a.emmc_readonly:
+        ap.error('--emmc-trace requires --emmc-readonly')
     if a.catalog_probe and a.userdata_root:
         ap.error('--catalog-probe is a RAM-root diagnostic; do not combine with --userdata-root')
     for f in [a.output,payload,manifest]:
@@ -35,6 +38,7 @@ def main():
     if len(data)>32*1024*1024:ap.error('RAM-root trial limited to 32 MiB; full iOS needs storage')
     args='debug=0x14e serial=3 cpus=1 keepsyms=1 -v -noprogress -enable_kprintf_spam startup_debug=1 -show_pointers rd=md0'
     if a.usb_probe:args+=' a03usb_probe=1'
+    if a.emmc_trace:args+=' a03emmc_trace=1'
     if a.emmc_readonly:
         import sys
         sys.path.insert(0,str(ROOT/'tools'))

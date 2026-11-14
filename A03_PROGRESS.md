@@ -2160,3 +2160,9 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   32-bit command argument. Next diagnostic should read adjacent known
   nonzero catalog sectors and print absolute/relative LBA, separating an
   on-device USERDATA transfer gap from a high-LBA SDMA/read-address fault.
+- Added opt-in patch0094 (`a03emmc_trace=1`) to print successful reads at
+  LBA >= `0x100000`, including absolute LBA and first four bytes. This will
+  expose the exact command LBA used for the catalog read without enabling
+  writes or changing controller timing. It applies cleanly to the corrected
+  post-0092 source; profile and packer now expose the trace flag. It is not
+  built or flashed yet.
