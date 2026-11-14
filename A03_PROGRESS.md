@@ -2185,3 +2185,25 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   `0956a223313ef84cd09744f7a0b20d135e9aa52518400576f986195c9594666d`.
   Heimdall uploaded BOOT0035 BOOT-only at100% and rebooted; no USERDATA or
   protected partition write. UIO and USB marker output are pending.
+- The preceding BOOT0034 trace reported `CMD17 lba=f3101f resp=900
+  data=00000000`, while the verified catalog should be absolute LBA
+  `0x1097c10`. BOOT0035 adds an earlier `A03 eMMC UIO: off=... lba=...`
+  print and an unconditional `A03 USB: probe entered` marker to identify
+  whether the offset is lost before cdev I/O or whether the earlier trace was
+  from the block path. BOOT0035 was uploaded BOOT-only and rebooted; output is
+  pending. No USERDATA write.
+- User reports a new eMMC trace: `cmd=17 lba=f3101f resp=900 data=00000000`.
+  This is USERDATA base `0xf31000` plus `0x1f` sectors, hence byte offset
+  `0x3e00`, while the tested catalog request is byte offset `0x2cd82000`
+  (relative LBA `0x166c10`, expected absolute LBA `0x1097c10`). This trace
+  alone does not prove where the offset changed; BOOT0035's UIO line is still
+  needed to distinguish `pread`/specfs translation from the device handler.
+- Inspection found `emmc_psize()` returned 512, although XNU block-device
+  `d_psize` is the partition capacity in DEV_BSIZE sectors. Changed it to
+  report validated BOOT/USERDATA sector counts, with INT_MAX saturation, and
+  updated the A03 profile to stage patch0097 after the UIO trace patch. The
+  host harness now checks each node's reported capacity; `python3
+  tools/a03-test-bsd-storage.py` passes, including large buffered reads and
+  raw UIO boundary cases. This is a plausible specfs geometry defect, not yet
+  proven as the sole source of the observed 0x3e00 offset; retain the UIO
+  trace in the next BOOT diagnostic. No device write was made.

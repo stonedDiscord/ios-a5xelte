@@ -224,9 +224,11 @@ static int emmc_ioctl(dev_t dev,u_long cmd,caddr_t data,__unused int flag,__unus
     default:return ENOTTY;
     }
 }
-/* XNU specfs uses d_psize as sector bytes, as in memdev.c.
- * Capacity is reported separately by DKIOCGETBLOCKCOUNT. */
-static int emmc_psize(dev_t dev) {return ae.ready&&minor(dev)<2?512:-1;}
+/* XNU specfs uses d_psize as the number of DEV_BSIZE sectors.  Returning a
+ * fixed 512 here made high-offset character reads subject to specfs's small
+ * device-size handling even though DKIOCGETBLOCKCOUNT reported the real
+ * partition capacity. */
+static int emmc_psize(dev_t dev) {uint32_t n;return !ae.ready||minor(dev)>1?-1:((n=part_count(dev))>0x7fffffffu?0x7fffffff:(int)n);}
 /* physio marks B_PHYS and supplies user addresses; buf_map does not map
  * those into kernel space. Keep raw I/O in the calling thread and let
  * uiomove perform the protected user/kernel copy (including partial I/O). */
