@@ -22,6 +22,12 @@ USB reset re-enumerated the A03. BOOT0027 then transferred100% to `boot`
 USERDATA/GPT/recovery/bootloader/EFS/NV write. Eight seconds later no
 Download/ADB USB had re-enumerated; no catalog/PID1/HFS/userspace evidence.
 
+Correction: BOOT0027 selected USERDATA as root, so HFS failure could precede
+the diagnostic PID1. Prepared BOOT0028 with `rd=md0` RAM root plus `a03emmc=1`
+and the same read-only catalog probe. SHA
+`e99ec4100f5a00028b5d24fc29b80e1e1ab5acd74c447af8100062923ede38ae`.
+Not flashed; wait for USB/physical state before another BOOT-only transfer.
+
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
 HFS root-mount path; current physical/USB state is unknown. USERDATA

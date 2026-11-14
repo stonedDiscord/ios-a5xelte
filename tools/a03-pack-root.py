@@ -11,12 +11,17 @@ def main():
     ap.add_argument('--emmc-readonly',action='store_true',help='opt-in XNU read-only SDMA probe; requires matching ADT node')
     ap.add_argument('--userdata-writable',action='store_true',help='enable USERDATA-only writes; requires --emmc-readonly controller opt-in')
     ap.add_argument('--userdata-root',action='store_true',help='select validated USERDATA HFS root; requires --userdata-writable and kernel root-selection patch; positional root remains small RAM fallback')
+    ap.add_argument('--catalog-probe',action='store_true',help='keep RAM HFS root while enabling A03 eMMC for PID1 catalog reads')
     ap.add_argument('--base',type=Path,default=ROOT/'backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img')
     a=ap.parse_args();payload=a.output.with_suffix('.payload');manifest=a.output.with_suffix('.json')
     if a.userdata_writable and not a.emmc_readonly:
         ap.error('--userdata-writable requires --emmc-readonly controller opt-in')
     if a.userdata_root and not a.userdata_writable:
         ap.error('--userdata-root requires --userdata-writable')
+    if a.catalog_probe and not a.emmc_readonly:
+        ap.error('--catalog-probe requires --emmc-readonly')
+    if a.catalog_probe and a.userdata_root:
+        ap.error('--catalog-probe is a RAM-root diagnostic; do not combine with --userdata-root')
     for f in [a.output,payload,manifest]:
         if f.exists():ap.error('refusing existing output '+str(f))
     for f in [a.kernel,a.root,a.adt,a.base]:

@@ -1860,3 +1860,16 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
 - `heimdall close-pc-screen --resume` completed `Rebooting device`. Eight
   seconds later neither Download nor ADB USB was visible. This is not
   evidence of PID1, catalog output, HFS mount, launchd or SpringBoard.
+
+### 2026-11-14: corrected catalog probe packaging
+
+- BOOT0027 selected `rd=a03userdata0`, so a failed HFS mount could prevent
+  its PID1 diagnostic from running. Added `--catalog-probe` to
+  `tools/a03-pack-root.py` and prepared BOOT0028 with the same eMMC provider
+  enabled but `rd=md0`, preserving the independently verified RAM HFS root.
+  This lets PID1 read USERDATA catalog bytes without requiring HFS to mount
+  USERDATA first.
+- BOOT0028 SHA256 is
+  `e99ec4100f5a00028b5d24fc29b80e1e1ab5acd74c447af8100062923ede38ae`.
+  Kernel/root/ADT inputs are unchanged and catalog reads remain read-only.
+  BOOT0028 is not flashed; the phone is currently not enumerating USB.
