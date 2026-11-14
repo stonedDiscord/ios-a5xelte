@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-14: SDMA source audit
+
+Compared `shim/a03/xnu-loader.c` with the installed T606 Linux driver
+(`android_kernel_samsung_a03/drivers/mmc/host/sprd-sdhcr11.c/.h`). The
+existing command value `0x003a0011` was confirmed correct for a single-block
+read: data-present, R1 response, read and SDMA. The loader was corrected to
+mirror two controller setup details from Linux: enable SDHCI v4 64-bit system
+address mode through HOST_CTRL2 (0x3e) bit 13, and write the 512-byte block
+size as a 16-bit `0x7200` value before the 32-bit block count. Host build
+passes with `A03_EMMC_SNAPSHOT=5`; no device flash or USERDATA write has been
+made for this audit. Commit `f98d116`.
+
 ## 2026-11-13: branch and first on-device diagnostic
 
 - Branch `a03-bringup`, based on `64b1067` (`dreamlte-bringup`).
