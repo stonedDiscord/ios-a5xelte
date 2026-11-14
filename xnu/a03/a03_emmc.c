@@ -162,7 +162,9 @@ static int emmc_ioctl(dev_t dev,u_long cmd,caddr_t data,__unused int flag,__unus
     default:return ENOTTY;
     }
 }
-static int emmc_psize(dev_t dev) {return ae.ready&&minor(dev)<2?(int)part_count(dev):-1;}
+/* XNU specfs uses d_psize as sector bytes, as in memdev.c.
+ * Capacity is reported separately by DKIOCGETBLOCKCOUNT. */
+static int emmc_psize(dev_t dev) {return ae.ready&&minor(dev)<2?512:-1;}
 /* physio marks B_PHYS and supplies user addresses; buf_map does not map
  * those into kernel space. Keep raw I/O in the calling thread and let
  * uiomove perform the protected user/kernel copy (including partial I/O). */

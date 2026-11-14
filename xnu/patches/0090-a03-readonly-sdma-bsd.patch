@@ -37,7 +37,7 @@
  //
 --- /dev/null
 +++ b/bsd/dev/a03_emmc.c
-@@ -0,0 +1,243 @@
+@@ -0,0 +1,245 @@
 +/* A03 ums9230 SDHC v4, polled read-only SDMA.
 + * Register sequence: local Samsung sprd-sdhcr11 and loader trials0017..0020.
 + * No card configuration, clocks, resets, writes, recovery or NV access.
@@ -202,7 +202,9 @@
 +    default:return ENOTTY;
 +    }
 +}
-+static int emmc_psize(dev_t dev) {return ae.ready&&minor(dev)<2?(int)part_count(dev):-1;}
++/* XNU specfs uses d_psize as sector bytes, as in memdev.c.
++ * Capacity is reported separately by DKIOCGETBLOCKCOUNT. */
++static int emmc_psize(dev_t dev) {return ae.ready&&minor(dev)<2?512:-1;}
 +/* physio marks B_PHYS and supplies user addresses; buf_map does not map
 + * those into kernel space. Keep raw I/O in the calling thread and let
 + * uiomove perform the protected user/kernel copy (including partial I/O). */

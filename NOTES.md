@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-14
 
+0023 USER stage21/value16 = buffered read EINVAL. Raw BOOT header passed
+by diagnostic control flow. Root cause confirmed in specfs: d_psize means
+sector bytes, ours returned partition count131072>PAGE_SIZE. Fix512,
+capacity still DKIOCGETBLOCKCOUNT; no hardware changes. Host sanitizer
+16K request+callback regression passes and rejects old code. Patch sync/
+dry-run + GPT pass. Next corrected XNU CI, reuse root43597035152 for0024.
+Current0023. Full block+EROFS storage PASS pending.
+
+
 CURRENT0023 FLASHED: Heimdall boot100%/success/reboot exit0. Image
 shim/a03/out/a03-xnu-0023-storage-stage.img SHA256
 31a19aeb5aa25bccbd18a577bd38694e60dddc10bd8cdee664b974610e28d143.

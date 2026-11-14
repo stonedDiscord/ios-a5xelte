@@ -20,6 +20,9 @@ def main():
     raw_begin = source.index('static int emmc_read(')
     raw_end = source.index('static int emmc_write(', raw_begin)
     handlers += source[raw_begin:raw_end]
+    size_begin = source.index('static int emmc_psize(')
+    size_end = source.index(chr(10), size_begin)
+    handlers += source[size_begin:size_end] + chr(10)
     stub = r'''
 #include <stdint.h>
 #include <stdbool.h>
@@ -42,7 +45,7 @@ struct proc;
 #define MIN(a,b) ((a)<(b)?(a):(b))
 struct request {
     dev_t dev;int flags,error,completed,mapped;int64_t block;
-    uint32_t count,resid;char data[1536];
+    uint32_t count,resid;char data[16896];
 };
 typedef struct request *buf_t;
 static struct {
@@ -50,8 +53,8 @@ static struct {
     struct {uint32_t boot,boot_count,userdata,userdata_count;} gpt;
 } ae;
 static int a03_emmc_lock,lock_depth,read_calls,fail_call,map_fail;
-static uint32_t requested[8];
-struct uio {int64_t offset,resid;unsigned copied;int fail;char data[1536];};
+static uint32_t requested[40];
+struct uio {int64_t offset,resid;unsigned copied;int fail;char data[16896];};
 static int64_t uio_offset(struct uio *u) {return u->offset;}
 static int64_t uio_resid(struct uio *u) {return u->resid;}
 static int uiomove(const char *p,int n,struct uio *u) {
@@ -75,7 +78,7 @@ static void buf_unmap(buf_t b) {assert(b->mapped==1);b->mapped--;}
 static void lck_mtx_lock(int *p) {(void)p;assert(lock_depth++==0);}
 static void lck_mtx_unlock(int *p) {(void)p;assert(--lock_depth==0);}
 static int data_read(unsigned cmd,uint32_t lba,unsigned char *p) {
-    assert(lock_depth==1);assert(cmd==17);assert(read_calls<8);
+    assert(lock_depth==1);assert(cmd==17);assert(read_calls<40);
     requested[read_calls++]=lba;
     if(read_calls==fail_call)return EIO;
     for(unsigned i=0;i<512;i++)p[i]=(unsigned char)(lba+i);
@@ -99,6 +102,19 @@ int main(void) {
     assert(emmc_open(1,FWRITE,0,NULL)==EROFS);
     assert(emmc_open(2,0,0,NULL)==ENXIO);
     assert(emmc_close(0,0,0,NULL)==0);
+    /* XNU specfs d_psize returns sector bytes, not partition capacity. */
+    assert(emmc_psize(0)==512&&emmc_psize(1)==512&&emmc_psize(2)==-1);
+    ae.ready=false;assert(emmc_psize(0)==-1);ae.ready=true;
+    const unsigned page_size=16384;
+    unsigned sector_size=(unsigned)emmc_psize(0);
+    assert(sector_size<=page_size&&page_size%sector_size==0);
+    unsigned bscale=page_size/sector_size;assert(bscale==32);
+    struct request page=req(0,0,bscale*sector_size,B_READ);
+    emmc_strategy(&page);check_done(&page,0,0,32);
+    assert(requested[0]==ae.gpt.boot&&requested[31]==ae.gpt.boot+31);
+    for(unsigned i=0;i<page_size;i++)
+        assert((unsigned char)page.data[i]==(unsigned char)(ae.gpt.boot+i/512+i%512));
+    assert((unsigned char)page.data[page_size]==0xa5);
     struct request b=req(0,0,1025,B_READ);emmc_strategy(&b);
     check_done(&b,0,0,3);assert(requested[0]==ae.gpt.boot);
     assert(requested[2]==ae.gpt.boot+2);

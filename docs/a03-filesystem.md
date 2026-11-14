@@ -197,3 +197,14 @@ Instruction emulation covers PASS and all14 failure stages with stubbed
 Darwin syscalls; it does not emulate XNU/device behavior. Default init
 remains byte-identical. Rebuild only a03-root.yml(storage_probe=true),
 then reuse corrected kernel43590138639 and the opt-in emmc ADT.
+
+### XNU block-device sector-size correction
+
+BOOT0023 reports stage0x21/value0x16 (buffered read/EINVAL), after raw
+BOOT header validation passed. XNU specfs set_blocksize interprets d_psize
+as bytes per sector, matching native memdev's mdSecsize return. Returning
+partition sector count made v_specsize131072 exceed PAGE_SIZE16384 and
+blocked spec_read before strategy. A03 now returns512; block count remains
+available through DKIOCGETBLOCKCOUNT. Actual-handler sanitizer tests cover
+the callback contract and a full16KiB/32-sector buffered transfer. Physical
+validation of this correction remains pending the next kernel trial.

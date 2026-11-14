@@ -1471,3 +1471,21 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   This is root diagnostics only; no hardware-driver change, XNU rebuild
   or non-BOOT write. Actual storage failure remains undiagnosed until
   physical output arrives.
+
+### 2026-11-14: BOOT0023 isolates buffered-read EINVAL; sector-size fix
+
+- User reports FAIL stage0x21/value0x16: block-device read errno22/EINVAL.
+  Diagnostic control flow reaches block read only after raw open/read and
+  BOOT magic/page2048/header-v2 validation succeeded. Thus0023 establishes
+  XNU SDMA plus raw uiomove BOOT-header reads; full block/EROFS PASS pending.
+- Source diagnosis: specfs set_blocksize calls bdevsw.d_psize and stores
+  its return as v_specsize (bytes per sector). Native memdev mdevsize
+  returns mdSecsize. Our callback incorrectly returned partition sector
+  count131072, so spec_read rejected devBlockSize>PAGE_SIZE before I/O.
+- Corrected emmc_psize to512 for ready valid minors; capacity remains
+  DKIOCGETBLOCKCOUNT. No SDMA/MMIO/card-sequence changes. Embedded0090
+  source exact-match and patch dry-run pass. Host actual-handler ASan/UBSan
+  adds callback checks and complete16KiB/32-sector buffered request; passes,
+  and demonstrably rejects the original callback. GPT tests pass.
+- Reuse diagnostic root43597035152 for next corrected-kernel BOOT0024.
+  Current0023; no new flash or complete storage PID1 PASS yet.
