@@ -2147,3 +2147,16 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   seconds later neither Download nor ADB was enumerated. BOOT0033's physical
   `A03 USB:` and catalog/header output are pending. USB state probe is linked;
   actual MUSB enumeration/log channel is still not implemented.
+- User now confirms BOOT0033 repeats the storage result: raw and block catalog
+  remain zero; raw and block HFS headers both begin
+  `48580005800021004846534a00000081` and identify HFSX; SWEET PID1 remains
+  alive. No `A03 USB:` lines were supplied, so the linked probe has not yet
+  yielded physical register values. This is not an iOS root, launchd or
+  SpringBoard boot.
+- The verified local 16GiB image still contains catalog prefix
+  `00000000000000000100000300000003` at relative `0x2cd82000`; the same
+  offset is LBA `0x166c10` within USERDATA and absolute card LBA
+  `0x1097c10` using the live GPT/PIT start. Both values fit the driver’s
+  32-bit command argument. Next diagnostic should read adjacent known
+  nonzero catalog sectors and print absolute/relative LBA, separating an
+  on-device USERDATA transfer gap from a high-LBA SDMA/read-address fault.

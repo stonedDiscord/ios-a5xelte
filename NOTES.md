@@ -27,6 +27,14 @@ catalog/header results. Host currently sees no Download/ADB device. Preserve
 GPT, recovery, bootloaders, EFS/NV; continue BOOT-only trials. MUSB
 enumeration/log channel is not yet implemented.
 
+LATEST BOOT0033 REPORT: raw/block catalog remain zero; raw/block HFS headers
+both begin `48580005800021004846534a00000081` (HFSX); SWEET PID1 remains alive.
+No `A03 USB:` register lines were supplied. Local image catalog prefix is
+known at relative `0x2cd82000` (LBA `0x166c10`, absolute card LBA `0x1097c10`),
+so next storage diagnostic should read adjacent catalog sectors and print both
+LBA forms. This distinguishes an incomplete USERDATA transfer from a high-LBA
+SDMA/address fault. No iOS root, launchd or SpringBoard result.
+
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /
 hfs_mountroot errno5 / cannot mount root errno19. eMMC later reports ready,
