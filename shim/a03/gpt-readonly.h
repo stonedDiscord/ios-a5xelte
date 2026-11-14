@@ -5,6 +5,7 @@
 struct a03_gpt {
     uint32_t array_lba, count, array_crc, first, last;
     uint32_t boot, boot_count, userdata, userdata_count;
+    uint32_t boot_index, userdata_index, identity_errors;
 };
 static uint32_t a03_le32(const unsigned char *p) {
     return p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);
@@ -36,7 +37,7 @@ static unsigned a03_gpt_header(const unsigned char *p,uint32_t sectors,struct a0
        array>=first||(count+3)/4>first-array||
        (count+3)/4>=backup-last)return 0;
     *g=(struct a03_gpt){(uint32_t)array,count,a03_le32(p+88),
-        (uint32_t)first,(uint32_t)last,0,0,0,0};
+        (uint32_t)first,(uint32_t)last,0,0,0,0,0,0,0};
     return 1;
 }
 static unsigned a03_gpt_name(const unsigned char *entry,const char *name) {
@@ -68,16 +69,25 @@ static unsigned a03_gpt_entries(struct a03_gpt *g,
         for(unsigned j=0;j<used;j++)if(start<=ends[j]&&starts[j]<=end)return 2;
         starts[used]=(uint32_t)start;ends[used++]=(uint32_t)end;
         if(a03_gpt_name(e,"boot")) {
-            if(g->boot||i!=38||start!=483328||end-start+1!=131072)return 3;
+            if(g->boot)g->identity_errors|=1;
+            if(i!=38)g->identity_errors|=2;
+            if(start!=483328)g->identity_errors|=4;
+            if(end-start+1!=131072)g->identity_errors|=8;
+            g->boot_index=i;
             g->boot=(uint32_t)start;g->boot_count=(uint32_t)(end-start+1);
         }
         if(a03_gpt_name(e,"userdata")) {
-            if(g->userdata||i!=54||start!=15929344||end!=g->last)return 3;
+            if(g->userdata)g->identity_errors|=16;
+            if(i!=54)g->identity_errors|=32;
+            if(start!=15929344)g->identity_errors|=64;
+            if(end!=g->last)g->identity_errors|=128;
+            g->userdata_index=i;
             g->userdata=(uint32_t)start;g->userdata_count=(uint32_t)(end-start+1);
         }
     }
     *computed=~crc;
     if(*computed!=g->array_crc)return 4;
+    if(g->identity_errors)return 3;
     if(!g->boot||!g->userdata)return 5;
     return 0;
 }

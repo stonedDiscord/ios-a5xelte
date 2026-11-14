@@ -2,6 +2,17 @@
 
 ## Active A03 handoff — 2026-11-13
 
+0018 physical photo IMG_20261114_114702_077.jpg: GPT header CRC matches,
+array storedbb4c2987/computed0/result3. Parser stopped on identity before
+finishing array; computed0 is unset, not a real CRC. BOOT compare not reached.
+0019 prepared to finish CRC and show mismatch mask + actual starts/counts/
+indices/last usable; constraints unchanged, read-only bounded SDMA. Candidate
+shim/a03/out/a03-xnu-0019-gpt-details.img SHA256
+1cf7617b30af133355a64c884c3250602ebeffc3b96f552f33f86b62ca4d6388.
+Host actual-C tests, Werror, no relocs/SIMD, exact0012 payload pass. Fresh
+Download detected; BOOT-only flash next. Current0018. Prior notes historical.
+
+
 Latest0018 FLASHED: Heimdall --resume PIT/boot100%/reboot successful, exit0.
 Current BOOT0018 image SHA256
 2b6683c9cd2d29a1536a7037b02d5e681b038a6ddb32ed457218cc42029d0d67.

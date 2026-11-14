@@ -76,7 +76,12 @@ int check(const unsigned char *header,const unsigned char *data,
             bad = bytearray(entries);struct.pack_into('<Q',bad,off,val)
             run(header(bad),bad,2)
         bad = bytearray(entries);struct.pack_into('<Q',bad,38*128+32,483329)
-        run(header(bad),bad,3)
+        assert run(header(bad),bad,3)==(32,zlib.crc32(bad))
+        # An identity discrepancy must not hide an array-integrity failure.
+        h = header(bad);bad[1000]^=1;run(h,bad,4)
+        bad = bytearray(entries)
+        struct.pack_into('<Q',bad,54*128+40,SECTORS-35)
+        assert run(header(bad),bad,3)==(32,zlib.crc32(bad))
         bad = bytearray(entries);bad[54*128+56]=ord('x')
         run(header(bad),bad,5)
         bad = bytearray(entries);bad[38*128:39*128]=bytes(128)

@@ -1237,3 +1237,24 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   match or exact guard/failure. No GPT-entry/known-BOOT runtime success yet.
   Only BOOT was written; no filesystem/card-sector writes by probe, no
   recovery/bootloader/EFS/NV/USERDATA writes. XNU provider still pending.
+
+### 2026-11-14: 0018 photo identifies identity rejection; 0019 prepared
+
+- Inspected IMG_20261114_114702_077.jpg.0018 reads EXT_CSD/MBR/header
+  again; GPT header CRC040a1bb6 matches. GPT ARRAY CRC STORED=bb4c2987;
+  COMPUTED=00000000; RESULT=3(identity). Computed zero is the initialized
+  diagnostic field because parser returned before completing array, not
+  evidence of a computed CRC mismatch. No BOOT comparison reached.
+- Exact failing identity condition unproven: boot index/start/length or
+  userdata index/start/end. Do not weaken constraints by guessing.0019
+  accumulates identity mismatch bits while finishing bounded array CRC,
+  prioritizes a CRC error, then prints actual starts/counts/zero-based
+  indices/last usable. Mismatch still stops before BOOT comparison/XNU.
+- Bitmask:1 duplicate boot,2 boot index,4 boot start,8 boot size,16 duplicate
+  userdata,32 userdata index,64 userdata start,128 userdata end!=last usable.
+  No new commands, storage writes, card config, reset or clock changes.
+- Actual C regression tests pass, including complete CRC on identity error
+  and CRC-error priority; Werror/no-relocs/no-SIMD, exact0012 payload verified.
+  Candidate shim/a03/out/a03-xnu-0019-gpt-details.img SHA256
+  1cf7617b30af133355a64c884c3250602ebeffc3b96f552f33f86b62ca4d6388.
+  Prepared only at this entry. Fresh Download USB available.

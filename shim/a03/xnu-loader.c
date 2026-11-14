@@ -241,10 +241,17 @@ static void emmc_gpt_probe(const unsigned char *header,uint32_t sectors) {
     hexline("GPT ARRAY CRC STORED",g.array_crc,64);
     hexline("GPT ARRAY CRC COMPUTED",crc,65);
     hexline("GPT RESULT 0PASS 1IO 2RANGE 3ID 4CRC 5LABEL",result,66);
-    if(result)return;
+    if(result && result!=3)return;
     hexline("BOOT FIRST LBA",g.boot,67);hexline("BOOT SECTORS",g.boot_count,68);
     hexline("USERDATA FIRST LBA",g.userdata,69);
     hexline("USERDATA SECTORS",g.userdata_count,70);
+    if(result==3) {
+        hexline("IDENTITY MISMATCH BITMASK",g.identity_errors,71);
+        hexline("BOOT GPT INDEX ZERO BASED",g.boot_index,72);
+        hexline("USERDATA GPT INDEX ZERO BASED",g.userdata_index,73);
+        hexline("GPT LAST USABLE LBA",g.last,74);
+        text("0019 IDENTITY STOP - CRC CHECK COMPLETED",76);return;
+    }
     text("GPT ARRAY CRC + PIT BOOT/USERDATA MATCH",71);
     uint32_t words[128];const unsigned char *b=(const unsigned char*)words;
     uint64_t kernel=*(const uint64_t*)(_start+16);
@@ -261,7 +268,7 @@ static void emmc_gpt_probe(const unsigned char *header,uint32_t sectors) {
     unsigned diff=0;for(unsigned i=0;i<512;i++)diff|=b[i]^expected[i];
     hexline("BOOT PAYLOAD RELATIVE SECTOR",(uint32_t)relative,73);
     text(diff?"BOOT PAYLOAD SECTOR MISMATCH":"BOOT HEADER + 512 PAYLOAD BYTES MATCH",74);
-    if(!diff)text("0018 STORAGE IDENTITY PASS - NO STORAGE WRITES",76);
+    if(!diff)text("0019 STORAGE IDENTITY PASS - NO STORAGE WRITES",76);
 }
 #endif
 static void emmc_read_probe(void) {
@@ -310,7 +317,7 @@ static void emmc_snapshot(void) {
         {"DLL_CFG",0x200,4}, {"DLL_DELAY",0x204,4}
     };
 #if A03_EMMC_SNAPSHOT >= 5
-    text("A03 EMMC 0018 GPT + CURRENT BOOT VALIDATION",3);
+    text("A03 EMMC 0019 GPT IDENTITY MISMATCH DETAILS",3);
 #elif A03_EMMC_SNAPSHOT == 4
     text("A03 EMMC 0017 SDMA READ - DOWNSTREAM PATH",3);
 #elif A03_EMMC_SNAPSHOT == 3
