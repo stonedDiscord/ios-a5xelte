@@ -1269,3 +1269,25 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   and USERDATA start/count, identity bitmask, indices, last usable. Code
   commit6a71956. No GPT-array/BOOT runtime success inferred from upload.
   XNU integration remains gated on resolving actual identity evidence.
+
+### 2026-11-14: 0019 proves GPT array integrity; tail-end guard corrected
+
+- Inspected IMG_20261114_115151_999.jpg. GPT ARRAY stored/computed both
+  bb4c2987. Result3 with identity mask80: ONLY userdata-end==last-usable
+  failed. BOOT start00076000/count00020000/index26; USERDATA start00f31000/
+  index36. Indices are zero-based hex, matching p39/p55 and live PIT.
+  Last usable0747bfde; photographed USERDATA count appears0654afdb (small
+  tail gap). Exact gap will be printed directly in0020, avoid relying on OCR.
+- All entry-array sectors/CRC, nonempty unique-GUID presence, partition
+  non-overlap and bounds checks completed. This does not prove BOOT bytes
+  or XNU storage access:0019 intentionally stopped before BOOT comparison.
+- Root cause of identity rejection is an unsupported parser assumption:
+  PIT count0/remainder does not establish USERDATA ends at last-usable.
+  Permit a tail gap while retaining verified start/index, range/overlap/
+  CRC checks. No partition data or geometry changed.0020 prints tail gap,
+  then checks current BOOT header and512 immutable payload bytes.
+- Actual-C regressions now include legal tail gaps and still reject
+  out-of-bounds/overlap/identity/CRC errors. Werror/no-relocs/no-SIMD and
+  exact0012 kernel/HFS payload verified. Ready0020 candidate SHA256
+  e7b647a5d7ff4fd7658bd4cedc8c77010652762306fb62dfd54c43d7b1ade896
+  at shim/a03/out/a03-xnu-0020-gpt-boot.img. Not flashed at this entry.

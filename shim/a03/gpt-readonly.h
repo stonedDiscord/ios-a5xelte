@@ -80,7 +80,8 @@ static unsigned a03_gpt_entries(struct a03_gpt *g,
             if(g->userdata)g->identity_errors|=16;
             if(i!=54)g->identity_errors|=32;
             if(start!=15929344)g->identity_errors|=64;
-            if(end!=g->last)g->identity_errors|=128;
+            /* Last-usable bounds were checked above. GPT may leave a tail
+             * gap: PIT's zero 'remainder' count does not prove exact end. */
             g->userdata_index=i;
             g->userdata=(uint32_t)start;g->userdata_count=(uint32_t)(end-start+1);
         }

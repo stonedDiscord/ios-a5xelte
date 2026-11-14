@@ -2,6 +2,17 @@
 
 ## Active A03 handoff — 2026-11-13
 
+0019 photo IMG_20261114_115151_999.jpg CONFIRMS GPT array CRCbb4c2987
+match, all bounds/nonoverlap, boot/start/size/index and userdata/start/index.
+Only mismatch80: unsupported assumption userdata ends exactly last-usable.
+0020 removes exact-end requirement (bounds remain), prints tail gap and
+proceeds to current BOOT header+512-byte sample comparison. Actual-C tests
+including legal tail gaps pass; no relocs/SIMD, exact0012 payload unchanged.
+Ready shim/a03/out/a03-xnu-0020-gpt-boot.img SHA256
+e7b647a5d7ff4fd7658bd4cedc8c77010652762306fb62dfd54c43d7b1ade896.
+Current0019; fresh Download detected. Prior pending0019 notes historical.
+
+
 Latest0019 FLASHED successfully: fresh detect, verified SHA256
 1cf7617b30af133355a64c884c3250602ebeffc3b96f552f33f86b62ca4d6388,
 Heimdall PIT/boot100%/reboot exit0; no independent readback. Current0019.
