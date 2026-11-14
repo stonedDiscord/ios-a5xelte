@@ -168,6 +168,10 @@ jobs:
             echo 'A03 USB probe was requested but its diagnostic string is absent from the kernel' >&2
             exit 1
           fi
+          if ! strings "$kernel" | grep -F 'A03 CATALOG direct' >/dev/null; then
+            echo 'A03 direct catalog probe was requested but its diagnostic string is absent from the kernel' >&2
+            exit 1
+          fi
           echo "A03 USB state probe linked: $kernel"
 
       - name: Compiler cache statistics
