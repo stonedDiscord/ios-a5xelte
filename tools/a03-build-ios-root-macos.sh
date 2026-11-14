@@ -38,7 +38,7 @@ for name in os sysos appos; do
     mkdir "$work/$name"
     hdiutil attach -readonly -nobrowse -owners on -mountpoint "$work/$name" "$work/$name.dmg"
 done
-hdiutil create -size 16g -fs HFSX -fsargs '-J' -volname A03iOSRoot -layout NONE -type UDRW "$work/root.dmg"
+hdiutil create -size 16g -fs HFSX -fsargs '-J' -volname A03iOSRoot -layout NONE "$work/root.dmg"
 mkdir "$work/root"
 hdiutil attach -nobrowse -owners on -mountpoint "$work/root" "$work/root.dmg"
 # Reuse portable file staging only; no donor hardware or partition tool.

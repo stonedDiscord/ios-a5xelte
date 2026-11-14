@@ -1638,3 +1638,8 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   RAM-root default preserved.0090+0092 patch application passes baseline.
   Packager exposes explicit --userdata-root, retaining small RAM payload.
   Not included in live43601676154 and not yet fully compiled or booted.
+
+- Filesystem43602020594 reached source APFS mounts/verified checksums, then
+  failed at hdiutil create: UDRW is not a valid -type argument. Remove it
+  (default writable UDIF, matching tested small-root builder) and rebuild.
+  No filesystem artifact or phone write resulted from this failure.
