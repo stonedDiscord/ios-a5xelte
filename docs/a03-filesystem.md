@@ -96,7 +96,11 @@ bounded read-only PIO: EXT_CSD first, then only if user partition selected
 with 512-byte sectors, CMD17 LBA0/LBA1. Checks MBR signature and GPT header
 CRC32; does not validate the GPT entry array or provide a BSD block driver.
 Register/command references are the local android_kernel_samsung_a03 tree.
-0015 flashed successfully; physical PIO results pending. No XNU rebuild.
+0015 photo reports CMD8 R1=900/INT2/PRESENT01f000f0 followed by failure.
+Transfer-complete without error bits is not sufficient to claim buffer
+reception: the failed stage/FIFO count were not visible in0015. Trial0016
+keeps the read path and adds stage/status/FIFO diagnostics at rows65..71,
+pending flash. No XNU rebuild or extra controller reconfiguration.
 
 ## CachyOS ldid compatibility
 

@@ -1094,3 +1094,27 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   Manifest shim/a03/out/a03-xnu-0015-emmc-read.json. Detected Download USB.
   Heimdall PIT/boot100%/upload/reboot successful, exit0; BOOT only, no
   independent readback. Current0015, physical results pending.
+
+### 2026-11-14: photo confirms 0015 EXT_CSD path fails; 0016 prepared
+
+- Read user's local IMG_20261114_112553_338.jpg (private /home/stoned/ocr).
+  CMD13 INT1/RESPONSE900/PRESENT01f000f0 again. CMD8 READ R1=0x00000900,
+  READ INT=0x00000002, READ PRESENT=0x01f000f0, then EXT_CSD FAILED -
+  STOPPED, NO RETRY. Bottom says READ PROBE COMPLETE / NO DMA OR STORAGE
+  WRITES. No EXT_CSD fields, MBR or GPT displayed; no sector-read success.
+- Important: final interrupt2 is transfer-complete, without error bits.
+  The helper nevertheless returned failure. 0015 does not expose which
+  wait failed or whether any FIFO words were read, so neither successful
+  PIO data reception nor missing read-ready event can yet be concluded.
+- Rechecked local cloned sprd-sdhcr11 driver interrupt handling and sdhci
+  FIFO definitions; no online reference needed. Prepared0016 with same
+  command/transfer logic, adding fail-stage, accumulated/last poll status,
+  last sampled PRESENT, FIFO-word count, live enable/command diagnostics.
+  These appear at rows65..71; photo must include lower screen.
+- No speculative register-mode/reset/clock/card changes. Read-only CMD8/
+  CMD17 whitelist and guards retained. Host integer-only disassembly,
+  no linked relocations, exact0012 payload and normal build verified.
+- BOOT0016 SHA256
+  830bf41e70460aeed768aaf0af86fcbf1caf175d1eb3ecb435d37f78e3a41fb9.
+  shim/a03/out/a03-xnu-0016-pio-stage.{img,json}. No XNU rebuild.
+  NOT flashed: Download USB absent at check. Current phone remains0015.

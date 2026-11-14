@@ -85,12 +85,14 @@ static unsigned emmc_status_probe(void) {
 #if A03_EMMC_SNAPSHOT == 3
 /* Local references: A03 sprd-sdhcr11.{c,h}, sdhci.{c,h}, mmc_ops.c.
  * Read only: whitelist SEND_EXT_CSD and READ_SINGLE_BLOCK, no DMA. */
+static uint32_t poll_seen, poll_last, poll_present;
 static unsigned emmc_poll(unsigned mask) {
     uint64_t start,now,freq;
     __asm__ volatile("mrs %0,cntpct_el0":"=r"(start));
     __asm__ volatile("mrs %0,cntfrq_el0":"=r"(freq));
     for(unsigned i=0;i<10000000;i++) {
         uint32_t s=emmc_read32(0x30);
+        poll_seen|=s;poll_last=s;poll_present=emmc_read32(0x24);
         if(s&0xffff8000u)return 0;
         if((s&mask)==mask)return 1;
         __asm__ volatile("mrs %0,cntpct_el0":"=r"(now));
@@ -109,20 +111,32 @@ static unsigned emmc_pio_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned r
     emmc_write32(0x00,1); /* v4 32-bit block-count register, DMA disabled */
     emmc_write32(0x08,arg);
     hexline("READ CMD",cmd,row);
+    poll_seen=0;poll_last=0;poll_present=0;
     emmc_write32(0x0c,(cmd<<24)|0x003a0010u); /* R1 + data, read, single, PIO */
     unsigned ok=emmc_poll(1);
+    unsigned stage=ok?2:1, words=0;
     uint32_t response=emmc_read32(0x10);
     hexline("READ R1",response,row+1);
-    if(response&0xffffe080u)ok=0;
-    if(ok) {emmc_write32(0x30,1);ok=emmc_poll(0x20);}
+    if(response&0xffffe080u) {ok=0;stage=4;}
+    if(ok) {emmc_write32(0x30,1);ok=emmc_poll(0x20);if(ok)stage=3;}
     if(ok) {
-        for(unsigned i=0;i<128;i++)buf[i]=emmc_read32(0x20);
+        for(unsigned i=0;i<128;i++) {buf[i]=emmc_read32(0x20);words++;}
         emmc_write32(0x30,0x20);ok=emmc_poll(2);
+        if(ok)stage=0;
     }
     uint32_t status=emmc_read32(0x30);
     hexline("READ INT",status,row+2);
     hexline("READ PRESENT",emmc_read32(0x24),row+3);
-    if(emmc_read32(0x24)&3)ok=0;
+    if(emmc_read32(0x24)&3) {ok=0;stage=5;}
+    if(!ok) {
+        hexline("FAIL STAGE 1CMD 2READY 3DONE 4R1 5BUSY",stage,65);
+        hexline("POLL SEEN",poll_seen,66);
+        hexline("POLL LAST",poll_last,67);
+        hexline("POLL PRESENT",poll_present,68);
+        hexline("FIFO WORDS",words,69);
+        hexline("INT ENABLE LIVE",emmc_read32(0x34),70);
+        hexline("COMMAND LIVE",emmc_read32(0x0c),71);
+    }
     emmc_write32(0x34,enable);
     emmc_write32(0x30,status&0xffff8033u);
     emmc_write32(0x04,block);emmc_write32(0x00,count);
@@ -183,7 +197,7 @@ static void emmc_snapshot(void) {
         {"DLL_CFG",0x200,4}, {"DLL_DELAY",0x204,4}
     };
 #if A03_EMMC_SNAPSHOT == 3
-    text("A03 EMMC 0015 EXT_CSD + FIRST-SECTOR PIO",3);
+    text("A03 EMMC 0016 PIO POLL-STAGE DIAGNOSTIC",3);
 #elif A03_EMMC_SNAPSHOT == 2
     text("A03 EMMC 0014 SNAPSHOT + GUARDED CMD13",3);
 #else

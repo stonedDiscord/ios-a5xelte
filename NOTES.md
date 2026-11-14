@@ -2,6 +2,19 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest physical0015 photo IMG_20261114_112553_338.jpg: CMD13 OK, CMD8
+READ R1=900 INT=2 PRESENT01f000f0, EXT_CSD FAILED/STOPPED. Transfer-complete
+bit without error bits, but helper failure; stage/FIFO progress unknown.
+No EXT_CSD or sector success. Do not claim read-ready was absent yet.
+0016 READY NOT FLASHED: shim/a03/out/a03-xnu-0016-pio-stage.img SHA256
+830bf41e70460aeed768aaf0af86fcbf1caf175d1eb3ecb435d37f78e3a41fb9.
+Same guarded PIO path, extra fail-stage/seen/last/PRESENT/FIFO count/live
+enable+command diagnostics at screen rows65..71. Need full-screen photo.
+No Download USB now; user must re-enter. Then BOOT-only flash0016.
+Host compile/no-relocs/integer-only/exact kernel+root payload verified;
+no CI. Current BOOT0015. Reference only local android_kernel_samsung_a03.
+Prior handoffs below are historical.
+
 Latest0015 FLASHED, boot100%/reboot/exit0, SHA256
 94c7832e02d5452410bfc2c82fc83f389a514f4f869b61c2897de682d8a18197.
 User confirms0014 CMD13 INT1 RESPONSE900 PRESENT01f000f0 and glyph fix.
