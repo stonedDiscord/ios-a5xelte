@@ -1942,3 +1942,16 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   `close-pc-screen --resume` completed reboot. USERDATA and protected
   partitions were untouched. Ten seconds later no Download/ADB interface was
   visible. Await display/PID1 output for the corrected catalog result.
+
+### 2026-11-14: RAM-root XNU and PID1 confirmed
+
+- User supplied `IMG_20261114_170949_912.jpg`. The display log shows
+  `BSD root: md0`, HFS mounted `A03TestRoot`, BSD/devfs initialization, and
+  `SWEET userspace: init running as PID 1` followed by repeated `still alive`.
+  It also shows eMMC GPT result0 with CRC `bb4c2987/bb4c2987` and BOOT plus
+  USERDATA BSD devices ready.
+- This is the first confirmed XNU RAM-root and PID1 userspace run on A03. It
+  is not an iOS root, launchd, SpringBoard, or USERDATA HFS mount result.
+- BOOT0029 came from the default root workflow and did not include the
+  explicit catalog probe input. Catalog-enabled workflow `43614257862` is
+  dispatched for the next read-only BOOT test.
