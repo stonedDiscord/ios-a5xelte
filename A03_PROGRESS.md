@@ -870,3 +870,25 @@ User transcribed (minor spelling differences preserved in original chat):
   100%, reported success, rebooted, exit 0. Only BOOT written; no independent
   readback. Current BOOT 0011-pid1; asked for pthread/md0/PID1/heartbeat
   or panic lines/photo. No userspace success inferred before device report.
+
+### 2026-11-14 MILESTONE: A03 XNU userspace PID 1 runs
+
+- User reports trial 0011 displays load_init_program attempting
+  /usr/appleinternal/sbin/launchd.development, then /sbin/launchd, then
+  *** SWEET userspace: init running as PID 1 *** and
+  SWEET init: still alive (minor transcription typos in user message).
+- This is on-device evidence of mockfs RAM-root execution, test init at
+  PID1, user/kernel syscall transitions and console writes. The still-alive
+  message is produced after the test program's select timeout; one report
+  does not establish long-duration stability or sustained interrupt rates.
+- It is the static test executable provided as the RAM disk, not Apple's
+  launchd or an iOS graphical interface. The development-launchd candidate
+  message is a search attempt; fallback /sbin/launchd successfully executes.
+- Missing pthread registration panic is no longer blocking this boot.
+  Current BOOT remains 0011-pid1; no further image or partition write.
+- Next real-iOS dependencies: accessible filesystem containing launchd,
+  dyld/shared cache and services; A03 eMMC/block transport (donor UFS is
+  Qualcomm-specific); generic HFS/code-signing/entitlement integration;
+  framebuffer/IOSurface and display services before any GUI claim. Current
+  managed RAM window is 256 MiB, unsuitable for assuming full root fits in
+  RAM. No authorization inferred to write non-BOOT partitions.

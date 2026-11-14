@@ -2,18 +2,19 @@
 
 ## Active A03 handoff — 2026-11-13
 
-Latest 2026-11-14: BOOT 0011-pid1 flashed 100%, success, reboot, exit 0.
-CI 43530972730 source a8e2da7 passed; kernel manifest verified SHA256
+Latest 2026-11-14 MILESTONE: user confirms BOOT0011 executes static test
+userspace as PID1 and prints SWEET init: still alive. load_init_program
+tries development launchd then /sbin/launchd; mockfs serves test executable.
+This is physical user-reported A03 userspace/syscall/console evidence,
+NOT Apple launchd/SpringBoard/iOS GUI. One heartbeat, no duration claim.
+Current BOOT0011 SHA256
+4bdf15d5a4c66321783f193d5c72fef33bbebd520eb07087da8b650e9b6fb0c9.
+Kernel CI43530972730 source a8e2da7, hash
 00028c59d5c543c32e2c13e1e6229ede236140027a205c79c1e003a9f5ea585d.
-Named CPU/BSD/pthread/AMFI/mockfs functions disassembled SIMD-free.
-BOOT SHA256 4bdf15d5a4c66321783f193d5c72fef33bbebd520eb07087da8b650e9b6fb0c9.
-Attached private static test init via --ramdisk and rd=md0, RAM PA
-0x104008000 size0x8000; ADT0x104010000. Segment/payload byte-match passed.
-Runtime pthread/md0/PID1/heartbeat or panic/photo requested; no success yet.
-This is mockfs test init, not real iOS launchd/rootfs/SpringBoard.
-0010 confirmed CPU registration/SGI1 and BSD, panicked missing pthread
-provider; built-in provider + RAM-root + minimal AMFI included in 0011.
-Current phone BOOT0011, normal IRQ masking. Preserve non-BOOT partitions.
+Next: actual iOS filesystem transport, generic HFS/AMFI entitlements and
+display services. A03 is eMMC, do not enable donor Qualcomm UFS driver.
+Managed RAM is only256MiB; full root cannot be assumed RAM-backed.
+No new flash; preserve non-BOOT partitions. No real iOS root attached.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a
 Galaxy A03 SM-A035G (UNISOC T606/ums9230), not the S8 described below.
