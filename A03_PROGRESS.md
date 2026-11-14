@@ -1065,3 +1065,32 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   (or guard-skip/final partial marker), plus confirmation of glyph fix.
   Diagnostic deliberately pauses before XNU. No fresh card response or
   sector-read success is inferred from the successful flash.
+
+### 2026-11-14: CMD13 succeeds; BOOT 0015 read trial flashed
+
+- User reports CMD13 INT=0x00000001, RESPONSE=0x00000900,
+  PRESENT=0x01f000f0. Fresh command-complete response confirms ready/TRAN
+  at the retained RCA1; no inhibit bits. User confirms glyphs now correct.
+  This does not establish sector access or selected hardware partition.
+- User reminded us to use android_kernel_samsung_a03; all new command,
+  PIO/FIFO, block-count and EXT_CSD definitions checked against that
+  local checkout (sprd-sdhcr11, sdhci, mmc_ops, include/linux/mmc/mmc.h).
+- Added opt-in mode3, BOOT0015: revalidate fresh CMD13, read 512-byte
+  EXT_CSD via CMD8 PIO, display revision/partition config/sector count/
+  data-sector-size. Only if user partition selected, 512-byte sectors,
+  plausible modern revision and capacity: CMD17 LBA0 then LBA1. No CMD6,
+  selection, DMA, clock/reset programming, multi-block access or writes.
+- Checks MBR signature then EFI PART GPT header, current LBA1, bounded
+  header size and header CRC32. No full GPT table/backup identity check
+  yet. CRC match would be first internally validated sector reads only.
+- Each event wait bounded to one second/10 million iterations, no retry
+  on error. Restores interrupt enables and block registers; pauses before
+  XNU with results. Hardware behavior of new PIO path remains unproven.
+- Host verifies warning-clean build, integer-only disassembly/no linked
+  relocations, exact0012 kernel/root payload match, actual C CRC helper
+  against zlib for92/512-byte synthetic headers. No XNU build required.
+- BOOT0015 SHA256
+  94c7832e02d5452410bfc2c82fc83f389a514f4f869b61c2897de682d8a18197.
+  Manifest shim/a03/out/a03-xnu-0015-emmc-read.json. Detected Download USB.
+  Heimdall PIT/boot100%/upload/reboot successful, exit0; BOOT only, no
+  independent readback. Current0015, physical results pending.

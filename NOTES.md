@@ -2,6 +2,21 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0015 FLASHED, boot100%/reboot/exit0, SHA256
+94c7832e02d5452410bfc2c82fc83f389a514f4f869b61c2897de682d8a18197.
+User confirms0014 CMD13 INT1 RESPONSE900 PRESENT01f000f0 and glyph fix.
+RCA1 responds ready/TRAN. Mode3 now fresh CMD13 -> EXT_CSD CMD8 PIO ->
+only if user partition/512-byte sectors/capacity/revision guards pass,
+CMD17 LBA0/LBA1 with MBR signature/GPT header CRC checks. No card config
+changes, DMA, resets or storage writes. All references local cloned A03
+Linux source as user requested. Each poll bounded, stop on failure.
+Await screen EXT REV/PARTITION_CONFIG/SECTOR_COUNT/DATA_SECTOR_SIZE,
+READ R1/INT/PRESENT, MBR and GPT CRC or final failure marker/photo.
+Trial pauses before XNU. No PIO/sector success inferred yet. Same0012
+kernel/HFS payload; no CI. Host CRC checked against zlib, build/codegen
+checked. Only BOOT written, no independent readback;0012 fallback retained.
+Prior trial handoffs follow as history.
+
 Latest: BOOT0014 CMD13 diagnostic FLASHED, Heimdall detected device, image
 hash matched17b1299ee4387b52eeba7a1a25c15a85495a5b9e5a9f2d76896a6f11ac42f48f,
 PIT/upload boot100%/reboot all successful, exit0; no independent readback.

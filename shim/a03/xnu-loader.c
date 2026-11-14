@@ -24,7 +24,7 @@ static void text(const char *s,unsigned row) {
     __asm__ volatile("dsb sy":::"memory");
 }
 #ifdef A03_EMMC_SNAPSHOT
-#if A03_EMMC_SNAPSHOT == 2
+#if A03_EMMC_SNAPSHOT >= 2
 static uint32_t emmc_read32(unsigned off) {
     uint32_t v=*(volatile uint32_t*)(0x201d0000UL+off);
     __asm__ volatile("dsb sy"::: "memory");return v;
@@ -40,7 +40,7 @@ static void hexline(const char *label,uint32_t value,unsigned row) {
     for(int shift=28;shift>=0;shift-=4)line[n++]="0123456789abcdef"[(value>>shift)&15];
     line[n]=0;text(line,row);
 }
-static void emmc_status_probe(void) {
+static unsigned emmc_status_probe(void) {
     uint32_t argument=emmc_read32(0x08),state=emmc_read32(0x24);
     uint32_t modecmd=emmc_read32(0x0c),clock=emmc_read32(0x2c);
     uint32_t oldstatus=emmc_read32(0x30),response=emmc_read32(0x10);
@@ -50,7 +50,7 @@ static void emmc_status_probe(void) {
     if((state&3)||(clock&7)!=7||oldstatus||!(argument>>16)||
        (argument&0xffff)||(cmd!=11 && cmd!=13)||
        (response&0x1f00)!=0x0900) {
-        text("CMD13 SKIPPED - RETAINED STATE GUARD FAILED",24);return;
+        text("CMD13 SKIPPED - RETAINED STATE GUARD FAILED",24);return 0;
     }
     hexline("CMD13 CANDIDATE ARG",argument,24);
     uint32_t enable=emmc_read32(0x34),signal=emmc_read32(0x38);
@@ -71,14 +71,101 @@ static void emmc_status_probe(void) {
         if(now-start>=freq)break;
     }
     hexline("CMD13 INT",status,26);
-    hexline("CMD13 RESPONSE",emmc_read32(0x10),27);
+    uint32_t fresh=emmc_read32(0x10);
+    hexline("CMD13 RESPONSE",fresh,27);
     hexline("CMD13 PRESENT",emmc_read32(0x24),28);
     emmc_write32(0x34,enable);
     emmc_write32(0x30,status&0xffff8001u);
     emmc_write32(0x38,signal);
     if((status&0xffff8001u)==1)text("CMD13 RESPONSE RECEIVED - CHECK CARD STATUS",30);
     else text("CMD13 FAILED/TIMED OUT - NO RESET OR RETRY",30);
+    return (status&0xffff8001u)==1 && (fresh&0xffffe180u)==0x100u &&
+        (fresh&0x1e00u)==0x800u && !(emmc_read32(0x24)&3);
 }
+#if A03_EMMC_SNAPSHOT == 3
+/* Local references: A03 sprd-sdhcr11.{c,h}, sdhci.{c,h}, mmc_ops.c.
+ * Read only: whitelist SEND_EXT_CSD and READ_SINGLE_BLOCK, no DMA. */
+static unsigned emmc_poll(unsigned mask) {
+    uint64_t start,now,freq;
+    __asm__ volatile("mrs %0,cntpct_el0":"=r"(start));
+    __asm__ volatile("mrs %0,cntfrq_el0":"=r"(freq));
+    for(unsigned i=0;i<10000000;i++) {
+        uint32_t s=emmc_read32(0x30);
+        if(s&0xffff8000u)return 0;
+        if((s&mask)==mask)return 1;
+        __asm__ volatile("mrs %0,cntpct_el0":"=r"(now));
+        if(now-start>=freq)return 0;
+    }
+    return 0;
+}
+static unsigned emmc_pio_read(unsigned cmd,uint32_t arg,uint32_t *buf,unsigned row) {
+    if((cmd!=8 && cmd!=17)||(cmd==8 && arg)||
+       (cmd==17 && arg>1)||(emmc_read32(0x24)&3)||emmc_read32(0x30))return 0;
+    uint32_t enable=emmc_read32(0x34),signal=emmc_read32(0x38);
+    uint32_t block=emmc_read32(0x04),count=emmc_read32(0x00);
+    emmc_write32(0x38,0);
+    emmc_write32(0x34,enable|0x037f8033u);
+    emmc_write32(0x04,0x00017200u); /* one 512-byte block, boundary 512K */
+    emmc_write32(0x00,1); /* v4 32-bit block-count register, DMA disabled */
+    emmc_write32(0x08,arg);
+    hexline("READ CMD",cmd,row);
+    emmc_write32(0x0c,(cmd<<24)|0x003a0010u); /* R1 + data, read, single, PIO */
+    unsigned ok=emmc_poll(1);
+    uint32_t response=emmc_read32(0x10);
+    hexline("READ R1",response,row+1);
+    if(response&0xffffe080u)ok=0;
+    if(ok) {emmc_write32(0x30,1);ok=emmc_poll(0x20);}
+    if(ok) {
+        for(unsigned i=0;i<128;i++)buf[i]=emmc_read32(0x20);
+        emmc_write32(0x30,0x20);ok=emmc_poll(2);
+    }
+    uint32_t status=emmc_read32(0x30);
+    hexline("READ INT",status,row+2);
+    hexline("READ PRESENT",emmc_read32(0x24),row+3);
+    if(emmc_read32(0x24)&3)ok=0;
+    emmc_write32(0x34,enable);
+    emmc_write32(0x30,status&0xffff8033u);
+    emmc_write32(0x04,block);emmc_write32(0x00,count);
+    emmc_write32(0x38,signal);
+    return ok;
+}
+static uint32_t le32(const unsigned char *p) {
+    return p[0]|((uint32_t)p[1]<<8)|((uint32_t)p[2]<<16)|((uint32_t)p[3]<<24);
+}
+static uint32_t header_crc(const unsigned char *p,unsigned n) {
+    uint32_t crc=~0u;
+    for(unsigned i=0;i<n;i++) {
+        crc^=(i>=16 && i<20)?0:p[i];
+        for(unsigned b=0;b<8;b++)crc=(crc>>1)^(0xedb88320u & (0u-(crc&1)));
+    }
+    return ~crc;
+}
+static void emmc_read_probe(void) {
+    uint32_t buf[128];
+    text("READ EXT_CSD - NO CARD CONFIGURATION CHANGES",32);
+    if(!emmc_pio_read(8,0,buf,34)) {text("EXT_CSD FAILED - STOPPED, NO RETRY",39);return;}
+    const unsigned char *p=(const unsigned char*)buf;
+    uint32_t sectors=le32(p+212);
+    hexline("EXT REV",p[192],39);hexline("PARTITION_CONFIG",p[179],40);
+    hexline("SECTOR_COUNT",sectors,41);hexline("DATA_SECTOR_SIZE",p[61],42);
+    if((p[179]&7)||p[61]||p[192]<5||p[192]>8||sectors<2) {
+        text("SECTOR READ SKIPPED - EXT_CSD GUARD",44);return;
+    }
+    if(!emmc_pio_read(17,0,buf,44)) {text("LBA0 FAILED - STOPPED",49);return;}
+    hexline("MBR SIGNATURE",p[510]|((uint32_t)p[511]<<8),49);
+    if(p[510]!=0x55||p[511]!=0xaa) {text("MBR GUARD FAILED - STOPPED",50);return;}
+    if(!emmc_pio_read(17,1,buf,51)) {text("LBA1 FAILED - STOPPED",56);return;}
+    unsigned n=le32(p+12);
+    if(le32(p)!=0x20494645u||le32(p+4)!=0x54524150u||
+       n<92||n>512||le32(p+24)!=1||le32(p+28)) {
+        text("GPT HEADER GUARD FAILED",56);return;
+    }
+    uint32_t stored=le32(p+16),calculated=header_crc(p,n);
+    hexline("GPT HEADER CRC STORED",stored,56);
+    hexline("GPT HEADER CRC COMPUTED",calculated,57);
+    text(stored==calculated?"GPT HEADER CRC MATCH - FIRST SECTORS READ":"GPT HEADER CRC MISMATCH",59);
+}
+#endif
 #endif
 /* Register addresses/widths checked against the A03 live DT and Linux
  * sprd-sdhcr11.h. No FIFO read, controller write, reset or card command.
@@ -95,7 +182,9 @@ static void emmc_snapshot(void) {
         {"INT_ENABLE",0x34,4}, {"SIGNAL",0x38,4},
         {"DLL_CFG",0x200,4}, {"DLL_DELAY",0x204,4}
     };
-#if A03_EMMC_SNAPSHOT == 2
+#if A03_EMMC_SNAPSHOT == 3
+    text("A03 EMMC 0015 EXT_CSD + FIRST-SECTOR PIO",3);
+#elif A03_EMMC_SNAPSHOT == 2
     text("A03 EMMC 0014 SNAPSHOT + GUARDED CMD13",3);
 #else
     text("A03 EMMC 0013 READ-ONLY SNAPSHOT PA 201d0000",3);
@@ -117,7 +206,11 @@ static void emmc_snapshot(void) {
         for(int shift=28;shift>=0;shift-=4)line[n++]="0123456789abcdef"[(value>>shift)&15];
         line[n]=0;text(line,5+i);
     }
-#if A03_EMMC_SNAPSHOT == 2
+#if A03_EMMC_SNAPSHOT == 3
+    if(emmc_status_probe())emmc_read_probe();
+    text("READ PROBE COMPLETE - PAUSED FOR PHOTO",61);
+    text("NO DMA OR STORAGE WRITES",62);
+#elif A03_EMMC_SNAPSHOT == 2
     emmc_status_probe();
     text("STATUS PROBE COMPLETE - PAUSED FOR PHOTO",32);
     text("NO SECTOR READS OR STORAGE WRITES",33);

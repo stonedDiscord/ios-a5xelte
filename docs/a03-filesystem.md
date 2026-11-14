@@ -90,6 +90,14 @@ storage write. Interpret its response before implementing block reads.
 Loader glyph rendering now uses the font's MSB-first bit order to correct
 the individually mirrored characters reported on trial0013.
 
+Trial0014 fresh CMD13 returned INT1/RSP900/PRESENT01f000f0; RCA1 ready/TRAN
+and glyph orientation confirmed. Trial0015 (A03_EMMC_SNAPSHOT=3) adds
+bounded read-only PIO: EXT_CSD first, then only if user partition selected
+with 512-byte sectors, CMD17 LBA0/LBA1. Checks MBR signature and GPT header
+CRC32; does not validate the GPT entry array or provide a BSD block driver.
+Register/command references are the local android_kernel_samsung_a03 tree.
+0015 flashed successfully; physical PIO results pending. No XNU rebuild.
+
 ## CachyOS ldid compatibility
 
 The current AUR ldid-2.1.5-procursus7 source fails against this host's
