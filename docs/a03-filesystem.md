@@ -208,3 +208,27 @@ blocked spec_read before strategy. A03 now returns512; block count remains
 available through DKIOCGETBLOCKCOUNT. Actual-handler sanitizer tests cover
 the callback contract and a full16KiB/32-sector buffered transfer. Physical
 validation of this correction remains pending the next kernel trial.
+
+## Preparing actual iOS userspace
+
+The current HFS RAM root contains our static diagnostic init, not Apple's
+launchd. Before staging an extracted iOS root, run the read-only inventory:
+
+```sh
+python3 tools/a03-inspect-ios-root.py /path/to/extracted-ios-root
+```
+
+It checks thin plain-arm64 dynamic launchd, dyld and SpringBoard headers,
+system version, launch daemon dictionary and primary arm64 cache header.
+Absolute symlinks resolve within the supplied root. Static test init and
+arm64e binaries fail. This is prerequisite inventory only: no signature,
+Apple provenance, complete cache/subcache, entitlement or runtime claim.
+No mount, image generation or partition writes occur. Retain output privately
+if local paths are identifying. Source assets have not been found in the
+checked local Downloads/research/Handy/MacOS locations.
+
+The current A03 kernel profile includes minimal AMFI0025 only, not the
+donor's later XML entitlement/platform-binary/CS_SIGNED integration0035/0036.
+These portable services, real root selection, writeable state and additional
+memory need separate adaptation and validation after storage PASS. The donor
+UFS drivers and their write paths are not A03 eMMC implementations.

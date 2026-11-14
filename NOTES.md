@@ -2,6 +2,12 @@
 
 ## Active A03 handoff — 2026-11-14
 
+Offline root inventory tools/a03-inspect-ios-root.py added; actual test
+root correctly fails dynamic-launchd requirement. No iOS source assets in
+checked local paths; need existing IPSW/root location. Profile AMFI0025
+lacks donor0035/0036 entitlement/platform/CS_SIGNED support. No device
+output/new photo in latest check;0024 physical result still required.
+
 CURRENT0024 FLASHED: fresh Heimdall PIT/boot100%/upload success/reboot exit0.
 Image SHA256a4240b2222a59099fe436a6b33348b9c6ebbed768d9a98ec2f00168e73b53b9c.
 No independent readback. Corrected d_psize512 kernel43598578558 SUCCESS;

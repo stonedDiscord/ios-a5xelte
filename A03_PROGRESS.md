@@ -1529,3 +1529,16 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   CI/tests/flash alone do not establish full storage runtime success.
   Root remains diagnostic HFS RAM; no Apple launchd/eMMC filesystem-root
   or iOS GUI. No non-BOOT partition written.
+
+### 2026-11-14: offline iOS root prerequisite inventory prepared
+
+- BOOT0024 physical result still pending; no new image or device write.
+  No ADB/Samsung USB or new photo observed in this check.
+- Added read-only tools/a03-inspect-ios-root.py to inventory plain-arm64
+  dynamic launchd/dyld/SpringBoard, version/jobs and primary cache header.
+  It rejects the actual static test root; synthetic fixtures exercise
+  arm64e/malformed rejection and rooted absolute/escaping/looped symlinks.
+  This does not verify Apple provenance, signing, complete dependencies
+  or bootability. Local iOS source assets remain absent in checked paths.
+- Current profile still minimal AMFI0025; donor portable0035/0036 services
+  are not integrated. No real Apple launchd or iOS GUI result inferred.
