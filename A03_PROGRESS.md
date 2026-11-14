@@ -1163,3 +1163,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   3b15409996e43a52729383f1c06f37bbe242d04c5fa9958732899ac22ed3c8a4.
   Earlier non-v2 host candidate superseded, never flashed. No Download
   USB now;0017 NOT flashed. Current phone remains0016.
+
+### 2026-11-14: BOOT 0017 SDMA diagnostic flashed
+
+- User confirmed Download ready; heimdall detect succeeded. Rechecked
+  reviewed v2 image SHA256 against manifest:
+  3b15409996e43a52729383f1c06f37bbe242d04c5fa9958732899ac22ed3c8a4.
+- Heimdall protocol/PIT successful, uploaded only boot100%, reported
+  upload success/reboot, exit0. No independent partition readback.
+- Current BOOT0017. Await EXT_CSD/MBR/GPT or failure diagnostics,
+  including DMA WORDS COPIED, buffer address and poll/status markers.
+  SDMA behavior and card data remain unverified until physical report.

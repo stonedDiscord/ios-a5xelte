@@ -2,6 +2,13 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0017 SDMA diagnostic FLASHED: reviewed v2 SHA matched
+3b15409996e43a52729383f1c06f37bbe242d04c5fa9958732899ac22ed3c8a4,
+heimdall detect/PIT/boot100%/reboot successful, exit0. No readback.
+Current0017. Await physical metadata/GPT results or fail-stage/poll/DMA
+WORDS COPIED/buffer-address values; no SDMA data success inferred yet.
+Prior NOT FLASHED language below is historical.
+
 Latest0016 report: fail2(read-ready),seen3,last2,present01f000f0,FIFO0,
 enable037f000b,command083a0013. No data success. Downstream sprd_send_cmd
 always sets if_dma=1; no PIO data path. Generic PIO assumption was wrong.
