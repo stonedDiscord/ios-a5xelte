@@ -69,11 +69,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Restore pinned XNU build checkout
+        uses: actions/cache/restore@v4
+        id: dxb-cache
+        with:
+          path: dxb
+          key: xnu-dxb-v1-${{ env.DXB_SHA }}
+
       - name: Fetch build script
         run: |
-          git init -q dxb
-          git -C dxb fetch -q --depth 1 "$DXB_REPO" "$DXB_SHA"
-          git -C dxb checkout -q FETCH_HEAD
+          if [ -d dxb/.git ]; then
+            git -C dxb reset --hard -q
+            git -C dxb clean -fdq
+            git -C dxb checkout -q --detach "$DXB_SHA" 2>/dev/null || {
+              git -C dxb fetch -q --depth 1 origin "$DXB_SHA"
+              git -C dxb checkout -q --detach "$DXB_SHA"
+            }
+          else
+            git init -q dxb
+            git -C dxb remote add origin "$DXB_REPO"
+            git -C dxb fetch -q --depth 1 origin "$DXB_SHA"
+            git -C dxb checkout -q --detach "$DXB_SHA"
+          fi
           # 12.5-14.3 use the top-level patches dir; ours go next to blacktop's
           if [ "$BOARD_PROFILE" = a03 ]; then
             [ "$MACHINE_CONFIG" = SWEET ] || { echo 'a03 requires native 16K SWEET config'; exit 1; }
@@ -108,9 +125,16 @@ jobs:
           PY
           ls dxb/patches
 
+      - name: Cache pinned XNU build checkout
+        if: steps.dxb-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: dxb
+          key: ${{ steps.dxb-cache.outputs.cache-primary-key }}
+
       - name: Deps
         run: |
-          for formula in jq gum bash cmake ninja ccache; do
+          for formula in jq gum bash cmake ninja ccache zstd; do
             brew list --versions "$formula" >/dev/null 2>&1 || brew install "$formula"
           done
           # build.sh only checks that xcodes exists (Xcode is preinstalled); no bottle on macOS 14
@@ -157,6 +181,22 @@ jobs:
           restore-keys: |
             xnu-ccache-v1-${{ matrix.runner }}-${{ env.A03_CCACHE_COMPILER }}-${{ env.BOARD_PROFILE }}-${{ env.KERNEL_CONFIG }}-
 
+      - name: Restore KDK archive
+        # The A03/iOS 16 path uses 13.5/22G74. Other MACOS_VERSION choices
+        # fall back to darwin-xnu-build's normal KDK download path.
+        uses: actions/cache/restore@v4
+        id: kdk-cache
+        with:
+          path: .kdk-cache
+          key: xnu-kdk-v1-${{ env.MACOS_VERSION }}-${{ matrix.runner }}
+
+      - name: Install cached Kernel Debug Kit
+        if: steps.kdk-cache.outputs.cache-hit == 'true' && env.MACOS_VERSION == '13.5'
+        run: |
+          test -f .kdk-cache/KDK_13.5_22G74.tar.zst
+          sudo mkdir -p /Library/Developer/KDKs
+          sudo tar --use-compress-program=zstd -xf .kdk-cache/KDK_13.5_22G74.tar.zst -C /Library/Developer/KDKs
+
       - name: Build
         working-directory: dxb
         env:
@@ -166,6 +206,20 @@ jobs:
           export MAKEFLAGS="${MAKEFLAGS} -j$(sysctl -n hw.ncpu)"
           set -o pipefail
           bash build.sh 2>&1 | tee ../build.log
+
+      - name: Archive installed KDK for future runs
+        if: success() && steps.kdk-cache.outputs.cache-hit != 'true' && env.MACOS_VERSION == '13.5'
+        run: |
+          mkdir -p .kdk-cache
+          sudo tar --use-compress-program=zstd -cf .kdk-cache/KDK_13.5_22G74.tar.zst \
+            -C /Library/Developer/KDKs KDK_13.5_22G74.kdk
+
+      - name: Save KDK cache
+        if: success() && steps.kdk-cache.outputs.cache-hit != 'true' && env.MACOS_VERSION == '13.5'
+        uses: actions/cache/save@v4
+        with:
+          path: .kdk-cache
+          key: ${{ steps.kdk-cache.outputs.cache-primary-key }}
 
       - name: Verify requested A03 USB probe is linked
         if: success() && inputs.board_profile == 'a03' && inputs.a03_ios_userspace
