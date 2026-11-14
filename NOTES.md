@@ -6,13 +6,16 @@ LATEST USER REPORT: USERDATA raw/block HFS header both begin
 `48580005800021004846534a00000081` (HFSX), but catalog still reads zero;
 SWEET PID1 is alive. Exact BOOT image not identified, so don't attribute this
 to the MUSB-probe build. This confirms the volume header only, not catalog,
-HFS mount, launchd or SpringBoard. MUSB controller is Qogirl6 peripheral;
-state-probe build43620198151 remains in progress. Next: finish that build,
-run opt-in state probe with the RAM root, then implement PHY/core setup and a
-host-visible log/read transport. Phone is now confirmed in Download mode;
-Heimdall freshly read the SPRD8735 60-entry PIT (USERDATA ID55 start
-15929344/count0). No write was made. Keep BOOT-only test flashes; preserve GPT,
-recovery, bootloaders, EFS/NV. No new device write since the reported pass.
+HFS mount, launchd or SpringBoard. MUSB controller is Qogirl6 peripheral.
+XNU workflow43620198151 PASS. BOOT0032
+(`4ace15fb349f9c669f4a6bd51c5c7c84c25cb47f5ae0a1b05d37bfa65cdab287`)
+was uploaded BOOT-only after fresh Download/PIT; Heimdall reported100%,
+`boot upload successful`, then `close-pc-screen --resume` rebooted. It uses
+RAM HFS root, read-only eMMC, catalog/header tests and opt-in MUSB state probe.
+Await physical `A03 USB:` and catalog/header output. Twelve seconds after
+reboot neither Download nor ADB enumerated; this alone is inconclusive. MUSB
+enumeration/channel not implemented. Preserve GPT,
+recovery, bootloaders, EFS/NV. No USERDATA write was made.
 
 NEW PHOTO162431: XNU reports root a03userdata0 (major2/minor1), enters
 vfs_mountroot, then invalid catalog B-tree fileID4 / BTOpenPath error5 /

@@ -2085,3 +2085,24 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   (dynamic remainder). The phone remains in Download mode; no flash or other
   device write was performed. This gives a ready BOOT-only test state once a
   validated image is packaged.
+
+### 2026-11-14: BOOT0032 MUSB state probe deployed
+
+- XNU workflow `43620198151` completed successfully. Kernel
+  `kernel.development.sweet` SHA256:
+  `1d2c74ac9de5266203e5068a2b402fe604ddc3666e92b63ee56a01bb0171bb26`.
+- Packaged BOOT0032 from that kernel, verified 32MiB RAM HFS root SHA
+  `b266c456151780842025a1e14137f5b416650d2feca71677dc34a13131f34893`,
+  matching A03 eMMC ADT, and verified Magisk BOOT base. Image SHA256:
+  `4ace15fb349f9c669f4a6bd51c5c7c84c25cb47f5ae0a1b05d37bfa65cdab287`.
+  Cmdline enables `a03usb_probe=1 a03emmc=1` and keeps `rd=md0`; USERDATA
+  writes remain disabled. The RAM-root PID1 runs catalog/header diagnostics.
+- Heimdall's first attempts failed before transfer during USB protocol setup.
+  After Download-mode USB re-enumeration, Heimdall freshly initialized,
+  downloaded PIT and uploaded only lowercase `boot` to100%, reporting
+  `boot upload successful`. No USERDATA, GPT, recovery, bootloader, EFS or NV
+  write occurred. `close-pc-screen --resume` completed reboot, exit0.
+- Twelve seconds after reboot neither Download nor ADB USB was enumerated.
+  This does not establish XNU USB enumeration. Physical BOOT0032 display and
+  `A03 USB:` / catalog/header output are pending. A host-visible XNU USB data
+  channel is still not implemented.
