@@ -7,6 +7,8 @@ output=$(cd "$(dirname "$2")" && pwd)/$(basename "$2")
 [[ ! -e $output ]] || { echo 'output exists' >&2; exit 1; }
 repo=$(cd "$(dirname "$0")/.." && pwd)
 work=$(mktemp -d)
+# hdiutil reports physical /private/var paths; keep mount checks consistent.
+work=$(cd "$work" && pwd -P)
 cleanup() {
     for name in root appos sysos os; do
         if mount | grep -F " on $work/$name (" >/dev/null; then hdiutil detach "$work/$name" || true; fi
