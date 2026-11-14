@@ -17,7 +17,7 @@ cleanup() {
 trap cleanup EXIT
 mkdir "$work/mount"
 hdiutil create -size 32m -fs HFSX -volname A03TestRoot \
-    -layout NONE -type UDRW "$work/root.dmg"
+    -layout NONE "$work/root.dmg"
 hdiutil attach -nobrowse -owners on -mountpoint "$work/mount" "$work/root.dmg"
 mounted=1
 sudo ditto "$source_dir" "$work/mount"
