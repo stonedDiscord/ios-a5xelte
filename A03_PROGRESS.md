@@ -1749,3 +1749,26 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   restart. Root contents/inventory unchanged by this invocation fix. Run
   Linux read-only fsck, HFSX geometry/SHA, core-binary/source and full declared
   cache checks locally before any USERDATA flash. Phone remains Download.
+
+### 2026-11-14: real iOS16.0 USERDATA root verified locally, ready to install
+
+- Downloaded retained root43604313047 artifact14118636510, decompressed
+  exact17179869184bytes. SHA256 matches CI output:
+  eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108.
+- Linux fsck.hfsplus -fn (forced READ ONLY, unlike -n which skips journaled
+  volumes) checks extents/catalog/hardlinks/hierarchy/xattrs/bitmap/header;
+  volume A03iOSRoot appears OK, exit0. No repair or image modification.
+- HFSX primary and alternate geometry4096*4194304; journal block129. Primary
+  attrs80002100 clean/journaled, alternate80002000 journaled with older
+  unmount flag. Guard originally overrequired both headers' clean bit;
+  corrected authoritative primary cleanliness, both journal flags/location
+  and both geometries. Actual image passes SHA/geometry; dirty primary,
+  missing alternate journal flag, journal-pointer mismatch tests reject.
+- Actual HFS catalog/data forks: launchd/dyld/SpringBoard SHA256/length/mode
+ 0755/uid0/gid0 exactly match supplied IPSW source. HFS version16.0/20A362,
+ 526 launchd jobs. Full declared cache check passes40subcache UUIDs, symbols
+  UUID, mapping/signature extents,2663image table/four core dependencies.
+  These remain file checks, not cryptographic signature/runtime proof.
+- Fresh Download detected; BOOT0026/kernel/stock-Magisk restore hashes
+  revalidated.16GiB image33554432sectors fits verified USERDATA106213336
+  sectors (54381228032bytes). Ready USERDATA-only install then BOOT0026.

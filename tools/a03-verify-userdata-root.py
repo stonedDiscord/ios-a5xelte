@@ -13,7 +13,7 @@ def inspect(path,expected):
     with path.open('rb') as f:
         f.seek(1024);h=f.read(512)
         f.seek(size-1024);alt=f.read(512)
-        for header in (h,alt):
+        for index,header in enumerate((h,alt)):
             if header[:4]!=b'HX\x00\x05':
                 raise ValueError('missing HFSX version5 primary/alternate header')
             attrs,=struct.unpack_from('>I',header,4)
@@ -21,8 +21,14 @@ def inspect(path,expected):
             journal,=struct.unpack_from('>I',header,12)
             if block<512 or block&(block-1) or block*count!=size:
                 raise ValueError('invalid allocation geometry')
-            if attrs&((1<<8)|(1<<13))!=((1<<8)|(1<<13)) or not 0<journal<count:
-                raise ValueError('requires cleanly unmounted journaled filesystem')
+            if not attrs&(1<<13) or not 0<journal<count:
+                raise ValueError('requires journaled filesystem')
+            # Alternate headers need not be rewritten on every unmount. The
+            # primary header carries the authoritative clean-unmount bit.
+            if index==0 and not attrs&(1<<8):
+                raise ValueError('requires cleanly unmounted primary volume header')
+        if h[12:16]!=alt[12:16]:
+            raise ValueError('primary/alternate journal location mismatch')
         if h[40:48]!=alt[40:48]:
             raise ValueError('primary/alternate geometry mismatch')
         digest=hashlib.sha256();f.seek(0)

@@ -2,36 +2,24 @@
 
 ## Active A03 handoff — 2026-11-14
 
-MILESTONE0025 USER CONFIRMED: USERDATA WRITE PASS changed/readback/
-restored/fsync sector at16GiB; raw+block BOOT read +write-open EROFS PASS.
-Physical XNU single-sector USERDATA writes now established; no filesystem
-mount/Apple launchd/SpringBoard yet. Current0025 static RAM-root PID1.
-BOOT SHA051304ad437d305cdd77890dbffb3f73763c74e26f2a24355ce1bab951b4dd3c.
-Kernel43601676154 SUCCESS SHA1186c331...72fedf7; root43601678578 verified
-SHA7a2379b0...20dfc4d.0024 checkpoint also preserved.
-Supplied16.0 IPSW verified. Filesystem43602490133 staging; root-selection
-kernel43602657100 SUCCESS at051206f includes0092, SHA124d32ca...605f1d80.
-BOOT0026 prepared SHAe012784b...5528086b, NOT FLASHED; install filesystem
-first. Final image guard tools/a03-verify-userdata-root.py added; require
-inventory/fsck/hash/geometry. Filesystem43602490133 staged10GiB/~298k inodes; file inventory PASS
-(dynamicarm64 launchd/dyld/SpringBoard,526jobs,16.0). Final fsck on regular
-file failed ENOTTY. Fixed readonly/nomount rawdevice check. Latest root
-CI43604313047 atfb27fcf terminal final-fsck invocation FAILURE; superseded43604260923 cancelled.
-Completed raw conversions now retained even on verification failure;
-require logs/fsck/host final guard before install. BOOT0026 ready.
-No full filesystem flash yet. Phone Download detected, current0025.
-Local supplied source mounted readonly APFS-FUSE under ignored
-research/a03-ios16-source/{os,sysos}/root. New cache verifier9893c60 passes
-40subcache UUIDs +symbols +mapping/signature extents +2663image table/core
-launchd/SpringBoard dependency paths. Run tools/a03-verify-ios-cache.py
---hfs-image FINAL_ROOT after download too. launchd/SpringBoard actual XML
-entitlement slots present (supported optional0035). Source checks are not
-runtime/signature trust proof. Root43604313047 retained artifact14118636510 (5.66GB ZIP); download session
-18144 live, temp ZIP>4GB. Failure was literal escaped /dev/rdisk8 path,
-not a filesystem check result. Fixed portable prefix removal; do not rerun
-full staging just for this. Verify retained image locally (fsck -n, root
-geometry/hash, cache UUIDs, core binaries) before USERDATA install.
+REAL IOS ROOT READY: shim/a03/out/ios-root-43604313047/a03-ios16-root.img
+16GiB SHAeb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108.
+Retained artifact14118636510 from failed final-fsck-path CI43604313047;
+local forced read-only fsck -fn CLEAN exit0. SHA/HFSX geometry/journal +
+exact source launchd/dyld/SpringBoard bytes/mode0755 uid/gid0 +16.0/20A362
+526jobs +all40cachepart UUID/mapping/dependency checks PASS. Primary clean,
+alternate older unmount bit is normal; guard corrected and rejects dirty
+primary/missing journal/location mismatch. Root byte payload unchanged.
+Next USERDATA-only16GiB install --no-reboot, then BOOT0026 --resume/reboot.
+BOOT0026 SHAe012784bf236bae131029b02c0a5239546081eebb039852e9de64a465528086b,
+kernel43602657100 SHA124d32ca...605f1d80. Both +Magisk restore rehashed.
+Phone fresh Download detected; current0025. No full filesystem flash yet.
+
+MILESTONE0025 USER CONFIRMED USERDATA WRITE PASS changed/readback/restored/
+fsync sector16GiB, raw+block BOOT reads/write-open EROFS PASS. Preserve0024
+and0025. No eMMC filesystem mount/Apple launchd/SpringBoard established yet.
 Scope authorized USERDATAp55 +BOOT; preserve GPT/recovery/bootloaders/EFS/NV.
+Local readonly source APFS-FUSE remains research/a03-ios16-source/{os,sysos}/root.
 
 MILESTONE0024 USER CONFIRMED: raw+block BOOT-header read/write-open EROFS
 PID1 PASS. XNU SDMA/cache/BSD read path established. Preserve0024 image
