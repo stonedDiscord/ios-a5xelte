@@ -1374,3 +1374,14 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   result0 CRCbb4c2987/bb4c2987, BSD nodes ready, HFS RAM PID1, then A03
   STORAGE PID1 PASS raw+block BOOT reads/write-open EROFS. Report actual
   failure/last line rather than inferring success from absent USB.
+
+### 2026-11-14: BOOT0021 XNU read-only SDMA/BSD trial flashed
+
+- Reviewed image SHA7753f418de5b7dd8c5db245e49c439d743c76691ee350a96d6fac22c289aafe7
+  and Magisk restore hash rechecked. Fresh Heimdall protocol/PIT, upload
+  only boot100%, boot upload successful/reboot exit0. No independent readback.
+- Current BOOT0021. Await physical XNU DMA PA/GPT validation/nodes and
+  A03 STORAGE PID1 PASS (raw+block BOOT reads, write-open EROFS), or exact
+  error/last line. No runtime SDMA/BSD success inferred from flash.
+  No non-BOOT partition written; root remains HFS RAM image. Apple launchd/
+  SpringBoard and eMMC filesystem root remain future checkpoints.

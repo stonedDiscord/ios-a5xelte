@@ -2,6 +2,15 @@
 
 ## Active A03 handoff — 2026-11-13
 
+Latest0021 FLASHED: Heimdall PIT/boot100%/successful upload/reboot exit0.
+Current0021 SHA2567753f418de5b7dd8c5db245e49c439d743c76691ee350a96d6fac22c289aafe7.
+No independent readback. Await XNU SDMA probe/DMA PA/GPT result0/nodes
+and A03 STORAGE PID1 PASS raw+block BOOT/EROFS-open or exact failure.
+HFS RAM root retained; no eMMC writes, Apple launchd or iOS GUI yet.
+Earlier READY/current0020 notes historical. CI43588264792 and root
+43588996330 succeeded; kernel+root packaging evidence d238751.
+
+
 XNU43588264792 PASSED; storage text verified integer-only.0021 READY
 shim/a03/out/a03-xnu-0021-sdma-bsd.img SHA256
 7753f418de5b7dd8c5db245e49c439d743c76691ee350a96d6fac22c289aafe7.
