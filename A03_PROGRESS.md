@@ -1822,3 +1822,30 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   build the diagnostic root, use the known root-selection kernel, and
   compare both reported prefixes with the image before changing HFS or
   storage code. Physical USB/device state remains unconfirmed.
+
+### 2026-11-14: catalog diagnostic BOOT0027 prepared; flash transport failed
+
+- Pushed diagnostic implementation as `0f23cbc` and dispatched root build
+  `43611194283` with `catalog_probe=true`; completed successfully. Downloaded
+  32MiB HFSX RAM-root artifact SHA256
+  `525293710b033e7d149d600a6d41d51fe18cdc3b8bbc784bdca9e2795938827b`.
+- Reused root-selection kernel from successful XNU run `43602657100`,
+  SHA256 `124d32ca8812840a171e127c6a24dfaf5da85530eec810aa3f0f4e30605f1d80`,
+  A03 ADT `a03-0025-write.adt`, and verified Magisk BOOT base. Packaged
+  `shim/a03/out/a03-xnu-0027-catalog-read.img`, SHA256
+  `79bea0b10029b368b763e5d6bc12340b3cd52b825dce6db3e3a204b7b5dc20fc`.
+  Cmdline selects `rd=a03userdata0` with writable USERDATA root selection;
+  the diagnostic HFS image remains in the payload as the RAM disk. Catalog
+  reads themselves are read-only.
+- Heimdall detected Samsung Download USB. A full live PIT read succeeded
+  once (Spreadtrum tag, 60 entries, USERDATA ID55); subsequent PIT and BOOT
+  sessions failed protocol initialization. Verbose flash result:
+  `Failed to receive handshake response. Result: -7`. No PIT selection or
+  image transfer occurred; BOOT and USERDATA were not written in these
+  attempts. Restore BOOT SHA256 remains
+  `94fa7c5347b00e49fe1dc60a4edae958ddd5dac9accdbcddbeb743b5215e9ce7`.
+- Next hardware step is restore a clean Download-mode USB session (physically
+  reconnect/re-enter Download mode), then flash only BOOT0027 and capture
+  PID1 raw/block catalog bytes. Do not rewrite USERDATA before comparing
+  those bytes against the verified image. No iOS HFS mount, launchd or
+  SpringBoard success yet.

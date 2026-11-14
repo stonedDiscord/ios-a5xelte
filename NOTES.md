@@ -8,9 +8,14 @@ hfs_mountroot errno5 / cannot mount root errno19. eMMC later reports ready,
 USERDATA RW and BOOT RO. Root selection is confirmed; HFS mount and userspace
 are not. No Apple launchd/SpringBoard claim. Added opt-in RAM-root PID1
 catalog probe: pread 512 bytes at USERDATA offset0x2cd82000 via raw+block,
-print first16, compare known image prefix. AArch64 build+mkinit validation
-PASS; not yet built/tested on device. Next run this diagnostic with existing
-root-selection kernel, then isolate transfer vs block mapping vs HFS.
+print first16, compare known image prefix. Root CI43611194283 PASS.
+BOOT0027 prepared SHA79bea0b10029b368b763e5d6bc12340b3cd52b825dce6db3e3a204b7b5dc20fc,
+root SHA525293710b033e7d149d600a6d41d51fe18cdc3b8bbc784bdca9e2795938827b;
+kernel43602657100 reused, SHA124d32ca...605f1d80. Heimdall detected
+Download USB and one live PIT read confirmed60-entry SPRD PIT/USERDATA ID55.
+Subsequent PIT/flash protocol attempts time out at handshake (Result -7),
+before transfer. No partition write. Need clean Download USB session, then
+flash BOOT only, compare raw/block catalog bytes before changing USERDATA.
 
 BOOT0026 and the USERDATA image were installed as described below. The
 162431 photo proves the phone subsequently booted far enough to reach XNU's
