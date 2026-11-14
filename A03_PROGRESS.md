@@ -2166,3 +2166,7 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   writes or changing controller timing. It applies cleanly to the corrected
   post-0092 source; profile and packer now expose the trace flag. It is not
   built or flashed yet.
+- XNU workflow `43625945895` was dispatched from commit `e130de1` with the
+  A03/SWEET DEVELOPMENT profile and iOS-userspace patches, including0094.
+  Build and kernel string verification are pending; phone remains on BOOT0033
+  and no device write was made.
