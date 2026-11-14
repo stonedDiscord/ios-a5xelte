@@ -14,24 +14,24 @@
  	 * max_cpus must be nailed down by the time PE_lockdown_iokit() finishes,
  	 * at the latest
  	 */
-+	a03_startup_checkpoint("0009 before VM restrictions");
++	a03_startup_checkpoint("before VM restrictions");
  	vm_set_restrictions(machine_info.max_cpus);
-+	a03_startup_checkpoint("0009 after VM restrictions");
++	a03_startup_checkpoint("after VM restrictions");
  
  
  #if KPERF
-+	a03_startup_checkpoint("0009 before kperf CPU wait");
++	a03_startup_checkpoint("before kperf CPU wait");
  	kperf_init_early();
-+	a03_startup_checkpoint("0009 after kperf CPU wait");
++	a03_startup_checkpoint("after kperf CPU wait");
  #endif
  
  	/*
  	 *	Start the user bootstrap.
  	 */
  #ifdef  MACH_BSD
-+	a03_startup_checkpoint("0009 before BSD init");
++	a03_startup_checkpoint("before BSD init");
  	bsd_init();
-+	a03_startup_checkpoint("0009 after BSD init");
++	a03_startup_checkpoint("after BSD init");
  #endif
  
  
@@ -60,7 +60,7 @@
  bool
  SweetCPU::start(IOService *provider)
  {
-+	a03_startup_checkpoint("0009 CPU start entered");
++	a03_startup_checkpoint("CPU start entered");
  	const ml_topology_info_t *topology = ml_get_topology_info();
  	const ml_topology_cpu_t *cpu = topology->boot_cpu;
  	OSNumber *logical = OSDynamicCast(OSNumber, provider->getProperty("logical-cpu-id"));
@@ -68,7 +68,7 @@
  	if (logical == NULL || reg == NULL || reg->getLength() != sizeof(uint32_t) ||
  	    logical->unsigned32BitValue() != cpu->cpu_id ||
  	    *(const uint32_t *)reg->getBytesNoCopy() != cpu->phys_id) {
-+		a03_startup_checkpoint("0009 CPU DT identity rejected");
++		a03_startup_checkpoint("CPU DT identity rejected");
  		return false;
  	}
  	if (topology->num_cpus != 1) {
@@ -76,7 +76,7 @@
  	}
  	setCPUNumber(cpu->cpu_id);
  
-+	a03_startup_checkpoint("0009 CPU before registration");
++	a03_startup_checkpoint("CPU before registration");
  	ml_processor_info_t info = {};
  	info.cpu_id = reinterpret_cast<cpu_id_t>(this);
  	info.phys_id = cpu->phys_id;
@@ -84,7 +84,7 @@
  	info.l3_cache_size = cpu->l3_cache_size;
  	perfmon_interrupt_handler_func pmi_handler = NULL;
  	kern_return_t result = ml_processor_register(&info, &machProcessor, &ipi_handler, &pmi_handler);
-+	a03_startup_checkpoint("0009 CPU registration returned");
++	a03_startup_checkpoint("CPU registration returned");
  	if (result != KERN_SUCCESS) {
  		panic("SWEET CPU: ml_processor_register failed: %d", result);
  	}
@@ -92,9 +92,9 @@
  	}
  
  	/* Re-enter the boot CPU through cpu_machine_init -> PE_cpu_machine_init. */
-+	a03_startup_checkpoint("0009 CPU before processor_start");
++	a03_startup_checkpoint("CPU before processor_start");
  	result = processor_start(machProcessor);
-+	a03_startup_checkpoint("0009 CPU after processor_start");
++	a03_startup_checkpoint("CPU after processor_start");
  	if (result != KERN_SUCCESS || getCPUState() != kIOCPUStateRunning) {
  		panic("SWEET CPU: processor_start failed: %d", result);
  	}
@@ -102,9 +102,9 @@
  	IOService::publishResource(gIOAllCPUInitializedKey, kOSBooleanTrue);
  
  	/* Announce completion only after registration, startup and SGI validation. */
-+	a03_startup_checkpoint("0009 CPU publishing max CPUs");
++	a03_startup_checkpoint("CPU publishing max CPUs");
  	ml_set_max_cpus(topology->max_cpu_id + 1);
-+	a03_startup_checkpoint("0009 CPU initialization complete");
++	a03_startup_checkpoint("CPU initialization complete");
  	IOLog("SWEET CPU: boot CPU %u registered, SGI1 verified, initialization complete\n",
  	    getCPUNumber());
  	return true;
@@ -112,7 +112,7 @@
  void
  SweetCPU::initCPU(bool boot)
  {
-+	a03_startup_checkpoint("0009 CPU initCPU entered");
++	a03_startup_checkpoint("CPU initCPU entered");
  	if (!boot) {
  		panic("SWEET CPU: resume is not implemented");
  	}
@@ -120,7 +120,7 @@
  	/* A real GIC interrupt clears SIGPdisabled in cpu_signal_handler. */
  	uint64_t deadline;
  	nanoseconds_to_deadline(NSEC_PER_SEC, &deadline);
-+	a03_startup_checkpoint("0009 CPU before SGI self-test");
++	a03_startup_checkpoint("CPU before SGI self-test");
  	signalCPU(this);
  	while (!ml_cpu_signal_is_enabled()) {
  		if (mach_absolute_time() > deadline) {
@@ -128,7 +128,7 @@
  		}
  		__asm__ volatile("yield");
  	}
-+	a03_startup_checkpoint("0009 CPU SGI self-test passed");
++	a03_startup_checkpoint("CPU SGI self-test passed");
  	setCPUState(kIOCPUStateRunning);
  }
  
@@ -162,7 +162,7 @@
  {
 +#if defined(SWEET)
 +	extern void a03_startup_checkpoint(const char *message);
-+	a03_startup_checkpoint("0009 BSD entered");
++	a03_startup_checkpoint("BSD entered");
 +#endif
  	struct uthread *ut;
  	vnode_t init_rootvnode = NULLVP;
@@ -173,7 +173,7 @@
  
 -#if DEBUG_BSDINIT
 +#if defined(SWEET)
-+#define bsd_init_kprintf(x, ...) a03_startup_checkpoint("0009 BSD " x)
++#define bsd_init_kprintf(x, ...) a03_startup_checkpoint("BSD " x)
 +#elif DEBUG_BSDINIT
  #define bsd_init_kprintf(x, ...) kprintf("bsd_init: " x, ## __VA_ARGS__)
  #else

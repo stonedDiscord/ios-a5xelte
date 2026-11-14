@@ -12,7 +12,7 @@
 +{
 +	uint64_t daif = __builtin_arm_rsr64("DAIF");
 +	__builtin_arm_wsr("DAIFSet", 3);
-+	const char *prefix = "A03 STEP ";
++	const char *prefix = "";
 +	while (*prefix) {
 +		serial_putc(*prefix++);
 +	}
@@ -35,7 +35,7 @@
 +	/* No stack buffer: automatic initialization may emit forbidden SIMD. */
 +	uint64_t daif = __builtin_arm_rsr64("DAIF");
 +	__builtin_arm_wsr("DAIFSet", 3);
-+	const char *prefix = "A03 STEP ";
++	const char *prefix = "";
 +	while (*prefix) {
 +		serial_putc(*prefix++);
 +	}
