@@ -1,0 +1,10 @@
+--- a/bsd/dev/a03_usb.c
++++ b/bsd/dev/a03_usb.c
+@@ -51,6 +51,7 @@
+ 	if (enable != 1) {
+ 		return;
+ 	}
++	printf("A03 USB: probe entered\n");
+ 	vm_offset_t aon = ml_io_map(AON_APB_PA, 0x1000);
+ 	if (aon == 0) {
+ 		printf("A03 USB: AON APB map failed\n");
