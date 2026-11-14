@@ -933,3 +933,12 @@ User transcribed (minor spelling differences preserved in original chat):
 - HFS-capable kernel CI43534803374 remains queued. Do not attach this real
   filesystem to old mockfs-only kernel and claim HFS support. No phone
   flash or non-BOOT write performed. BOOT0011 remains working checkpoint.
+
+- User reports pending-job stall and AUR ldid build failure. CI43534803374
+  had status queued with jobs=[]; started fresh same-runner kernel
+  CI43536143024, now in Build. No manual cancellation needed.
+- hfsprogs/ccache/apfs-fuse/dmg2img now installed. Reproduced ldid compile
+  errors against OpenSSL4 in a /tmp copy of AUR-prepared source. Compiling
+  with installed OpenSSL3 headers/libs succeeds. Local ignored tool at
+  shim/a03/out/host-tools/ldid, linked libcrypto.so.3, successfully signs
+  disposable init copy and prints CDHash. No original init/system change.

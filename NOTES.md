@@ -15,7 +15,10 @@ Actions reenabled by user; independent root CI43535227249 PASSED in24s
 (d1ca9ab), artifact root-43535227249/a03-test-root.img downloaded/validated.
 32MiB HFSX SHA256 b886b433b988b410cd643683b93db1553d769ecddaf6ca73af3c68e910dbed1e.
 Earlier hdiutil format/type failures corrected by default image creation.
-HFS kernel CI43534803374 still queued. No additional phone flash.
+Old HFS kernel CI43534803374 stuck queued/jobs=[]; fresh CI43536143024
+is now in Build. No additional phone flash.
+Host HFS tools installed. ldid built/tested locally against openssl-3;
+ignored binary shim/a03/out/host-tools/ldid. See filesystem doc.
 Preserve non-BOOT partitions. Real iOS root/display remains future work.
 
 Current branch: `a03-bringup`, from `64b1067`. Connected device is now a

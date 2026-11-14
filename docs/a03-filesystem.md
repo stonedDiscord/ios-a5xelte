@@ -38,3 +38,18 @@ backups, and only then expose a BSD block device. Do not reset/reconfigure
 clocks, assume a card RCA, or issue storage writes from guessed state.
 No non-BOOT partition is authorized for the current trials. A real iOS root
 will need storage plus later signing/entitlement/display work.
+
+## CachyOS ldid compatibility
+
+The current AUR ldid-2.1.5-procursus7 source fails against this host's
+OpenSSL4 headers (opaque ASN1_STRING plus const API changes). The installed
+openssl-3 package provides compatible headers and libcrypto.so.3.
+Building the already prepared source with these overrides succeeded:
+
+    make LIBCRYPTO_INCLUDES=-I/usr/include/openssl-3 LIBCRYPTO_LIBS='-L/usr/lib/openssl-3 -lcrypto'
+
+A tested local executable is shim/a03/out/host-tools/ldid (ignored). It
+ad-hoc signed a disposable copy of the test init and printed its CDHash.
+No system package files or original test-init image were modified. Our
+static init tool already generates its own signature; ldid is optional
+for that checkpoint. Use a maintained package fix for a system install.
