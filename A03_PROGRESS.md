@@ -2271,3 +2271,15 @@ DLL_CFG=0xef250b23 DLL_DELAY=0xd5c0c07f
   `CMD17` at verified absolute catalog LBA `0x1097c10` immediately after GPT
   validation and print its first 16 bytes. This bypasses specfs, uio and HFS;
   its single line is the next required discriminator. No device write.
+- XNU workflow `43639229337` built commit `917e2f3` successfully. The final
+  kernel SHA256 is
+  `285850a93c11e4fd991289861b6d1333b7b5e339982bd7d84ab2b754734eccf7`;
+  workflow gates passed and kernel strings contain exactly the expected
+  `A03 CATALOG direct`, `A03 eMMC UIO`, and `A03 eMMC TRACE` diagnostics.
+  Packaged BOOT0039 with RAM HFS root and read-only storage diagnostics;
+  image SHA256
+  `4588ae7fa46e8b9a445bc42e0a7063ff91a3988868a6f9631d3b746da9133b97`.
+  Download mode/PIT succeeded and Heimdall uploaded only `boot` to 100%,
+  reported success, then rebooted. No USERDATA or protected partition write.
+  After reboot there is no host Download/ADB enumeration and no newer photo
+  in `/home/stoned/ocr`; direct catalog bytes remain unobserved.
