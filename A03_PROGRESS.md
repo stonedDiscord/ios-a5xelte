@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: latest catalog failure remains below userspace
+
+Screenshot `IMG_20261115_004550_780.jpg` shows GPT CRC validation, USERDATA
+selection, BSD root `a03userdata0`, and HFSX volume-header recognition all
+passing. HFS then reads catalog node 0 as zero (`hfs_swap_BTNode: offset #0
+invalid (0x0000)`, `BTOpenPath` error 5, root mount errno 19). No launchd or
+SpringBoard evidence is present. This image predates the direct catalog-root
+probe in commit `66af3d4`; workflow `43655138104` is building a BOOT-only
+diagnostic that reads both the catalog fork and declared root node directly.
+No USERDATA write is indicated until those bytes are compared with the local
+image.
+
 ## 2026-11-14: SDMA source audit
 
 Compared `shim/a03/xnu-loader.c` with the installed T606 Linux driver
