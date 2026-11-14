@@ -193,9 +193,13 @@ jobs:
       - name: Install cached Kernel Debug Kit
         if: steps.kdk-cache.outputs.cache-hit == 'true' && env.MACOS_VERSION == '13.5'
         run: |
-          test -f .kdk-cache/KDK_13.5_22G74.tar.zst
-          sudo mkdir -p /Library/Developer/KDKs
-          sudo tar --use-compress-program=zstd -xf .kdk-cache/KDK_13.5_22G74.tar.zst -C /Library/Developer/KDKs
+          archive=.kdk-cache/KDK_13.5_22G74.tar.zst
+          if test -f "$archive" && zstd -t "$archive" >/dev/null 2>&1; then
+            sudo mkdir -p /Library/Developer/KDKs
+            sudo tar --use-compress-program=zstd -xf "$archive" -C /Library/Developer/KDKs
+          else
+            echo 'Cached KDK archive is invalid; allowing build.sh to fetch a fresh KDK'
+          fi
 
       - name: Build
         working-directory: dxb
