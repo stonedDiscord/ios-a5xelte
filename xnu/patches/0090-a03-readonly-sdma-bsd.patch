@@ -81,6 +81,12 @@
 +static void wr(unsigned off,uint32_t value) {
 +    *(volatile uint32_t *)(ae.regs+off)=value;barrier();
 +}
++static uint16_t rd16(unsigned off) {
++    uint16_t v=*(volatile uint16_t *)(ae.regs+off);barrier();return v;
++}
++static void wr16(unsigned off,uint16_t value) {
++    *(volatile uint16_t *)(ae.regs+off)=value;barrier();
++}
 +/* Private page owns all touched cache lines. Prepare clean+invalidate;
 + * after FROM_DEVICE completion invalidate only, never clean stale data. */
 +static void dma_sync(bool before) {
@@ -123,6 +129,9 @@
 +       (cmd==17&&lba>=ae.sectors)||(rd(0x24)&3)||rd(0x30))return EIO;
 +    if((rd(0x3c)&0x30000000)!=0x30000000||
 +       *(volatile uint16_t *)(ae.regs+0xfe)!=4)return ENXIO;
++    uint16_t ctrl2=rd16(0x3e);
++    if(!(ctrl2&0x2000u)) { wr16(0x3e,(uint16_t)(ctrl2|0x2000u)); ctrl2=rd16(0x3e); }
++    if(!(ctrl2&0x2000u))return ENXIO;
 +    uint32_t enable=rd(0x34),signal=rd(0x38),block=rd(4),count=rd(0);
 +    uint32_t host=rd(0x28),lo=rd(0x58),hi=rd(0x5c);
 +    /* Invalidate full owned lines before device writes; no sentinel needed. */
@@ -130,7 +139,7 @@
 +    *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)(host&~0x18u);barrier();
 +    wr(0x38,0);wr(0x34,enable|0x037f8033);
 +    wr(0x58,(uint32_t)ae.pa);wr(0x5c,(uint32_t)(ae.pa>>32));
-+    wr(4,0x17200);wr(0,1);wr(8,lba);
++    wr16(4,0x7200);wr(0,1);wr(8,lba);
 +    wr(0xc,(cmd<<24)|0x003a0011);
 +    bool ok=poll(1);uint32_t response=rd(0x10);
 +    if(response&0xffffe080u)ok=false;
@@ -162,6 +171,9 @@
 +       lba>=ae.sectors||(rd(0x24)&3)||rd(0x30))return EIO;
 +    if((rd(0x3c)&0x30000000)!=0x30000000||
 +       *(volatile uint16_t *)(ae.regs+0xfe)!=4)return ENXIO;
++    uint16_t ctrl2=rd16(0x3e);
++    if(!(ctrl2&0x2000u)) { wr16(0x3e,(uint16_t)(ctrl2|0x2000u)); ctrl2=rd16(0x3e); }
++    if(!(ctrl2&0x2000u))return ENXIO;
 +    uint32_t enable=rd(0x34),signal=rd(0x38),block=rd(4),count=rd(0);
 +    uint32_t host=rd(0x28),lo=rd(0x58),hi=rd(0x5c);
 +    volatile unsigned char *p=(volatile unsigned char *)ae.dma;
@@ -170,7 +182,7 @@
 +    *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)(host&~0x18u);barrier();
 +    wr(0x38,0);wr(0x34,enable|0x037f8033);
 +    wr(0x58,(uint32_t)ae.pa);wr(0x5c,(uint32_t)(ae.pa>>32));
-+    wr(4,0x17200);wr(0,1);wr(8,lba);
++    wr16(4,0x7200);wr(0,1);wr(8,lba);
 +    wr(0xc,0x183a0001); /* CMD24, R1, data present, single SDMA write */
 +    bool ok=poll(1);uint32_t response=rd(0x10);
 +    if(response&0xffffe080u)ok=false;
