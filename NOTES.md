@@ -1,5 +1,9 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE:0054 flashed and CDC enumerated after50s; capture16470 waiting ACL.
+User asked scoped setfacl again.0112 watchdog CI43744288276 from5eee9b2
+running. Need install0055 later +a03_watchdog_disabled=1 after USB fix.
+
 CURRENT0054 flashed BOOT-only100%/success/reboot; capture16470 waiting.
 0112 opt-in disabled-watchdog capability locally tested; full CI pending.
 0053 watchdogd missing IOWatchdog confirmed by runtime PC+matching BRK.

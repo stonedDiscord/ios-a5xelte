@@ -3320,3 +3320,7 @@ Host detected physical Download. BOOT0054 e5082d92...4511a flashed only
 boot,100percent/success/reboot; no host USERDATA or protected writes.
 Capture16470 waits240seconds for USB, then90seconds. Need RX state/packet
 evidence and Download retry.
+
+0054 CDC enumeration confirmed50s after flash; new tty requires ACL.
+Capture16470 remains waiting; user asked scoped setfacl.0112 full CI
+43744288276 running from5eee9b2. No watchdog hardware success yet.
