@@ -1,3 +1,16 @@
+ACTIVE handoff:0063 still running USB CDC; user sees Apple logo and logs
+confirm11 full-screen BGRA swaps, zero CRASH through extended capture's
+latest86767-byte snapshot. Extended600s session79994 still active at read.
+0124 CI43762755721 exact640a2a1 in Build. Package0064 session54915 waits
+success; expected12 source files frozen /tmp/a03-expected0124/xnu, package
+script now reads that snapshot (local working tree additionally has0125).
+0064 sole arg addition a03_work_interval=1; no flash yet.0125 committed
+75148a0 after7441628/10da93e, host and real syntax/object tests PASS; full
+two-file plain git apply equality PASS. Not in0124 CI. Root unchanged.
+Next: let current capture finish, verify0124 artifacts/package, BOOT-only
+0064 test, capture long enough to compare entitlement grant and GUI progress.
+Do not mark SpringBoard complete from logo/frame submission alone.
+
 NEXT diagnostic0125 prepared/tested: opt-in a03_userlogs observer on
 SpringBoard/backboardd /dev/null writes, duplicate-uio only, bounded/sanitized;
 not in0124 CI43762755721 or running0063. Keep0124 test isolated first.

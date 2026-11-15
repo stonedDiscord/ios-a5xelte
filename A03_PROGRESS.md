@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: extended0063 rendering continues during0124 build
+
+Extended capture now includes swaps4..11 from alternating720x1600 BGRA
+surfaces2/3, zero CRASH in latest86767-byte snapshot. Capture600s remains
+active; no final hash claimed. Physical observation remains Apple logo.
+0124 CI43762755721 is authoritatively in Build; package54915 remains live.
+Frozen expected0124 sources now reside /tmp/a03-expected0124/xnu so later
+independent0125 local edits cannot contaminate exact CI comparisons.
+
+0125 followup includes mem.o general-register codegen; complete two-file
+plain git apply equality, real syntax/object compile and actual-source
+observer tests PASS. Latest commit75148a0 pushed. Neither0124 nor0125 has
+been hardware-tested yet; no new flash/root rewrite/protected write.
+
 ## 2026-11-15: bounded userspace-log observer0125 prepared
 
 While0063 remains running and0124 CI builds, prepared an independent opt-in
