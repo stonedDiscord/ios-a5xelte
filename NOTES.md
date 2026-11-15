@@ -1,3 +1,10 @@
+ACTIVE0064 BOOT-only upload100percent/success/reboot~21:30UTC. USB CDC
+returned; deployment87223 captures360s boot0064-usb-initial.log. Need see
+A03 Sandbox entitled work-interval grant and eventual swaps/GUI behavior.
+Follow-up0125/0126 CI43764128179 exact736d3b3 builds; package0065 session34897
+waits success and14 frozen source/loader/ADT/only a03_userlogs=1 checks.
+No0065 flash; root unchanged and protected partitions preserved.
+
 ACTIVE0064 package verified CI43762755721 SUCCESS640a2a1,12 exact sources,
 identical loader(except size)/ADT/root; sole arg a03_work_interval=1.
 BOOTf98965ef...13d05. CDC reset from0063 worked; Download observed.

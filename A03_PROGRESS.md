@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: BOOT0064 upload success; GUI diagnostic CI started
+
+BOOT-only upload reached100percent, reported success and reboot around
+21:30UTC. USB CDC re-enumerated1d6b:0104; initial360s capture now growing
+in boot0064-usb-initial.log (deployment87223). No runtime result inferred
+before userspace reaches the relevant call. Root/ADT preserved.
+
+Follow-up0125/0126 diagnostic CI43764128179 started exact736d3b3 while
+0064 runs. Package0065 session34897 waits successful CI,14 source checks
+against frozen /tmp/a03-expected0126/xnu, identical loader/ADT and sole
+additional a03_userlogs=1. Diagnostics preserve syscall/devnull decisions.
+No0065 flash;0124's isolated runtime observation takes priority.
+
 ## 2026-11-15:0124 full CI success and verified0064 package
 
 CI43762755721 SUCCESS from640a2a1. Twelve downloaded source comparisons
