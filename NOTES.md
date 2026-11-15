@@ -1,3 +1,9 @@
+ACTIVE CPU0 question verified: cpus=1; SweetCPU hard-enforces one CPU,
+startCPU KERN_NOT_SUPPORTED, self-SGI only. cpus=8 alone will not work.
+SMP requires A03 topology/PSCI secondary entry/per-core IRQ/timer/cross-IPIs.
+No SMP change made; CPU contention plausible but no proven logo blocker.
+0067 thread sampler remains priority.0131 auto-dispatch stopped.
+
 ACTIVE user doubts I/O-bound hypothesis. No measurement established it.
 Priority is0067 GUI thread snapshots to distinguish IPC/service wait from
 CPU work; do not deploy0131 storage candidate as presumed fix. Stopped

@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: user asks about CPU0; SMP explicitly unsupported
+
+Verified running cmdline cpus=1 and actual SweetCPU.cpp: start rejects
+non-boot CPU identity, panics if topology num_cpus!=1; startCPU returns
+KERN_NOT_SUPPORTED; signalCPU supports self-SGI only. Therefore changing
+bootarg to cpus=8 is not an SMP implementation. Stock DT describes PSCI0.2
+SMC, but secondary firmware startup on this XNU port is unverified. Need
+A03 topology/MPIDRs, secondary entry/per-CPU setup, per-core GIC/timers and
+cross-core IPI routing before multi-core boot. Single-core CPU contention
+is plausible, not established as logo-only blocker; thread sampler first.
+No CPU topology/bootarg/hardware changed for this question.
+
 ## 2026-11-15: prioritize wait-state evidence over unmeasured I/O hypothesis
 
 User suspects slowdown is not I/O bound. No device timing established an
