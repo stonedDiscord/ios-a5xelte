@@ -1,5 +1,14 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+INSTALL LIVE 2026-11-15 10:54UTC: process session63894 is writing verified
+16GiB root to exact validated USB USERDATA LUN1 /dev/sdc, serialA03LinuxInstallV11.
+At10:58UTC ~6.5GiB written; do not reboot/flash. Follow same handle until
+terminal result; full O_DIRECT SHA readback required. Catalog bytes now match
+source locally but this is not full install proof. User requested visible USB
+status; corrected DRM query arrays and added live state/counters. Host-only
+status0014 RO/RW images built, unflashed; test after install/verification.
+
+
 CURRENT 2026-11-15 10:53UTC: Linux USB storage works after absolute configfs
 symlink fix. Independent host reads prove installed catalog header/root zero.
 Current BOOT=installer0011 SHA7acfc1f50d01b86a760408f8fa748618429a07cdb8eeeecf64cb96e54986ccdb,

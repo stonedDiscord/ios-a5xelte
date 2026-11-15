@@ -2473,3 +2473,26 @@ mount/target guards, pinned16GiB source hash, full write/fsync/O_DIRECT
 readback SHA256. Direct hash routine checked on host; regular target refused.
 User returned phone to Download for authorized root install. Install actual
 write remains pending; do not claim USERDATA repaired until full readback.
+
+
+### 10:54UTC: verified USB USERDATA root install started
+
+Installer0011 BOOT-only upload100%/reboot succeeded. Host enumerates LUN0RO,
+LUN1RW with expected serialA03LinuxInstallV11 and54381228032-byte capacity.
+User granted targeted host read/write ACL. Guarded installer process
+session63894 verified pinned source SHA and identity, then began16GiB write.
+Live catalog header/root bytes now match source after those offsets were
+written; full install/fsync/O_DIRECT hash still pending. Do not reboot or
+flash while this process remains active.
+
+User requested visible working status in USB mode. Found DRM GETRESOURCES
+and GETCONNECTOR second queries retained nonzero framebuffer/encoder/property
+counts but supplied NULL arrays; fixed all bounded output arrays, prefer DRM
+over unavailable/inactive FB0, retain failure stage in diagnostic report.
+Added status heading plus live UDC state, read/written MiB counters and uptime.
+Builds with -Wall -Wextra -Werror pass. New UNFLASHED RO status0014 SHA
+ eb3266449946ec0719cd14b242aefcaf983b90141db943c43fc83d2a20c386bd
+and RW status0014 SHA
+8826ce374112caef531593a887e459efea243c9c5f038a143f6ea17d5c4547ae.
+On-screen result still requires device verification; current install continues
+on0011. Host fsck.hfsplus -fn of rebuilt source reports A03iOSRoot OK.

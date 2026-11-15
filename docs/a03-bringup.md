@@ -198,3 +198,9 @@ exactly16GiB, fsyncs and verifies a full O_DIRECT readback SHA. The existing
 4KiB diagnostic mailbox beyond16GiB remains separate. Host block permissions
 must permit the read/write; do not grant access to any host disk. Device
 assignment can change after USB reconnect; recheck model/serial/LUN each time.
+
+
+USB status image revision0014 fixes bounded DRM resource/connector output
+arrays and prefers DRM/KMS. It draws mode, UDC state, partition read/written
+MiB and uptime. Status counters are Linux block-sector counters, not host-side
+hash verification or iOS progress. On-screen display requires runtime testing.

@@ -35,32 +35,47 @@
 #endif
 static char report[16384];
 static size_t used;
+static char live_status[256]="Starting Linux USB mode";
+static char bound_udc[128];
 static void screen(void) {
     static uint32_t *pixels;
     static struct fb_fix_screeninfo fix;
     static struct fb_var_screeninfo var;
     if(!pixels){
-        FILE *f=fopen("/sys/class/graphics/fb0/dev","r");
-        unsigned maj=0,min=0;
-        if(!f){
-            if(!drm_pixels)drm_screen_init();
-            if(!drm_pixels)return;
+        if(!drm_pixels)drm_screen_init();
+        if(drm_pixels){
             pixels=drm_pixels;fix.line_length=drm_stride*4;
             var.xres=drm_width;var.yres=drm_height;
-            goto draw;
+        }else{
+            FILE *f=fopen("/sys/class/graphics/fb0/dev","r");
+            unsigned maj=0,min=0;
+            if(!f)return;
+            int n=fscanf(f,"%u:%u",&maj,&min);fclose(f);if(n!=2)return;
+            mknod("/dev/fb0",S_IFCHR|0600,makedev(maj,min));
+            int fd=open("/dev/fb0",O_RDWR|O_CLOEXEC);if(fd<0)return;
+            if(ioctl(fd,FBIOGET_FSCREENINFO,&fix)||ioctl(fd,FBIOGET_VSCREENINFO,&var)||
+               var.bits_per_pixel!=32||fix.line_length<var.xres*4||
+               (uint64_t)(var.yoffset+var.yres)*fix.line_length>fix.smem_len){close(fd);return;}
+            void *map=mmap(NULL,fix.smem_len,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
+            close(fd);if(map==MAP_FAILED)return;pixels=map;
         }
-        int n=fscanf(f,"%u:%u",&maj,&min);fclose(f);if(n!=2)return;
-        mknod("/dev/fb0",S_IFCHR|0600,makedev(maj,min));
-        int fd=open("/dev/fb0",O_RDWR|O_CLOEXEC);if(fd<0)return;
-        if(ioctl(fd,FBIOGET_FSCREENINFO,&fix)||ioctl(fd,FBIOGET_VSCREENINFO,&var)||
-           var.bits_per_pixel!=32||fix.line_length<var.xres*4||
-           (uint64_t)(var.yoffset+var.yres)*fix.line_length>fix.smem_len){close(fd);return;}
-        void *map=mmap(NULL,fix.smem_len,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
-        close(fd);if(map==MAP_FAILED)return;pixels=map;
     }
-draw:;
     unsigned cols=var.xres/8,rows=var.yres/16,row=0,col=0;
-    if(!cols||!rows)return;
+    if(!cols||rows<6)return;
+    /* Live status is kept above the diagnostic report and updated each second. */
+    for(unsigned y=0;y<64;y++)for(unsigned x=0;x<var.xres;x++)
+        pixels[(size_t)(var.yoffset+y)*(fix.line_length/4)+var.xoffset+x]=0xff102030;
+    const char *heading="A03 LINUX USB STORAGE";
+    for(unsigned line=0;line<3;line++){
+        const char *label=line==0?heading:(line==1?READER_PRODUCT:live_status);
+        for(unsigned i=0;label[i]&&i<cols;i++){
+            unsigned c=(unsigned char)label[i];if(c<32||c>126)c='?';
+            for(unsigned y=0;y<16;y++)for(unsigned x=0;x<8;x++)
+                pixels[(size_t)(var.yoffset+line*16+y)*(fix.line_length/4)+var.xoffset+i*8+x]=
+                    (font8x16[c-32][y]&(0x80u>>x))?0xffffffff:0xff102030;
+        }
+    }
+    row=5;
     for(size_t i=0;i<used&&row<rows;i++){
         unsigned c=(unsigned char)report[i];
         if(c==10){row++;col=0;continue;}
@@ -170,6 +185,7 @@ usb_setup:
        put("/config/usb_gadget/a03/strings/0x409/product",READER_PRODUCT)||
        put("/config/usb_gadget/a03/strings/0x409/serialnumber",READER_SERIAL))goto idle;
     if(dir("/config/usb_gadget/a03/configs/c.1")||dir("/config/usb_gadget/a03/functions/mass_storage.0"))goto idle;
+    if(drm_error[0])logmsg("%s\n",drm_error);
     int rf=open("/run/report.bin",O_CREAT|O_RDWR|O_CLOEXEC,0600);
     if(rf<0)goto idle;
     if(ftruncate(rf,1048576)||pwrite(rf,report,used,0)!=(ssize_t)used){close(rf);goto idle;}
@@ -190,7 +206,10 @@ usb_setup:
         if(d){
             while((de=readdir(d)))if(de->d_name[0]!='.'){
                 logmsg("binding UDC %s\n",de->d_name);
-                if(!put("/config/usb_gadget/a03/UDC",de->d_name)){usb_bound=1;closedir(d);goto idle;}
+                if(!put("/config/usb_gadget/a03/UDC",de->d_name)){
+                    usb_bound=1;snprintf(bound_udc,sizeof(bound_udc),"%.127s",de->d_name);
+                    closedir(d);goto idle;
+                }
             }
             closedir(d);
         }
@@ -217,7 +236,22 @@ idle:
      * gadget/display setup failed. Linux restart handler only; no block writes. */
     unsigned wait_seconds=usb_bound?USB_WAIT_SECONDS:45;
     logmsg("Returning to Download in %u seconds\n",wait_seconds);
-    for(unsigned t=0;t<wait_seconds;t++){screen();sleep(1);}
+    for(unsigned t=0;t<wait_seconds;t++){
+        char state[64]="not bound",path[256];
+        unsigned long long stats[11]={0};
+        if(usb_bound){
+            snprintf(path,sizeof(path),"/sys/class/udc/%s/state",bound_udc);
+            if(!get(path,state,sizeof(state)))state[strcspn(state,"\n")]=0;
+        }
+        FILE *f=fopen("/sys/class/block/mmcblk0p55/stat","r");
+        if(f){
+            for(unsigned i=0;i<11;i++)if(fscanf(f,"%llu",&stats[i])!=1)break;
+            fclose(f);
+        }
+        snprintf(live_status,sizeof(live_status),"USB %s | read %llu MiB | written %llu MiB | %us",
+            state,stats[2]/2048,stats[6]/2048,t);
+        screen();sleep(1);
+    }
     syscall(SYS_reboot,LINUX_REBOOT_MAGIC1,LINUX_REBOOT_MAGIC2,
             LINUX_REBOOT_CMD_RESTART2,"download");
     for(;;)pause();
