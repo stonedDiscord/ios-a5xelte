@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0066 continuation confirms another analyticsd crash
+
+180s continuation completed11406bytes SHA256
+eb85be80ff887e1991435f3817c1d77b8e72adc8f2d819a1bde94ac259932e99.
+Generic corpse record confirms analyticsd225 crash; no custom CRASH emitted.
+Expanded exception logger is still not complete coverage of every process
+termination path. Initial360s no-crash observation applies only to that log.
+0067 CI43766598769 now past Build, packaging artifacts; deployment waiter
+38683 will BOOT-only flash after19 exact sources/loader/ADT/args/hash checks.
+No active CDC reader.0131 dispatch stopped; GUI sampler stays priority.
+
 ## 2026-11-15: user asks about CPU0; SMP explicitly unsupported
 
 Verified running cmdline cpus=1 and actual SweetCPU.cpp: start rejects

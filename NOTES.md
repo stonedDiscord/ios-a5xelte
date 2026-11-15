@@ -1,3 +1,9 @@
+ACTIVE0066 continuation180 complete11406bytes SHAeb85be80...932e99,
+generic analyticsd225 crash, no custom CRASH.0067 CI43766598769 passed
+Build, packaging. Deploy waiter38683 runs only after package19exact-source/
+loader/ADT/sole sample arg/hash checks, captures660s. No current CDC reader.
+0131 dispatch stopped; wait-state evidence priority. No home screen.
+
 ACTIVE CPU0 question verified: cpus=1; SweetCPU hard-enforces one CPU,
 startCPU KERN_NOT_SUPPORTED, self-SGI only. cpus=8 alone will not work.
 SMP requires A03 topology/PSCI secondary entry/per-core IRQ/timer/cross-IPIs.
