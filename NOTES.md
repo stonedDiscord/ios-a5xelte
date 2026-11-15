@@ -1,3 +1,10 @@
+ACTIVE0064 reaches three full-screen swaps,4 entitled WI grants, no CRASH.
+New repeated499 op6/len38 ENOTSUP is work_interval_instance_start (not
+workload config); exact wrappers update7/finish8, all absent current XNU.
+No hint bypass/remap. Wait actual0125/0126 runtime diagnostics before
+choosing functional fix; CI43764128179 building.0127 surface fix committed
+c15b532, not in that build. Existing snapshots frozen per candidate.
+
 ACTIVE0064 runtime grants backboardd entitled work-interval privilege;
 zero CRASH so far, initial360s still active. GUI unverified.0127 local
 candidate fixes selector3: exact wrapper sends canvas dimensions, not layer;

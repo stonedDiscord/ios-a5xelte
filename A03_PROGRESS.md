@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0064 reaches frame submission; instance notification ABI gap
+
+0064 live capture now records three successful full-screen swaps, four
+entitled work-interval grants, zero CRASH, and repeated syscall499 op6
+ENOTSUP45 with instance buffer length0x38. Earlier commentary called this
+workload configuration; exact libsystem_kernel decode corrects that:
+work_interval_instance_start1bf1348b4 sends6, update1bf12e5b0 sends7,
+finish1bf131390 sends8; all pass0x38-byte instance data. These operations
+are absent from the current open-source XNU sys_work_interval switch.
+Instance_alloc1bf139d28 stores WI ID at0, create flags at30; setters store
+start10,finish18,deadline20. This is not SET_WORKLOAD_ID(op0xb). No generic
+success/ABI remap added; exact semantics need further review or evidence
+that these hint failures block GUI. Stock open-source8792.41.9 source also
+omits instance operations.0125/0126 diagnostic CI43764128179 remains Build.
+
 ## 2026-11-15:0064 grants actual work interval; default-surface ABI correction
 
 Live0064 capture records A03 Sandbox: backboardd entitled work-interval
