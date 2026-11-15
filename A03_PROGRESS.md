@@ -3522,3 +3522,15 @@ parser corrected before deployment and regression explicitly exercises this.
 No BOOT0058 flash yet; phone remains in Download. Earlier0057 UMD notify8
 is NOT proof of mediaserverd notification failure: it can originate in a
 process that intentionally disables notifications; media candidate unproven.
+
+## 2026-11-15: BOOT0058 annotation diagnostic deployed
+
+CI43751227542 SUCCESS from7e5ecb7. Downloaded exception.c/USB source matches
+locally tested source. Exact0057 loader (except image_size), ADT and args
+preserved; no RAMDisk/root rewrite. Kernel SHA256
+0c82adf788ece8d17d61c781a44efb7d1f78ed6df2375b5dfd5ed8d013ec570b.
+Image SHA25609f5350cbf8acffabf08a9d14b261241a38f8bd8777e7e9bef655f6b08fa7b69.
+BOOT-only Heimdall upload100percent/success/reboot19:26UTC. Capture77592
+waits900s then100s into private boot0058-usb-initial.log. Runtime pending.
+No host USERDATA/GPT/recovery/bootloader/EFS/NV write.
+User requests silence during routine CI waits; only results/needed input.
