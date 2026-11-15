@@ -1,4 +1,10 @@
-PAUSED at user request. CI43757697658 FAILED: zero-context0122 patch
+ACTIVE resumed SpringBoard goal 2026-11-15. Samsung Download detected.
+Corrected0122 CI43759153171 at28b8b81 is live in Build; package0062
+session17809 waits successful CI and exact source/loader/ADT/argument checks.
+HFS scope regression PASS. Next verified0062 BOOT-only; no new flash yet.
+0061 bounded no-crash window does not establish stable SpringBoard/display.
+
+Historical pause: CI43757697658 FAILED: zero-context0122 patch
 misplaced call at file scope under git apply. Restored contextual hunks;
 fresh plain git apply full-source equality, host scope checks and kernel
 compile PASS. Regression rejects zero-context hunks. No retry CI/flash.
