@@ -3105,3 +3105,30 @@ UNFINISHED LOCAL WORK (not validated, not deployed):
 
 User explicitly requested notes and stop. Work stopped after this handoff;
 no further build/flash/device transition requested. Resume only on user request.
+
+## 2026-11-15: XNU USB source audit and0109 candidate
+
+User resumed work specifically to obtain XNU USB logs instead of reading the
+screen. BOOT0051 still has no host USB enumeration; its initialized message
+is not physical attach evidence. No device currently visible in host lsusb.
+
+Audited matching local Samsung source and private live DT (not staged):
+phy-sprd-qogirl6.c probe requires ANA_EB alongside OTG_UTMI_EB; init explicitly
+sets/enables3300000uV VDDUSB33. Existing XNU omitted ANA_EB and inherited an
+unverified PMIC rail. musb_sprd.c has no MUSB_INDEXED_EP quirk, so Linux uses
+flat endpoint registers0x100+ep*16, unlike XNU's indexed0x10 aperture.
+
+Added0109: missing analog gate; bounded ADI read/address-echo validation;
+SC2730 USB-only voltage/power setup with preserved unrelated bits and verified
+readback; flat EP0/bulk/interrupt registers; USB pin mux selection; clear
+vendor host-force and20ms soft detach. ADI writes allowlisted to regulator
+unlock1bd0, USB PD19e8 and USB voltage19ec only. Live DT uses sharkl5 fallback
+ADI window0x20000/address echo and no ADI hwlock. No partition operations.
+
+Local exact0050/0051 USB patch apply/reverse PASS; clang23 arm64 Mach-O kernel
+syntax with actual CI BSD flags and -mgeneral-regs-only PASS. Cumulative CDC
+protocol/flat-bank checks, monitor parser and bounded ADI/supply emulation
+PASS. Supply tests exercise no-op rail state, preserved bits, allowlist,
+busy/FIFO timeouts, bad address echo and failed readback. Hardware success
+remains unproven; next full build and BOOT-only test. Keep0108 crash-diagnostic
+WIP and its local staging edits out of this USB build/commit.

@@ -67,3 +67,38 @@ UTMI_CTL2+c clear18 pulldowns, UTMI_CTL1+4 clear low16 reserved bits.
 Readbacks print trim/CTL1/CTL2/select, MUSB power/devctl/version and ten-second
 reset/setup counts. Regulator state is still inherited; no PMIC writes.
 These changes require a new kernel and physical enumeration evidence.
+
+## Source audit and USB candidate0109 (2026-11-15)
+
+The prior initialized message proves software setup only. Matching Linux
+sources identify three gaps in that setup:
+
+- phy-sprd-qogirl6.c probe enables ANA_EB (AON EB1 bit12), in addition to
+  OTG_UTMI_EB bit8. The earlier XNU implementation only enabled bit8.
+- PHY init sets and enables SC2730 VDDUSB33 at3300000uV. Inherited supply
+  state was never verified in XNU. Live DT selects the sharkl5 ADI fallback
+  (0x64200000 controller,0x20000 slave window, address-echo read validation).
+- musb_sprd.c declares MUSB_DMA_SPRD without MUSB_INDEXED_EP. musb_core.c
+  therefore uses flat endpoint registers at0x100+16*ep+register, whereas
+  earlier XNU code used the indexed0x10 aperture. FIFO sizing stays indexed.
+
+0109 enables the missing gate, reads the USB supply, unlocks regulator writes
+only if needed, sets VDDUSB33 selector210 (1.2V+210*10mV), clears its power-down
+bit and verifies readback before attaching. ADI writes are allowlisted to
+0x1bd0 unlock,0x19e8 USB power-down and0x19ec USB voltage; no other rail,
+reset, watchdog or storage operation is exposed. Polls have bounded timeouts;
+failed map/address echo/readback stops console startup with a diagnostic.
+Live DT has no ADI hwlock; existing bootloader ADI timing/channels remain.
+
+Also selects USB on the documented shared pin mux (AON0x374 low4 bits), clears
+vendor HOST_FORCE_EN (MUSB0x34b bit0), detaches for20ms, and uses Linux's flat
+endpoint layout for EP0, bulk and interrupt endpoints. This is a candidate
+fix until an actual host attach/configuration/tty transfer is captured.
+
+    python3 tools/a03-test-usb-console.py
+    python3 tools/a03-test-usb-supply.py
+    python3 tools/a03-test-usb-monitor.py
+
+Host tests cover actual cumulative source, flat endpoint address isolation,
+CDC protocol/commands, supply write allowlist/preserved bits/no-op state,
+bounded busy/FIFO timeouts, bad address echo and failed physical readback.

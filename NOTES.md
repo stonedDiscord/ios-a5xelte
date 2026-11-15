@@ -1,5 +1,13 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE 2026-11-15: user resumed for XNU USB.0109 corrects matching-Linux gaps:
+ANA_EB, explicit SC2730 USB3.3V supply/readback, flat endpoint registers,
+USB pin mux and inherited host-force. Host CDC/supply/monitor tests and exact
+CI BSD arm64 syntax PASS; no USB hardware claim yet. Next full CI, package
+BOOT0052 preserving0051 root/args, BOOT-only test and host capture.
+0108 daemon diagnostics stays local WIP; excluded from USB build/commit.
+
+
 STOPPED AT USER REQUEST (2026-11-15). BOOT0051 still installed, root preserved.
 Physical: watchdogd, backboardd and SpringBoard explicitly reported crashing;
 output continues. Spawn lines: fairplayd, mDNSResponder, repeated xpcproxy;

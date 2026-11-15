@@ -7,12 +7,15 @@ root=Path(__file__).resolve().parent.parent
 with tempfile.TemporaryDirectory(prefix='a03-cdc-source-') as d:
  for name in ('0103-a03-usb-cdc-console.patch',
               '0104-a03-post-trap-usb-monitor.patch',
-              '0106-a03-usb-peripheral-phy-readback.patch'):
+              '0106-a03-usb-peripheral-phy-readback.patch',
+              '0109-a03-usb-supply-flat-endpoints.patch'):
   subprocess.run(['git','apply','--include=bsd/dev/a03_usb_console.c',
                   str(root/'xnu/a03'/name)],cwd=d,check=True)
  source=(Path(d)/'bsd/dev/a03_usb_console.c').read_text()
 source=re.sub(r'^#include .*\n','',source,flags=re.M)
 source=source.replace('__asm__ volatile("dsb sy" ::: "memory");','')
+a=source.index('/* Live DT uses sharkl5');b=source.index('static unsigned le16(',a)
+source=source[:a]+source[b:]
 start=source.index('static uint8_t r8(');end=source.index('static void update(',start)
 source=source[:start]+'''static unsigned char regs[8192], fifo[512];static unsigned fifo_n;
 static uint8_t r8(unsigned o) { return regs[o]; }
@@ -34,6 +37,7 @@ unsigned a03_console_read(unsigned char *p,unsigned n) { (void)p;(void)n;return 
 '''
 tests='''
 int main(void) {
+ assert(ep_reg(0,2)==0x102 && ep_reg(1,6)==0x116 && ep_reg(2,2)==0x122);
  assert(sizeof(device_desc)==18);assert(sizeof(config_desc)==67);
  assert(le16(config_desc+2)==sizeof(config_desc));
  unsigned interfaces=0,eps=0;
@@ -43,17 +47,19 @@ int main(void) {
  }
  assert(interfaces==2 && eps==3);
  unsigned char getdev[8]={0x80,6,0,1,0,0,18,0};setup(getdev);
- assert(fifo_n==18 && !control_active && r16(0x12)==0x0a);
+ assert(fifo_n==18 && !control_active && ep_read(0,2)==0x0a);
  fifo_n=0;unsigned char getcfg[8]={0x80,6,0,2,0,0,255,0};setup(getcfg);
  assert(fifo_n==64 && control_active);control_send();assert(fifo_n==67 && !control_active);
- fifo_n=0;getcfg[6]=64;setup(getcfg);assert(fifo_n==64 && !control_active && r16(0x12)==0x0a);
+ fifo_n=0;getcfg[6]=64;setup(getcfg);assert(fifo_n==64 && !control_active && ep_read(0,2)==0x0a);
  unsigned char setaddr[8]={0,5,12,0,0,0,0,0};setup(setaddr);
- assert(address_valid && address_pending==12 && r16(0x12)==0x48);
+ assert(address_valid && address_pending==12 && ep_read(0,2)==0x48);
  unsigned char setcfg[8]={0,9,1,0,0,0,0,0};setup(setcfg);assert(configured==1);
+ assert(ep_read(1,0)==64 && ep_read(1,4)==64 && ep_read(2,0)==16);
+ assert(ep_read(1,2)==0x2048 && ep_read(1,6)==0x90 && ep_read(2,2)==0x2048);
  unsigned char setline[8]={0x21,0x20,0,0,0,0,7,0};setup(setline);assert(control_out);
- unsigned char setdtr[8]={0x21,0x22,1,0,0,0,0,0};setup(setdtr);assert(r16(0x12)==0x48);
+ unsigned char setdtr[8]={0x21,0x22,1,0,0,0,0,0};setup(setdtr);assert(ep_read(0,2)==0x48);
  fifo_n=0;unsigned char getstr[8]={0x80,6,2,3,9,4,255,0};setup(getstr);assert(fifo_n==32);
- unsigned char bad[8]={0x80,6,0,99,0,0,1,0};setup(bad);assert(r16(0x12)==0x60);
+ unsigned char bad[8]={0x80,6,0,99,0,0,1,0};setup(bad);assert(ep_read(0,2)==0x60);
  assert(setup_count==9);
  input_char('r');input_char('e');input_char('g');input_char('s');input_char('\\n');
  char cmd[128];assert(a03_usb_debug_command(cmd,sizeof(cmd)) && cmd[0]=='r');
