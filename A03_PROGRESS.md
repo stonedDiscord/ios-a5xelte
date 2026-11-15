@@ -3283,3 +3283,8 @@ Caller0x1b8315768 -> FrontBoard+0x50768, nearest local symbol
 ___34+[FBDisplayManager sharedInstance]_block_invoke+0x100. These identify
 crashing code, not a proven missing-provider diagnosis. Identityservices
 SIGABRT also captured. USB Download work remains active.
+
+Five-minute0053 follow-up saved306913bytes to private
+shim/a03/out/boot0053-usb-followup.log. Two reports each for SpringBoard
+and identityservices; bounded counter saturation confirmed in this capture.
+USB IN continues while Download acknowledgements remain absent.
