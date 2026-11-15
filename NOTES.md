@@ -1,3 +1,10 @@
+ACTIVE0067 BOOT-only100percent/success/reboot22:11UTC. CI43766598769
+SUCCESSc2c3837,19frozen sources/loader/ADT/sole sample arg verified.
+BOOTfcaa5d1f...15f14. Capture233456660s boot0067-usb-initial.log active;
+need GUI samples180/300/420/540s, symbolicate with captured cache slide.
+Private helper /tmp/a03-symbolicate-samples.py ready.0131 absent/off,
+no SMP/root changes, no home-screen proof. Target actual blocking service.
+
 ACTIVE0066 continuation180 complete11406bytes SHAeb85be80...932e99,
 generic analyticsd225 crash, no custom CRASH.0067 CI43766598769 passed
 Build, packaging. Deploy waiter38683 runs only after package19exact-source/

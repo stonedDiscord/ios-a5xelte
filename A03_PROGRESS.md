@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0067 GUI sampler BOOT-only deployment verified
+
+CI43766598769 SUCCESS exactc2c38372fe44efe11c268d1e18ce0f571a4c7a42.
+Nineteen frozen-source comparisons PASS; loader identical except image_size,
+ADT identical, sole new arg a03_sample=1. Kernel SHA256
+5216ea6e4558446308961d645f92a5307ce7da9fed70add174c701ebc8f05f8f;
+BOOTfcaa5d1fe75eb335850430b400473761d99c48b1c58cd5e54490636bd6215f14.
+CDC Download reset succeeded; BOOT upload100percent/success/reboot confirmed
+~22:11UTC.660s boot0067-usb-initial.log capture233456 active. Need sampler
+at180/300/420/540s to inspect actual GUI waits.0131 absent; no root rewrite,
+SMP change or performance claim. No SpringBoard home-screen proof.
+
 ## 2026-11-15:0066 continuation confirms another analyticsd crash
 
 180s continuation completed11406bytes SHA256
