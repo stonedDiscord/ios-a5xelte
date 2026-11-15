@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: opt-in display/surface candidate0123 prepared
+
+Adapted pinned SWEET0046 software IOSurface/framebuffer provider, plus0068
+cached lookup reference correction, for exact observed iOS16.0 swap400 ABI.
+No Qualcomm MMIO. Explicit a03_display=1 gates service startup/nub; ADT
+--display adds only a03,display720x1600 node. Framebuffer start checks exact
+9e000000/720/1600/2880/depth32 boot video. Unknown external selectors return
+Unsupported rather than generic-success buffers. Scalar shapes/type0 and
+exact swap input checked; pixel copier accepts BGRA4byte elements only.
+Allocation64MiB and total wiring96MiB caps fit current256MiB kernel window
+better than donor1536MiB cap. No GPU/touch or active hardware vsync claim.
+
+Actual copier host test covers source extent, mask, missing surface, format,
+element size, clipping and destination sentinels. Opt-in ADT tests PASS.
+Four actual kernel C++ files compile with general-register flags; plain
+git apply yields exact full files. Profile staging, Python compile and diff
+checks PASS. Full CI/hardware pending;0062 remains running. No GUI proof.
+
 ## 2026-11-15: BOOT0062 confirms HFS atomic-save repair
 
 USB CDC returned and initial100s capture completed371425bytes, SHA256

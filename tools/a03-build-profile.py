@@ -125,7 +125,8 @@ def main():
                      '0119-a03-framework-crash-annotations.patch',
                      '0120-a03-bounded-startup-syscall-evidence.patch',
                      '0121-a03-opt-in-sandbox-check-api.patch',
-                     '0122-a03-opt-in-hfs-rename-swap.patch'):
+                     '0122-a03-opt-in-hfs-rename-swap.patch',
+                     '0123-a03-opt-in-ios16-display-surface.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

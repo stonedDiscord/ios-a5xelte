@@ -1,4 +1,10 @@
-ACTIVE0062 runtime: three HFS exchanges error0; no atomic-save failures
+ACTIVE0123 display/surface candidate prepared for full CI. Native720x1600,
+exact iOS16.0 swap400 ABI, opt-in a03_display=1, unknown selectors unsupported;
+panel PA/stride/depth gates and64MiB allocation/96MiB wiring caps. Actual
+copier tests, four real kernel C++ compiles, plain git apply equality PASS.
+0062 stays CDC; continuation2668 ends300s normally. No display flash yet.
+
+Earlier0062 runtime: three HFS exchanges error0; no atomic-save failures
 in initial100s, personas created; one SpringBoard/backboard exec each and
 zero bounded CRASH records.371425bytes SHAa929c52f...92640. Continuation2668
 captures300s. No GUI proof. Next display ABI adaptation; keep0062 running.

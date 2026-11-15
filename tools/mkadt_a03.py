@@ -9,7 +9,7 @@ import mkadt as sweet
 PHYS_BASE=0x102000000  # 32 MiB aligned for XNU's bootstrap L2 block mappings.
 MEM_SIZE=0x10000000
 
-def build(emmc=False):
+def build(emmc=False, display=False):
     root=sweet.build(seed=os.urandom(64),qemu=True)
     def prop(n,k,v):
         n.props=[(a,f,v if a==k else b) for a,f,b in n.props]
@@ -22,6 +22,10 @@ def build(emmc=False):
     prop(cp,'fixed-frequency',sweet.u32(26000000));prop(cp,'peripheral-frequency',sweet.u32(26000000))
     prop(cp,'clock-frequency',sweet.u32(1600000000))
     io=by['arm-io'];io.children=[n for n in io.children if n.name!='disp0']
+    if display:
+        io.children.append(sweet.node('disp0', [('device_type',sweet.cstr('display-subsystem')),
+            ('compatible',sweet.cstr('a03,display')),('canvas-width',sweet.u32(720)),
+            ('canvas-height',sweet.u32(1600))]))
     gic=next(n for n in io.children if n.name=='gic')
     prop(gic,'reg',sweet.u64(0x10000000-sweet.SOC_BASE,0x20000,0x10040000-sweet.SOC_BASE,0x100000))
     prop(gic,'virtual-timer-intid',sweet.u32(27))
@@ -32,8 +36,8 @@ def build(emmc=False):
     return root
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('output',type=Path);p.add_argument('--emmc-readonly',action='store_true');a=p.parse_args()
-    blob=adt.serialize(build(a.emmc_readonly));root,end=adt.parse(blob);assert end==len(blob)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('output',type=Path);p.add_argument('--emmc-readonly',action='store_true');p.add_argument('--display',action='store_true',help='opt-in A03 iOS16 framebuffer nub (0123 required)');a=p.parse_args()
+    blob=adt.serialize(build(a.emmc_readonly,a.display));root,end=adt.parse(blob);assert end==len(blob)
     assert not any(n.name=='sweet-ufs' for n in root.children)
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_bytes(blob)
     print('A03 ADT',len(blob),'bytes; 256 MiB upper-bank window; single A55')
