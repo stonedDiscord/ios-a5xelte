@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT 2026-11-15 12:55UTC = XNU BOOT0045 flashed BOOT-only100%/success/reboot.
+CI43714631683 PASS; kernel80cdfc51...c2653, BOOTa348ba5b...ad5a0.
+Contains1x XNU font and pre-coredump SIGTRAP PC/LR, dyld/main bases, slide,
+x19 text and frames. Same0044 args. Await user's A03 TRAP screen lines and
+font-size confirmation; no actual launchd main success proven. Root preserved.
+
 BUILD FIX: CI43712255840 failed due opaque Mach structs in BSD diagnostic.
 Moved helper to osfmk/kern/exception.c; BSD only passes pid under SIGTRAP guard.
 Exact failed buildtree/compile flags local syntax PASS for both affected C
