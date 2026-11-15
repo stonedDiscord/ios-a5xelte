@@ -2503,3 +2503,8 @@ panels. Host build PASS, unflashed RO SHA
 12915ef3306eb148f93e789f06bc3dd97c6c647dbba98a2850301efed5c5ad4f,
 RW SHAe4039f111fbe8cfbd0591272f78a593aab7abd0724d769e3746069347eac2c0d.
 Current installer remains0011 while16GiB transfer is active; no interruption.
+
+
+11:03UTC: installer completed exactly16384MiB writes in551.6seconds and
+entered full O_DIRECT readback. Same live process63894; verification pending.
+No reboot/BOOT flash until process terminates with matching hash.

@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+11:04UTC LIVE UPDATE: session63894 completed16GiB write (551.6s), now full
+O_DIRECT readback (first1GiB done). Do not reboot/flash until FULL DEVICE
+READBACK PASS. Next after pass: status0015 RO USB screen test, then XNU0042.
+
+
 INSTALL LIVE 2026-11-15 10:54UTC: process session63894 is writing verified
 16GiB root to exact validated USB USERDATA LUN1 /dev/sdc, serialA03LinuxInstallV11.
 At10:58UTC ~6.5GiB written; do not reboot/flash. Follow same handle until
