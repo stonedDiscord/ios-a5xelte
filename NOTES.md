@@ -1,3 +1,10 @@
+ACTIVE0064 runtime grants backboardd entitled work-interval privilege;
+zero CRASH so far, initial360s still active. GUI unverified.0127 local
+candidate fixes selector3: exact wrapper sends canvas dimensions, not layer;
+accept native or undiscovered-zero values, reject conflicting geometry.
+Host actual-method, kernel syntax/object and plain apply equality PASS.
+Not in0125/0126 CI43764128179/expected0126 snapshot. Preserve0065 isolation.
+
 ACTIVE0064 BOOT-only upload100percent/success/reboot~21:30UTC. USB CDC
 returned; deployment87223 captures360s boot0064-usb-initial.log. Need see
 A03 Sandbox entitled work-interval grant and eventual swaps/GUI behavior.

@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0064 grants actual work interval; default-surface ABI correction
+
+Live0064 capture records A03 Sandbox: backboardd entitled work-interval
+privilege granted, with no observed syscall499 EPERM afterwards and zero
+CRASH so far. This proves0124's actual grant path, not full GUI success.
+Initial360s capture remains active; no swaps yet at this observation.
+
+Exact iOS16.0 _kern_GetLayerDefaultSurface1ad7daf08 checks layer0 in
+userspace, then sends two widened uint32 canvas dimensions at client+484.
+Initialization1ad7d9890 reads canvas-width/canvas-height provider properties
+into484/488 (CFString backing1ad7e0911/91e); SetDisplaySize1ad7d7fb4 also
+sets these from dimensions.0123's input0==0 layer guard was incorrect.
+Prepared0127 to accept native720/1600 dimensions (or zero for undiscovered
+provider dimensions), reject conflicting nonzero geometry, and return the
+existing validated physical-surface port. No new allocation or generic
+selector success. Actual-source method tests, kernel syntax/object compile
+and plain apply full-file equality PASS. Not yet in CI43764128179/0065.
+
 ## 2026-11-15: BOOT0064 upload success; GUI diagnostic CI started
 
 BOOT-only upload reached100percent, reported success and reboot around

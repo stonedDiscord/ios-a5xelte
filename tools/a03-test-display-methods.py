@@ -6,6 +6,11 @@ root=Path(__file__).resolve().parent.parent
 patch=(root/'xnu/a03/0123-a03-opt-in-ios16-display-surface.patch').read_text()
 part=patch.split('+++ b/iokit/Kernel/arm/SweetFramebuffer.cpp\n',1)[1].split('--- ',1)[0]
 p='\n'.join(x[1:] for x in part.splitlines() if x.startswith('+'))
+# Apply every contextual hunk before extracting the actual method body.
+with tempfile.TemporaryDirectory() as d:
+ q=Path(d)/'iokit/Kernel/arm/SweetFramebuffer.cpp';q.parent.mkdir(parents=True);q.write_text(p+'\n')
+ subprocess.run(['git','apply',str(root/'xnu/a03/0127-a03-default-surface-dimensions.patch')],cwd=d,check=True)
+ p=q.read_text()
 start=p.index('static uint64_t sweet_fb_logged;');src=p[start:p.rindex('#endif')]
 pre=r'''
 #include <cassert>
@@ -37,7 +42,7 @@ assert(c.externalMethod(8,nullptr,nullptr,nullptr,nullptr)==kIOReturnBadArgument
 uint64_t out[3]={99,99,99},in[4]={};a.scalarOutput=out;a.scalarOutputCount=2;assert(call(8)==0&&out[0]==720&&out[1]==1600&&out[2]==99);
 a.scalarOutputCount=1;assert(call(8)==kIOReturnBadArgument);a.scalarOutput=nullptr;assert(call(7)==kIOReturnBadArgument);
 a.scalarOutput=out;assert(call(4)==0&&out[0]==1);assert(call(18)==0&&out[0]==1);assert(call(28)==0&&out[0]==270);
-a.scalarInput=in;a.scalarInputCount=2;assert(call(3)==0&&out[0]==7);in[0]=1;assert(call(3)==kIOReturnUnsupported);in[0]=0;
+a.scalarInput=in;a.scalarInputCount=2;in[0]=720;in[1]=1600;assert(call(3)==0&&out[0]==7);in[0]=0;in[1]=0;assert(call(3)==0&&out[0]==7);in[0]=721;assert(call(3)==kIOReturnUnsupported);in[0]=720;in[1]=1599;assert(call(3)==kIOReturnUnsupported);in[1]=1600;
 a.scalarInputCount=0;a.scalarOutputCount=0;uint8_t rec[0x400]={0x42};a.structureInput=rec;a.structureInputSize=sizeof(rec);assert(call(5)==0&&fb.swaps==1);
 a.structureInputSize=0x3ff;assert(call(5)==kIOReturnBadArgument);a.structureInputSize=0x46c;assert(call(5)==kIOReturnBadArgument);a.structureInputSize=0x400;a.structureInput=nullptr;assert(call(5)==kIOReturnBadArgument);
 a.structureInputSize=0;a.scalarInputCount=4;in[0]=10;in[1]=11;in[2]=5;assert(call(72)==0&&c.fFunc[5]==10&&c.fRefcon[5]==11);in[2]=8;assert(call(72)==kIOReturnBadArgument);

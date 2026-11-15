@@ -1,0 +1,23 @@
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -11,5 +11,5 @@
+  *
+  * User client selectors used by CoreAnimation:
+- *   3  GetLayerDefaultSurface [layer, ?] -> [IOSurface port name]
++ *   3  GetLayerDefaultSurface [canvas width, canvas height] -> [IOSurface port name]
+  *   4  SwapBegin -> [swap id]
+  *   5  SwapEnd, struct 0x400: +0x50 swap id, +0x54 IOSurface id per layer
+@@ -400,5 +400,12 @@
+ 	switch (selector) {
+ 	case kSweetFBGetLayerDefaultSurface:
+-		if (args->scalarInput[0] != 0) { ret = kIOReturnUnsupported; break; }
++		/* _kern_GetLayerDefaultSurface sends widened canvas dimensions,
++         * not a layer number. Zero dimensions occur when provider property
++         * discovery failed; use the already validated native panel then. */
++        if ((args->scalarInput[0] != 0 && args->scalarInput[0] != fFB->fWidth) ||
++            (args->scalarInput[1] != 0 && args->scalarInput[1] != fFB->fHeight)) {
++            ret = kIOReturnUnsupported;
++            break;
++        }
+ 		out[0] = sweet_surface_port_in_task(fFB->fSurface, fTask);
+ 		outCount = 1;
