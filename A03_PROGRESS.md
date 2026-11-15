@@ -3334,3 +3334,9 @@ was not cleared by current startup.0113 disables enable bit0 of documented
 flushes EP1 as Linux gadget init. Actual cumulative host test verifies all
 30 channel enables clear while other bits remain, split command reception;
 exact kernel C syntax PASS. Runtime effect unproven.
+
+Combined0112+0113 CI43744564237 from62736e7 supersedes watchdog-only
+43744288276. BOOT0054 installed,0055 pending.90second0054 capture297403bytes
+SHA2569e2116fabf4ffc628b3b6672d7dd4efe5618587be2c608dc87f6b0bb57f5ef4a.
+Source observation is RX DMAMODE left set; it does not yet prove DMA enable
+was active or that clearing it alone fixes console commands.

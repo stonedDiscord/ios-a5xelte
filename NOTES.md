@@ -1,5 +1,9 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+NEXT: combined0112+0113 CI43744564237 from62736e7; supersedes watchdog-only.
+0055 needs exact0054 ADT/loader/args +a03_watchdog_disabled=1, no root rewrite.
+Next physical Download when build ready; no functional reset claim yet.
+
 RX0054: csr0800 DMAMODE survives, unsolicited count1 zero packets.
 0113 PIO takeover locally tested (30 DMA enables clear+readback, CSR clear,
 double flush); next combined CI includes0112 watchdog; root preserved.
