@@ -2533,3 +2533,10 @@ missing; image is fully verified. Status0015 on-screen behavior unproven.
 status0015 flashed BOOT-only/upload100%/success/reboot. USB1d6b:0104
 re-enumerated. Await physical status-heading/counter confirmation; full root
 remains verified. No HFS root mount/launchd retest yet.
+
+
+USB status display VERIFIED: user reports visible read2MiB/written0MiB on
+status0015. These are current-boot block counters, not total historical install
+bytes; installer0011 previously completed/passed full16GiB readback. This
+fulfills visible USB working-status request. Next XNU0042 BOOT-only trial on
+verified root; user asked to return Download. No launchd runtime yet.

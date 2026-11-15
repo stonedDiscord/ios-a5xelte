@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+USB STATUS SCREEN VERIFIED: user sees read2MiB/written0MiB on0015. Counters
+are per boot;16GiB root remains independently verified. Await Download for
+XNU0042 BOOT-only retry toward actual Apple launchd execution.
+
+
 CURRENT BOOT11:14UTC = RO USB status0015, BOOT upload100%/reboot/USB enumerated.
 Full16GiB USERDATA root readback passed earlier. Await user's screen result
 for new status/counters; then Download and XNU0042 BOOT-only launchd trial.
