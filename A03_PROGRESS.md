@@ -2870,3 +2870,9 @@ Next full CI, BOOT0048 +a03_ios16_provisional_reply=1; hardware unproven.
 
 Full build CI43724877490 started fromf8ecc37; Download mode detected.
 No0048 flash yet.
+
+Additional host audit: deployed0047 _proc_prepareexit disassembly branches
+to _a03_init_trap_log then _a03_init_debug_hold before coredump. Both symbols
+are linked; hardware hold still unconfirmed. Cumulative0103+0104+0106 CDC
+protocol/command test PASS, all four IPC/USB source consumers compile PASS.
+Build43724877490 remains running; Download detected. Root untouched.
