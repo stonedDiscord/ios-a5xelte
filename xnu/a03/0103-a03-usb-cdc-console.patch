@@ -1,0 +1,222 @@
+--- /dev/null
++++ b/bsd/dev/a03_usb_console.c
+@@ -0,0 +1,128 @@
++/* A03 diagnostic CDC ACM console. Register facts: matching Qogirl6 Linux
++ * musb_regs.h, qogirl6.dtsi and phy-sprd-qogirl6.c. No storage access.
++ * Full-speed PIO only; output is mirrored, input is discarded. */
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <sys/param.h>
++#include <sys/systm.h>
++#include <pexpert/pexpert.h>
++#include <kern/thread.h>
++#include <kern/clock.h>
++#include <machine/machine_routines.h>
++#include <vm/vm_kern.h>
++#include <IOKit/IOLib.h>
++extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
++extern unsigned a03_console_read(unsigned char *, unsigned);
++void a03_usb_console_start(void);
++static vm_offset_t usb;
++static unsigned configured, address_pending, address_valid;
++static const unsigned char *control_data;
++static unsigned control_length, control_offset, control_active, control_out, control_requested;
++static unsigned char line_coding[7] = {0, 0xc2, 1, 0, 0, 0, 8};
++static unsigned char string_buffer[96];
++static const unsigned char device_desc[] = {
++ 18,1,0,2,2,0,0,64, 0x6b,0x1d,0x04,0x01,0,1,1,2,3,1
++};
++/* Diagnostic identity matches the already-used Linux gadget VID/PID. */
++static const unsigned char config_desc[] = {
++ 9,2,67,0,2,1,0,0x80,50,
++ 9,4,0,0,1,2,2,1,0,
++ 5,0x24,0,0x10,1, 5,0x24,1,0,1, 4,0x24,2,2, 5,0x24,6,0,1,
++ 7,5,0x82,3,16,0,16,
++ 9,4,1,0,2,0x0a,0,0,0,
++ 7,5,0x01,2,64,0,0, 7,5,0x81,2,64,0,0
++};
++static uint8_t r8(unsigned o) { return *(volatile uint8_t *)(usb+o); }
++static uint16_t r16(unsigned o) { return *(volatile uint16_t *)(usb+o); }
++static void w8(unsigned o,uint8_t v) { *(volatile uint8_t *)(usb+o)=v; __asm__ volatile("dsb sy" ::: "memory"); }
++static void w16(unsigned o,uint16_t v) { *(volatile uint16_t *)(usb+o)=v; __asm__ volatile("dsb sy" ::: "memory"); }
++static void update(vm_offset_t b,unsigned o,uint32_t clear,uint32_t set) {
++ volatile uint32_t *p=(volatile uint32_t *)(b+o); *p=(*p & ~clear)|set; __asm__ volatile("dsb sy" ::: "memory");
++}
++static unsigned le16(const unsigned char *p) { return p[0]|((unsigned)p[1]<<8); }
++static void endpoints(void) {
++ /* EP0 reserves first64 bytes. EP1 RX/TX64, EP2 interrupt TX16. */
++ w8(0x0e,1); w8(0x62,3); w16(0x64,8); w8(0x63,3); w16(0x66,16);
++ w16(0x10,64); w16(0x14,64); w16(0x12,0x2048); w16(0x16,0x90);
++ w8(0x0e,2); w8(0x62,1); w16(0x64,24); w16(0x10,16); w16(0x12,0x2048);
++ w8(0x0e,0);
++}
++static void control_send(void) {
++ unsigned left=control_length-control_offset,n=left>64?64:left;
++ for(unsigned i=0;i<n;i++) w8(0x20,control_data[control_offset++]);
++ if(n<64 || (control_offset==control_length && control_length==control_requested)) { w16(0x12,0x0a); control_active=0; }
++ else { w16(0x12,2); }
++}
++static void respond(const unsigned char *p,unsigned n,unsigned requested) {
++ control_data=p;control_length=n<requested?n:requested;control_requested=requested;control_offset=0;control_active=1;
++ w16(0x12,0x40);control_send();
++}
++static void setup(const unsigned char *s) {
++ unsigned type=s[0],request=s[1],value=le16(s+2),index=le16(s+4),length=le16(s+6);
++ control_active=control_out=0;
++ if(type==0x80 && request==6) {
++  if(value>>8==1) { respond(device_desc,sizeof(device_desc),length);return; }
++  if(value>>8==2) { respond(config_desc,sizeof(config_desc),length);return; }
++  if(value>>8==3) {
++   const char *str=0;
++   switch(value&255) { case 0: string_buffer[0]=4;string_buffer[1]=3;string_buffer[2]=9;string_buffer[3]=4;respond(string_buffer,4,length);return;
++    case 1:str="A03 diagnostic";break;case 2:str="A03 XNU console";break;case 3:str="A03XNUConsole01";break;default:break; }
++   if(str) { unsigned n=0;while(str[n] && n<46) { string_buffer[2+n*2]=str[n];string_buffer[3+n*2]=0;n++; }
++    string_buffer[0]=2+n*2;string_buffer[1]=3;respond(string_buffer,2+n*2,length);return; }
++  }
++ }
++ if(type==0 && request==5 && value<128 && !length) { address_pending=value;address_valid=1;w16(0x12,0x48);return; }
++ if(type==0 && request==9 && value<=1 && !length) { configured=value;endpoints();w16(0x12,0x48);return; }
++ if(type==0x80 && request==8) { string_buffer[0]=configured;respond(string_buffer,1,length);return; }
++ if((type==0x80||type==0x81||type==0x82) && request==0) { string_buffer[0]=string_buffer[1]=0;respond(string_buffer,2,length);return; }
++ if(type==0x81 && request==10) { string_buffer[0]=0;respond(string_buffer,1,length);return; }
++ if(type==1 && request==11 && value==0 && index<2 && !length) { w16(0x12,0x48);return; }
++ if(type==0x21 && request==0x20 && length==7) { control_out=1;w16(0x12,0x40);return; }
++ if(type==0xa1 && request==0x21) { respond(line_coding,7,length);return; }
++ if(type==0x21 && (request==0x22||request==0x23) && !length) { w16(0x12,0x48);return; }
++ if(type==2 && request==1 && value==0 && !length) {
++  unsigned ep=index&15;if(ep==1||ep==2) { w8(0x0e,ep);w16((index&0x80)?0x12:0x16,(index&0x80)?0x2048:0x90);w8(0x0e,0);w16(0x12,0x48);return; }
++ }
++ w16(0x12,0x60);
++}
++static void poll_usb(void) {
++ unsigned intr=r8(0x0a); /* MUSB status is read-to-clear. Only this thread reads. */
++ if(intr&4) { configured=address_valid=control_active=control_out=0;w8(0,0);endpoints(); }
++ w8(0x0e,0);unsigned csr=r16(0x12);
++ if(address_valid && !(csr&0x0a)) { w8(0,address_pending);address_valid=0; }
++ if(csr&4) { w16(0x12,0);control_active=control_out=0; }
++ if(csr&0x10) { w16(0x12,0x80);control_active=control_out=0;csr=r16(0x12); }
++ if(csr&1) {
++  unsigned n=r16(0x18);
++  if(control_out) { for(unsigned i=0;i<n;i++) { uint8_t c=r8(0x20);if(i<7)line_coding[i]=c; }control_out=0;w16(0x12,0x48); }
++  else if(n==8) { unsigned char s[8];for(unsigned i=0;i<8;i++)s[i]=r8(0x20);setup(s); }
++  else { for(unsigned i=0;i<n;i++)(void)r8(0x20);w16(0x12,0x40); }
++ } else if(control_active && !(csr&2)) control_send();
++ if(!configured)return;
++ w8(0x0e,1);csr=r16(0x16);
++ if(csr&1) { unsigned n=r16(0x18);for(unsigned i=0;i<n;i++)(void)r8(0x24);w16(0x16,0); }
++ csr=r16(0x12);
++ if(!(csr&1)) { unsigned char b[64];unsigned n=a03_console_read(b,64);if(n) { for(unsigned i=0;i<n;i++)w8(0x24,b[i]);w16(0x12,0x2001); } }
++ w8(0x0e,0);
++}
++static void worker(void *arg,wait_result_t result) {
++ (void)arg;(void)result;
++ for(;;) { poll_usb();IOSleep(1); }
++}
++void a03_usb_console_start(void) {
++ uint32_t enable=0;PE_parse_boot_argn("a03usb_console",&enable,sizeof(enable));if(enable!=1)return;
++ vm_offset_t aon=ml_io_map(0x64000000,0x1000),ana=ml_io_map(0x64570000,0x1000);
++ if(!aon||!ana) { printf("A03 USB console: PHY map failed\n");return; }
++ /* Preserve bootloader-provided regulator state; do not program PMIC. */
++ update(aon,0x004,0,1u<<8);update(aon,0x138,0,0x1400);
++ update(ana,0x1c,1,0);update(ana,8,0x18,0);
++ update(aon,0x204,0,1u<<24);update(ana,4,0,0x10010000);
++ update(aon,0x208,0,0x40000008);update(ana,0x10,0xffffffff,0x04f3d1c0);
++ update(aon,0x10,0,0x300);delay(25000);update(aon,0x10,0x300,0);delay(1000);
++ usb=ml_io_map(0x64900000,0x2000);if(!usb){printf("A03 USB console: core map failed\n");return;}
++ w8(1,0);w8(0,0);w16(6,0);w16(8,0);w8(0x0b,0);w8(0x60,0);w8(0x0f,0);endpoints();
++ thread_t thread=THREAD_NULL;kern_return_t kr=kernel_thread_start(worker,NULL,&thread);
++ if(kr!=KERN_SUCCESS){usb=0;printf("A03 USB console: thread error %d\n",kr);return;}
++ thread_deallocate(thread);w8(1,0x40);
++ printf("A03 USB console: full-speed CDC ACM initialized, awaiting host\n");
++}
++#endif
+--- a/pexpert/arm/pe_serial.c
++++ b/pexpert/arm/pe_serial.c
+@@ -717,6 +717,35 @@
+ #define FBCON_FG        0xffffffffu
+ #define FBCON_BG        0xff000000u
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++/* Single-core A03 console spool. Both producer and consumer mask IRQs. */
++#define A03_LOG_SIZE (256u * 1024u)
++static unsigned char a03_log[A03_LOG_SIZE];
++static unsigned a03_log_head, a03_log_tail;
++unsigned a03_console_read(unsigned char *, unsigned);
++unsigned
++a03_console_read(unsigned char *dst, unsigned capacity)
++{
++    boolean_t irq = ml_set_interrupts_enabled(FALSE);
++    unsigned n = 0;
++    while (n < capacity && a03_log_tail != a03_log_head) {
++        dst[n++] = a03_log[a03_log_tail++ % A03_LOG_SIZE];
++    }
++    ml_set_interrupts_enabled(irq);
++    return n;
++}
++static void
++a03_console_append(uint8_t c)
++{
++    boolean_t irq = ml_set_interrupts_enabled(FALSE);
++    if (a03_log_head - a03_log_tail == A03_LOG_SIZE) {
++        a03_log_tail++;
++    }
++    a03_log[a03_log_head++ % A03_LOG_SIZE] = c;
++    ml_set_interrupts_enabled(irq);
++}
++#endif
++
+ static volatile uint32_t *fbcon_base;
+ static uint32_t fbcon_width, fbcon_height, fbcon_stride;
+ static uint32_t fbcon_cols, fbcon_rows, fbcon_col, fbcon_row;
+@@ -761,6 +790,9 @@
+ static void
+ fbcon_transmit_data(uint8_t c)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    a03_console_append(c);
++#endif
+ 	if (c == '\r') {
+ 		fbcon_col = 0;
+ 		return;
+--- a/bsd/dev/a03_usb.c
++++ b/bsd/dev/a03_usb.c
+@@ -46,6 +46,8 @@
+ void
+ a03_usb_probe(void)
+ {
++    extern void a03_usb_console_start(void);
++    a03_usb_console_start();
+ 	uint32_t enable = 0;
+ 	PE_parse_boot_argn("a03usb_probe", &enable, sizeof(enable));
+ 	if (enable != 1) {
+--- a/bsd/conf/files
++++ b/bsd/conf/files
+@@ -105,6 +105,7 @@
+ 
+ bsd/dev/a03_emmc.c			standard
+ bsd/dev/a03_usb.c			standard
++bsd/dev/a03_usb_console.c		standard
+ bsd/dev/memdev.c			standard
+ bsd/dev/mem.c				standard
+ bsd/dev/munge.c 			optional config_requires_u32_munging
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -95,6 +95,7 @@
+ 
+ # A03: BSD is a separate make target from osfmk.
+ bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
++a03_usb_console.o_CFLAGS_ADD += -mgeneral-regs-only
+ kern_exit.o_CFLAGS_ADD += -mgeneral-regs-only
+ a03_emmc.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+--- a/pexpert/conf/Makefile.template
++++ b/pexpert/conf/Makefile.template
+@@ -49,6 +49,9 @@
+ %SFILES
+ 
+ %MACHDEP
++
++# A03 console spool must not use kernel FP/SIMD.
++pe_serial.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ #
+ # Diagnostic opt-outs.  We need to make this list empty.

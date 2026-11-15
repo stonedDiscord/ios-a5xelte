@@ -2785,3 +2785,15 @@ bits/semantics under existing space lock and printing after unlock; PID1
 mach_port_construct logs flags/status/name. No validation bypass or forced
 success. Both affected files locally compile using exact CI headers/flags;
 patch reverse/forward roundtrip zero-fuzz PASS. No new phone write yet.
+
+## 2026-11-15: USB console mirror implemented for next BOOT test
+
+User requests simultaneous XNU screen+USB logs. Added opt-in0103 CDC ACM
+full-speed PIO peripheral and256KiB serial spool, guarded capture tool and
+protocol test. Register setup grounded in matching A03 Linux Qogirl6 PHY/
+MUSB sources. Screen remains, no storage operation. IRQ-masked single-core
+spool; polling kernel thread; no USB DMA. PMIC state preserved. Descriptor/
+control-request harness PASS; exact patch zero-fuzz roundtrip PASS; three
+local component compiles PASS, general-register driver/spool. Enumeration/
+transport UNPROVEN. docs/a03-usb-console.md records limits/reproduction.
+Retain0102 reply-right diagnostics; no IPC validation bypass.

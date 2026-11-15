@@ -101,6 +101,8 @@ def main():
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0102-a03-invalid-reply-diagnostics.patch'
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
+        name = '0103-a03-usb-cdc-console.patch'
+        shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
         'Portable crypto 0020/0023/0027/0032/0033 and pinned BearSSL stage script.',
@@ -108,7 +110,7 @@ def main():
         'Pinned libpthread and mockfs/HFS RAM-root.',
         'Experimental XML entitlements/platform CS_SIGNED support (0035/0036).' if a.ios_userspace else 'Minimal AMFI interface for static test init.',
         'Opt-in A03 SDMA; BOOT reads confirmed0024; USERDATA writes hardware-unverified.', '']))
-    print('A03 profile staged:', len(patches)+8+9*int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
+    print('A03 profile staged:', len(patches)+8+10*int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':

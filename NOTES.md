@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+NEXT: combined0102 reply-right diagnostics +0103 USB CDC console mirror.
+Local compile/patch/protocol PASS; USB hardware unproven. Add a03usb_console=1
+in next BOOT0047. Screen retained; spool256KiB; serialA03XNUConsole01;
+host tools/a03-usb-console.py. CI43719205319 builds0102 only; combine next.
+
+
 CURRENT: user msg2 options0x200000003,size40,remote0x503,reply0x603;
 no MIG. Invalid reply before dispatch.0102 logs reply rights/semantics and
 PID1 port construct. Local two-file compile and patch checks PASS.
