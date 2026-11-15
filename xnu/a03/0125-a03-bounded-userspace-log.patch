@@ -1,0 +1,53 @@
+--- a/bsd/dev/mem.c
++++ b/bsd/dev/mem.c
+@@ -118,9 +118,50 @@
+ 	return mmrw(dev, uio, UIO_READ);
+ }
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++/* Observe a bounded prefix through a duplicate uio. /dev/null still consumes
++ * the original without reading it, even if diagnostic copying fails. */
++static void
++a03_devnull_log(struct uio *uio)
++{
++    uint32_t enabled = 0;
++    PE_parse_boot_argn("a03_userlogs", &enabled, sizeof(enabled));
++    if (enabled != 1 || uio_resid(uio) <= 0) return;
++    char name[32];
++    proc_selfname(name, sizeof(name));
++    unsigned slot;
++    if (!strcmp(name, "SpringBoard")) slot = 0;
++    else if (!strcmp(name, "backboardd")) slot = 1;
++    else return;
++    static unsigned reports[2];
++    unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
++    do {
++        if (old >= 128) return;
++    } while (!__atomic_compare_exchange_n(&reports[slot], &old, old + 1,
++        false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++    uio_t copy = uio_duplicate(uio);
++    if (copy == NULL) return;
++    char text[256];
++    int n = (int)MIN(uio_resid(copy), sizeof(text) - 1);
++    int error = uiomove(text, n, copy);
++    uio_free(copy);
++    if (error) return;
++    text[n] = 0;
++    for (int i = 0; i < n; i++) {
++        unsigned char c = text[i];
++        if ((c < 32 && c != '\n' && c != '\t') || c == 127) text[i] = ' ';
++    }
++    printf("A03 USER %s: %s%s", name, text,
++        n > 0 && text[n - 1] == '\n' ? "" : "\n");
++}
++#endif
++
+ int
+ mmwrite(dev_t dev, struct uio *uio)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if (minor(dev) == 2) a03_devnull_log(uio);
++#endif
+ 	return mmrw(dev, uio, UIO_WRITE);
+ }
+ 

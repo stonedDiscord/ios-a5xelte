@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: bounded userspace-log observer0125 prepared
+
+While0063 remains running and0124 CI builds, prepared an independent opt-in
+read-only /dev/null observer for SpringBoard/backboardd. It copies at most
+255bytes from a duplicated uio, at most128writes/process. Original uio and
+/dev/null success/error behavior stay unchanged, including diagnostic-copy
+failure. Control bytes sanitized. Actual-source tests cover disabled/name/
+bounds/failures/original-uio preservation; real kernel syntax/object compile
+and plain git apply complete-file equality PASS. Not in running0063 or
+active0124 CI; hardware untested. Intended to expose startup messages that
+would otherwise be discarded, if the entitlement test still stalls.
+
 ## 2026-11-15: BOOT0063 five-minute continuation complete;0124 CI active
 
 Continuation300s completed136106bytes SHA256

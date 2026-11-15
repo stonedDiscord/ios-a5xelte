@@ -1,3 +1,7 @@
+NEXT diagnostic0125 prepared/tested: opt-in a03_userlogs observer on
+SpringBoard/backboardd /dev/null writes, duplicate-uio only, bounded/sanitized;
+not in0124 CI43762755721 or running0063. Keep0124 test isolated first.
+
 ACTIVE0124 CI43762755721 exact640a2a1 running; package0064 session54915
 waits success and12 source/loader/ADT/sole a03_work_interval checks.
 0063 continuation300s complete136106bytes SHA9cc39598...96b51, zero CRASH,
