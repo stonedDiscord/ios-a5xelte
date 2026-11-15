@@ -1,5 +1,15 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT USB0052 BULK LOG TRANSFER CONFIRMED after user tty ACL fix.
+45second capture289235 bytes/5002 lines: private
+shim/a03/out/boot0052-usb-perms-fixed.log. Supply PD1->0, voltage d2 retained;
+configuration1 resets2 setups14. Actual XNU USB logs now available.
+Crash lines confirm backboardd19/mediaserverd43/watchdogd17/configd8/lockdownd3
+in that capture; no exact cause/PC. No stable GUI claim, no new flash.
+Additional300s capture79265 writes boot0052-usb-continuing.log privately.
+0108 remains unvalidated WIP; preserve it. See latest A03_PROGRESS.md.
+
+
 USB0052 NOW ENUMERATES: host17:06:17UTC full-speed1d6b:0104,
 A03XNUConsole01, cdc_acm ttyACM0. Bulk logs still unverified: EACCES.
 User asked to run sudo setfacl -m u:stoned:rw /dev/ttyACM0 (sudo password

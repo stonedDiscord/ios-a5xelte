@@ -3176,3 +3176,33 @@ sudo setfacl -m u:stoned:rw /dev/ttyACM0, then resume capture. Empty private
 capture files do not contain kernel logs. No host credential requested.
 Exact deployed CI USB source matches tested source byte-for-byte; BSD
 Makefile confirms -mgeneral-regs-only. No more phone flash indicated.
+
+
+## 2026-11-15: BOOT0052 XNU console data transfer confirmed
+
+User corrected host tty permissions and reports mediaserverd/backboardd/
+watchdogd crashing. Exact-identity host capture then successfully opened
+/dev/ttyACM0 and saved289235 bytes/5002 lines over45seconds to ignored
+shim/a03/out/boot0052-usb-perms-fixed.log; SHA256
+f28a19c9883862ac8a8736c932cf265f82888b9086ea6ad2286e61a6217848c9.
+Capture includes buffered startup plus continuing userspace output, with
+an incomplete opening fragment. Actual XNU USB bulk console transfer is now
+proven, not merely enumeration. No interactive monitor/panic service claim.
+
+Captured supply before pd=0001 vol=00d2, after pd=0000 vol=00d2 proves the
+inherited USB rail was powered down and XNU enabled it at retained3.3V.
+PHY trim04b3d1c0 ctl1=1c010000 ctl2=0 sel=6; CORE power50 devctl98 hwvers0200
+ext00; EB1=001eb9f3 ref=00a3ffab mux0; configuration1 resets2 setups14.
+0109 combined changes work; their separate contributions remain unisolated.
+
+Captured crash-line counts: backboardd19, mediaserverd43, watchdogd17,
+configd8, lockdownd3. Counts describe this log, not all exits: early crashes
+may lack the corpse-limit message. Exact causes/signals/PCs not logged.
+Backboardd AKS selectors0/17 return0 before a crash; that alone is not its
+cause. Several earlier filesystem/persona warnings exist, but no causality
+established. No new provider/stub/change justified solely by these names.
+
+Started an additional300second capture79265 to ignored
+shim/a03/out/boot0052-usb-continuing.log (host stderr/stdout
+/tmp/a03-boot0052-usb-continuing.log). BOOT0052/root remain installed; no
+phone writes/reboot in this follow-up.0108 WIP preserved, not deployed.

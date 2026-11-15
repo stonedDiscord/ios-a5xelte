@@ -1,17 +1,16 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-15, XNU BOOT0051 boots the verified 16GiB HFSX root on
-validated USERDATA p55 and reaches launchd daemon orchestration. The user
-reports watchdogd, backboardd and SpringBoard crashing with continuing
-output and Too many corpses being created. Spawn messages also name
-fairplayd, mDNSResponder, repeated xpcproxy, bluetoothd and identityservicesd;
-these messages alone do not confirm crashes or successful startup.
-Stable userspace and GUI remain unproven; exact crash details are missing.
-BOOT0051 is same0050 kernel plus launchd_unsecure_cache=1. Software AKS is
-opt-in lab state without SEP/passcode protection; USB CDC has not enumerated.
-User requested stop. Unvalidated bounded crash-diagnostic patch0108 and its
-profile/workflow edits remain local WIP, with no CI build or new flash.
-
+As of2026-11-15, XNU BOOT0052 boots the verified16GiB HFSX root on validated
+USERDATA p55 and reaches launchd daemon orchestration. USB CDC now enumerates
+and transfers kernel logs through host ttyACM0. A45-second capture saved
+289235 bytes, including USB supply/configuration evidence and repeated
+backboardd, mediaserverd, watchdogd, configd and lockdownd crash lines.
+Exact daemon crash reasons/PCs remain unavailable in this kernel; stable
+userspace and GUI remain unproven. See docs/a03-usb-console.md for capture.
+BOOT0052 retains0051 loader/ADT/arguments/root, adding0109 USB setup fixes.
+Software AKS is opt-in lab state without SEP/passcode protection. Unvalidated
+bounded crash-diagnostic patch0108 and its profile/workflow edits remain
+local WIP, excluded from0052.
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve
 checkpoint reproduction and should not be read as current-device status.
