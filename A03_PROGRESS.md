@@ -3275,3 +3275,11 @@ line and rejects oversized packets. Kernel syntax compile PASS.
 
 Receive-diagnostic CI43742555051 started fromf28fc71. BOOT0053 remains
 installed; next diagnostic not yet built/flashed.
+
+Additional0053 follow-up capture reports SpringBoard SIGTRAP at
+0x1b1da39a4, cache slide0x16e0c000 -> FrontBoardServices+0x579a4, nearest
+local symbol -[FBSDisplayMonitor _initWithBookendObserver:transformer:]+0x488.
+Caller0x1b8315768 -> FrontBoard+0x50768, nearest local symbol
+___34+[FBDisplayManager sharedInstance]_block_invoke+0x100. These identify
+crashing code, not a proven missing-provider diagnosis. Identityservices
+SIGABRT also captured. USB Download work remains active.
