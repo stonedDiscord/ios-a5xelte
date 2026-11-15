@@ -19,6 +19,7 @@ def cpio(files):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('output',type=Path)
+    ap.add_argument('--userdata-writable',action='store_true',help='export only validated USERDATA writable for authorized root install')
     ap.add_argument('--base',type=Path,default=ROOT/'backup/galaxy-a03-2026-11-13/firmware/magisk-boot.img')
     a=ap.parse_args()
     if a.output.exists():ap.error('refusing existing output')
@@ -32,7 +33,7 @@ def main():
     kernel=b[page:page+ks];dt_off=page+align(ks)+align(old_rs);dt=b[dt_off:dt_off+ds]
     with tempfile.TemporaryDirectory(prefix='a03-linux-reader-') as temp:
         binary=Path(temp)/'init'
-        subprocess.run(['aarch64-linux-gnu-gcc','-static','-Os','-I/usr/include/libdrm','-Wall','-Wextra','-Werror',
+        subprocess.run(['aarch64-linux-gnu-gcc','-static','-Os','-I/usr/include/libdrm','-Wall','-Wextra','-Werror',*(['-DA03_USERDATA_WRITABLE=1'] if a.userdata_writable else []),
                         str(ROOT/'tools/a03-linux-reader-init.c'),'-o',str(binary)],check=True)
         ramdisk=cpio([(n,0o40755,b'') for n in ('dev','proc','sys','config','run')]+[('init',0o100755,binary.read_bytes())])
     out=bytearray(b[:page]);struct.pack_into('<I',out,16,len(ramdisk));digest=hashlib.sha1()
@@ -52,5 +53,5 @@ def main():
     print('BOOT-only Linux reader:',a.output)
     print('kernel SHA256',hashlib.sha256(kernel).hexdigest())
     print('BOOT SHA256',hashlib.sha256(out).hexdigest())
-    print('USERDATA unmounted; USB read-only. Writes 4 KiB report at offset 16 GiB after GPT validation.')
+    print('USERDATA unmounted; USB USERDATA '+('WRITABLE' if a.userdata_writable else 'read-only')+'. GPT validation required; report mailbox at16GiB.')
 if __name__=='__main__':main()

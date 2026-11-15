@@ -2432,3 +2432,44 @@ No new USERDATA write by viewer. It halts before XNU, awaiting physical
 A03 STOCK LINUX REPORT text or the mailbox/GPT failure line. Current BOOT is
 the report viewer. Commits d9ff094 and c381f54 contain reader and mailbox work.
 Reader0008 remains unflashed. Host sees no USB on viewer by design.
+
+
+## 2026-11-15 10:46UTC: independent Linux confirms installed catalog zeros
+
+User read the CRC-verified Linux mailbox viewer: GPT CRC=bb4c2987,
+USERDATA start15929344, CATALOG_HEADER at relative0x2cd82000 first32 all zero.
+This agrees with XNU direct CMD17 and isolates the catalog failure to installed
+USERDATA contents rather than the XNU BSD/HFS path. Reported sector count was
+transcribed10621336; do not adopt that as authoritative geometry without
+reading full report (existing test fixture106213336). Full host rebuilt-image
+16GiB SHA256 reverified eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108.
+
+User supplied remaining report error: link mass storage: No such file or
+directory. Stock Linux fs/configfs/symlink.c get_target uses kern_path on
+symlink argument before link creation, resolving relative paths from process
+cwd rather than the link parent. Replaced relative target with absolute
+/config/usb_gadget/a03/functions/mass_storage.0. Reader0009 host build PASS,
+SHA8891c2434ab430f321ec9e49ec1bcb422561bc2deaf177fba267c745235dd2d3.
+Await Download mode for BOOT-only test. USB export remains read-only;
+existing4096-byte USERDATA mailbox behavior unchanged. No launchd yet.
+
+
+### USB storage transport works; independent catalog verification
+
+Fixed absolute configfs symlink, built/flashed reader0010 BOOT-only
+SHAa2d3439e754ff3f422c6c6c083afbd3b0d800779d703bc7c640a9d15934d7dac.
+USB1d6b:0104 enumerated; host LUN0=1MiB RAM report, LUN1=54381228032-byte
+USERDATA, both read-only, serialA03LinuxReaderV9. User granted host read ACL
+only to /dev/sdb and /dev/sdc. Direct host reads of RAM report and USERDATA
+confirm GPT CRCbb4c2987, start15929344, sectors106213336, valid HFSX header
+and all-zero32-byte catalog header/root at0x2cd82000/0x2cfa6000. This proves
+installed image contents, not XNU read translation, block HFS/launchd.
+
+Added explicit --userdata-writable build profile: only GPT-validated p55 LUN
+becomes writable, no whole card exported, RAM report remains read-only.
+Installer0011 SHA7acfc1f50d01b86a760408f8fa748618429a07cdb8eeeecf64cb96e54986ccdb.
+Added tools/a03-install-usb-root.py with exact USB identity/LUN/capacity,
+mount/target guards, pinned16GiB source hash, full write/fsync/O_DIRECT
+readback SHA256. Direct hash routine checked on host; regular target refused.
+User returned phone to Download for authorized root install. Install actual
+write remains pending; do not claim USERDATA repaired until full readback.

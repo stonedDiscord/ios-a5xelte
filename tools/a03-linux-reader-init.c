@@ -22,6 +22,17 @@
 #include <string.h>
 #include <unistd.h>
 #include "a03-linux-reader-drm.h"
+#if A03_USERDATA_WRITABLE
+#define USERDATA_USB_RO "0"
+#define READER_SERIAL "A03LinuxInstallV11"
+#define READER_PRODUCT "A03 USERDATA INSTALL"
+#define USB_WAIT_SECONDS 7200
+#else
+#define USERDATA_USB_RO "1"
+#define READER_SERIAL "A03LinuxReaderV11"
+#define READER_PRODUCT "A03 USERDATA READ ONLY"
+#define USB_WAIT_SECONDS 900
+#endif
 static char report[16384];
 static size_t used;
 static void screen(void) {
@@ -102,9 +113,9 @@ int main(void) {
     mount("proc","/proc","proc",MS_NOSUID|MS_NODEV|MS_NOEXEC,NULL);
     mount("sysfs","/sys","sysfs",MS_NOSUID|MS_NODEV|MS_NOEXEC,NULL);
     mount("tmpfs","/run","tmpfs",MS_NOSUID|MS_NODEV,"mode=0700");
-    logmsg("A03_LINUX_READER_V7 PID=%ld; USERDATA read-only; no Android init\n",(long)getpid());
+    logmsg("A03_LINUX_READER_V11 PID=%ld; no Android init\n",(long)getpid());
     char buf[256];
-    int validated=0;
+    int validated=0,usb_bound=0;
     uint64_t part_sectors=0;
     for(unsigned t=0;t<15;t++){
         if(!get("/sys/class/block/mmcblk0p55/dev",buf,sizeof(buf)))break;
@@ -156,8 +167,8 @@ usb_setup:
     if(put("/config/usb_gadget/a03/idVendor","0x1d6b")||put("/config/usb_gadget/a03/idProduct","0x0104"))goto idle;
     if(dir("/config/usb_gadget/a03/strings/0x409"))goto idle;
     if(put("/config/usb_gadget/a03/strings/0x409/manufacturer","A03 bringup")||
-       put("/config/usb_gadget/a03/strings/0x409/product","A03 USERDATA READ ONLY")||
-       put("/config/usb_gadget/a03/strings/0x409/serialnumber","A03LinuxReaderV7"))goto idle;
+       put("/config/usb_gadget/a03/strings/0x409/product",READER_PRODUCT)||
+       put("/config/usb_gadget/a03/strings/0x409/serialnumber",READER_SERIAL))goto idle;
     if(dir("/config/usb_gadget/a03/configs/c.1")||dir("/config/usb_gadget/a03/functions/mass_storage.0"))goto idle;
     int rf=open("/run/report.bin",O_CREAT|O_RDWR|O_CLOEXEC,0600);
     if(rf<0)goto idle;
@@ -167,11 +178,11 @@ usb_setup:
        put("/config/usb_gadget/a03/functions/mass_storage.0/lun.0/file","/run/report.bin"))goto idle;
     if(validated){
         if(dir("/config/usb_gadget/a03/functions/mass_storage.0/lun.1")||
-           put("/config/usb_gadget/a03/functions/mass_storage.0/lun.1/ro","1")||
+           put("/config/usb_gadget/a03/functions/mass_storage.0/lun.1/ro",USERDATA_USB_RO)||
            put("/config/usb_gadget/a03/functions/mass_storage.0/lun.1/removable","1")||
            put("/config/usb_gadget/a03/functions/mass_storage.0/lun.1/file","/dev/mmcblk0p55"))goto idle;
     }
-    if(symlink("../../functions/mass_storage.0","/config/usb_gadget/a03/configs/c.1/mass_storage.0")){
+    if(symlink("/config/usb_gadget/a03/functions/mass_storage.0","/config/usb_gadget/a03/configs/c.1/mass_storage.0")){
         logmsg("link mass storage: %s\n",strerror(errno));goto idle;
     }
     for(unsigned t=0;t<15;t++){
@@ -179,7 +190,7 @@ usb_setup:
         if(d){
             while((de=readdir(d)))if(de->d_name[0]!='.'){
                 logmsg("binding UDC %s\n",de->d_name);
-                if(!put("/config/usb_gadget/a03/UDC",de->d_name)){closedir(d);goto idle;}
+                if(!put("/config/usb_gadget/a03/UDC",de->d_name)){usb_bound=1;closedir(d);goto idle;}
             }
             closedir(d);
         }
@@ -204,8 +215,9 @@ idle:
     }
     /* Return to Download after observation, proving init execution even if
      * gadget/display setup failed. Linux restart handler only; no block writes. */
-    logmsg("Returning to Download in 45 seconds\n");
-    for(unsigned t=0;t<45;t++){screen();sleep(1);}
+    unsigned wait_seconds=usb_bound?USB_WAIT_SECONDS:45;
+    logmsg("Returning to Download in %u seconds\n",wait_seconds);
+    for(unsigned t=0;t<wait_seconds;t++){screen();sleep(1);}
     syscall(SYS_reboot,LINUX_REBOOT_MAGIC1,LINUX_REBOOT_MAGIC2,
             LINUX_REBOOT_CMD_RESTART2,"download");
     for(;;)pause();

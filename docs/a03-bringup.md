@@ -178,3 +178,23 @@ To display its saved report through the known shim framebuffer:
 
 This profile validates GPT, reads only the bounded mailbox, checks magic/CRC,
 displays text and halts before XNU. It is not an XNU/launchd execution test.
+
+
+## Linux USB root installation
+
+The configfs function symlink must use an absolute target: this4.14 kernel
+resolves symlink input from process cwd before creating the configfs link.
+The fixed reader enumerated1d6b:0104 and exported report/USERDATA successfully.
+Explicit --userdata-writable changes only validated USERDATA LUN1 to RW;
+LUN0 stays RO, no whole-card LUN. Writable profile serialA03LinuxInstallV11.
+It waits2hours after UDC bind; default reader remains RO and waits15minutes.
+
+    python3 tools/a03-linux-reader-image.py OUTPUT --userdata-writable
+    python3 tools/a03-install-usb-root.py VERIFIED_ROOT_IMAGE --write
+
+Installer accepts only the pinned16GiB root SHA and exact USB LUN identity/
+54381228032-byte partition capacity, rejects mounts/wrong device, writes
+exactly16GiB, fsyncs and verifies a full O_DIRECT readback SHA. The existing
+4KiB diagnostic mailbox beyond16GiB remains separate. Host block permissions
+must permit the read/write; do not grant access to any host disk. Device
+assignment can change after USB reconnect; recheck model/serial/LUN each time.

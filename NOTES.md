@@ -1,5 +1,29 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT 2026-11-15 10:53UTC: Linux USB storage works after absolute configfs
+symlink fix. Independent host reads prove installed catalog header/root zero.
+Current BOOT=installer0011 SHA7acfc1f50d01b86a760408f8fa748618429a07cdb8eeeecf64cb96e54986ccdb,
+BOOT-only upload100%/reboot. USB serialA03LinuxInstallV11, LUN0=/dev/sdb1MiBRO,
+LUN1=/dev/sdc54381228032bytesRW (only GPT-validated USERDATAp55, not whole card).
+Await user host ACL r on sdb and rw on sdc; no root install started yet.
+Run tools/a03-install-usb-root.py with rebuilt16GiB image and --write after
+ACL; pinned source hash and USB identity/capacity/mount guards mandatory;
+full O_DIRECT readback hash required. Device stays in installer for2hours.
+Then return Download and flash XNU0042/0041 BOOT-only to test actual launchd.
+No Apple launchd yet. Keep protected partitions intact.
+
+
+LATEST 2026-11-15 10:46UTC: user read Linux mailbox: GPT CRCbb4c2987,
+USERDATA start15929344 and CATALOG_HEADER@0x2cd82000 first32 all zero.
+Independent stock Linux confirms installed catalog contents wrong, agreeing
+with XNU. Reverified host16GiB root SHAeb72c14a...89da108. Remaining report
+error link mass storage: ENOENT traced to configfs resolving relative target
+from cwd. Fixed to absolute target; host candidate reader0009 SHA
+8891c2434ab430f321ec9e49ec1bcb422561bc2deaf177fba267c745235dd2d3.
+Await Download for BOOT-only USB retest; read-only LUN still enforced.
+Current BOOT remains report viewer0001; no launchd execution.
+
+
 CURRENT BOOT UPDATE 2026-11-15 10:43UTC: reader7 returned to Download;
 report viewer0001 flashed BOOT-only/upload100%/success/reboot. Await screen
 A03 STOCK LINUX REPORT or last mailbox/GPT failure line. Viewer halts before
