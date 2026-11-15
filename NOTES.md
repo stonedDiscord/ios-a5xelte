@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT0055: USB IN works, PIO takeover did NOT fix RX (0800/count1 zero).
+0115 explicit --download-control -> CDC SEND_BREAKffff bypasses bulk OUT
+to same sync/reset worker. Combined0114+0115 CI43746383199 from3a3f19a
+queued; supersedes43746031809.0056 pending. Need physical Download once.
+
 CURRENT0055 installed BOOT-only100%/success/reboot. CI43744564237 PASS.
 Image2cf20091b428f9043fd3a77b09903df0de3f4c3ab0b337c3d9dd1549d1043aec.
 Exact0054 loader/ADT/args preserved; watchdog opt-in OFF. Capture99106 waits

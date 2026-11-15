@@ -3392,3 +3392,6 @@ when explicitly requested. Ordinary capture/CDC open and break-clear0 do
 not trigger reset. EP0 setup path works for enumeration; reset still must
 be hardware tested. Bulk command remains for eventual RX repair. Actual
 protocol positive/clear-break tests and kernel syntax PASS.
+
+Combined0114+0115 build43746383199 from3a3f19a queued; requested cancellation
+of older43746031809 before packaging. BOOT0055 installed, reset unresolved.
