@@ -2876,3 +2876,15 @@ to _a03_init_trap_log then _a03_init_debug_hold before coredump. Both symbols
 are linked; hardware hold still unconfirmed. Cumulative0103+0104+0106 CDC
 protocol/command test PASS, all four IPC/USB source consumers compile PASS.
 Build43724877490 remains running; Download detected. Root untouched.
+
+## 2026-11-15: BOOT0048 reply compatibility + PHY trial deployed
+
+CI43724877490 SUCCESS fromf8ecc3747c33fd5046ead5465519d9452c8f7fd9.
+Kernel SHAf7f873bef453343675a53ac829f69b555c0797b732f739cc77cdbfb1bc50f5b4.
+Required markers independently checked; linked strict predicate disassembly
+calls proc_sdk/proc_platform and checks IOS2/SDK16 before the exception.
+BOOT0048 SHAe9f8ee1df066a7b9e4fd0db131f8a4c11df5b70215eafad5fa8daf60fd6c6626.
+Uses0047 args plus a03_ios16_provisional_reply=1. Host capture45847 started
+before Heimdall BOOT-only upload100%/success/reboot. USERDATA/root/GPT and
+protected partitions untouched. Await physical logs and USB enumeration;
+no runtime host_info/launchd improvement or USB success claimed yet.

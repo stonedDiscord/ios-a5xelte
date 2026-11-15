@@ -1,5 +1,13 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT0048 flashed BOOT-only100%/success/reboot; CI43724877490 PASS.
+Kernel f7f873be...0f5b4, image e9f8ee1d...6c6626.0047 args+ opt-in reply
+compatibility=1. Markers + actual predicate disassembly verified. Capture
+session45847 logs /tmp/a03-boot0048-usb-capture.log; private output
+shim/a03/out/boot0048-usb-console.log if tty enumerates. Await user's screen
+USB PHY/CORE/config/reset/setup + final launchd/TRAP lines. Root preserved.
+No runtime improvement proven yet.
+
 NEXT0048:0105 opt-in iOS16 SDK16 provisional reply compatibility only;
 0106 matching A03 peripheral PHY/trim correction + register/counter logs.
 Cross-compile/exact patch/192-case predicate/CDC/parser PASS. CI43724877490 running fromf8ecc37.
