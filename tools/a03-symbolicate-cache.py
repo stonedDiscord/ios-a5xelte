@@ -3,8 +3,8 @@
 
 Read-only HFS image/extracted-root access. Addresses default to unslid;
 --slide subtracts a captured cache slide. Does not resolve standalone images.
-Reports the nearest preceding local symbol, not a proven containing function;
-exported symbols can occur between local symbols.
+Reports nearest preceding local and exported symbols, not proven containing
+functions; exported symbols can occur between local symbols.
 """
 import argparse
 import importlib.util
@@ -83,6 +83,7 @@ class Symbols:
             commands = self.read(address + 32, size)
             offset = 0
             found = False
+            linkedit = symtab = None
             for _ in range(count):
                 cmd, length = struct.unpack_from('<II', commands, offset)
                 if length < 8 or offset + length > len(commands):
@@ -91,6 +92,10 @@ class Symbols:
                     start, span = struct.unpack_from('<QQ', commands, offset + 24)
                     initprot, = struct.unpack_from('<I', commands, offset + 60)
                     found |= bool(initprot & 4 and start <= pc < start + span)
+                    if commands[offset+8:offset+24].rstrip(bytes(1)) == b"__LINKEDIT":
+                        linkedit = struct.unpack_from("<4Q", commands, offset+24)
+                elif cmd == 2:
+                    symtab = struct.unpack_from("<4I", commands, offset+8)
                 offset += length
             if not found:
                 continue
@@ -110,6 +115,23 @@ class Symbols:
                                         min(2048, self.strsize-no)).split(b'\0')[0].decode(errors='replace')
                 result.update(nearest_local_symbol=name, local_symbol_address=hex(value),
                               distance_from_local_symbol=hex(pc-value))
+            # The cache Mach-O symbol table retains exports omitted by local symbols.
+            if linkedit is not None and symtab is not None:
+                linkva, linksize, fileoff, filesize = linkedit
+                no, nc, so, ss = symtab
+                if nc > 1000000 or filesize > linksize or no < fileoff or so < fileoff or no+nc*16 > fileoff+filesize or so+ss > fileoff+filesize:
+                    raise ValueError("invalid image symbol-table bounds")
+                symbols = self.read(linkva+no-fileoff, nc*16)
+                best_export = None
+                for nameoff, kind, sect, desc, value in struct.iter_unpack("<IBBHQ", symbols):
+                    if kind & 0xe0 or kind & 0x0e != 0x0e or not kind & 1 or not sect or not address <= value <= pc or nameoff >= ss:
+                        continue
+                    if best_export is None or value > best_export[0]:
+                        name = self.read(linkva+so-fileoff+nameoff, min(2048, ss-nameoff)).split(bytes(1))[0].decode(errors="replace")
+                        if name and name != "<redacted>":best_export = value, name
+                if best_export is not None:
+                    value, name = best_export
+                    result.update(nearest_exported_symbol=name, exported_symbol_address=hex(value), distance_from_exported_symbol=hex(pc-value))
             return result
         return {'pc': hex(pc), 'error': 'no executable cache image contains this address'}
 

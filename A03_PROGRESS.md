@@ -3395,3 +3395,10 @@ protocol positive/clear-break tests and kernel syntax PASS.
 
 Combined0114+0115 build43746383199 from3a3f19a queued; requested cancellation
 of older43746031809 before packaging. BOOT0055 installed, reset unresolved.
+
+Symbolication correction: image LC_SYMTAB exports put mediaserverd unslid
+181cb11b0 in CFDictionaryGetValue+0x48, not a proven CFRetain function.
+Matching instruction ldr x8,[x0] with captured FAR0 establishes null dictionary
+passed by FigNotificationListenerStartNotifications+0x38. Extended tool
+reports nearest local AND exported symbols, retaining proximity caveat.
+No Apple binary edits. Need trace listener initialization before patching.

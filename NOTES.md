@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE: CI43746383199 running; host Download detected,0056 pending.
+Symbolicator now includes LC_SYMTAB exports: mediaserverd crash is null
+CFDictionaryGetValue+48 (ldr x8,[x0]), caller FigNotificationListenerStartNotifications+38.
+Root preserved; no full iOS success.
+
 CURRENT0055: USB IN works, PIO takeover did NOT fix RX (0800/count1 zero).
 0115 explicit --download-control -> CDC SEND_BREAKffff bypasses bulk OUT
 to same sync/reset worker. Combined0114+0115 CI43746383199 from3a3f19a
