@@ -112,7 +112,8 @@ def main():
                      '0106-a03-usb-peripheral-phy-readback.patch',
                      '0107-a03-opt-in-software-keystore.patch',
                      '0108-a03-bounded-daemon-crash-diagnostics.patch',
-                     '0109-a03-usb-supply-flat-endpoints.patch'):
+                     '0109-a03-usb-supply-flat-endpoints.patch',
+                     '0110-a03-usb-download-command.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
@@ -121,7 +122,7 @@ def main():
         'Pinned libpthread and mockfs/HFS RAM-root.',
         'Experimental XML entitlements/platform CS_SIGNED support (0035/0036).' if a.ios_userspace else 'Minimal AMFI interface for static test init.',
         'Opt-in A03 SDMA; BOOT reads confirmed0024; USERDATA writes hardware-unverified.', '']))
-    print('A03 profile staged:', len(patches)+8+17*int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
+    print('A03 profile staged:', len(patches)+8+18*int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':

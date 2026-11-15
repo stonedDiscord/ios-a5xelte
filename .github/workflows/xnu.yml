@@ -252,7 +252,7 @@ jobs:
             echo 'A03 init SIGTRAP diagnostics are absent from the kernel' >&2
             exit 1
           fi
-          for marker in 'A03 REPLY invalid' 'A03 REPLY construct' 'A03 USB console:' 'A03 DEBUG: initproc exit paused' 'A03 IPC: iOS16 provisional reply compatibility=' 'A03 USB PHY:' 'A03 USB supply: after' 'flat-ep' 'A03 AKS: software AppleKeyStore registered' 'CRASH %s[%d] sig'; do
+          for marker in 'A03 REPLY invalid' 'A03 REPLY construct' 'A03 USB console:' 'A03 DEBUG: initproc exit paused' 'A03 IPC: iOS16 provisional reply compatibility=' 'A03 USB PHY:' 'A03 USB supply: after' 'flat-ep' 'A03 USB: download requested; syncing filesystems' 'A03 AKS: software AppleKeyStore registered' 'CRASH %s[%d] sig'; do
             if ! strings "$kernel" | grep -F "$marker" >/dev/null; then
               echo "Requested A03 diagnostic missing: $marker" >&2
               exit 1
