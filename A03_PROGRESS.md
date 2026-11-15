@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: later0062 container access evidence and selector tests
+
+Additional120s capture193407bytes SHA256
+fcfe7772b22177916d749fabeba33880ddfc217a6de35f627c3e4c24133debc3.
+Zero CRASH, zero new SpringBoard/backboard spawns, four successful HFS
+exchanges and no atomic-save failures. Backboardd56 now records an actual
+mkdir_extended syscall220 EACCES13 on its resolved system-container
+Library/Caches. This is concrete permission failure, not proof that the
+external ACL resolver is its cause. Existing CONFIG_EXT_RESOLVER differs
+from donor; no permission bypass/removal applied to0123 test.
+
+Added actual-source external-method host test for scalar input/output
+counts, null buffers, exact400 swap versus3ff/46c, invalid notification type,
+layer0 restriction and unknown selector propagation. PASS. Four real Mach-O
+objects generated with general-register codegen.0123 CI43760748014 still
+running exactee1307c; later test/docs commits do not alter kernel candidate.
+
 ## 2026-11-15: display CI43760748014 running; BOOT0062 extended window
 
 0123 commit ee1307c pushed; full CI43760748014 active. Package0063
