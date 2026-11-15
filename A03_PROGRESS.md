@@ -2931,3 +2931,8 @@ headers/flags: bind_subr.c, bind_vfsops.c, bind_vnops.c PASS. Full new config
 link/registration remains for CI and phone validation. Bring-up guide's
 current-status introduction updated to distinguish observed boot tasks from
 sustained launchd or GUI success. No new device write.
+
+User confirms Download mode ready for0049; host detection agrees. Candidate
+retains0048 cmdline exactly. Apple's own arm64/iPhoneOS config includes
+bindfs, and vfs_conf.c registers the real filesystem when BINDFS is enabled.
+CI43727113402 remains in Build; no0049 flash yet.

@@ -4,7 +4,7 @@ CURRENT0048 physical: launchd runs boot task mount-phase-1, exits74 after
 firmware bind mount ENODEV19. Old pthread trap passed; sustained boot not yet.
 Kernel lacks bindfs_vfsops; A03 omitted portable donor0037. Profile now stages
 0037, exact config apply PASS, CI gate requires symbol. CI43727113402 running fromfb777a0; next0049 BOOT-only.
-No root reinstall. Need Download when new kernel ready; USB still absent.
+No root reinstall. Download ready confirmed by user+host; USB console still absent.
 
 CURRENT0048 audit: exact CI43724877490 ipc_port.c/.h +USB source match
 locally tested files byte-for-byte; debug-hold call in actual kern_exit.c.
