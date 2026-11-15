@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE CI43720286686 at94edf70 (monitor+CDC+reply diagnostics), pending.
+Supersedes43719832882 USB-only. Device Download detected. Next0047 after
+PASS, add a03usb_console=1 a03debug_hold=1; start host capture first.
+No new flash yet. Actual USB/monitor responsiveness unproven.
+
+
 NEXT combined0102/0103/0104: buffered CDC + post-SIGTRAP inspection hold.
 a03usb_console=1 a03debug_hold=1. USB OUT help/regs/bt/mem/panic; no shell
 or resume. Local compile/protocol/parser/patch PASS; runtime unproven.

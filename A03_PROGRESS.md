@@ -2816,3 +2816,7 @@ resume, task execution, memory writes or launchd restart claim. USB OUT line
 queue and host capture interactive/command support added. Local three-file
 compile PASS; parser/queue harness PASS; exact patch zero-fuzz roundtrip PASS.
 USB hardware remains unproven. Combine0102/0103/0104 for next0047 candidate.
+
+Monitor-inclusive CI43720286686 at94edf70 queued/pending. Supersedes USB-only
+43719832882. Download detected. Next successful kernel=>BOOT0047 with
+ a03usb_console=1 a03debug_hold=1, then host capture and BOOT-only trial.
