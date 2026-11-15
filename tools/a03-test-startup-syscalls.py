@@ -7,6 +7,11 @@ patch=(root/'xnu/a03/0120-a03-bounded-startup-syscall-evidence.patch').read_text
 source='\n'.join(x[1:] for x in patch.splitlines() if x.startswith('+') and not x.startswith('+++'))
 source=source[source.index('#if defined(ARM64_BOARD_CONFIG_SWEET)'):source.index('\n\tif (is_saved_state64')]
 source=source[:source.rindex('#if defined(ARM64_BOARD_CONFIG_SWEET)')]
+# Apply the small follow-up selection extension to the extracted real helper.
+follow=(root/'xnu/a03/0126-a03-springboard-startup-evidence.patch').read_text()
+assert '+    static unsigned reports[5];' in follow
+assert '+    else if (!strcmp(p->p_comm, "SpringBoard")) slot = 4;' in follow
+source=source.replace('static unsigned reports[4];','static unsigned reports[5];',1).replace('else if (!strcmp(p->p_comm, "notifyd")) slot = 3;','else if (!strcmp(p->p_comm, "notifyd")) slot = 3;\n    else if (!strcmp(p->p_comm, "SpringBoard")) slot = 4;',1)
 names=['open','open_nocancel','access','mkdir','mkdir_extended','stat64','lstat64','getattrlist','getxattr','__mac_syscall','openat','openat_nocancel','openat_dprotected_np','faccessat','mkdirat','getattrlistat','csops','csops_audittoken']
 header=r'''
 #include <assert.h>
@@ -44,8 +49,8 @@ int main(void){
  a[0]=a[1]=a[2]=a[3]=0;logs=0;
  for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);
  assert(logs==188);
- const char *others[]={"containermanager","mediaserverd","notifyd"};
- for(unsigned k=0;k<3;k++){strcpy(p.p_comm,others[k]);logs=0;
+ const char *others[]={"containermanager","mediaserverd","notifyd","SpringBoard"};
+ for(unsigned k=0;k<4;k++){strcpy(p.p_comm,others[k]);logs=0;
  for(unsigned i=0;i<1000;i++){a03_startup_syscall_log(&p,99,2,a,0,1);}assert(logs==192);}
  puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/192-report cap PASS");
 }

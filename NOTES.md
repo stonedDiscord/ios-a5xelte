@@ -1,3 +1,10 @@
+ACTIVE0063 extended600s completed90815bytes SHA07d49975...d4193, zero
+CRASH, swaps4..11. Capture stopped normally, CDC remains; no GUI proof.
+0124 CI43762755721 still Build21:28UTC, package54915 live.0126 follow-up
+adds SpringBoard to bounded startup syscall evidence; actual-source host,
+kernel syntax and plain apply equality PASS. Not in0124.0125/0126 local
+tree differs from frozen0124 comparison snapshot; retain isolation.
+
 ACTIVE handoff:0063 still running USB CDC; user sees Apple logo and logs
 confirm11 full-screen BGRA swaps, zero CRASH through extended capture's
 latest86767-byte snapshot. Extended600s session79994 still active at read.

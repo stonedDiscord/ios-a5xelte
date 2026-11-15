@@ -1,0 +1,14 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -90,9 +90,10 @@
+ {
+     unsigned slot;
+-    static unsigned reports[4];
++    static unsigned reports[5];
+     if (!strcmp(p->p_comm, "backboardd")) slot = 0;
+     else if (!strncmp(p->p_comm, "containermanager", 15)) slot = 1;
+     else if (!strcmp(p->p_comm, "mediaserverd")) slot = 2;
+     else if (!strcmp(p->p_comm, "notifyd")) slot = 3;
++    else if (!strcmp(p->p_comm, "SpringBoard")) slot = 4;
+     else return;
+     if (!error && code != SYS_csops && code != SYS_csops_audittoken &&

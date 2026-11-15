@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: extended0063 capture complete; SpringBoard diagnostic coverage
+
+Extended600s capture completed90815bytes SHA256
+07d49975277cea6c77336f72ec247d922d68b31d626abd169634c330f13d4193.
+Zero CRASH; eight additional swaps4..11, no repeated SpringBoard/backboardd
+spawn authorization. USB CDC still enumerated. No home-screen observation.
+0124 CI43762755721 still in Build at21:28UTC; package54915 remains live.
+
+Existing0120 startup syscall diagnostics omitted SpringBoard itself.
+Prepared0126 to add a fifth independent192-report slot, preserving the
+existing opt-in/error filter/path/header logic and syscall decisions.
+Actual-source host tests include SpringBoard's independent cap; real kernel
+syntax compile and plain git apply full-file equality PASS.0125/0126 are
+follow-up diagnostics, absent from0124 CI and running0063. Guide refreshed
+to distinguish physical Apple logo from SpringBoard success (8396f6e).
+
 ## 2026-11-15: extended0063 rendering continues during0124 build
 
 Extended capture now includes swaps4..11 from alternating720x1600 BGRA
