@@ -3534,3 +3534,16 @@ BOOT-only Heimdall upload100percent/success/reboot19:26UTC. Capture77592
 waits900s then100s into private boot0058-usb-initial.log. Runtime pending.
 No host USERDATA/GPT/recovery/bootloader/EFS/NV write.
 User requests silence during routine CI waits; only results/needed input.
+
+BOOT0058 CDC enumerated, user ACL restored; capture77592 opened. Runtime
+annotation scan reaches455 loaded backboardd images, both selected libraries.
+libc++abi v5 annotation1: "terminating with uncaught exception of type NSException"
+on both backboardd reports. This confirms diagnostic execution but gives no
+exception reason. Libobjc has no __crash_info in this cache. Read-only exact
+cache inspection identifies v5 sections in Foundation/CoreFoundation/QuartzCore
+and libc abort path sets libsystem_c annotation at1dd8f8430.0119 extends only
+selected image paths to these four owners (max6 matches total); bounds and
+no-user-write behavior retained. Actual-source selector tests exercise all6
+paths/unselected rejection; parser and exception.c kernel compile PASS.
+Media null dictionary and configd null+54 persist; WDT disabled path remains.
+No stable GUI claim. Next combined build pending;0058 running, tty accessible.

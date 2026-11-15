@@ -1,0 +1,17 @@
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -1043,8 +1043,12 @@
+             char path[256];
+             vm_size_t copied = 0;
+             if (images[i].path && copyinstr((user_addr_t)images[i].path, path, sizeof(path), &copied) == 0 &&
+-                (!strcmp(path, "/usr/lib/libc++abi.dylib") || !strcmp(path, "/usr/lib/libobjc.A.dylib"))) {
+-                if (++matches > 2) return;
++                (!strcmp(path, "/usr/lib/libc++abi.dylib") || !strcmp(path, "/usr/lib/libobjc.A.dylib") ||
++                 !strcmp(path, "/usr/lib/system/libsystem_c.dylib") ||
++                 !strcmp(path, "/System/Library/Frameworks/Foundation.framework/Foundation") ||
++                 !strcmp(path, "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation") ||
++                 !strcmp(path, "/System/Library/Frameworks/QuartzCore.framework/QuartzCore"))) {
++                if (++matches > 6) return;
+                 a03_crash_image(name, images[i].base);
+             }
+         }

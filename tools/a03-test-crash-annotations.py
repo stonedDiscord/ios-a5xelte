@@ -6,6 +6,12 @@ import tempfile
 root = Path(__file__).resolve().parent.parent
 patch = (root/'xnu/a03/0118-a03-bounded-crash-annotations.patch').read_text()
 source = '\n'.join(x[1:] for x in patch.splitlines() if x.startswith('+') and not x.startswith('+++'))
+# Apply the follow-on selector extension to the actual extracted helper.
+with tempfile.TemporaryDirectory(prefix='a03-annotation-patch-') as directory:
+    d=Path(directory);p=d/'osfmk/kern/exception.c';p.parent.mkdir(parents=True)
+    p.write_text(source)
+    subprocess.run(['git','apply','--unidiff-zero',str(root/'xnu/a03/0119-a03-framework-crash-annotations.patch')],cwd=d,check=True)
+    source=p.read_text()
 source = source[source.index('/* Read current-task'):source.index('\n\ta03_crash_annotations(name, task->')]
 header = r'''
 #include <stdint.h>
@@ -79,6 +85,15 @@ int main(void) {
  sec=(void*)(memory+176);strcpy(sec->sectname,"__crash_info");strcpy(sec->segname,"__DATA");sec->addr=0x2000;sec->size=64;
  output[0]=0;messages=0;a03_crash_annotations("test",0x103000,16,0);
  assert(messages==1&&strstr(output,"images 1 matches 1"));
+
+ const char *paths[]={"/usr/lib/libc++abi.dylib","/usr/lib/libobjc.A.dylib",
+ "/usr/lib/system/libsystem_c.dylib","/System/Library/Frameworks/Foundation.framework/Foundation",
+ "/System/Library/Frameworks/CoreFoundation.framework/CoreFoundation",
+ "/System/Library/Frameworks/QuartzCore.framework/QuartzCore"};
+ for(unsigned k=0;k<6;k++) {strcpy((char*)memory+12800,paths[k]);output[0]=0;messages=0;
+ a03_crash_annotations("test",0x103000,16,0);assert(messages==1&&strstr(output,"matches 1"));}
+ strcpy((char*)memory+12800,"/unselected.dylib");output[0]=0;messages=0;
+ a03_crash_annotations("test",0x103000,16,0);assert(!messages&&strstr(output,"matches 0"));
  puts("A03 actual annotation parser: layout/slide/messages/sanitization/caps/malformed/fault/overflow PASS");
 }
 '''

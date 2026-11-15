@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0058 USB capture works: libc++abi confirms uncaught NSException, no
+reason text.0119 adds Foundation/CoreFoundation/QuartzCore/libsystem_c owners
+(max6 selected), tests/kernel compile PASS. Next CI then0059;0058 running,
+tty open. Use working --download-control when next image ready, no mode ask.
+
 ACTIVE0058 flashed BOOT-only100%/success/reboot19:26UTC; CI43751227542 PASS.
 Image09f5350cbf8acffabf08a9d14b261241a38f8bd8777e7e9bef655f6b08fa7b69.
 Exact0057 loader/ADT/args/root retained. Annotation diagnostic capture77592
