@@ -3340,3 +3340,10 @@ Combined0112+0113 CI43744564237 from62736e7 supersedes watchdog-only
 SHA2569e2116fabf4ffc628b3b6672d7dd4efe5618587be2c608dc87f6b0bb57f5ef4a.
 Source observation is RX DMAMODE left set; it does not yet prove DMA enable
 was active or that clearing it alone fixes console commands.
+
+Further read-only cache tracing: FBS init sends CADisplay displays then
+firstObject; nil branches to exact main-CADisplay assertion. QuartzCore
++[CADisplay displays] calls ensure_displays; discovery uses CASGetDisplays
+through com.apple.CARenderServer bootstrap port. Therefore nil list is not
+yet direct proof of missing IOMobileFramebuffer: backboardd render-server
+health and display discovery need tracing before provider implementation.

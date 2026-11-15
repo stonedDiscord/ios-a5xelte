@@ -1,16 +1,17 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of2026-11-15, XNU BOOT0052 boots the verified16GiB HFSX root on validated
-USERDATA p55 and reaches launchd daemon orchestration. USB CDC now enumerates
-and transfers kernel logs through host ttyACM0. A45-second capture saved
-289235 bytes, including USB supply/configuration evidence and repeated
-backboardd, mediaserverd, watchdogd, configd and lockdownd crash lines.
-BOOT0053 now installs bounded daemon crash diagnostics and the USB download
-command; new runtime results are pending. Stable
-userspace and GUI remain unproven. See docs/a03-usb-console.md for capture.
-BOOT0052 retains0051 loader/ADT/arguments/root, adding0109 USB setup fixes.
-Software AKS is opt-in lab state without SEP/passcode protection. Patch0108 crash diagnostics and0110 Download reset passed local tests and
-combined CI43740528122; BOOT0053 was flashed BOOT-only.0052 lacks both.
+As of 2026-11-15, XNU BOOT0054 boots the validated USERDATA p55 HFSX
+root and transfers kernel logs over USB CDC. Bounded crash diagnostics
+confirm watchdogd traps on missing IOWatchdog and SpringBoard traps in
+FBSDisplayMonitor because CADisplay.displays.firstObject is nil. Exact
+causes for backboardd/mediaserverd remain unresolved. Stable GUI is unproven.
+
+USB download command is implemented but hardware attempts give no ACK/reset.
+BOOT0054 RX evidence shows DMAMODE retained (CSR0800). Combined CI43744564237
+builds0113 PIO takeover plus0112 opt-in watchdog capability reporting userspace
+monitoring disabled. Neither correction is hardware validated. Preserve
+existing root/loader/ADT; next BOOT adds a03_watchdog_disabled=1.
+Software AKS remains lab-only without SEP/passcode protection.
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve
 checkpoint reproduction and should not be read as current-device status.
