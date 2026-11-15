@@ -1,0 +1,45 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -30,6 +30,8 @@
+ #include <sys/codesign.h>
+ #include <sys/mount.h>
+ #include <sys/proc.h>
++#include <sys/priv.h>
++#include <sys/kauth.h>
+ #include <sys/systm.h>
+ #include <sys/ubc_internal.h>
+ #include <sys/vnode.h>
+@@ -297,8 +299,33 @@
+     return error;
+ }
+ 
++/* Only the calling process's validated boolean entitlement may grant this
++ * privilege. Other credentials/privileges retain the normal MAC decision. */
++static TUNABLE(uint32_t, a03_work_interval, "a03_work_interval", 0);
++static int
++a03_sandbox_priv_grant(kauth_cred_t cred, int priv)
++{
++    if (!a03_work_interval || priv != PRIV_WORK_INTERVAL ||
++        cred != kauth_cred_get() ||
++        !sweet_entitlements_bool(sweet_proc_entitlements(current_proc()),
++            "com.apple.private.kernel.work-interval")) {
++        return EPERM;
++    }
++    static unsigned reports;
++    unsigned old = __atomic_load_n(&reports, __ATOMIC_RELAXED);
++    do {
++        if (old >= 16) return 0;
++    } while (!__atomic_compare_exchange_n(&reports, &old, old + 1,
++        false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++    char name[32];
++    proc_selfname(name, sizeof(name));
++    printf("A03 Sandbox: %s entitled work-interval privilege granted\n", name);
++    return 0;
++}
++
+ static const struct mac_policy_ops a03_sandbox_mac_ops = {
+     .mpo_policy_syscall = a03_sandbox_check_syscall,
++    .mpo_priv_grant = a03_sandbox_priv_grant,
+ };
+ static struct mac_policy_conf a03_sandbox_mac_conf = {
+     .mpc_name = "Sandbox",

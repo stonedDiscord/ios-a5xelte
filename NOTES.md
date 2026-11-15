@@ -1,3 +1,9 @@
+ACTIVE0063 user physically sees Apple logo; continuation confirms three
+full-screen720x1600 BGRA swaps by backboardd, zero CRASH at latest read.
+Leave running while collecting. Home screen unverified.0124 candidate
+adds opted-in work-interval privilege only for current validated entitlement;
+stock backboardd has it. Host compile/tests pending, no new flash.
+
 ACTIVE0063 runtime: initial120s422685bytes SHAa5d459ca...25aab9,
 zero CRASH; IOCoreSurfaceRoot/AppleCLCD registered720x1600. MobileGestalt
 size/dot-pitch calls succeed. Backboardd DOES reach FB selector29(out8),

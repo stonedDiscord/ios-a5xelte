@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: physical Apple logo and actual framebuffer swaps
+
+User reports the phone now shows an Apple logo. Continuation0063 USB log
+now records backboardd SwapBegin/SwapEnd success and three full-screen
+720x1600 BGRA swaps from allocated surfaces2/3 (bpr3072). This is stronger
+than provider registration and aligns with physical display observation;
+it does not establish that SpringBoard's home screen has loaded. Earlier
+no-swap assessments were bounded observations superseded by this capture.
+The same boot remains running to allow further initialization.
+
+Exact stock backboardd XML entitlement includes boolean
+com.apple.private.kernel.work-interval=true. CREATE2 op4 reaches kernel
+priv_check_cred(PRIV_WORK_INTERVAL), but the A03 Sandbox policy currently
+has no privilege-grant hook. Preparing opted-in0124 to grant only this
+privilege to the current credential with that validated boolean entitlement;
+other privileges/credentials retain existing decisions. Actual-source host
+tests pass opt-in/credential/privilege/entitlement negative cases and the
+bounded log path. Real kernel syntax/object compile and plain git apply
+full-file equality PASS; profile stages0124. No new flash yet.
+
 ## 2026-11-15: BOOT0063 runtime reaches the display provider
 
 Initial120s USB capture completed422685bytes SHA256
