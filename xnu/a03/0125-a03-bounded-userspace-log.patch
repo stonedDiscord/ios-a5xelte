@@ -51,3 +51,13 @@
  	return mmrw(dev, uio, UIO_WRITE);
  }
  
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -296,6 +296,7 @@
+ kern_overrides.o_CWARNFLAGS_ADD += -Wno-shorten-64-to-32
+ 
+ lockprof.o_CWARNFLAGS_ADD += -Wno-shorten-64-to-32
++mem.o_CFLAGS_ADD += -mgeneral-regs-only
+ mem.o_CWARNFLAGS_ADD += -Wno-shorten-64-to-32
+ memdev.o_CWARNFLAGS_ADD += -Wno-shorten-64-to-32
+ nd6_rtr.o_CWARNFLAGS_ADD += -Wno-shorten-64-to-32

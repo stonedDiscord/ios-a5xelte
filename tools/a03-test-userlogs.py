@@ -3,7 +3,7 @@
 from pathlib import Path
 import subprocess,tempfile
 root=Path(__file__).resolve().parent.parent
-patch=(root/'xnu/a03/0125-a03-bounded-userspace-log.patch').read_text()
+patch=(root/'xnu/a03/0125-a03-bounded-userspace-log.patch').read_text().split('--- a/bsd/conf/Makefile.template',1)[0]
 s='\n'.join(l[1:] for l in patch.splitlines() if l.startswith('+') and not l.startswith('+++'))
 s=s[s.index('static void'):s.index('#endif')]
 pre=r'''
