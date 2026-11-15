@@ -2564,3 +2564,9 @@ The A03 minimal profile omitted donor0029 unsealed-root support. Added
 rootdev guard; other roots retain the original authentication panic. Packer
 sets the opt-in only with --userdata-root. CI checks its linked marker.
 No filesystem reinstall is indicated. BOOT0042 remains current pending build.
+
+Host validation:0099 applies cleanly to extracted CI bsd_init.c; actual added
+C guard compiled in both board configurations and passed96 cases (auth result,
+opt-in presence/value, provider validity and rootdev mismatch). Existing GPT
+and BSD storage harnesses PASS. Commitd447b11 pushed; kernel CI43708471929
+queued on macos-15-intel with A03 iOS userspace profile. No new BOOT write yet.
