@@ -1,0 +1,67 @@
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -822,6 +822,7 @@
+ 
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+ #include <arm/thread.h>
++#include <arm/machine_routines.h>
+ #include <arm64/proc_reg.h>
+ #include <vm/vm_shared_region.h>
+ #include <pexpert/pexpert.h>
+@@ -1114,7 +1115,7 @@
+ void
+ a03_sample_task(const char *name, int pid, task_t task)
+ {
+-    struct snapshot { thread_t thread; uint64_t pc, lr, sp, fp; int state; } snap[24];
++    struct snapshot { thread_t thread; uint64_t pc, lr, sp, fp; int state; uint64_t wait, cont, kbt[12]; unsigned kn; time_value_t user, system, runnable; } snap[24];
+     unsigned count = 0;
+     vm_map_t map = get_task_map_reference(task);
+     if (map == VM_MAP_NULL) return;
+@@ -1138,13 +1139,47 @@
+         snap[count].lr = get_saved_state_lr(ss);
+         snap[count].sp = get_saved_state_sp(ss);
+         snap[count].fp = get_saved_state_fp(ss);
++        spl_t old_spl = splsched();
++        thread_lock(thread);
+         snap[count].state = thread->state;
++        snap[count].wait = thread->wait_event;
++        snap[count].cont = (uintptr_t)thread->continuation;
++        snap[count].kn = 0;
++        if ((thread->state & TH_WAIT) && thread->kernel_stack != 0) {
++            arm_kernel_saved_state_t ks;
++            if (ml_nofault_copy((vm_offset_t)&thread_get_kernel_state(thread)->machine.ss,
++                (vm_offset_t)&ks, sizeof(ks)) == sizeof(ks)) {
++                snap[count].kbt[snap[count].kn++] = ks.lr;
++                uint64_t kfp = ks.fp;
++                while (snap[count].kn < 12 && !(kfp & 7) &&
++                    kfp >= thread->kernel_stack &&
++                    kfp - thread->kernel_stack <= kernel_stack_size - 16) {
++                    uint64_t frame[2];
++                    if (ml_nofault_copy(kfp, (vm_offset_t)frame, sizeof(frame)) != sizeof(frame)) break;
++                    snap[count].kbt[snap[count].kn++] = frame[1];
++                    if (frame[0] <= kfp) break;
++                    kfp = frame[0];
++                }
++            }
++        }
++        thread_unlock(thread);
++        splx(old_spl);
++        thread_read_times(thread, &snap[count].user, &snap[count].system, &snap[count].runnable);
+         count++;
+     }
+     task_unlock(task);
+     printf("A03 SAMPLE %s[%d] slide %llx mh %llx threads %u\n", name, pid, slide, mh, count);
+     for (unsigned t = 0; t < count; t++) {
++        printf("A03 CPU %s t%u user %d.%06d system %d.%06d runnable %d.%06d\n",
++            name, t, snap[t].user.seconds, snap[t].user.microseconds,
++            snap[t].system.seconds, snap[t].system.microseconds,
++            snap[t].runnable.seconds, snap[t].runnable.microseconds);
+         char line[360];
++        int kn = snprintf(line, sizeof(line), "A03 WAIT %s t%u event %llx continuation %llx kbt",
++            name, t, snap[t].wait, snap[t].cont);
++        for (unsigned k = 0; k < snap[t].kn && kn < (int)sizeof(line) - 20; k++)
++            kn += snprintf(line + kn, sizeof(line) - kn, " %llx", snap[t].kbt[k]);
++        printf("%s\n", line);
+         int n = snprintf(line, sizeof(line), "A03 SAMPLE %s t%u state %x pc %llx lr %llx sp %llx bt",
+             name, t, snap[t].state, snap[t].pc, snap[t].lr, snap[t].sp);
+         uint64_t fp = snap[t].fp;

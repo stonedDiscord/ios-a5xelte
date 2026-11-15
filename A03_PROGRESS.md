@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0067 captures persistent SpringBoard initialization wait
+
+Sampler passes0/1 (180/300s) record same SpringBoard25 sole thread, same
+PC/LR/SP/full12frame chain and state9 (TH_WAIT|TH_UNINT). Matching cache
+slide1e524000 symbolicates PC1c188ed9c to dyld MachOFile::hasThreadLocalVariables,
+LR RuntimeState::initialize and stack through libSystem_initializer, dyld
+initializers/prepare/start. PC instruction is ldrb [x0,#0x1a]; saved user PC
+alone does not identify kernel wait or prove disk wait. Backboardd changes
+from objc class initialization to its executable;3frame swaps occur.
+This is persistent wait evidence, not proof of CPU saturation or I/O cause.
+
+Expanded crash tracer now records analyticsd195 SIGSEGV/null FAR with full
+stack and annotations. No SpringBoard crash or home-screen evidence.
+Prepared0132 adds cumulative thread user/system/runnable times plus wait
+event/continuation and bounded12frame kernel stack copied no-fault only for
+waiting threads, within their kernel stack bounds and thread lock at splsched.
+No printf/user reads while locks held. Real kernel object compile and plain
+apply exact equality PASS. Runtime pending.0131 remains off by default.
+
 ## 2026-11-15:0067 GUI sampler BOOT-only deployment verified
 
 CI43766598769 SUCCESS exactc2c38372fe44efe11c268d1e18ce0f571a4c7a42.

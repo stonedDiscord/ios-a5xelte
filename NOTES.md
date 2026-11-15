@@ -1,3 +1,10 @@
+ACTIVE0067 sample0/1: SpringBoard25 single thread state9 WAIT|UNINT,
+identical PC1c188ed9c/dyld hasThreadLocalVariables and libSystem_initializer
+stack120s apart. Not CPU-saturation proof; need kernel wait. Backboardd
+progresses and3swaps. analyticsd195 SIGSEGV/null captured (expanded tracer).
+0132 CPU times/wait event/continuation/bounded nofault kernel frames prepared,
+real kernel object/plain apply PASS.0131 stays off. Capture233456660s live.
+
 ACTIVE0067 BOOT-only100percent/success/reboot22:11UTC. CI43766598769
 SUCCESSc2c3837,19frozen sources/loader/ADT/sole sample arg verified.
 BOOTfcaa5d1f...15f14. Capture233456660s boot0067-usb-initial.log active;
