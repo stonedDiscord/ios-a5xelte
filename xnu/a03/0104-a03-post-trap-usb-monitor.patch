@@ -1,0 +1,123 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -13,6 +13,26 @@
+ extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
+ extern unsigned a03_console_read(unsigned char *, unsigned);
+ void a03_usb_console_start(void);
++int a03_usb_debug_command(char *, unsigned);
++static char command_line[128], command_ready[128];
++static unsigned command_used;
++static volatile unsigned command_available;
++int a03_usb_debug_command(char *dst, unsigned size) {
++ boolean_t irq=ml_set_interrupts_enabled(FALSE);
++ if(!command_available) { ml_set_interrupts_enabled(irq);return 0; }
++ unsigned i=0;while(i+1<size && command_ready[i]) { dst[i]=command_ready[i];i++; }
++ dst[i]=0;command_available=0;ml_set_interrupts_enabled(irq);return 1;
++}
++static void input_char(unsigned char c) {
++ if(c=='\r'||c=='\n') {
++  if(command_used && !command_available) {
++   for(unsigned i=0;i<command_used;i++)command_ready[i]=command_line[i];
++   command_ready[command_used]=0;command_available=1;
++  }
++  command_used=0;
++ } else if(c==8||c==127) { if(command_used)command_used--; }
++ else if(c>=32 && c<127 && command_used+1<sizeof(command_line))command_line[command_used++]=c;
++}
+ static vm_offset_t usb;
+ static volatile unsigned configured;
+ static unsigned address_pending, address_valid;
+@@ -100,7 +120,7 @@
+  } else if(control_active && !(csr&2)) control_send();
+  if(!configured)return;
+  w8(0x0e,1);csr=r16(0x16);
+- if(csr&1) { unsigned n=r16(0x18);for(unsigned i=0;i<n;i++)(void)r8(0x24);w16(0x16,0); }
++ if(csr&1) { unsigned n=r16(0x18);for(unsigned i=0;i<n;i++)input_char(r8(0x24));w16(0x16,0); }
+  csr=r16(0x12);
+  if(!(csr&1)) { unsigned char b[64];unsigned n=a03_console_read(b,64);if(n) { for(unsigned i=0;i<n;i++)w8(0x24,b[i]);w16(0x12,0x2001); } }
+  w8(0x0e,0);
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -824,9 +824,12 @@
+ #include <arm/thread.h>
+ #include <arm64/proc_reg.h>
+ #include <vm/vm_shared_region.h>
++#include <pexpert/pexpert.h>
++#include <IOKit/IOLib.h>
+ 
+ /* Print before the potentially slow/failed initproc core dump. No user writes. */
+ void a03_init_trap_log(int pid);
++void a03_init_debug_hold(int pid);
+ void
+ a03_init_trap_log(int pid)
+ {
+@@ -883,6 +886,58 @@
+         fp = frame[0];
+     }
+ }
++/* Runs in the dying initproc thread: copyin uses its still-live user map. */
++extern int a03_usb_debug_command(char *, unsigned);
++static int
++a03_debug_hex(const char **input, uint64_t *value)
++{
++    const char *s=*input;
++    while(*s==' ')s++;
++    if(s[0]=='0' && (s[1]=='x'||s[1]=='X'))s+=2;
++    unsigned digits=0;uint64_t v=0;
++    for(;;) {
++        unsigned n;
++        if(*s>='0'&&*s<='9')n=*s-'0';
++        else if(*s>='a'&&*s<='f')n=*s-'a'+10;
++        else if(*s>='A'&&*s<='F')n=*s-'A'+10;
++        else break;
++        if(++digits>16)return 0;
++        v=(v<<4)|n;s++;
++    }
++    if(!digits)return 0;
++    *input=s;*value=v;return 1;
++}
++void
++a03_init_debug_hold(int pid)
++{
++    uint32_t enabled=0;
++    PE_parse_boot_argn("a03debug_hold",&enabled,sizeof(enabled));
++    if(pid!=1 || enabled!=1)return;
++    printf("A03 DEBUG: initproc exit paused; USB commands: help regs bt mem HEX [HEXCOUNT] panic\n");
++    for(;;) {
++        char command[128];
++        if(!a03_usb_debug_command(command,sizeof(command))) { IOSleep(10);continue; }
++        if(!strcmp(command,"panic")) { printf("A03 DEBUG: continuing fatal exit\n");return; }
++        if(!strcmp(command,"regs")||!strcmp(command,"bt")) { a03_init_trap_log(pid); }
++        else if(!strncmp(command,"mem ",4)) {
++            const char *s=command+4;uint64_t addr=0,n=64;
++            if(!a03_debug_hex(&s,&addr)) { printf("A03 DEBUG: invalid address\n");continue; }
++            while(*s==' ')s++;
++            if(*s && !a03_debug_hex(&s,&n)) { printf("A03 DEBUG: invalid count\n");continue; }
++            if(n==0||n>256||addr+n<addr) { printf("A03 DEBUG: count must be 1..100 hex\n");continue; }
++            unsigned char bytes[256];
++            int error=copyin((user_addr_t)addr,bytes,(size_t)n);
++            if(error) { printf("A03 DEBUG: copyin error %d\n",error);continue; }
++            for(unsigned i=0;i<n;i++) {
++                if(!(i%16))printf("%llx:",addr+i);
++                printf(" %02x",bytes[i]);
++                if(i%16==15||i+1==n)printf("\n");
++            }
++        } else printf("A03 DEBUG: help regs bt mem HEX [HEXCOUNT<=100] panic; no task resume\n");
++        printf("a03-debug> ");
++    }
++}
++
+ #endif
+ 
+ 
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1821,6 +1821,8 @@
+     if (p == current_proc() && WTERMSIG(rv) == SIGTRAP) {
+         extern void a03_init_trap_log(int);
+         a03_init_trap_log(proc_getpid(p));
++        extern void a03_init_debug_hold(int);
++        a03_init_debug_hold(proc_getpid(p));
+     }
+ #endif
+ 	proc_crash_coredump(p);

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Capture the A03 XNU CDC ACM console to stdout and a private local log.
-Only opens a tty with exact diagnostic serial + VID/PID. No phone writes.
+Only opens a tty with exact diagnostic serial + VID/PID. Optional monitor
+commands are sent only when explicitly requested; no partition access.
 """
 import argparse,os,select,sys,termios,time
 from pathlib import Path
@@ -24,6 +25,8 @@ def main():
     ap.add_argument('--output',type=Path,default=Path('shim/a03/out/usb-console-'+time.strftime('%Y%m%d-%H%M%S')+'.log'))
     ap.add_argument('--wait',type=float,default=120,help='seconds to wait for enumeration')
     ap.add_argument('--duration',type=float,default=300,help='maximum capture seconds')
+    ap.add_argument('--command',action='append',default=[],help='monitor command; repeat for multiple commands')
+    ap.add_argument('--interactive',action='store_true',help='forward terminal input to USB monitor')
     a=ap.parse_args();deadline=time.monotonic()+a.wait;dev=None
     while dev is None:
         dev=find()
@@ -33,16 +36,38 @@ def main():
     a.output.parent.mkdir(parents=True,exist_ok=True)
     print('Capturing '+dev+' to '+str(a.output),file=sys.stderr)
     with a.output.open('xb') as log:
-        fd=os.open(dev,os.O_RDONLY|os.O_NOCTTY|os.O_NONBLOCK)
+        fd=os.open(dev,(os.O_RDWR if a.command or a.interactive else os.O_RDONLY)|os.O_NOCTTY|os.O_NONBLOCK)
         try:
             attr=termios.tcgetattr(fd);attr[0]=attr[1]=attr[3]=0
             attr[2]=termios.CS8|termios.CREAD|termios.CLOCAL
             attr[4]=attr[5]=termios.B115200
             attr[6][termios.VMIN]=1;attr[6][termios.VTIME]=0
             termios.tcsetattr(fd,termios.TCSANOW,attr)
+            for command in a.command:
+                if len(command)>126 or any(ord(c)<32 or ord(c)>126 for c in command):
+                    raise RuntimeError('Commands must contain at most126 printable ASCII characters')
+                payload=(command+'\n').encode('ascii')
+                offset=0
+                while offset<len(payload):
+                    _,writable,_=select.select([],[fd],[],2)
+                    if not writable:raise RuntimeError('USB command write timeout')
+                    offset+=os.write(fd,payload[offset:])
+                # The monitor holds one pending line; allow it to consume each.
+                time.sleep(.1)
             deadline=time.monotonic()+a.duration
             while time.monotonic()<deadline:
-                ready,_,_=select.select([fd],[],[],min(1,max(0,deadline-time.monotonic())))
+                inputs=[fd]+([sys.stdin] if a.interactive else [])
+                ready,_,_=select.select(inputs,[],[],min(1,max(0,deadline-time.monotonic())))
+                if a.interactive and sys.stdin in ready:
+                    line=sys.stdin.readline()
+                    if not line:a.interactive=False
+                    else:
+                        data=line.encode('ascii',errors='replace');offset=0
+                        while offset<len(data):
+                            _,writable,_=select.select([],[fd],[],2)
+                            if not writable:raise RuntimeError('USB command write timeout')
+                            offset+=os.write(fd,data[offset:])
+                    ready=[item for item in ready if item is not sys.stdin]
                 if not ready:continue
                 b=os.read(fd,65536)
                 if not b:break

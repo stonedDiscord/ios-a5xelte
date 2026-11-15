@@ -2804,3 +2804,15 @@ Combined USB/reply-right CI43719832882 queued from5694793; supersedes
 be captured. Updated patch roundtrip + final driver compile + protocol PASS.
 Download mode detected. Next download successful kernel, package0047 with
  a03usb_console=1, start host tty capture, then BOOT-only flash/test.
+
+## 2026-11-15: opt-in post-trap USB inspection monitor
+
+User requests ability to investigate userspace after launchd crashes.0104
+adds a03debug_hold=1: current initproc SIGTRAP exit pauses before coredump/
+panic, sleeping between commands to keep USB worker/scheduler alive. Dying
+thread executes copyin against its own still-live task map. Commands help,
+regs,bt,mem HEX [HEXCOUNT<=100],panic (continue normal fatal exit). No shell,
+resume, task execution, memory writes or launchd restart claim. USB OUT line
+queue and host capture interactive/command support added. Local three-file
+compile PASS; parser/queue harness PASS; exact patch zero-fuzz roundtrip PASS.
+USB hardware remains unproven. Combine0102/0103/0104 for next0047 candidate.

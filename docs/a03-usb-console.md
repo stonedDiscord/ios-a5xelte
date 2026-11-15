@@ -33,3 +33,26 @@ PHY/USB enumeration/packet transfer and panic service remain unproven.
 
 Startup waits up to10seconds for configuration, then1second for drain,
 before continuing toward initproc. This does not guarantee panic output.
+
+## Post-trap monitor
+
+Opt-in a03debug_hold=1 (0104) pauses the current PID1 SIGTRAP fatal exit
+before coredump/panic. This preserves that thread's map for copyin while
+letting the scheduler/USB worker run. It is not a recovered userspace shell,
+LLDB, arbitrary task execution or launchd restart. Other exit paths still
+follow existing behavior. USB itself must enumerate first.
+
+    python3 tools/a03-usb-console.py --interactive
+    python3 tools/a03-usb-console.py --command regs --command 'mem 12345678 40'
+
+Commands: help, regs, bt, mem HEXADDR [HEXCOUNT], panic. Memory reads use
+current dying initproc map, at most0x100 bytes, copyin errors reported.
+regs/bt print existing saved registers and six frames. panic leaves the hold
+and continues normal fatal exit/coredump/panic; it does not resume userspace.
+No memory/register writes or partition operations. One pending command slot.
+Opt out by omitting the boot arg; no filesystem change needed.
+
+    python3 tools/a03-test-usb-monitor.py
+
+Host parser/queue checks, patch roundtrip and three affected source syntax
+compiles pass. Runtime survival/USB responsiveness remain unproven.

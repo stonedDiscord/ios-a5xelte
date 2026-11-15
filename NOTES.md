@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+NEXT combined0102/0103/0104: buffered CDC + post-SIGTRAP inspection hold.
+a03usb_console=1 a03debug_hold=1. USB OUT help/regs/bt/mem/panic; no shell
+or resume. Local compile/protocol/parser/patch PASS; runtime unproven.
+CI43719832882 builds USB only; supersede with monitor-inclusive build.
+
+
 ACTIVE BUILD CI43719832882 at5694793: combined USB console + reply tracing.
 Earlier43719778245/43719205319 superseded/cancelled. Download detected.
 Final host checks PASS. Next BOOT0047 args0046+a03usb_console=1; launch
