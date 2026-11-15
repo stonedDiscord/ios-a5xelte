@@ -2820,3 +2820,15 @@ USB hardware remains unproven. Combine0102/0103/0104 for next0047 candidate.
 Monitor-inclusive CI43720286686 at94edf70 queued/pending. Supersedes USB-only
 43719832882. Download detected. Next successful kernel=>BOOT0047 with
  a03usb_console=1 a03debug_hold=1, then host capture and BOOT-only trial.
+
+## 2026-11-15: rejected incomplete CI artifact; fixed USB patch context
+
+CI43720286686 reports success but artifact marker audit disproves USB/monitor
+inclusion. Build log explicitly skips0103 (BSD Makefile context included
+local-only kern_exit CFLAGS) then0104 (missing USB source). Kernel32a1bc73...
+is NOT a USB/monitor candidate. No flash occurred. A malformed no-args host
+packaging attempt made only private files; discarded both never-flashed
+0047 image/payload. Corrected0103 against exact downloaded CI source; BOTH
+0103/0104 now pass git apply --check and application in sequence. Added CI
+required string checks for reply diagnostics, USB console and hold monitor,
+so skipped requested features cause failure. Next corrected full build.

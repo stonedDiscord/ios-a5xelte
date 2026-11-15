@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+IMPORTANT:43720286686 green but USB0103+monitor0104 SKIPPED; DO NOT FLASH.
+Artifact marker gate caught it; no phone write. Fixed context against exact
+CI tree, sequential git apply PASS. CI now requires USB+hold marker strings.
+Next corrected build, then BOOT0047 with args + console/hold. Device Download.
+
+
 ACTIVE CI43720286686 at94edf70 (monitor+CDC+reply diagnostics), pending.
 Supersedes43719832882 USB-only. Device Download detected. Next0047 after
 PASS, add a03usb_console=1 a03debug_hold=1; start host capture first.

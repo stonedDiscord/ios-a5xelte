@@ -210,9 +210,9 @@
  # A03: BSD is a separate make target from osfmk.
  bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
 +a03_usb_console.o_CFLAGS_ADD += -mgeneral-regs-only
- kern_exit.o_CFLAGS_ADD += -mgeneral-regs-only
  a03_emmc.o_CFLAGS_ADD += -mgeneral-regs-only
  
+ # A03 built-in userspace providers execute without kernel FP/SIMD state.
 --- a/pexpert/conf/Makefile.template
 +++ b/pexpert/conf/Makefile.template
 @@ -49,6 +49,9 @@
