@@ -2977,3 +2977,6 @@ cross-compile with general regs PASS. Host test compiles the actual provider
 with stub IOKit: opt-in registration, selector14 argument bounds/system0,
 lock state, Unsupported key-wrapping/unknown, DER output bounds/descriptors
 PASS. Profile stages54patches including0107. Full CI and hardware pending.
+
+Full build CI43730049732 started from09e658ffdbec16be4ec26087503dc0ceb88efa93.
+Actual deployed ADT defaults/no-effaceable-storage=1 confirmed.

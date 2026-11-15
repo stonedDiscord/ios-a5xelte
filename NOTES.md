@@ -3,7 +3,7 @@
 CURRENT0049 physical: keybagd fatal failed to load system bag, options
 warning. Passed prior firmware mount failure; sustained boot unproven.
 Kernel lacks AppleKeyStore; ReVa confirms actual iOS16 selector0/open and
-14/get_system ABI.0107 opt-in lab software provider prepared, compile next.
+14/get_system ABI.0107 local tests PASS; CI43730049732 running from09e658f.
 Next0050 adds a03_software_keystore=1; root already has systembag plist.
 
 CURRENT BOOT0049 flashed BOOT-only100%/success/reboot. CI43727113402 PASS;
