@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+USB CI43737353634 running from13baa99 (0109;0108 WIP excluded).
+Local real Mach-O object compile PASS.0052 will retain exact0051 ADT/cmdline,
+USERDATA root, no RAMDisk. Await CI artifact and physical Download mode.
+
+
 ACTIVE 2026-11-15: user resumed for XNU USB.0109 corrects matching-Linux gaps:
 ANA_EB, explicit SC2730 USB3.3V supply/readback, flat endpoint registers,
 USB pin mux and inherited host-force. Host CDC/supply/monitor tests and exact

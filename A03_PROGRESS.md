@@ -3132,3 +3132,11 @@ PASS. Supply tests exercise no-op rail state, preserved bits, allowlist,
 busy/FIFO timeouts, bad address echo and failed readback. Hardware success
 remains unproven; next full build and BOOT-only test. Keep0108 crash-diagnostic
 WIP and its local staging edits out of this USB build/commit.
+
+
+Full USB build CI43737353634 dispatched from13baa99.0108 WIP was deliberately
+excluded from the committed profile/CI gate (local working changes preserved).
+Real local Mach-O object compile of0109 also PASS with -mgeneral-regs-only.
+BOOT0052 packaging will reuse exact0051 ADT and command line.0051 payload
+has no RAMDisk segment (corrected initial packaging assumption); installed
+validated USERDATA root is retained without host rewrite.
