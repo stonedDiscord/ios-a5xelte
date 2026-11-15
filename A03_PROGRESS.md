@@ -3361,3 +3361,8 @@ provides strict one-key integer0..255 software bookkeeping property, no
 PMU hardware writes, unknown property dictionaries unsupported.0112 alone
 will remain disabled in the next USB-only test. Host property shape/range
 tests and kernel C++ syntax PASS. Full build/runtime pending.
+
+User confirms Download ready again; host detects it. Combined CI43744564237
+remains building.0055 will preserve0054 arguments, keeping0112 disabled
+until0114 is fully built. Later workflow marker gate now requires PIO and
+watchdog software-stage strings. No new flash after0054 yet.
