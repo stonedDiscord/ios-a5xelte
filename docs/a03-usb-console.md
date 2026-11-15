@@ -154,3 +154,9 @@ Runs in USB worker even outside PID1 hold. Syncs filesystems, then fixed stock S
 BOOT0053 hardware test: host writes drain but no download acknowledgement or
 reset; command is not yet functional on hardware. USB IN remains active.
 0111 receive diagnostics pending to distinguish RX FIFO/parser delivery.
+
+BOOT0054 receive diagnostics observed RXCSR0800 (DMAMODE), including
+unsolicited count1 zero bytes before the command retry.0113 next test
+clears documented SPRD DMA channel enables, endpoint DMA state, and flushes
+EP1 twice before attachment. This is a candidate correction; no interactive
+command success yet. Existing capture proved only device-to-host logs.
