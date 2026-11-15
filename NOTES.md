@@ -1,3 +1,9 @@
+ACTIVE0066 initial360 complete554548bytes SHAf4b0c37894802553dd2ca66e0ebccf1b56c0cc5618e0f741be0c1f5d42e6a6c6.
+selector3 success/3full-screen swaps; no custom/generic crashes within capture.
+No home-screen proof.0131 committed75ecd42, frozen20sources. Dispatch15508
+waits prior CI43766598769 before starting speed optimization build. Need
+batch-off/on actual CACHE_CTRL/I/O tick comparison, not quiet-log claims.
+
 ACTIVE speed optimization priority:0131 opt-in a03emmc_batch=1 batches
 card-cache flush per buffered request, retains CMD24/status per sector,
 flush-before-completion and raw durability. CACHE_CTRL unknown until new

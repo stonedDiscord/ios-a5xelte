@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0066 initial capture complete; default-surface ABI accepted
+
+360s capture completed554548bytes SHA256
+f4b0c37894802553dd2ca66e0ebccf1b56c0cc5618e0f741be0c1f5d42e6a6c6.
+Backboardd selector3 now succeeds with2scalar inputs;3full-screen BGRA
+swaps confirmed. Five SpringBoard startup syscall records, no A03 USER.
+No custom CRASH or generic corpse lines in this bounded capture only.
+User's latest physical observation remains logo-only; no home-screen proof.
+
+0131 speed candidate committed75ecd42; dispatch waiter15508 will start CI
+once43766598769 completes, avoiding workflow concurrency cancellation.
+Frozen20-source expected0131 retained. Need batch-off baseline first to
+measure actual CACHE_CTRL and I/O time, then batch-on comparison.
+
 ## 2026-11-15: speed optimization priority;0131 durable request batching
 
 User clarifies actual speed optimization is priority, not quiet logs.
