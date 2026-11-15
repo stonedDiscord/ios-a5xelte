@@ -86,6 +86,7 @@ static void screen(void) {
         }
         if(++col==cols){col=0;row++;}
     }
+    drm_screen_present();
 }
 static void logmsg(const char *fmt, ...) {
     va_list ap; va_start(ap, fmt);

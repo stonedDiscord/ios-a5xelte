@@ -2496,3 +2496,10 @@ and RW status0014 SHA
 8826ce374112caef531593a887e459efea243c9c5f038a143f6ea17d5c4547ae.
 On-screen result still requires device verification; current install continues
 on0011. Host fsck.hfsplus -fn of rebuilt source reports A03iOSRoot OK.
+
+
+Status follow-up0015 adds page-flip commit after redraw for command-mode
+panels. Host build PASS, unflashed RO SHA
+12915ef3306eb148f93e789f06bc3dd97c6c647dbba98a2850301efed5c5ad4f,
+RW SHAe4039f111fbe8cfbd0591272f78a593aab7abd0724d769e3746069347eac2c0d.
+Current installer remains0011 while16GiB transfer is active; no interruption.

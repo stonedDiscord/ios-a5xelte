@@ -65,3 +65,11 @@ fail:
     snprintf(drm_error,sizeof(drm_error),"DRM %s: %s",stage,strerror(errno));
     close(fd);
 }
+
+static void drm_screen_present(void) {
+    if(drm_fd<0)return;
+    __sync_synchronize();
+    struct drm_mode_crtc_page_flip flip={.crtc_id=drm_crtc,.fb_id=drm_fb};
+    /* Command-mode panels need a commit after CPU updates the framebuffer. */
+    ioctl(drm_fd,DRM_IOCTL_MODE_PAGE_FLIP,&flip);
+}
