@@ -2570,3 +2570,8 @@ C guard compiled in both board configurations and passed96 cases (auth result,
 opt-in presence/value, provider validity and rootdev mismatch). Existing GPT
 and BSD storage harnesses PASS. Commitd447b11 pushed; kernel CI43708471929
 queued on macos-15-intel with A03 iOS userspace profile. No new BOOT write yet.
+
+Offline-equivalent profile staging also PASS (45 patches):0099 present with
+exact source bytes and0098 corrected root LBA0x1098d30. Host independently
+detects Samsung Download USB and Heimdall confirms Device detected. CI is
+restoring dependencies before compilation. Current BOOT remains0042.
