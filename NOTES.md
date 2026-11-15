@@ -1,7 +1,8 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
 NEXT BUILD:0101 adds preserved host_info error x0/x8 and host port x22,
-msg2/MIG/host count diagnostics. Local four-file compile PASS; next full CI.
+msg2/MIG/host count diagnostics. Local four-file compile PASS.
+CI43717108507 running frome0e58a2; next package BOOT0046 on PASS.
 Diagnostics only, no forced-success or security bypass. Download not detected.
 
 

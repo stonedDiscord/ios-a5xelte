@@ -2744,3 +2744,6 @@ local syntax checks using recovered CI commands (environment/header warnings
 remain). Full CI/link/runtime validation pending. Physical Download absent.
 Direct cached branch stubs also resolve to libsystem_kernel host_info at
 0x1bf1361a4, message ID200, and host-self target0x1bf1307f8.
+
+Diagnostic CI43717108507 started frome0e58a2. Await link result, then
+package BOOT0046 with0045 args; user asked to prepare Download after dump.
