@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT11:16UTC = XNU0042, BOOT-only upload100%/success/reboot after
+full16GiB root repair/readback and user confirmation nonzero catalog under
+Linux. Await screen HFS/launchd output; user asked via async tool. Do not
+repeat root install. USB status0015 display works (user verified counters).
+Protected partitions intact. Apple launchd execution still unproven.
+
+
 USB STATUS SCREEN VERIFIED: user sees read2MiB/written0MiB on0015. Counters
 are per boot;16GiB root remains independently verified. Await Download for
 XNU0042 BOOT-only retry toward actual Apple launchd execution.

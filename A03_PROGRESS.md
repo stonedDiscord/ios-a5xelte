@@ -2540,3 +2540,14 @@ status0015. These are current-boot block counters, not total historical install
 bytes; installer0011 previously completed/passed full16GiB readback. This
 fulfills visible USB working-status request. Next XNU0042 BOOT-only trial on
 verified root; user asked to return Download. No launchd runtime yet.
+
+
+## 2026-11-15 11:16UTC: XNU0042 retry after verified root repair
+
+User confirmed RO status0015 catalog was no longer zero, then returned to
+Download. Heimdall detected, protocol/PIT passed, uploaded only BOOT0042
+(6c729a41d931fd2d151d42aaccf005b57d972206d410fbce7cb46da3a42c6115)
+to100%/success and rebooted. USERDATA not reflashed by this operation; full
+root remains previously verified. Await new HFS/launchd screen evidence.
+Known0042 second-root diagnostic LBA is obsolete/wrong; catalog-header direct
+read valid. No Apple launchd runtime claim until current boot output proves it.
