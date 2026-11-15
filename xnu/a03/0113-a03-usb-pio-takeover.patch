@@ -1,0 +1,40 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -143,10 +143,24 @@
+  return !(after_pd&1) && (after_vol&255)==210;
+ }
+ static unsigned le16(const unsigned char *p) { return p[0]|((unsigned)p[1]<<8); }
++/* Linux sprd_musbhsdma.h:30 channels; Download may leave RX DMA active.
++ * This console is PIO-only. Disable channel enable before touching FIFOs. */
++static int pio_takeover(void) {
++ for(unsigned channel=0;channel<30;channel++) {
++  volatile uint32_t *cfg=(volatile uint32_t *)(usb+0x1c04+channel*0x20);
++  *cfg&=~1u;__asm__ volatile("dsb sy" ::: "memory");
++  if(*cfg&1)return 0;
++ }
++ /* Clear endpoint DMA request/mode, then flush twice as Linux gadget does. */
++ for(unsigned ep=1;ep<=2;ep++) {
++  ep_write(ep,2,0);ep_write(ep,6,0);
++ }
++ return 1;
++}
+ static void endpoints(void) {
+  /* EP0 reserves first64 bytes. EP1 RX/TX64, EP2 interrupt TX16. */
+  w8(0x0e,1); w8(0x62,3); w16(0x64,8); w8(0x63,3); w16(0x66,16);
+- ep_write(1,0,64); ep_write(1,4,64); ep_write(1,2,0x2048); ep_write(1,6,0x90);
++ ep_write(1,0,64); ep_write(1,4,64); ep_write(1,2,0x2048); ep_write(1,2,0x2048); ep_write(1,6,0x90); ep_write(1,6,0x90);
+  w8(0x0e,2); w8(0x62,1); w16(0x64,24); ep_write(2,0,16); ep_write(2,2,0x2048);
+  w8(0x0e,0);
+ }
+@@ -263,7 +277,10 @@
+  update(aon,0x10,0,0x300);delay(25000);update(aon,0x10,0x300,0);delay(1000);
+  usb=ml_io_map(0x64900000,0x2000);if(!usb){printf("A03 USB console: core map failed\n");return;}
+  /* Drop inherited Download pullup/host-force state before attaching. */
+- w8(1,0);delay(20000);w8(0x34b,r8(0x34b)&~1u);w8(0,0);w16(6,0);w16(8,0);w8(0x0b,0);w8(0x60,0);w8(0x0f,0);endpoints();
++ w8(1,0);delay(20000);w8(0x34b,r8(0x34b)&~1u);w8(0,0);w16(6,0);w16(8,0);w8(0x0b,0);w8(0x60,0);w8(0x0f,0);
++ if(!pio_takeover()){printf("A03 USB: PIO takeover failed; not attaching\n");return;}
++ endpoints();
++ printf("A03 USB: PIO takeover RX csr=%04x\n",ep_read(1,6));
+  thread_t thread=THREAD_NULL;kern_return_t kr=kernel_thread_start(worker,NULL,&thread);
+  if(kr!=KERN_SUCCESS){usb=0;printf("A03 USB console: thread error %d\n",kr);return;}
+  thread_deallocate(thread);w8(1,0x40);

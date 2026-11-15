@@ -1,5 +1,9 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+RX0054: csr0800 DMAMODE survives, unsolicited count1 zero packets.
+0113 PIO takeover locally tested (30 DMA enables clear+readback, CSR clear,
+double flush); next combined CI includes0112 watchdog; root preserved.
+
 ACTIVE:0054 flashed and CDC enumerated after50s; capture16470 waiting ACL.
 User asked scoped setfacl again.0112 watchdog CI43744288276 from5eee9b2
 running. Need install0055 later +a03_watchdog_disabled=1 after USB fix.

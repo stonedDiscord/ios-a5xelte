@@ -115,7 +115,8 @@ def main():
                      '0109-a03-usb-supply-flat-endpoints.patch',
                      '0110-a03-usb-download-command.patch',
                      '0111-a03-usb-receive-diagnostics.patch',
-                     '0112-a03-disabled-watchdog-capability.patch'):
+                     '0112-a03-disabled-watchdog-capability.patch',
+                     '0113-a03-usb-pio-takeover.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

@@ -10,7 +10,8 @@ with tempfile.TemporaryDirectory(prefix='a03-cdc-source-') as d:
               '0106-a03-usb-peripheral-phy-readback.patch',
               '0109-a03-usb-supply-flat-endpoints.patch',
               '0110-a03-usb-download-command.patch',
-              '0111-a03-usb-receive-diagnostics.patch'):
+              '0111-a03-usb-receive-diagnostics.patch',
+              '0113-a03-usb-pio-takeover.patch'):
   subprocess.run(['git','apply','--include=bsd/dev/a03_usb_console.c',
                   str(root/'xnu/a03'/name)],cwd=d,check=True)
  source=(Path(d)/'bsd/dev/a03_usb_console.c').read_text()
@@ -40,6 +41,11 @@ unsigned a03_console_read(unsigned char *p,unsigned n) { (void)p;(void)n;return 
 '''
 tests='''
 int main(void) {
+ usb=(uintptr_t)regs;
+ for(unsigned i=0;i<30;i++){uint32_t value=0x1001;memcpy(regs+0x1c04+i*0x20,&value,4);}
+ assert(pio_takeover());
+ for(unsigned i=0;i<30;i++){uint32_t value;memcpy(&value,regs+0x1c04+i*0x20,4);assert(value==0x1000);}
+ assert(ep_read(1,2)==0 && ep_read(1,6)==0);
  assert(ep_reg(0,2)==0x102 && ep_reg(1,6)==0x116 && ep_reg(2,2)==0x122);
  assert(sizeof(device_desc)==18);assert(sizeof(config_desc)==67);
  assert(le16(config_desc+2)==sizeof(config_desc));

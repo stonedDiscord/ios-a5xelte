@@ -3324,3 +3324,13 @@ evidence and Download retry.
 0054 CDC enumeration confirmed50s after flash; new tty requires ACL.
 Capture16470 remains waiting; user asked scoped setfacl.0112 full CI
 43744288276 running from5eee9b2. No watchdog hardware success yet.
+
+0054 USB capture opened after user ACL correction. RX diagnostics report
+four unsolicited packets csr0803 count1 data00, then repeated flat/indexed
+csr0800 count0, FIFO03/address0010; TX2004. Explicit newline/download10byte
+write still no ACK/reset. Linux defines0800 RX DMAMODE; inherited DMA state
+was not cleared by current startup.0113 disables enable bit0 of documented
+30 SPRD channels with readback, clears endpoint DMA CSR state and double
+flushes EP1 as Linux gadget init. Actual cumulative host test verifies all
+30 channel enables clear while other bits remain, split command reception;
+exact kernel C syntax PASS. Runtime effect unproven.
