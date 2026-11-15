@@ -33,6 +33,6 @@ for enabled,provisional,plat,sdk,binary,sim in itertools.product([0,1],[0,1],[1,
  expected=bool(binary and not sim and not(enabled and provisional and plat==2 and sdk==16))
  rows.append(f'a03_ios16_provisional_reply={enabled}; platform_value={plat}; sdk_value={sdk}u<<16; platform_binary={binary}; simulated={sim}; assert(__ip_strict_reply_port_semantics_violation({provisional})=={int(expected)});')
 with tempfile.TemporaryDirectory(prefix='a03-reply-test-') as d:
- p=Path(d)/'test.c';p.write_text(header+source+'\nint main(void) {\n'+'\n'.join(rows)+'\nputs("A03 strict/provisional reply compatibility: 384 cases PASS (host only)");}\n')
+ p=Path(d)/'test.c';p.write_text(header+source+'\nint main(void) {\n'+'\n'.join(rows)+'\nputs("A03 strict/provisional reply compatibility: 192 cases PASS (host only)");}\n')
  subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror',str(p),'-o',d+'/test'],check=True)
  subprocess.run([d+'/test'],check=True)

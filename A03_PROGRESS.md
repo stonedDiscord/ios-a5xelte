@@ -2865,7 +2865,7 @@ receive-right/disposition/MIG checks retained. launchd Mach-O SDK16 verified.
 Candidate0106 mirrors matching A03 Linux peripheral PHY pulldowns/reserved
 bits and board-specific eye trim04b3d1c0; adds PHY/core readbacks and reset/
 setup counts. No PMIC writes. Three changed consumers cross-compile PASS;
-exact-source sequential apply PASS; CDC/parser and384-case predicate PASS.
+exact-source sequential apply PASS; CDC/parser and192-case predicate PASS.
 Next full CI, BOOT0048 +a03_ios16_provisional_reply=1; hardware unproven.
 
 Full build CI43724877490 started fromf8ecc37; Download mode detected.

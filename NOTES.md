@@ -2,7 +2,7 @@
 
 NEXT0048:0105 opt-in iOS16 SDK16 provisional reply compatibility only;
 0106 matching A03 peripheral PHY/trim correction + register/counter logs.
-Cross-compile/exact patch/384-case predicate/CDC/parser PASS. CI43724877490 running fromf8ecc37.
+Cross-compile/exact patch/192-case predicate/CDC/parser PASS. CI43724877490 running fromf8ecc37.
 Add a03_ios16_provisional_reply=1 to0047 args. No new flash/root write.
 
 CURRENT0047 evidence: construct4000/rv0/name603; invalid reply type21,
