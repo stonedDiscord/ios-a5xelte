@@ -1,18 +1,17 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-14, BOOT0024 is flashed with the corrected XNU sector-size
-callback and the same storage diagnostic RAM root. BOOT0023 established
-raw BOOT-header reads, then failed buffered read with EINVAL because
-d_psize returned partition count instead of sector bytes. Kernel
-CI43598578558 passed; compiled512-byte return, host regressions and
-BOOT upload verified. User now confirms full raw+block BOOT-header/EROFS PID1 PASS.
-BOOT0020 established GPT integrity/partition identity and a
-matching current-BOOT header plus512-byte payload sample; USERDATA has a
-7-sector tail gap. BOOT0012 separately established HFS RAM-root/static
-PID1 execution. Apple launchd, an eMMC filesystem root and iOS GUI are
-not established. See the latest A03_PROGRESS.md entry for authoritative
-image hashes and runtime evidence; the instructions below retain earlier
-checkpoint reproduction details, not claims about the currently flashed image.
+As of 2026-11-15, XNU BOOT0048 boots the verified 16GiB HFSX root on
+validated USERDATA p55 and reaches Apple's launchd boot-task orchestration.
+The prior libpthread host_info trap is passed with the opt-in iOS16
+provisional-reply compatibility flag. Current physical failure is
+mount-phase-1: bindfs firmware mount returns ENODEV19 and task exits74.
+The deployed0048 kernel lacks bindfs; portable config patch0037 is building
+in CI43727113402 for BOOT0049. This is not a sustained successful launchd
+bootstrap or iOS GUI result. The USB CDC console has not enumerated.
+
+See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
+exact artifacts and runtime observations. Older sections below preserve
+checkpoint reproduction and should not be read as current-device status.
 
 Historical probe0003 ran EL1 with actual16KiB translation and returned
 through EL2 to Android on2026-11-13. Probe0002d bootlooped because its

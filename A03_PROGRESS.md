@@ -2925,3 +2925,9 @@ ReVa confirms exact mounted-root /sbin/mount0x100006544 calls bindfs; errno19
 is not the tolerated optional ENOENT case and reaches errx via sysexit_np.
 Code signature contains bindfs-allow entitlement=true; retain that check.
 Private mount binary remains ignored. This narrows fix to config, not root.
+
+All three bindfs source files cross-compile against the recovered XNU CI
+headers/flags: bind_subr.c, bind_vfsops.c, bind_vnops.c PASS. Full new config
+link/registration remains for CI and phone validation. Bring-up guide's
+current-status introduction updated to distinguish observed boot tasks from
+sustained launchd or GUI success. No new device write.
