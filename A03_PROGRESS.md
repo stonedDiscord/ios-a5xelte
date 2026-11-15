@@ -3347,3 +3347,9 @@ firstObject; nil branches to exact main-CADisplay assertion. QuartzCore
 through com.apple.CARenderServer bootstrap port. Therefore nil list is not
 yet direct proof of missing IOMobileFramebuffer: backboardd render-server
 health and display discovery need tracing before provider implementation.
+
+0054 additional crash PCs: mediaserverd SIGSEGV/FAR0 at runtime18dbed1b0
+minus slide0bf3c000 = CoreFoundation181cb11b0; caller1954f2ea4 in
+FigNotificationListenerStartNotifications. Backboardd SIGABRT stack passes
+libobjc objc_terminate and libc++abi terminate path; underlying exception
+reason not printed. Neither supports an arbitrary hardware-provider fix.
