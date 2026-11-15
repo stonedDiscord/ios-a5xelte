@@ -1,6 +1,6 @@
 --- /dev/null
 +++ b/bsd/dev/a03_usb_console.c
-@@ -0,0 +1,128 @@
+@@ -0,0 +1,133 @@
 +/* A03 diagnostic CDC ACM console. Register facts: matching Qogirl6 Linux
 + * musb_regs.h, qogirl6.dtsi and phy-sprd-qogirl6.c. No storage access.
 + * Full-speed PIO only; output is mirrored, input is discarded. */
@@ -17,7 +17,8 @@
 +extern unsigned a03_console_read(unsigned char *, unsigned);
 +void a03_usb_console_start(void);
 +static vm_offset_t usb;
-+static unsigned configured, address_pending, address_valid;
++static volatile unsigned configured;
++static unsigned address_pending, address_valid;
 +static const unsigned char *control_data;
 +static unsigned control_length, control_offset, control_active, control_out, control_requested;
 +static unsigned char line_coding[7] = {0, 0xc2, 1, 0, 0, 0, 8};
@@ -127,6 +128,10 @@
 + if(kr!=KERN_SUCCESS){usb=0;printf("A03 USB console: thread error %d\n",kr);return;}
 + thread_deallocate(thread);w8(1,0x40);
 + printf("A03 USB console: full-speed CDC ACM initialized, awaiting host\n");
++ /* Give the host time to enumerate before a fast initproc failure. */
++ for(unsigned i=0;i<1000 && !configured;i++) IOSleep(10);
++ if(configured) IOSleep(1000);
++ printf("A03 USB console: configuration=%u; continuing boot\n",configured);
 +}
 +#endif
 --- a/pexpert/arm/pe_serial.c

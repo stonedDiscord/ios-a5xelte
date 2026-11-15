@@ -30,3 +30,6 @@ control device/configuration/string/address/config/CDC requests, stalls,
 exact64-byte completion. Local three-component kernel syntax and patch
 roundtrip checks pass. Driver/spool use general-register codegen. Hardware
 PHY/USB enumeration/packet transfer and panic service remain unproven.
+
+Startup waits up to10seconds for configuration, then1second for drain,
+before continuing toward initproc. This does not guarantee panic output.
