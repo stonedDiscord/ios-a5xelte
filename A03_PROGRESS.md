@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0069 read-lock fairness and A03 identity deployed
+
+CI43770218935 SUCCESS exactf1b31e1;20frozen sources expected0134 match.
+Loader identical except image_size, ADT/args identical0068. Kernel SHA256
+95478c050f54fe62a9e684fdcf8e33f16570367f49efe97814b2a1c8f29befd2;
+BOOTbb20a4743ff035343032a6f71f53ba69c3b7ce64455bcd72b033cb2a7b3850ee.
+CDC Download reset succeeded; BOOT-only100percent/upload success/reboot
+~22:49UTC. Capture245564660s boot0069-usb-initial.log waits USB. Need
+compare four GUI kernel waits/CPU times with0068 and actual A03 name lookup.
+No speedup/home-screen claim; no root/GPT/protected partition/SMP changes.
+
 ## 2026-11-15:0068 baseline capture completed; all four page-in mutex waits
 
 660s completed502735bytes SHA256

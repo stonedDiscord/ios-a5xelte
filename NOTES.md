@@ -1,3 +1,10 @@
+ACTIVE0069 BOOT-only100percent/success/reboot22:49UTC. CI43770218935
+SUCCESSf1b31e1,20sources/loader/ADT/args match. BOOTbb20a474...3850ee.
+Capture245564660s boot0069-usb-initial.log waits CDC. Test0133 read16KiB
+mutex yield +0134 SamsungGalaxyA03/a03 names; baseline0068 all4page-in
+mutex waits. Need actual CPU/wait progression comparison; no GUI proof.
+Batch off, memory256MiB/CPU1/root unchanged.
+
 ACTIVE0068 complete660s502735bytes SHAad1bb41db9fca94ed049284f810644874f1d3ee38257b7cfe43b14414495087c.
 All4samples same eMMC mutex/page-in wait; final CPU user.025/system13.45,
 runnable118.09s.3swaps/no home-screen proof. No active CDC capture.
