@@ -3235,3 +3235,8 @@ pthread assertion:1e6f71f5c-slide19274000=1cdcfdf5c, libsystem_pthread,
 ___pthread_init.cold.3+24. Apple assets stay ignored. Actual watchdogd ReVa
 fatal helper10000b2f4 independently resolves missing IOWatchdog lookup to
 os_crash message and BRK; current runtime cause still awaiting0053 evidence.
+
+
+## USB Download command0110
+
+Exact download line handled by worker outside PID1 hold; filesystem sync then stock Linux SC2730 restart:1bac lowbyte30 preserving high,1bf8 bit4,1824 bit0. Fixed bounded ADI operations with prerequisite/readback checks; no arbitrary register interface. Supply allowlist unchanged. Host parser/reset tests and kernel arm64 compile PASS; runtime reset unverified. Combined0108+0110 CI43740528122 from69882d3 supersedes crash-only43739909683. BOOT0052 lacks command; initial physical Download needed.

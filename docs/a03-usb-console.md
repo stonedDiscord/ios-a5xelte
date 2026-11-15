@@ -142,3 +142,10 @@ Capture now waits for tty permission correction within the original --wait
 budget, before creating the log. This avoids silently losing early diagnosis
 time after enumeration while the host ACL is being applied. Reconnect while
 waiting is reported; exact VID/PID/serial matching remains required.
+
+
+## Download command (0110)
+
+Use: python3 tools/a03-usb-console.py --command download --wait 30 --duration 10
+
+Runs in USB worker even outside PID1 hold. Syncs filesystems, then fixed stock SC2730 Download reset. Worker must still run. Diagnostic reboot, not full iOS shutdown. BOOT0052 lacks command; local compile/parser/reset tests PASS, device reset pending. Expected successful result: USB disconnect then Samsung Download mode.

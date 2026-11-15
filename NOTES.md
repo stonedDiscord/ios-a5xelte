@@ -1,5 +1,6 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE combined0108+0110 CI43740528122 from69882d3. Local crash/download tests and kernel compile PASS; BOOT0053 after CI.0052 lacks download command; initial physical Download entry needed.
 ACTIVE iOS boot goal:0108 crash evidence completed/locally validated against
 exact0052; mediaserverd/configd/lockdownd included, two reports per name.
 Next full CI/BOOT0053 adds only kernel diagnostics +a03crash_log=1, retains
