@@ -2,9 +2,15 @@
 """Host-only checks of A03 CDC descriptors/EP0 decisions; no hardware claim."""
 from pathlib import Path
 import re,subprocess,tempfile
-patch=(Path(__file__).resolve().parent.parent/'xnu/a03/0103-a03-usb-cdc-console.patch').read_text()
-first=patch.split('+++ b/bsd/dev/a03_usb_console.c\n',1)[1].split('--- a/',1)[0]
-source='\n'.join(l[1:] for l in first.splitlines() if l.startswith('+') and not l.startswith('+++'))
+root=Path(__file__).resolve().parent.parent
+# Test the cumulative deployed source, including OUT monitor and PHY changes.
+with tempfile.TemporaryDirectory(prefix='a03-cdc-source-') as d:
+ for name in ('0103-a03-usb-cdc-console.patch',
+              '0104-a03-post-trap-usb-monitor.patch',
+              '0106-a03-usb-peripheral-phy-readback.patch'):
+  subprocess.run(['git','apply','--include=bsd/dev/a03_usb_console.c',
+                  str(root/'xnu/a03'/name)],cwd=d,check=True)
+ source=(Path(d)/'bsd/dev/a03_usb_console.c').read_text()
 source=re.sub(r'^#include .*\n','',source,flags=re.M)
 source=source.replace('__asm__ volatile("dsb sy" ::: "memory");','')
 start=source.index('static uint8_t r8(');end=source.index('static void update(',start)
@@ -21,7 +27,9 @@ header='''#include <stdint.h>
 #include <stdio.h>
 #include <assert.h>
 #define ARM64_BOARD_CONFIG_SWEET 1
-typedef uintptr_t vm_offset_t;typedef size_t vm_size_t;
+typedef uintptr_t vm_offset_t;typedef size_t vm_size_t;typedef int boolean_t;
+#define FALSE 0
+static boolean_t ml_set_interrupts_enabled(boolean_t enabled) { return enabled; }
 unsigned a03_console_read(unsigned char *p,unsigned n) { (void)p;(void)n;return 0; }
 '''
 tests='''
@@ -46,7 +54,10 @@ int main(void) {
  unsigned char setdtr[8]={0x21,0x22,1,0,0,0,0,0};setup(setdtr);assert(r16(0x12)==0x48);
  fifo_n=0;unsigned char getstr[8]={0x80,6,2,3,9,4,255,0};setup(getstr);assert(fifo_n==32);
  unsigned char bad[8]={0x80,6,0,99,0,0,1,0};setup(bad);assert(r16(0x12)==0x60);
- puts("A03 CDC descriptor/control-request checks PASS (host only)");
+ assert(setup_count==9);
+ input_char('r');input_char('e');input_char('g');input_char('s');input_char('\\n');
+ char cmd[128];assert(a03_usb_debug_command(cmd,sizeof(cmd)) && cmd[0]=='r');
+ puts("A03 cumulative CDC descriptor/control-request/command checks PASS (host only)");
 }
 '''
 with tempfile.TemporaryDirectory(prefix='a03-cdc-test-') as d:
