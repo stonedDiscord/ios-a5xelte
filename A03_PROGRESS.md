@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: resumed goal; corrected HFS build and display ABI review
+
+Current host revalidation finds Samsung04e8:685d Download, no ADB/CDC.
+Corrected0122 CI43759153171 is building exact28b8b81; package0062 session17809
+waits this run and checks six CI source files, loader, ADT and sole added
+argument a03_hfs_swap=1. HFS actual-source regression passes again. No0062
+flash yet. Previous goal turn made progress correcting CI patch application.
+
+Read-only exact iOS16.0/20A362 cache review also exposes a later display ABI
+incompatibility: IOMobileFramebuffer kern_SwapEnd1ad7d6568 sends selector5
+with1024-byte (0x400) input at1ad7d6588. Donor0046 requires at least0x46c.
+GetDisplaySize1ad7d78e8 requests selector8 with two scalar outputs;
+GetLayerDefaultSurface1ad7daf08 requests selector3 with two scalar inputs
+and one output, consistent with the donor for those calls. Private disassembly
+in /tmp/a03-iomfb-*.txt; Apple bytes stay ignored. Current A03 profile omits
+0046 and mkadt_a03.py removes disp0, so no display service is being claimed.
+Need decode exact swap layout before adapting donor display/surface code;
+blindly selecting0046 would fail this demonstrated ABI check. This review
+does not prove backboardd/server recovery, physical GUI or SpringBoard.
+
 
 ## 2026-11-15: independent Linux reader; corrected catalog root address
 
