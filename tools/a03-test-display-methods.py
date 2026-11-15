@@ -47,7 +47,7 @@ a.scalarInputCount=0;a.scalarOutputCount=0;uint8_t rec[0x400]={0x42};a.structure
 a.structureInputSize=0x3ff;assert(call(5)==kIOReturnBadArgument);a.structureInputSize=0x46c;assert(call(5)==kIOReturnBadArgument);a.structureInputSize=0x400;a.structureInput=nullptr;assert(call(5)==kIOReturnBadArgument);
 a.structureInputSize=0;a.scalarInputCount=4;in[0]=10;in[1]=11;in[2]=5;assert(call(72)==0&&c.fFunc[5]==10&&c.fRefcon[5]==11);in[2]=8;assert(call(72)==kIOReturnBadArgument);
 a.scalarInputCount=0;assert(call(999)==kIOReturnUnsupported);
-puts("A03 actual external method: exact scalar shapes, swap400/null guards, notifications and unknown selector propagation PASS");}
+puts("A03 actual external method: exact scalar shapes, canvas-dimension defaults, swap400/null guards, notifications and unknown selector propagation PASS");}
 '''
 with tempfile.TemporaryDirectory() as d:
  p=Path(d);(p/'t.cpp').write_text(pre+src+tests);subprocess.run(['c++','-std=c++17','-Wall','-Wextra','-Wno-unused-variable','-Werror',str(p/'t.cpp'),'-o',str(p/'t')],check=True);subprocess.run([str(p/'t')],check=True)

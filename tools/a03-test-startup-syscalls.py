@@ -52,7 +52,7 @@ int main(void){
  const char *others[]={"containermanager","mediaserverd","notifyd","SpringBoard"};
  for(unsigned k=0;k<4;k++){strcpy(p.p_comm,others[k]);logs=0;
  for(unsigned i=0;i<1000;i++){a03_startup_syscall_log(&p,99,2,a,0,1);}assert(logs==192);}
- puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/192-report cap PASS");
+ puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/independent SpringBoard 192-report cap PASS");
 }
 '''
 with tempfile.TemporaryDirectory(prefix='a03-startup-') as d:
