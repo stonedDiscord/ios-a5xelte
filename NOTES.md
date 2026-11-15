@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT 2026-11-15 11:48UTC = XNU0043 flashed BOOT-only/upload100%/reboot.
+CI43708471929 PASS, kernel00c7cd3a...45018, BOOTedb76b9d...101e7e.
+Adds a03_unsealed_root=1 with validated writable USERDATA rootdev guard;
+fixes0042's post-mount root authentication panic. User asked for last screen
+lines. Await actual HFS/launchd/panic evidence; no launchd success claim yet.
+Do not reinstall fully verified16GiB root. Protected partitions intact.
+
 CURRENT: XNU0042 mounts repaired USERDATA root, then panics at
 bsd_init.c:946 rootvp not authenticated after mounting (user screen report).
 No launchd execution yet. Added scoped unsealed-root patch0099, explicit

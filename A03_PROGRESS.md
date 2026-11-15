@@ -2575,3 +2575,18 @@ Offline-equivalent profile staging also PASS (45 patches):0099 present with
 exact source bytes and0098 corrected root LBA0x1098d30. Host independently
 detects Samsung Download USB and Heimdall confirms Device detected. CI is
 restoring dependencies before compilation. Current BOOT remains0042.
+
+
+## 2026-11-15 11:48UTC: scoped unsealed-root XNU0043 flashed
+
+CI43708471929 success at d447b1198a4a0c45ec18006835a04f0f302bf1a6.
+Plain arm64 kernel SHA256:
+00c7cd3a5653d533e12d79d531fb68d201d9052ef9527f18ab22089a6b845018.
+Linked scoped unsealed-root diagnostic verified. Packaged with same0042
+ADT/boot arguments plus a03_unsealed_root=1, no RAM disk or root rewrite.
+BOOT0043 SHA256:
+edb76b9dcd3804c4e3f359ca7eafbf1b0260a7c16a9143c88f67e27ff2101e7e.
+Heimdall protocol/PIT successful; uploaded only boot to100%, reported boot
+upload successful, rebooted. GPT/recovery/bootloaders/EFS/NV untouched.
+Await physical screen result after unsealed-root line; actual Apple launchd
+execution is still unproven. Full16GiB root remains independently verified.
