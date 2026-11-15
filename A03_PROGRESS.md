@@ -2918,3 +2918,5 @@ portable donor0037; matching prior donor evidence reports the same bindfs
 ENODEV/exit74 failure. Enable actual bindfs VFS, not suppress mount failure.
 0037 exact deployed config apply PASS; add required linked-symbol CI gate.
 Root stays installed; only new kernel BOOT needed. USB remains unproven.
+
+CI43727113402 started fromfb777a0; portable bindfs profile staging PASS.
