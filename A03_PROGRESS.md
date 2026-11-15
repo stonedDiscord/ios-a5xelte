@@ -2677,3 +2677,12 @@ DEVELOPMENT/A03 iOS userspace, buildtree upload enabled for compile auditing.
 It supersedes font-only CI43711774561 via existing workflow concurrency.
 0100 dry-run applies with zero fuzz to extracted CI sources. Device remains
 RO USB status0015; no new XNU candidate flashed. Await build/runtime evidence.
+
+
+ReVa MCP now used on exact live dyld/launchd binaries; both imported/analyzed
+and saved locally without version control. ReVa confirms _dyld_halt BRK0x5fcd0
+versus dyld4::halt abort_with_payload namespace6, and pthread thread_selfid
+assertion BRK0x147a8. launchd main entry0x100014038 includes early wake-monitor
+assertion, another possible trap. None identifies actual runtime PC yet.
+Documented reproducible candidates/limits in docs/a03-launchd-trap-analysis.md.
+No Apple binary edits. Combined diagnostic CI43712255840 still building.

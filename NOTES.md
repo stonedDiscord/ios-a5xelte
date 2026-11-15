@@ -1,5 +1,7 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ReVa audit saved: docs/a03-launchd-trap-analysis.md; exact live binaries
+/ dyld and /launchd analyzed locally. Multiple distinct trap paths remain.
 NEXT: scoped initproc SIGTRAP diagnostic0100 added before core dump;
 prints PC/LR, dyld/main bases, cache slide, x19 text, instruction and frames.
 Live read-only inventory PASS:40 subcaches/UUIDs,2663 images; launchd/dyld

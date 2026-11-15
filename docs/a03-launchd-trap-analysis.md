@@ -1,0 +1,52 @@
+# A03 launchd-task SIGTRAP investigation
+
+Observed on BOOT0044: pid 1 requests shared-region mappings, then exits with
+OS_REASON_SIGNAL (2), signal SIGTRAP (5). No core.1 was found in the live
+read-only USERDATA HFS catalog after the user reported dump completion.
+This proves dyld activity in the launchd task, not launchd main-loop success.
+
+## Binary evidence from ReVa, 2026-11-15
+
+Imported live USERDATA binaries into the local Ghidra project as /dyld and
+/launchd with version control disabled. Analysis completed and saved (dyld:
+2713 functions; launchd:3370). Private binaries remain ignored. Their hashes
+match the pinned root: dyld e5768eb084e29b0ebdab8b55ce3505d988f5e1a3caf6e17a715fedf7e2691873;
+launchd314a84ce1540ba36ea8a30f1f47941c67aa0cebb3bee26a2c591b39a1bb5f666.
+Addresses below are image-relative for dyld, preferred VA for launchd;
+subtract observed runtime load addresses before comparing a future trap.
+
+- dyld _dyld_halt at0x5fc58 formats a diagnostic, stores its pointer in
+  crash-info storage0x841c0 and executes BRK at0x5fcd0. Assembly preserves the
+  message in x19. Several ignition/cryptex error paths reach this function.
+- dyld dyld4::halt at0x171b0 is a different termination path: it copies text
+  into error_string0x84af0 and dyld_all_image_infos.errorMessage (+0x38),
+  calls abort_with_payload with namespace6 (DYLD). It is not by itself proof
+  of a raw SIGTRAP. Callers include missing libdyld, missing executable entry,
+  dependency diagnostics and shared-cache configuration failures.
+- dyld __pthread_set_self at0x1474c has BRK0x147a8 when thread_selfid fails;
+  it records the failure string at0x841c0. Additional libplatform/lock BRKs
+  exist. No actual trap address has been observed yet.
+- launchd LC_MAIN points to0x100014038. Early entry marks
+  kern.initproc_spawned, installs an os_crash callback, validates pid1/stdout,
+  initializes descriptors and logging, then configures memory/wake policies.
+  A proc_disable_wakemon failure invokes os_crash and reaches a BRK in the
+ 0x1000145ac vicinity. This is a candidate, not an observed failure.
+
+## Filesystem and kernel evidence
+
+Live cache inventory passes40 declared subcache UUIDs/mapping bounds,
+symbol-cache UUID and2663 image paths. Does not establish all cache payload
+hashes or successful mapping. launchd and dyld byte comparisons pass.
+
+Exact XNU vm_unix.c falls back from missing trust-cache membership to root
+ownership checks. A not-in-trust-cache line alone does not prove the mapping
+failed. Do not bypass this based on the warning alone.
+
+## Next measurement
+
+Patch0100 logs initproc SIGTRAP before coredump: PC/LR/SP/FP, main/dyld load
+bases, cache slide, instruction, bounded x19 text and six frame pointers.
+Use its observed address/message to distinguish loader failure, pthread/
+libplatform assertion, launchd assertion or another crash. Combined build
+43712255840 includes0100 and smaller XNU font. No binary patch is justified
+until that runtime evidence exists.
