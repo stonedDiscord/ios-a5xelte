@@ -69,6 +69,16 @@ int main(void) {
  strcpy((char*)memory+12800,"/usr/lib/libc++abi.dylib");output[0]=0;messages=0;
  a03_crash_annotations("test",0x103000,16,0);assert(messages==1&&strstr(output,"images 1 matches 1"));
  all[1]=2048;((uint64_t*)all)[1]=UINT64_MAX-8;reads=0;a03_crash_annotations("test",0x103000,16,0);assert(reads==1);
+
+ /* Real shared caches put annotations in a separate __DATA segment. */
+ all[1]=1;((uint64_t*)all)[1]=0x103100;
+ mh->ncmds=2;mh->sizeofcmds=224;seg->cmdsize=72;seg->nsects=0;
+ struct segment_command_64 *data=(void*)(memory+104);
+ memset(data,0,152);data->cmd=LC_SEGMENT_64;data->cmdsize=152;
+ strcpy(data->segname,"__DATA");data->vmaddr=0x2000;data->vmsize=64;data->nsects=1;
+ sec=(void*)(memory+176);strcpy(sec->sectname,"__crash_info");strcpy(sec->segname,"__DATA");sec->addr=0x2000;sec->size=64;
+ output[0]=0;messages=0;a03_crash_annotations("test",0x103000,16,0);
+ assert(messages==1&&strstr(output,"images 1 matches 1"));
  puts("A03 actual annotation parser: layout/slide/messages/sanitization/caps/malformed/fault/overflow PASS");
 }
 '''
