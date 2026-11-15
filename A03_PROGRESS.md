@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: corrected0122 deployed as BOOT0062
+
+CI43759153171 SUCCESS from28b8b81. Six source comparisons against validated
+local tree PASS, including kpi_vfs.c contextual patch.0061 loader excluding
+image_size, ADT and root retained; sole boot-argument addition a03_hfs_swap=1.
+Kernel SHA256 e54b8712b0af529e253bd3b20864754e8621e6f9722a920130898029ff5386a8.
+BOOT SHA256 0f63d63fcd2cc20796f97931ee88b56ec84c62ca5715cd8c6b05ace5e448cd24.
+Already present Download device; Heimdall boot-only reached100percent,
+reported upload success and reboot20:47UTC. Deploy/capture session82030 waits
+for CDC then100s, private boot0062-usb-initial.log. No host USERDATA/protected
+partition write. HFS runtime effect and SpringBoard remain to be measured.
+
 ## 2026-11-15: resumed goal; corrected HFS build and display ABI review
 
 Current host revalidation finds Samsung04e8:685d Download, no ADB/CDC.

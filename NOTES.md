@@ -1,4 +1,11 @@
-ACTIVE resumed SpringBoard goal 2026-11-15. Samsung Download detected.
+ACTIVE0062 BOOT-only uploaded100percent/success/reboot20:47UTC.
+Corrected0122 CI43759153171 SUCCESS28b8b81; six exact CI sources and
+0061 loader/ADT/only a03_hfs_swap=1 addition verified. Image0f63d63f...8cd24.
+Capture/deploy82030 waits CDC then100s; inspect root HFS exchange and
+UMD/container/backboard/SpringBoard. Later display ABI mismatch recorded
+in A03_PROGRESS: iOS16.0 swap input400 vs donor46c. No GUI proof.
+
+Earlier resumed SpringBoard goal 2026-11-15. Samsung Download detected.
 Corrected0122 CI43759153171 at28b8b81 is live in Build; package0062
 session17809 waits successful CI and exact source/loader/ADT/argument checks.
 HFS scope regression PASS. Next verified0062 BOOT-only; no new flash yet.
