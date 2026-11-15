@@ -2686,3 +2686,18 @@ assertion BRK0x147a8. launchd main entry0x100014038 includes early wake-monitor
 assertion, another possible trap. None identifies actual runtime PC yet.
 Documented reproducible candidates/limits in docs/a03-launchd-trap-analysis.md.
 No Apple binary edits. Combined diagnostic CI43712255840 still building.
+
+
+## 2026-11-15: fix SIGTRAP diagnostic compile failure
+
+CI43712255840 failed compiling kern_exit.c: incomplete struct task at task
+image-info/main-header fields and incomplete struct vm_shared_region at slide.
+BSD headers expose opaque types; original diagnostic placement was incorrect.
+Moved full helper into osfmk/kern/exception.c (MACH_KERNEL_PRIVATE), leaving
+BSD only a proc/current-thread/SIGTRAP guard and scalar-pid call. Per-object
+-mgeneral-regs-only now applies to exception.o. No diagnostic removed, no
+opaque-layout casts. Smaller font remains. Downloaded exact failed buildtree
+and recovered982 compile commands; local Clang syntax checks of modified
+bsd/kern/kern_exit.c and osfmk/kern/exception.c both PASS using actual component
+flags/headers. Patch applies with zero fuzz. Full CI/link/runtime still needed.
+Current phone BOOT remains RO Linux USB status0015; no device write for fix.

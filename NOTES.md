@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+BUILD FIX: CI43712255840 failed due opaque Mach structs in BSD diagnostic.
+Moved helper to osfmk/kern/exception.c; BSD only passes pid under SIGTRAP guard.
+Exact failed buildtree/compile flags local syntax PASS for both affected C
+files. Small-font change retained. Next dispatch corrected CI, then BOOT0045.
+Current phone remains RO USB status0015; no new XNU flash yet.
+
 ReVa audit saved: docs/a03-launchd-trap-analysis.md; exact live binaries
 / dyld and /launchd analyzed locally. Multiple distinct trap paths remain.
 NEXT: scoped initproc SIGTRAP diagnostic0100 added before core dump;
