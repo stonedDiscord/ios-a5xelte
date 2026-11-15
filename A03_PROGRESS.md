@@ -3498,3 +3498,20 @@ detect PASS. Private control capture6528bytes/105lines SHA256
 ACK text not captured (earlier queued logs consumed the drain), so evidence is
 host request success plus actual CDC->Download transition, not ACK visibility.
 Bulk line download remains unproven/broken; use explicit control command.
+
+## 2026-11-15: bounded Mach-O crash annotations prepared (0118)
+
+BOOT0057 remains installed; host confirms Download mode, no tty currently.
+0118 extends the existing opt-in/two-report crash logger with current-task
+read-only Mach-O __crash_info collection for main image, libc++abi and libobjc.
+No fixed Apple addresses: dyld image-array prefix follows local kdp_dyld.h;
+Mach-O __TEXT mapping supplies slide and validated section supplies location.
+Only version5 annotations, message/message2; 2048 images,128 load commands,
+64KiB commands,128 sections and255-character sanitized text bounds. copyin
+failures/overflow/malformed metadata stop reads. Existing root untouched.
+Exact root libc++abi section version5 verified read-only; fatal routine writes
+its termination message at annotation+8 before abort. This is diagnostic;
+no underlying backboardd/media repair claimed. Actual-source synthetic parser
+layout/slide/message2/sanitization/truncation/malformed/fault/overflow tests,
+existing crash/USB-download/watchdog tests and exception.c general-register
+kernel compile PASS. Full CI and hardware capture pending.

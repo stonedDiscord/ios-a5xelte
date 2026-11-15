@@ -1,0 +1,123 @@
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -946,6 +946,112 @@
+  * selects processes, gates the boot argument and permits two reports per name.
+  * Saved user state belongs to the exiting thread; no task mutation or resume.
+  */
++#include <mach-o/loader.h>
++/* Read current-task Mach-O annotations, never a fixed shared-cache address.
++ * Layout prefixes follow kdp/kdp_dyld.h and the version-5 crash annotations
++ * in this root's libc++abi. Existing caller gate/two-report cap still apply. */
++static int
++a03_crash_read(uint64_t address, void *out, size_t size)
++{
++    if (address == 0 || address + size < address) return 1;
++    return copyin((user_addr_t)address, out, size);
++}
++
++static void
++a03_crash_message(const char *name, unsigned slot, uint64_t address)
++{
++    char text[256];
++    unsigned n;
++    if (address == 0) return;
++    for (n = 0; n < sizeof(text) - 1; n++) {
++        unsigned char c;
++        if (address + n < address || a03_crash_read(address + n, &c, 1)) return;
++        if (c == 0) break;
++        text[n] = c >= 32 && c <= 126 ? (char)c : ' ';
++    }
++    text[n] = 0;
++    if (n) printf("CRASH %s annotation%u: %s%s\n", name, slot, text,
++        n == sizeof(text) - 1 ? " [bounded]" : "");
++}
++
++static void
++a03_crash_image(const char *name, uint64_t base)
++{
++    struct mach_header_64 mh;
++    if (a03_crash_read(base, &mh, sizeof(mh)) || mh.magic != MH_MAGIC_64 ||
++        mh.cputype != CPU_TYPE_ARM64 || mh.ncmds > 128 ||
++        mh.sizeofcmds > 65536 || mh.sizeofcmds < mh.ncmds * sizeof(struct load_command) ||
++        base + sizeof(mh) + mh.sizeofcmds < base) return;
++    uint64_t commands = base + sizeof(mh), text_vmaddr = 0, annotation = 0;
++    bool have_text = false;
++    unsigned offset = 0;
++    for (unsigned i = 0; i < mh.ncmds; i++) {
++        struct load_command lc;
++        if (offset > mh.sizeofcmds || mh.sizeofcmds - offset < sizeof(lc) ||
++            a03_crash_read(commands + offset, &lc, sizeof(lc)) ||
++            lc.cmdsize < sizeof(lc) || (lc.cmdsize & 7) ||
++            lc.cmdsize > mh.sizeofcmds - offset) return;
++        if (lc.cmd == LC_SEGMENT_64) {
++            struct segment_command_64 seg;
++            if (lc.cmdsize < sizeof(seg) ||
++                a03_crash_read(commands + offset, &seg, sizeof(seg)) ||
++                seg.nsects > 128 || seg.nsects > (lc.cmdsize - sizeof(seg)) / sizeof(struct section_64) ||
++                seg.vmaddr + seg.vmsize < seg.vmaddr) return;
++            if (!strncmp(seg.segname, "__TEXT", 16) && seg.fileoff == 0 &&
++                seg.filesize >= sizeof(mh) + mh.sizeofcmds) {
++                text_vmaddr = seg.vmaddr;
++                have_text = true;
++            }
++            for (unsigned j = 0; j < seg.nsects; j++) {
++                struct section_64 section;
++                if (a03_crash_read(commands + offset + sizeof(seg) +
++                    j * sizeof(section), &section, sizeof(section))) return;
++                if (!strncmp(section.sectname, "__crash_info", 16) &&
++                    !strncmp(section.segname, seg.segname, 16) && section.size >= 64 &&
++                    section.addr >= seg.vmaddr && section.addr - seg.vmaddr <= seg.vmsize &&
++                    section.size <= seg.vmsize - (section.addr - seg.vmaddr)) annotation = section.addr;
++            }
++        }
++        offset += lc.cmdsize;
++    }
++    if (!have_text || !annotation || base < text_vmaddr) return;
++    uint64_t slide = base - text_vmaddr;
++    if (annotation + slide < annotation) return;
++    uint64_t info[8];
++    if (a03_crash_read(annotation + slide, info, sizeof(info)) || info[0] != 5) return;
++    printf("CRASH %s annotations image 0x%llx version %llu\n", name, base, info[0]);
++    a03_crash_message(name, 1, info[1]);
++    a03_crash_message(name, 2, info[4]);
++}
++
++static void
++a03_crash_annotations(const char *name, uint64_t address, uint64_t size, uint64_t main_image)
++{
++    struct { uint32_t version, count; uint64_t array; } infos;
++    struct { uint64_t base, path, modtime; } images[16];
++    a03_crash_image(name, main_image);
++    if (size < sizeof(infos) || a03_crash_read(address, &infos, sizeof(infos)) ||
++        infos.version < 1 || infos.count > 2048 || !infos.array ||
++        infos.array + (uint64_t)infos.count * sizeof(images[0]) < infos.array) return;
++    unsigned matches = 0;
++    for (unsigned start = 0; start < infos.count; start += 16) {
++        unsigned count = infos.count - start;
++        if (count > 16) count = 16;
++        if (a03_crash_read(infos.array + start * sizeof(images[0]), images,
++            count * sizeof(images[0]))) return;
++        for (unsigned i = 0; i < count; i++) {
++            char path[256];
++            vm_size_t copied = 0;
++            if (images[i].path && copyinstr((user_addr_t)images[i].path, path, sizeof(path), &copied) == 0 &&
++                (!strcmp(path, "/usr/lib/libc++abi.dylib") || !strcmp(path, "/usr/lib/libobjc.A.dylib"))) {
++                if (++matches > 2) return;
++                a03_crash_image(name, images[i].base);
++            }
++        }
++    }
++    printf("CRASH %s annotation scan images %u matches %u\n", name, infos.count, matches);
++}
++
+ void a03_daemon_crash_log(const char *name, int pid, int sig, uint64_t code, uint64_t subcode);
+ 
+ void
+@@ -966,6 +1072,7 @@
+ 	if (ss == NULL || !is_saved_state64(ss)) {
+ 		return;
+ 	}
++	a03_crash_annotations(name, task->all_image_info_addr, task->all_image_info_size, mh);
+ 	uint64_t x19 = saved_state64(ss)->x[19];
+ 	char message[160];
+ 	vm_size_t copied = 0;

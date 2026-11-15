@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0118: bounded read-only Mach-O __crash_info reader prepared/tested;
+local exception.c compile PASS. Need full CI then BOOT0058 preserving0057
+loader/ADT/args/root. Host already detects Download; do not ask user again.
+Target backboardd termination reason; media null dictionary persists.
+USB control Download hardware-confirmed0057; bulk RX remains broken.
+
 ACTIVE0057 CONTROL DOWNLOAD HARDWARE SUCCESS19:06UTC: --download-control
 returned0, CDC disconnected, repeated Heimdall detect PASS. No ACK text in
 control log (queued logs); transition verified. Bulk RX remains broken.
