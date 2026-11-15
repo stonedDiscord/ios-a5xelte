@@ -1,3 +1,11 @@
+ACTIVE0066 BOOT-only upload100percent/success/reboot and CDC return verified.
+CI43765717894 SUCCESS2a79856;15 frozen sources/loader/ADT/args verified.
+BOOT82df93a9...1d2e4.360s capture227343 boot0066-usb-initial.log active.
+0065 continuation deliberately stopped~168s; analyticsd226/dmd194 crashes.
+CI43766598769 exactc2c3837 builds0129 sampler+0130 HOST logging cap;
+package0067 session46921 waits19 frozen sources, only add a03_sample=1.
+No0067 flash, measured speedup or SpringBoard home-screen proof.
+
 ACTIVE user confirms logo-only, slow with HOST MIG spam.0130 now caps
 normal HOST logs8/site(4sites)+separate16errors, actual host/kernel objects/
 plain apply PASS; no IPC behavior changes.0065 initial1694 HOST lines78KB.

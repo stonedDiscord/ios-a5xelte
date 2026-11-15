@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0066 BOOT-only deployment verified;0130 CI building
+
+CI43765717894 SUCCESS exact2a79856ddc1b10878616bd8ec2979c5331fbfc76.
+Fifteen sources match frozen expected0128; loader identical except image_size,
+ADT and arguments identical to0065. Kernel SHA256
+49fbaaa86c10e2342f62bc6822b363511aafdf78ac5b858e90dc28621bb3d77a;
+BOOT82df93a96158b68cc437adea61dc77f2cb01fef5abd177e1047c857799b1d2e4.
+BOOT-only upload100percent/success/reboot confirmed; USB CDC returned,
+360s boot0066-usb-initial.log capture active. Includes0127 default-surface
+ABI correction and0128 expanded crash evidence; runtime result pending.
+No root rewrite or protected-partition writes. No home-screen proof.
+
+0065 continuation deliberately interrupted after approximately168s before
+reset:5281bytes SHA256853497e12751ce559f0c6d8c6acadd6b95f8f5dfc331b482b5dea217127edb00.
+Generic corpse lines confirm analyticsd226 and dmd194 crashes. Earlier
+initial360s no-crash observation must not be extended to this continuation.
+
+CI43766598769 exactc2c38372fe44efe11c268d1e18ce0f571a4c7a42 builds0129
+GUI thread sampler plus0130 HOST diagnostic cap. Package0067 waits CI and
+nineteen frozen-source checks; only intended new bootarg a03_sample=1.
+No0067 flash yet; no measured speedup claimed.
+
 ## 2026-11-15: user reports logo-only and excessive HOST logging;0130 cap
 
 User still sees only the Apple logo and reports slowness amid repeated
