@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0065 diagnostic initial capture complete
+
+360s capture completed554042bytes SHA256
+3228ff83c72f5731a18f15e4ac88015aad259e552cc146b89d88b432a8e15dfb.
+Three full-screen swaps, five SpringBoard25 syscall records, zero custom
+CRASH and zero generic crashed lines in this bounded capture. No A03 USER
+messages; observer does not prove stdout activity. No home-screen proof.
+Follow-up300s capture85699 active boot0065-usb-continuing.log.0127/0128
+CI43765717894 exact2a79856 still Build;0066 package63560 awaits success.
+0129 sampler committedb99a671, real three-object compile/host gating/plain
+apply equality PASS, not in active build. Use after isolated0066 evidence
+if startup wait remains. Expanded analyticsd/dmd/tccd tracing not live yet.
+
 ## 2026-11-15:0065 confirms SpringBoard execution;0129 thread evidence prepared
 
 Live0065 logs actual SpringBoard25 syscalls: Sandbox scalar check succeeds,

@@ -1,3 +1,10 @@
+ACTIVE0065 initial360 complete554042bytes SHA3228ff83...15dfb:3 swaps,
+5 actual SpringBoard syscalls, no custom/generic crash lines, no A03 USER.
+Continuation300s85699 active boot0065-usb-continuing.log. CI43765717894
+exact2a79856 still Build; package0066 session63560 waits15 exact sources
+and identical loader/ADT/args.0129 samplerb99a671 prepared/tested, absent
+that build. No home screen. Latest commits pushed, private logs ignored.
+
 ACTIVE0065 live: actual SpringBoard25 startup syscalls now visible; Sandbox
 op2 succeeds, AMFI5a103, mkdir/dev22, libdispatch query2; no proven blocker.
 No A03 USER lines yet. Capture56741 ongoing360s. CI43765717894 builds0066.
