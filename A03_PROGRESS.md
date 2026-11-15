@@ -3288,3 +3288,13 @@ Five-minute0053 follow-up saved306913bytes to private
 shim/a03/out/boot0053-usb-followup.log. Two reports each for SpringBoard
 and identityservices; bounded counter saturation confirmed in this capture.
 USB IN continues while Download acknowledgements remain absent.
+
+CI43742555051 SUCCESS fromf28fc71; BOOT0054 RX diagnostic packaged but
+UNFLASHED. Kernel SHA256
+75e7d098a2353a443e1d585be530e974a38a9d1feebf63b54b59653f6a2ac25b.
+Image SHA256
+e5082d921d19c084b63d0f46a2c369dda665e10b1196cf0f4e0d2b633614511a.
+Independent check confirms0053 loader/ADT/args retained and exact CI USB
+source equals locally tested source. No RAMDisk/root rewrite. Host still
+sees CDC, not Download; physical transition requested for next BOOT test.
+No working Download-command claim.
