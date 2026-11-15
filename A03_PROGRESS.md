@@ -3144,3 +3144,21 @@ validated USERDATA root is retained without host rewrite.
 Additional cumulative CDC regression PASS: bus reset clears configuration/
 address and rebuilds independent flat banks; SET_ADDRESS waits for completed
 EP0 status; bulk EP1 accesses leave EP0 CSR untouched. No hardware claim.
+
+## 2026-11-15: BOOT0052 USB supply/flat-register candidate deployed
+
+CI43737353634 SUCCESS from13baa99, including linked USB supply/flat-ep marker
+gates. Kernel SHA256 ae813082d1fced07d068b33b5cd0a31705293934fab04abe1db54ee59daa81be.
+BOOT0052 SHA25626ef37ccfced6ff9f7689675c7c8bbbcdc7ab72ed10bdbf06a515b22cb34ade0.
+Exact0051 loader (masking image_size), ADT and cmdline preserved;0051 payload
+was independently reproduced byte-for-byte before replacing only the kernel.
+No RAMDisk. Existing USERDATA root retained; no host root rewrite.
+
+User confirmed Download ready; host Heimdall detect independently succeeded.
+BOOT-only upload reached100%, boot upload successful, reboot. No GPT,
+USERDATA, recovery, bootloader or EFS/NV write. Host journal initially shows
+only Download disconnect, no USB attach/ttyACM. Capture63236 waits120seconds
+at /tmp/a03-boot0052-usb-capture.log; private tty log if enumerated would be
+shim/a03/out/boot0052-usb-console.log. Requested new physical supply before/
+after or failure, CORE and configuration/reset/setup lines to discriminate
+remaining failure. No hardware USB success claimed.

@@ -1,5 +1,13 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT0052 USB candidate flashed BOOT-only100%/success/reboot.
+CI43737353634 PASS from13baa99, kernel ae813082...81be, image26ef37cc...ade0.
+Exact0051 loader/ADT/args retained; root preserved. Initial host no attach;
+await supply before/after or failure, CORE/config/reset/setup screen lines.
+Capture63236 /tmp/a03-boot0052-usb-capture.log (120s enumeration wait).
+No hardware USB success yet.0108 remains unvalidated local WIP.
+
+
 USB CI43737353634 running from13baa99 (0109;0108 WIP excluded).
 Local real Mach-O object compile PASS.0052 will retain exact0051 ADT/cmdline,
 USERDATA root, no RAMDisk. Await CI artifact and physical Download mode.
