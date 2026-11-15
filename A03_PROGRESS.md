@@ -3580,3 +3580,25 @@ Imagec03d24d795070925e8a18ba2a972124ce2faca53a82e46ac5434f87eaa61bd87.
 0059 BOOT-only upload100percent/success/reboot19:42UTC; capture2930 waits
 900s then100s, private boot0059-usb-initial.log. No root/other partition write.
 Need CoreFoundation annotation runtime reason, not just libc++abi type.
+
+BOOT0059 capture group access solved without sudo: /etc/group already lists
+stoned in uucp, but inherited agent supplementary groups omit it. newgrp uucp
+launches capture with existing authorized membership. Initial ACL wait2930
+terminated; capture4638 opened immediately, no user ACL required. Use newgrp
+for future captures and control reset; no persistent permission change.
+Final100s log 298400bytes/4757lines SHA256
+87c779288a2dc194423cb5cc7b87ccb002706f86590ad1a13f4e8fc4cb08564b.
+
+BREAKTHROUGH: both backboardd reports CoreFoundation annotation1 explicitly
+NSInvalidArgumentException: "*** -[NSURL initFileURLWithPath:]: nil string parameter".
+libc++abi generic exception and libc abort annotations agree. This is not yet
+fixed. Read-only startup once block10001c4d8 first asks BSPathProviderFactory
+system container provider -> cachesPath -> path, before CAWindowServer.
+BaseBoard defaultPath18d96606c calls BSSystemSharedDirectoryForCurrentProcess
+then NSURL fileURLWithPath. That directory derives from
+container_system_path_for_identifier via18d957d04; failure returns nil.
+Candidate is system-container resolution, not proof absent display causes abort.
+Exact backboardd embedded XML includes com.apple.security.system-container=true.
+Original host root contains containers/Data/System and Shared/SystemGroup;
+current phone state can differ. Need container lookup failure details, not
+invented paths or blind root rewrite. Media null dictionary still persists.

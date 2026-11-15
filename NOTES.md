@@ -1,5 +1,14 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0059 exact backboardd reason: NSURL initFileURLWithPath nil string,
+NSInvalidArgumentException. Startup first resolves system-container caches;
+BaseBoard defaultPath converts BSSystemSharedDirectoryForCurrentProcess to URL,
+container_system_path_for_identifier failure can return nil. Not fixed yet.
+Backboardd XML entitlement system-container=true. Original root parent dirs
+exist. Need actual container lookup failure. Media null dictionary persists.
+0059 running; USB accessible via newgrp uucp (account already in group,
+agent inherited groups stale). Use that for capture/control, no ACL ask.
+
 ACTIVE0059 BOOT-only flash SUCCESS19:42UTC; CI43752732761 PASS.
 Exact0058 loader/ADT/args/root retained. Capture2930 waits900s then100s,
 private boot0059-usb-initial.log. CoreFoundation reason annotation pending.
