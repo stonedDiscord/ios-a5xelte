@@ -50,7 +50,7 @@ def main():
         args+=' a03emmc=1'
         if a.userdata_writable:args+=' a03emmc_rw=1'
     if a.userdata_root:
-        args=args.replace('rd=md0','rd=a03userdata0')+' rootrw=1 a03_unsealed_root=1 ignition_level=1 -nobsdmgroot'
+        args=args.replace('rd=md0','rd=a03userdata0')+' rootrw=1 a03_unsealed_root=1 ignition_level=1 -nobsdmgroot unentitled_ios_sim_launch=1 launchdsuffix=release'
     a.output.parent.mkdir(parents=True,exist_ok=True)
     subprocess.run(['python3',str(ROOT/'tools/mkpayload.py'),str(a.kernel),str(a.adt),str(payload),'--ramdisk',str(a.root),'--cmdline',args],check=True)
     subprocess.run(['python3',str(ROOT/'tools/a03-xnu-image.py'),str(a.base),str(payload),str(a.output)],check=True)

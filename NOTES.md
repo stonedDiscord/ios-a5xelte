@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT: BOOT0043 screen panic launchd CS_KILLED namespace9/code0xe.
+Exact XNU source identifies EXEC WRONG_PLATFORM, not invalid code page. Root
+mount now passes; actual launchd userspace execution remains unproven. Prepare
+BOOT0044 with same CI43708471929 kernel + unentitled_ios_sim_launch=1 and
+launchdsuffix=release. Await Download; only BOOT update needed. No root reflash.
+
 CURRENT 2026-11-15 11:48UTC = XNU0043 flashed BOOT-only/upload100%/reboot.
 CI43708471929 PASS, kernel00c7cd3a...45018, BOOTedb76b9d...101e7e.
 Adds a03_unsealed_root=1 with validated writable USERDATA rootdev guard;

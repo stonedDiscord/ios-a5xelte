@@ -2590,3 +2590,17 @@ Heimdall protocol/PIT successful; uploaded only boot to100%, reported boot
 upload successful, rebooted. GPT/recovery/bootloaders/EFS/NV untouched.
 Await physical screen result after unsealed-root line; actual Apple launchd
 execution is still unproven. Full16GiB root remains independently verified.
+
+
+## 2026-11-15: BOOT0043 passes mount; iOS exec platform gate rejects launchd
+
+User reports panic(cpu 0 caller 0xfffffe0007ad5a20): unexpected SIGKILL of
+launchd (CS_KILLED), namespace9 code0xe, description none. In exact extracted
+XNU source reason.h namespace9=OS_REASON_EXEC,14=WRONG_PLATFORM. process_signature
+in kern_exec.c rejects PLATFORM_IOS exec with no spawn attributes unless
+no-sandbox entitlement or DEVELOPMENT unentitled_ios_sim_launch is enabled.
+This is not invalid-page signature failure (namespace3/code2), and the process
+name does not prove launchd instructions ran. Root mount/auth override advanced.
+Existing DEVELOPMENT tunable unentitled_ios_sim_launch=1 permits this path;
+package same verified kernel with that flag and launchdsuffix=release. Packer
+adds these only with --userdata-root. No filesystem reinstall/rebuild needed.
