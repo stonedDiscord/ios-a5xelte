@@ -6,7 +6,8 @@ compatibility=1. Markers + actual predicate disassembly verified. Capture
 session45847 logs /tmp/a03-boot0048-usb-capture.log; private output
 shim/a03/out/boot0048-usb-console.log if tty enumerates. Await user's screen
 USB PHY/CORE/config/reset/setup + final launchd/TRAP lines. Root preserved.
-No runtime improvement proven yet.
+USB capture45847 ended120s timeout/no enumeration; host journal only
+Download disconnect. Await physical screen; no runtime improvement proven.
 
 NEXT0048:0105 opt-in iOS16 SDK16 provisional reply compatibility only;
 0106 matching A03 peripheral PHY/trim correction + register/counter logs.

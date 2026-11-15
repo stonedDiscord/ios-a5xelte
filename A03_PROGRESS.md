@@ -2888,3 +2888,8 @@ Uses0047 args plus a03_ios16_provisional_reply=1. Host capture45847 started
 before Heimdall BOOT-only upload100%/success/reboot. USERDATA/root/GPT and
 protected partitions untouched. Await physical logs and USB enumeration;
 no runtime host_info/launchd improvement or USB success claimed yet.
+
+BOOT0048 capture45847 completed with120-second enumeration timeout:
+A03 XNU CDC console did not enumerate. Host kernel journal shows only
+Download disconnect, no subsequent USB attach. Await physical PHY/CORE and
+IPC/launchd output before further code changes; not evidence about host_info.
