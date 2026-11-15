@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0067 third sample proves slow initializer progress
+
+Pass2 (420s) SpringBoard25 still one thread state9, but PC moves from dyld
+hasThreadLocalVariables to libobjc map_images_nolock (unslid1800c39d4),
+through _objc_init/libdispatch_init/libSystem_initializer. Thus earlier
+identical180/300s snapshots do not establish permanent deadlock. Need
+kernel wait/CPU time evidence, not presumed I/O or CPU cause.
+Analyticsd195/197 null strlen SIGSEGV captured; tccd189 SIGABRT reason
+namespace25: com.apple.tccd: profile not found. Separate from GUI outcome.
+0132 real kernel object compiles/plain-apply equality PASS; CI43768648670
+exact981615130da8f1c0539f3cd2a203899ba3af96c7 building. Package0068 session
+59465 uses20frozen sources expected0132, identical0067 args/ADT/loader,
+so request batching remains off. Old0068 waiter231182 stopped.
+
 ## 2026-11-15:0067 captures persistent SpringBoard initialization wait
 
 Sampler passes0/1 (180/300s) record same SpringBoard25 sole thread, same

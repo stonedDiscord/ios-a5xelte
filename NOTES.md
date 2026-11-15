@@ -1,3 +1,10 @@
+ACTIVE0067 pass2/420s SpringBoard25 advances to libobjc map_images_nolock,
+still state9/one thread; earlier same180/300s PC not permanent deadlock proof.
+analyticsd null strlen SIGSEGV and tccd189 profile-not-found SIGABRT captured.
+0132 CI43768648670 exact9816151 running, package0068 session59465 waits
+20frozen-source expected0132 + identical0067 loader/ADT/args (batch off).
+0067 capture233456660s active; final pass540s pending. No home screen.
+
 ACTIVE0067 sample0/1: SpringBoard25 single thread state9 WAIT|UNINT,
 identical PC1c188ed9c/dyld hasThreadLocalVariables and libSystem_initializer
 stack120s apart. Not CPU-saturation proof; need kernel wait. Backboardd
