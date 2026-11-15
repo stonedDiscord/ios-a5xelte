@@ -5,6 +5,7 @@ prints PC/LR, dyld/main bases, cache slide, x19 text, instruction and frames.
 Live read-only inventory PASS:40 subcaches/UUIDs,2663 images; launchd/dyld
 bytes match pinned root. No core file exists. dyld_halt BRK0x5fcd0 retains
 message in x19, but actual trap site UNKNOWN. Keep smaller font in next build.
+Combined build CI43712255840 at3580c5b supersedes font-only43711774561.
 No trust-cache bypass justified yet; missing-cache warning falls back to UID.
 
 CURRENT BOOT = RO Linux USB status0015 (BOOT-only flash succeeded).

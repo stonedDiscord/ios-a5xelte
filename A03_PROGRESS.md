@@ -2671,3 +2671,9 @@ frames before initproc core dump, which left no catalog file last time.
 Source reads user memory with copyin/copyinstr only; kern_exit receives
 -mgeneral-regs-only. No trust-cache bypass or iOS binary edits. Includes
 small-font change in same next kernel build. Runtime trap location pending.
+
+Combined smaller-font + SIGTRAP capture CI43712255840 dispatched at3580c5b,
+DEVELOPMENT/A03 iOS userspace, buildtree upload enabled for compile auditing.
+It supersedes font-only CI43711774561 via existing workflow concurrency.
+0100 dry-run applies with zero fuzz to extracted CI sources. Device remains
+RO USB status0015; no new XNU candidate flashed. Await build/runtime evidence.
