@@ -3463,3 +3463,11 @@ and explicitly logs a headless path if either display/server display is nil.
 Thus absent main CADisplay is not by itself proof of the backboardd SIGABRT.
 Need0116 deeper runtime stack to identify actual thrown-exception origin.
 Host now detects Download again18:49UTC; do not request another transition.
+
+Further read-only media trace: manager init1954ee604 stores result of
++[ARPRoutePredictor routePredictor] at derived storage+18 (1954ee908).
+Class/key loaded via dlopen AirPlayRoutePrediction and dlsym at1954f76b0.
+Framework is present in the exact plain-arm64 cache. ARP init1ccb54b48 has
+a nil-return path when notify_register_dispatch fails (call1ccb54cf0; branch
+1ccb54d00). This is a candidate cause, not runtime proof; need deeper crash
+state or notification diagnostics before changing IPC behavior.
