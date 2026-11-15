@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+Latest BOOT0042 output identifies the A03 USB state: `A03 USB: AON
+EB1=001eb8f3 RST1=00000000 PHY_TEST=00000000 PHY_CTRL=0000000a CTRL1=00000000
+CLK_REF=00000000`, then `MUSB clock gated; controller not accessed`. AON reset
+is released but the MUSB reference clock is disabled, so XNU USB is not yet a
+usable diagnostic channel. The screen still reports HFS mount error 5; keep
+USB clock bring-up separate from the catalog/eMMC investigation.
+
 ## Active A03 handoff — 2026-11-14
 
 Latest screenshot `IMG_20261115_004550_780.jpg` still shows the same HFSX

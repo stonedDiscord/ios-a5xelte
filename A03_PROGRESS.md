@@ -22,6 +22,13 @@ trace. Heimdall detected Download mode and uploaded only PIT entry `boot` to
 100%, then rebooted. USERDATA, GPT, recovery, bootloaders, EFS and NV were
 untouched. Await direct catalog-fork/root-node output.
 
+The resulting USB probe reported `A03 USB: AON EB1=001eb8f3 RST1=00000000
+PHY_TEST=00000000 PHY_CTRL=0000000a CTRL1=00000000 CLK_REF=00000000` followed
+by `MUSB clock gated; controller not accessed`. AON reset is released, but
+the reference clock is disabled, so no MUSB register evidence or USB
+transport is available yet. HFS still fails with error 5; this USB state does
+not identify the catalog read failure.
+
 ## 2026-11-14: SDMA source audit
 
 Compared `shim/a03/xnu-loader.c` with the installed T606 Linux driver
