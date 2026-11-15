@@ -2422,3 +2422,13 @@ Snapshot6 halts before XNU and reads only the bounded validated mailbox.
 Host reader0008 adds explicit mailbox capacity guard; unflashed SHA
 46149eb8297f255926dcc29f8a006956ace65f6f1c9b26677e703698fcb83750.
 Host compilation, GPT and BSD harnesses pass. No protected partition write.
+
+
+### Linux report viewer deployed, 10:43UTC
+
+Reader7 returned to Download; host confirmed04e8:685d. Flashed report viewer
+shim/a03/out/a03-linux-report-0001.img BOOT-only; upload100%/success/reboot.
+No new USERDATA write by viewer. It halts before XNU, awaiting physical
+A03 STOCK LINUX REPORT text or the mailbox/GPT failure line. Current BOOT is
+the report viewer. Commits d9ff094 and c381f54 contain reader and mailbox work.
+Reader0008 remains unflashed. Host sees no USB on viewer by design.

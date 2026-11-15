@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT UPDATE 2026-11-15 10:43UTC: reader7 returned to Download;
+report viewer0001 flashed BOOT-only/upload100%/success/reboot. Await screen
+A03 STOCK LINUX REPORT or last mailbox/GPT failure line. Viewer halts before
+XNU, does not write USERDATA and has no USB. Commits d9ff094/c381f54 saved.
+
+
 ## Latest A03 state — Linux diagnostic mailbox, 2026-11-15 10:40UTC
 
 Reader5's automatic return to Download was observed by user and host: custom
