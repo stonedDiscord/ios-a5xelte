@@ -11,7 +11,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parent.parent
 with tempfile.TemporaryDirectory(prefix='a03-usb-supply-') as directory:
     directory = Path(directory)
-    for number in ('0103', '0104', '0106', '0109'):
+    for number in ('0103', '0104', '0106', '0109', '0110'):
         patch, = (ROOT / 'xnu/a03').glob(number + '-*.patch')
         subprocess.run(['git', 'apply', '--include=bsd/dev/a03_usb_console.c',
                         str(patch)], cwd=directory, check=True)
@@ -19,6 +19,9 @@ with tempfile.TemporaryDirectory(prefix='a03-usb-supply-') as directory:
     start = source.index('static int adi_read(')
     end = source.index('static unsigned le16(', start)
     source = source[start:end]
+    a = source.index('/* Matches sprd_adi_restart_handler')
+    b = source.index('static int usb_supply(', a)
+    source = source[:a] + source[b:]
     header = r'''
 #include <stdint.h>
 #include <stdio.h>

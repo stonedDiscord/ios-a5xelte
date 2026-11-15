@@ -8,7 +8,8 @@ with tempfile.TemporaryDirectory(prefix='a03-cdc-source-') as d:
  for name in ('0103-a03-usb-cdc-console.patch',
               '0104-a03-post-trap-usb-monitor.patch',
               '0106-a03-usb-peripheral-phy-readback.patch',
-              '0109-a03-usb-supply-flat-endpoints.patch'):
+              '0109-a03-usb-supply-flat-endpoints.patch',
+              '0110-a03-usb-download-command.patch'):
   subprocess.run(['git','apply','--include=bsd/dev/a03_usb_console.c',
                   str(root/'xnu/a03'/name)],cwd=d,check=True)
  source=(Path(d)/'bsd/dev/a03_usb_console.c').read_text()
@@ -26,6 +27,7 @@ static void w16(unsigned o,uint16_t v) { regs[o]=v;regs[o+1]=v>>8; }
 # Hardware startup and thread body are outside this protocol test.
 source=source[:source.index('static void worker(')]+'\n#endif\n'
 header='''#include <stdint.h>
+#include <string.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <assert.h>
