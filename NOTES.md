@@ -1,3 +1,10 @@
+ACTIVE user doubts I/O-bound hypothesis. No measurement established it.
+Priority is0067 GUI thread snapshots to distinguish IPC/service wait from
+CPU work; do not deploy0131 storage candidate as presumed fix. Stopped
+0131 auto-dispatch waiter230570 before CI launch.0131 remains tested,
+committed/off by default only. Existing CI43766598769 builds0129/0130;
+package0067 waits success.0066 continuation180s230775 active.
+
 ACTIVE0066 initial360 complete554548bytes SHAf4b0c37894802553dd2ca66e0ebccf1b56c0cc5618e0f741be0c1f5d42e6a6c6.
 selector3 success/3full-screen swaps; no custom/generic crashes within capture.
 No home-screen proof.0131 committed75ecd42, frozen20sources. Dispatch15508

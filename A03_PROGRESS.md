@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: prioritize wait-state evidence over unmeasured I/O hypothesis
+
+User suspects slowdown is not I/O bound. No device timing established an
+I/O bottleneck; per-sector code alone is insufficient evidence. Stopped
+0131 auto-dispatch before launch; candidate remains off by default and
+committed. Priority stays0067 read-only GUI thread snapshots, identifying
+whether SpringBoard is running or waiting on IPC/service initialization.
+No new storage optimization deployed. CI43766598769 still building.
+
 ## 2026-11-15:0066 initial capture complete; default-surface ABI accepted
 
 360s capture completed554548bytes SHA256
