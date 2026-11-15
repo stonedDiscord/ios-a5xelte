@@ -1,3 +1,11 @@
+ACTIVE0068 first stack proves SpringBoard controller mutex wait during
+cluster_pagein, event=a03_emmc_lock+8. Not XPC timeout. CACHE_CTRL0 means
+flush-batching benefit absent. IO~81.56s/8192requests excludes lock wait.
+0133 read16KiB lck_mtx_yield fairness +0134 A03 product/target name prepared,
+actual handler handoff tests/2kernel objects/plain apply/profile PASS.
+Not deployed;0068 capture239781660s still live. Need compare next samples.
+Redmi text is actual inherited product-name leak; SWEET internal names stay.
+
 ACTIVE0068 BOOT-only100percent/success/reboot22:30UTC. CI43768648670
 SUCCESS9816151,20frozen sources/loader/ADT/args match. BOOTbd6682dc...81582.
 Capture239781660s boot0068-usb-initial.log waits USB; sample180/300/420/540

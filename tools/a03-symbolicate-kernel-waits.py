@@ -19,7 +19,7 @@ def main():
     output = subprocess.check_output(['llvm-nm', '-n', '--defined-only', str(a.kernel)], text=True)
     symbols = []
     for line in output.splitlines():
-        match = re.fullmatch(r'([0-9a-fA-F]+) [tT] (.+)', line)
+        match = re.fullmatch(r'([0-9a-fA-F]+) [tTsS] (.+)', line)
         if match:
             symbols.append((int(match[1], 16), match[2]))
     symbols.sort()
@@ -31,7 +31,12 @@ def main():
         match = re.search(r'continuation ([0-9a-f]+) kbt(.*)', line)
         if not match:
             continue
-        for token in [match[1]] + match[2].split():
+        tokens=[]
+        for token in match[2].split():
+            if not re.fullmatch(r'[0-9a-f]{16}',token):
+                break
+            tokens.append(token)
+        for token in [match[1]] + tokens:
             address = int(token, 16)
             i = bisect.bisect_right(addresses, address) - 1
             if i >= 0 and address - symbols[i][0] < 0x10000:

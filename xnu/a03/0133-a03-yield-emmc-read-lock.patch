@@ -1,0 +1,15 @@
+--- a/bsd/dev/a03_emmc.c
++++ b/bsd/dev/a03_emmc.c
+@@ -257,6 +257,12 @@
+             ae.write_sectors++;
+         }
+         done+=take;buf_setresid(bp,count-done);
++        /* A synchronous clustered read must not monopolize the controller
++         * while another process waits to fault in its executable. All DMA
++         * and register restoration completed before this lock handoff.
++         * Writes retain request-scoped flush/serialization semantics. */
++        if(reading&&done<count&&(done&16383)==0)
++            lck_mtx_yield(&a03_emmc_lock);
+     }
+     if(pending_flush) {
+         int flush_error=data_flush_cache();

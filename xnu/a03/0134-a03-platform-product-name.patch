@@ -1,0 +1,27 @@
+--- a/iokit/Kernel/arm/SweetPlatformExpert.cpp
++++ b/iokit/Kernel/arm/SweetPlatformExpert.cpp
+@@ -1,5 +1,5 @@
+ /*
+- * Minimal device-tree platform expert for Redmi Note 10 Pro (sweet).
++ * A03 adaptation of the SWEET device-tree platform expert.
+  * Uses XNU's normal platform, power-domain and nub initialization. Hardware
+  * interrupt and power-management services are supplied by separate drivers.
+  */
+@@ -85,7 +85,7 @@
+ 	if (name == NULL || maxLength <= 0) {
+ 		return false;
+ 	}
+-	strlcpy(name, "sweet", (size_t)maxLength);
++	strlcpy(name, "a03", (size_t)maxLength);
+ 	return true;
+ }
+ 
+@@ -95,7 +95,7 @@
+ 	if (name == NULL || maxLength <= 0) {
+ 		return false;
+ 	}
+-	strlcpy(name, "Redmi Note 10 Pro", (size_t)maxLength);
++	strlcpy(name, "Samsung Galaxy A03", (size_t)maxLength);
+ 	return true;
+ }
+ #endif /* SWEET */

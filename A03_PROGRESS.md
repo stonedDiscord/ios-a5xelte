@@ -1,5 +1,32 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0068 identifies storage mutex wait; Redmi product leak fixed locally
+
+First kernel snapshot: SpringBoard26 state9 waits in lck_mtx_lock_contended
+from emmc_strategy -> spec_strategy -> buf_strategy -> VNOP_STRATEGY ->
+cluster_io -> cluster_pagein. Event7c425a8 equals exact kernel a03_emmc_lock
+7c425a0+8. This identifies this sample's wait as controller mutex contention,
+not an XPC timeout.120s was sampler cadence, not measured timeout length.
+Thread CPU user0.017560s/system5.714774s/runnable59.395987s; no saturation
+conclusion. Actual CACHE_CTRL=0 means0131 flush batching has no benefit on
+this boot. First8192requests939039read/6379write sectors, I/O lock-held
+2120578835ticks at26MHz (~81.56s), excluding lock wait.
+
+Prepared0133 read fairness: lck_mtx_yield after each completed16KiB within
+buffered reads, letting waiting faulting processes acquire controller; all
+sector DMA/register restoration done before handoff. Writes retain existing
+serialization/durability. Actual production handler test verifies33sector
+read one handoff, writes none; two real kernel objects and plain apply exact
+complete-file equality PASS. Hardware effect pending.
+
+User correctly sees Redmi Note10Pro: inherited SweetPlatformExpert hardcodes
+getProductName and getTargetName, used in MediaExperience/MediaToolbox lookup
+paths.0134 replaces product with Samsung Galaxy A03 and target a03; no
+matching-compatible/Apple userland identity or hardware register change.
+SWEET internal class/build names remain donor implementation identifiers.
+0133/0134 not yet deployed. Kernel-wait resolver fixed for Mach-O S/s symbols
+and partial log lines; sampler kernel line may truncate, retain valid frames.
+
 ## 2026-11-15:0068 kernel-wait/CPU-time boot deployed
 
 CI43768648670 SUCCESS exact981615130da8f1c0539f3cd2a203899ba3af96c7.

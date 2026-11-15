@@ -69,6 +69,7 @@ static struct {
     struct {uint32_t boot,boot_count,userdata,userdata_count;} gpt;
 } ae;
 static int a03_emmc_lock,lock_depth,read_calls,fail_call,map_fail;
+static int handoffs;
 static int flushes,flush_fail;
 static int write_calls,write_fail;static uint32_t write_lba;static unsigned char written[512];
 static uint32_t requested[40];
@@ -117,6 +118,7 @@ static int data_write(uint32_t lba,const unsigned char *p) {
 }
 '''
     stub += r'''
+static bool lck_mtx_yield(int *p) {(void)p;assert(lock_depth==1);handoffs++;return true;}
 static int data_write_sector(uint32_t lba,const unsigned char *p,bool flush) {
  assert(!ae.batch_flush||!ae.cache_enabled||!flush);return data_write(lba,p);
 }
@@ -230,10 +232,12 @@ int main(void) {
     b=req(0,0,512,B_READ);emmc_strategy(&b);check_done(&b,ENXIO,512,0);
     ae.poisoned=false;ae.ready=false;
     b=req(0,0,512,B_READ);emmc_strategy(&b);check_done(&b,ENXIO,512,0);
+    ae.ready=true;ae.poisoned=false;
+    b=req(1,0,16896,B_READ);handoffs=0;emmc_strategy(&b);check_done(&b,0,0,33);assert(handoffs==1);
     ae.ready=true;ae.poisoned=false;ae.writable=true;ae.cache_enabled=true;ae.batch_flush=1;
     flushes=flush_fail=write_fail=write_calls=0;
-    b=req(1,0,16384,0);emmc_strategy(&b);check_done(&b,0,0,0);
-    assert(write_calls==32&&flushes==1);
+    handoffs=0;b=req(1,0,16384,0);emmc_strategy(&b);check_done(&b,0,0,0);
+    assert(write_calls==32&&flushes==1&&handoffs==0);
     flush_fail=1;flushes=write_calls=0;
     b=req(1,0,1024,0);emmc_strategy(&b);check_done(&b,EIO,1024,0);
     assert(write_calls==2&&flushes==1);
