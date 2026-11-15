@@ -3471,3 +3471,30 @@ Framework is present in the exact plain-arm64 cache. ARP init1ccb54b48 has
 a nil-return path when notify_register_dispatch fails (call1ccb54cf0; branch
 1ccb54d00). This is a candidate cause, not runtime proof; need deeper crash
 state or notification diagnostics before changing IPC behavior.
+
+## 2026-11-15: BOOT0057 corrected break descriptor deployed
+
+CI43748823542 SUCCESS from1ab9e92. Downloaded USB/exception sources equal
+local tested sources;0056 loader/ADT/arguments preserved, no RAMDisk/root
+rewrite. Kernel SHA2569f176b5e0a983f06507fa3ed8806c64f8e7ea525056b4d9a2551c774b07b2d3a.
+Image SHA2563f1d1ac4b3f6978402389aac406b5efbe7c1c5e42b4149ca38352c20c050144d.
+BOOT-only upload100percent/success/reboot19:03UTC. CDC enumerated within58s;
+user restored tty ACL and capture60997 opened. Sysfs actual descriptors now
+contain ACM capabilities06. WDT selector0 disabled/software stage255 persists.
+90second initial capture running; deeper crash/reset evidence pending.
+No host USERDATA/GPT/recovery/bootloader/EFS/NV write.
+
+BOOT0057 final90second capture360618bytes/4921lines SHA256
+c89236085e9f7cdb2849e789ea83ffea6e5760980be493eec59f389052428b60.
+Deeper backboardd trace reaches main+0xa354 and+0xaa20,
+through dispatch_once; exact entry call10000aa1c dispatches windowserver.
+Exception unwinding removes original thrown-site frames before terminate.
+Mediaserverd still null dictionary; WDT disabled path still confirmed.
+
+HARDWARE DOWNLOAD SUCCESS: explicit --download-control returned0; CDC
+disconnected and Heimdall immediately detected Download at19:06UTC, repeated
+detect PASS. Private control capture6528bytes/105lines SHA256
+931b5a5340e0cde1cb742295a2e8e57fa40ac3403652f408dfcc0bca9761d58d.
+ACK text not captured (earlier queued logs consumed the drain), so evidence is
+host request success plus actual CDC->Download transition, not ACK visibility.
+Bulk line download remains unproven/broken; use explicit control command.

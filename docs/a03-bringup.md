@@ -12,13 +12,14 @@ passed by FigNotificationListenerStartNotifications. Backboardd still aborts
 through Objective-C/C++ terminate; its underlying exception reason is unknown.
 0116 expands bounded crash traces to24frames to reach beyond these wrappers.
 
-Bulk USB download has no hardware ACK/reset. BOOT0055 PIO takeover did not
-fix RX: CSR0800 and one-byte zero packets persist. BOOT0056 control reset
-failed before transmission: host TIOCSBRK returned EOPNOTSUPP because the ACM
-descriptor omitted CAP_BRK.0117 changes capabilities02->06; host protocol
-tests and kernel syntax pass. Combined0116+0117 CI43748823542 is building;
-reset remains hardware-unverified. Preserve root/loader/ADT and the enabled
-a03_watchdog_disabled=1 argument for the next BOOT-only test.
+BOOT0057 control Download reset is hardware-confirmed: run
+python3 tools/a03-usb-console.py --download-control --wait 30 --duration 10
+with host tty access. CDC disconnects and Heimdall detects Download mode.
+This uses explicit CDC SEND_BREAKffff; ordinary capture does not request it.
+Bulk line download remains broken/unverified; PIO takeover did not fix RX.
+0117 advertises ACM CAP_BRK required by current Linux before sending break.
+0057 also includes bounded24-frame crash traces and preserves the working
+root/loader/ADT/arguments, including a03_watchdog_disabled=1.
 Software AKS remains lab-only without SEP/passcode protection.
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve

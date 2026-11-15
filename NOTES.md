@@ -1,12 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
-ACTIVE0056 USB capture complete313123bytes/4857lines; watchdog disabled
-selector0/software stage255 confirmed twice, no watchdog CRASH. Media/backboard
-crashes persist. --download-control ioctl EOPNOTSUPP: descriptor lacks CAP_BRK.
-0117 ACM02->06 validated host+kernel; combinedCI43748823542 from1ab9e92
-started, supersedes cancelled0116-onlyCI43748416531.
-Host Download detected18:49UTC;0057 awaits full CI, no repeat mode request.
-Root/protected parts retained.0056 image9ec37ad1...09b880.
+ACTIVE0057 CONTROL DOWNLOAD HARDWARE SUCCESS19:06UTC: --download-control
+returned0, CDC disconnected, repeated Heimdall detect PASS. No ACK text in
+control log (queued logs); transition verified. Bulk RX remains broken.
+0057 deeper crash captured: backboard main+a354/aa20, windowserver dispatch_once;
+original thrown-site unwound. Media null dictionary persists; WDT disabled
+selector0/stage255 confirmed. Root/protected parts retained.
+Image3f1d1ac4b3f6978402389aac406b5efbe7c1c5e42b4149ca38352c20c050144d.
 
 CURRENT0055: USB IN works, PIO takeover did NOT fix RX (0800/count1 zero).
 0115 explicit --download-control -> CDC SEND_BREAKffff bypasses bulk OUT
