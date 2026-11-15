@@ -2654,3 +2654,20 @@ A03 iOS userspace profile / DEVELOPMENT / SWEET / macos-15-intel. Staged0003
 verified FBCON_SCALE1. At720x1600 this is90columns x100rows (four times old
 character capacity). Current device stays in RO USB status0015 until build
 passes and user returns Download. No new XNU flash yet.
+
+
+## 2026-11-15: live dyld/cache audit and pre-coredump trap logging
+
+Read-only USB audit validates all40 declared subcache files, UUIDs, mapping
+bounds, symbol UUID and2663 image paths. Live launchd SHA314a84ce...bb5f666
+and dyld SHAe5768eb0...691873 match pinned rebuilt root bytes. This checks
+inventory/selected file bytes, not every cache payload hash or runtime success.
+Private extracted binaries/reports remain in ignored out/launchd-trap-audit.
+Disassembly identifies dyld_halt BRK at image offset0x5fcd0 with formatted
+message retained in x19, plus other pthread/libplatform BRK sites. SIGTRAP
+alone cannot distinguish them. Added0100 to print actual PC/LR/SP/FP, main
+and dyld bases, cache slide, instruction, bounded x19 string and6 bounded
+frames before initproc core dump, which left no catalog file last time.
+Source reads user memory with copyin/copyinstr only; kern_exit receives
+-mgeneral-regs-only. No trust-cache bypass or iOS binary edits. Includes
+small-font change in same next kernel build. Runtime trap location pending.

@@ -1,0 +1,92 @@
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1772,6 +1772,69 @@
+ #endif /* (DEVELOPMENT || DEBUG) && CONFIG_COREDUMP */
+ }
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <arm/thread.h>
++#include <arm64/proc_reg.h>
++#include <vm/vm_shared_region.h>
++
++/* Print before the potentially slow/failed initproc core dump. No user writes. */
++static void
++a03_init_trap_log(proc_t p, int rv)
++{
++    if (p != current_proc() || WTERMSIG(rv) != SIGTRAP) {
++        return;
++    }
++    arm_saved_state_t *ss = find_user_regs(current_thread());
++    if (ss == NULL || !is_saved_state64(ss)) {
++        return;
++    }
++    task_t task = current_task();
++    uint64_t pc = get_saved_state_pc(ss), fp = get_saved_state_fp(ss);
++    uint64_t dyld = 0, slide = 0;
++    uint64_t infos[5];
++    if (task->all_image_info_size >= sizeof(infos) &&
++        copyin((user_addr_t)task->all_image_info_addr, infos, sizeof(infos)) == 0) {
++        dyld = infos[4]; /* dyld_all_image_infos64.dyldImageLoadAddress */
++    }
++    vm_shared_region_t sr = vm_shared_region_get(task);
++    if (sr != NULL) {
++        slide = sr->sr_slide;
++        vm_shared_region_deallocate(sr);
++    }
++    printf("A03 TRAP pid=%d pc=%llx lr=%llx sp=%llx fp=%llx\n",
++        proc_getpid(p), pc, get_saved_state_lr(ss), get_saved_state_sp(ss), fp);
++    printf("A03 TRAP main=%llx dyld=%llx cache_slide=%llx x19=%llx\n",
++        task->mach_header_vm_address, dyld, slide, saved_state64(ss)->x[19]);
++    uint32_t instruction = 0;
++    if (copyin((user_addr_t)pc, &instruction, sizeof(instruction)) == 0) {
++        printf("A03 TRAP instruction=%08x\n", instruction);
++    }
++    /* Apple's dyld_halt preserves its formatted diagnostic in x19 at BRK. */
++    char message[256];
++    size_t copied = 0;
++    if (copyinstr((user_addr_t)saved_state64(ss)->x[19], message,
++        sizeof(message), &copied) == 0 && copied > 1) {
++        for (size_t i = 0; i + 1 < copied; i++) {
++            if ((unsigned char)message[i] < 32 || (unsigned char)message[i] > 126) {
++                message[i] = ' ';
++            }
++        }
++        printf("A03 TRAP x19 text: %s\n", message);
++    }
++    for (unsigned i = 0; i < 6 && fp != 0 && (fp & 7) == 0; i++) {
++        uint64_t frame[2];
++        if (copyin((user_addr_t)fp, frame, sizeof(frame)) != 0) {
++            break;
++        }
++        printf("A03 TRAP frame%u=%llx\n", i, frame[1]);
++        if (frame[0] <= fp) {
++            break;
++        }
++        fp = frame[0];
++    }
++}
++#endif
++
+ static void
+ proc_handle_critical_exit(proc_t p, int rv)
+ {
+@@ -1817,6 +1880,9 @@
+ 		prefix_str = prefix_str_buf;
+ 	}
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++	a03_init_trap_log(p, rv);
++#endif
+ 	proc_crash_coredump(p);
+ 
+ 	sync(p, (void *)NULL, (int *)NULL);
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -95,6 +95,7 @@
+ 
+ # A03: BSD is a separate make target from osfmk.
+ bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
++kern_exit.o_CFLAGS_ADD += -mgeneral-regs-only
+ a03_emmc.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ # A03 built-in userspace providers execute without kernel FP/SIMD state.

@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+NEXT: scoped initproc SIGTRAP diagnostic0100 added before core dump;
+prints PC/LR, dyld/main bases, cache slide, x19 text, instruction and frames.
+Live read-only inventory PASS:40 subcaches/UUIDs,2663 images; launchd/dyld
+bytes match pinned root. No core file exists. dyld_halt BRK0x5fcd0 retains
+message in x19, but actual trap site UNKNOWN. Keep smaller font in next build.
+No trust-cache bypass justified yet; missing-cache warning falls back to UID.
+
 CURRENT BOOT = RO Linux USB status0015 (BOOT-only flash succeeded).
 BOOT0044 advanced to dyld shared_region requests, then SIGTRAP namespace2/5.
 Trust-cache warning falls back to root ownership; do not assume causal.
