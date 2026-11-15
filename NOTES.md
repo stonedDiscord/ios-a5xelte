@@ -9,6 +9,13 @@ older BOOT0031 diagnostic and does not include the direct catalog-root probe
 added in `66af3d4`. Workflow `43655138104` is building the next BOOT-only
 probe; wait for its output before any further USERDATA write.
 
+Workflow `43656529029` succeeded after fixing `0098`'s malformed hunk. BOOT
+candidate `a03-xnu-0042-d7c03ad.img` SHA256
+`6c729a41d931fd2d151d42aaccf005b57d972206d410fbce7cb46da3a42c6115` was
+uploaded BOOT-only via Heimdall to 100% and the phone rebooted. It includes
+the direct reads at absolute LBAs `0x1097c10` and `0x1097d22`; await their
+bytes. No USERDATA or protected partition write occurred.
+
 Kernel-source audit of `android_kernel_samsung_a03/drivers/mmc/host/sprd-sdhcr11.{c,h}` found the existing SDMA command encoding was already correct: Linux's `set_trans_and_cmd()` produces `(cmd<<24)|0x003a0011` for a single-block read (data-present + R1 + read + DMA). The loader now follows two source-backed details that were missing: it enables SDHCI v4 64-bit system-address mode via HOST_CTRL2 (0x3e) bit 13, as Linux does in `sprd_sdhc_set_64bit_addr()`, and programs block size with the controller's 16-bit write at 0x04 (`0x7200`) before the 32-bit block count. Host build `A03_EMMC_SNAPSHOT=5 sh shim/a03/build-xnu.sh` passes. This is not yet device evidence; flash a BOOT-only diagnostic and inspect the new controller mode/SDMA result before changing USERDATA.
 
 Corrected XNU build 43641820579 (commit 4e4873e) succeeded with the A03 USB/direct-catalog gates. Kernel SHA256 `f19877e2842a7cff12433efd770910174307decae7d6c92c6ab39142d03454a5`. Packaged local USERDATA-root candidate `shim/a03/out/a03-xnu-0040.img` with the verified iOS root and `rd=a03userdata0 rootrw=1`; image SHA256 `94e18760fe23c75b48f0ac17e1af42cde93d493645b2d3b9a8bfe348b709a9a2`. No device write yet; Download-mode state is required before a BOOT-only flash.

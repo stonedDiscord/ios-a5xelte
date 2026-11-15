@@ -12,6 +12,16 @@ diagnostic that reads both the catalog fork and declared root node directly.
 No USERDATA write is indicated until those bytes are compared with the local
 image.
 
+## 2026-11-15: direct catalog-root diagnostic deployed
+
+Workflow `43656529029` succeeded from commit `31d9bc2`; the corrected `0098`
+patch linked. Packaged BOOT candidate `a03-xnu-0042-d7c03ad.img` has SHA256
+`6c729a41d931fd2d151d42aaccf005b57d972206d410fbce7cb46da3a42c6115` and
+uses the emmc-enabled ADT with USERDATA root selection, USB probe and eMMC
+trace. Heimdall detected Download mode and uploaded only PIT entry `boot` to
+100%, then rebooted. USERDATA, GPT, recovery, bootloaders, EFS and NV were
+untouched. Await direct catalog-fork/root-node output.
+
 ## 2026-11-14: SDMA source audit
 
 Compared `shim/a03/xnu-loader.c` with the installed T606 Linux driver
