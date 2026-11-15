@@ -3140,3 +3140,7 @@ Real local Mach-O object compile of0109 also PASS with -mgeneral-regs-only.
 BOOT0052 packaging will reuse exact0051 ADT and command line.0051 payload
 has no RAMDisk segment (corrected initial packaging assumption); installed
 validated USERDATA root is retained without host rewrite.
+
+Additional cumulative CDC regression PASS: bus reset clears configuration/
+address and rebuilds independent flat banks; SET_ADDRESS waits for completed
+EP0 status; bulk EP1 accesses leave EP0 CSR untouched. No hardware claim.

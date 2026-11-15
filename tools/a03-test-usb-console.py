@@ -61,6 +61,17 @@ int main(void) {
  fifo_n=0;unsigned char getstr[8]={0x80,6,2,3,9,4,255,0};setup(getstr);assert(fifo_n==32);
  unsigned char bad[8]={0x80,6,0,99,0,0,1,0};setup(bad);assert(ep_read(0,2)==0x60);
  assert(setup_count==9);
+ /* A reset must clear address/configuration and rebuild independent banks. */
+ regs[0x0a]=4;poll_usb();regs[0x0a]=0;
+ assert(reset_count==1 && !configured && !address_valid && regs[0]==0);
+ assert(ep_read(1,0)==64 && ep_read(2,0)==16);
+ /* SET_ADDRESS is committed only after the EP0 status transaction ends. */
+ setup(setaddr);poll_usb();assert(address_valid && regs[0]==0);
+ ep_write(0,2,0);poll_usb();assert(!address_valid && regs[0]==12);
+ /* Bulk EP1 activity cannot overwrite EP0 CSR in the flat mapping. */
+ setup(setcfg);ep_write(0,2,0);ep_write(1,6,0);ep_write(1,2,1);
+ poll_usb();assert(ep_read(0,2)==0 && ep_read(1,2)==1);
+
  input_char('r');input_char('e');input_char('g');input_char('s');input_char('\\n');
  char cmd[128];assert(a03_usb_debug_command(cmd,sizeof(cmd)) && cmd[0]=='r');
  puts("A03 cumulative CDC descriptor/control-request/command checks PASS (host only)");

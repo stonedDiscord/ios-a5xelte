@@ -12,7 +12,7 @@ Matching local Linux Qogirl6 sources ground AON0x64000000, analog0x64570000,
 MUSB0x64900000; OTG/UTMI reference clocks, analog power,16-bit UTMI,
 peripheral ID and25ms PHY reset. Patch0106 selects the matching board trim
 0x04b3d1c0 and explicitly clears host pulldowns. PMIC regulator
-state preserved: powered-down supply can block enumeration. No partition
+state was inherited through0106;0109 explicitly enables the verified USB rail. No partition
 changes added. Diagnostic VID1d6b/PID0104 serialA03XNUConsole01 is private
 bring-up identity only. Linux cdc_acm should expose /dev/ttyACM*.
 
