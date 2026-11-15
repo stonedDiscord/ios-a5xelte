@@ -1,5 +1,13 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+USB0052 NOW ENUMERATES: host17:06:17UTC full-speed1d6b:0104,
+A03XNUConsole01, cdc_acm ttyACM0. Bulk logs still unverified: EACCES.
+User asked to run sudo setfacl -m u:stoned:rw /dev/ttyACM0 (sudo password
+required; agent cannot execute). Then capture to NEW private log via
+python3 tools/a03-usb-console.py --wait 5 --duration 60 --output PATH.
+No reflash needed. Exact deployed USB source/general-regs flags verified.
+
+
 CURRENT BOOT0052 USB candidate flashed BOOT-only100%/success/reboot.
 CI43737353634 PASS from13baa99, kernel ae813082...81be, image26ef37cc...ade0.
 Exact0051 loader/ADT/args retained; root preserved. Initial host no attach;

@@ -3162,3 +3162,17 @@ at /tmp/a03-boot0052-usb-capture.log; private tty log if enumerated would be
 shim/a03/out/boot0052-usb-console.log. Requested new physical supply before/
 after or failure, CORE and configuration/reset/setup lines to discriminate
 remaining failure. No hardware USB success claimed.
+
+BOOT0052 USB ENUMERATION CONFIRMED at2026-11-15 17:06:17UTC:
+host xhci reports new full-speed device1d6b:0104, manufacturer A03 diagnostic,
+product A03 XNU console, serialA03XNUConsole01; Linux cdc_acm binds ttyACM0.
+This is actual XNU USB descriptor/configuration/CDC-driver success. It does
+not yet establish bulk log transfer or interactive monitor response.
+
+Capture63236 found the exact device but open failed EACCES: ttyACM0 is
+root:uucp0660; current user lacks uucp. Scoped sudo setfacl attempt refused
+because sudo requires password. Asked user to run only
+sudo setfacl -m u:stoned:rw /dev/ttyACM0, then resume capture. Empty private
+capture files do not contain kernel logs. No host credential requested.
+Exact deployed CI USB source matches tested source byte-for-byte; BSD
+Makefile confirms -mgeneral-regs-only. No more phone flash indicated.
