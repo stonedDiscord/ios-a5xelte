@@ -3680,3 +3680,16 @@ all diagnostic errno lines as blockers. Bootloader/USERDATA unchanged.
 0121 CI43756243470 running fromd640287. Package0061 session16037 waits for
 success and exact source check; will preserve0060 loader/ADT/root and add
 only a03_sandbox_disabled=1. No0061 flash until full build/package verified.
+
+## 2026-11-15: requested cross-reference with other phone ports
+
+Compared A5 historical8c3900f(0117), tracked HEROLTE0200/0201, exact SWEET
+checkout45263be and HakiOS63fc2b4. Source/runtime matrix in
+ docs/a03-userspace-cross-reference.md.
+A5 same nil BaseBoard URL plus UMD atomic-save ENOTSUP; after0117 recovered
+window has5BGRA swaps without those failures. A03 omits donor0052 HFS swap,
+0057 external ACL resolver removal,0064 work-interval grant, and until0121
+Sandbox0050 functionality. Actual generated Makefile has EXT_RESOLVER.
+HakiOS XNU8796.121.2 vs our8796.141.3; broad Sandbox stub not copied.
+Staged A03 SystemVersion confirmed16.0/20A362, not donor16.7.16/20H392.
+Other repositories inspected only; no phone USERDATA write.

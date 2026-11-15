@@ -1,3 +1,8 @@
+ACTIVE cross-reference: docs/a03-userspace-cross-reference.md.
+A5 nil-container crash improved after HFS swap0117; A03 omits0052.
+A03 retains external ACL resolver, omits work-interval grant. SWEET45263be
+matches pinned donor; HakiOS63fc2b4 uses XNU8796.121.2.0121 CI unchanged.
+
 ACTIVE0121 CI43756243470 fromd640287 running; package0061 session16037.
 0060 capture83189 complete494160bytes; media null listener/backboard nil
 path persist. Sandbox op2 errno103 proven.0061 adds only explicit sandbox
