@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: display candidate BOOT0063 deployed
+
+CI43760748014 SUCCESS exactee1307c. Twelve downloaded source comparisons
+PASS.0062 loader retained except image_size; ADT only adds disp0 and removing
+it byte-matches0062; sole boot argument a03_display=1. Kernel SHA256
+cf24c083bf9a2c29735e01ce8ae860b4d8d4091b4f029007f751f369b8d98797.
+BOOT SHA256 dd217cf6bf20263d35db9ddf182d5d2fceea2be7d3476a6fb62c49fb7268f230.
+0062 CDC Download-control reset succeeded again: CDC disconnected and
+Heimdall detected Download. BOOT-only upload100percent/success/reboot21:08UTC.
+Deploy/capture28481 waits CDC then120s, private boot0063-usb-initial.log.
+No root rewrite or protected-partition write. Provider registration, GUI and
+SpringBoard runtime results pending.
+
 ## 2026-11-15: later0062 container access evidence and selector tests
 
 Additional120s capture193407bytes SHA256

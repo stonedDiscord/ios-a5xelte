@@ -1,4 +1,10 @@
-ACTIVE0123 CI43760748014 fromee1307c live. Package0063 session55131
+ACTIVE0063 flashed BOOT-only100percent/success/reboot21:08UTC. CI43760748014
+SUCCESSee1307c;12 source/loader/ADT-only-disp0/arg-only-a03_display checks
+PASS. Imagedd217cf6...68f230. CDC Download control from0062 worked again.
+Deploy/capture28481 waits CDC then120s; inspect A03 SURF/FB/CRASH logs.
+No GUI or provider-registration runtime evidence yet. Protected parts intact.
+
+Earlier0123 CI43760748014 fromee1307c live. Package0063 session55131
 waits success, compares12 exact sources, preserves0062 loader/ADT except
 disp0 and only adds a03_display=1.0062 continuation300s completed6887bytes
 SHA3a713cf9...cd809, no CRASH; CDC remains. Full display runtime unproven.
