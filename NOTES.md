@@ -1,4 +1,9 @@
-ACTIVE0062 BOOT-only uploaded100percent/success/reboot20:47UTC.
+ACTIVE0062 runtime: three HFS exchanges error0; no atomic-save failures
+in initial100s, personas created; one SpringBoard/backboard exec each and
+zero bounded CRASH records.371425bytes SHAa929c52f...92640. Continuation2668
+captures300s. No GUI proof. Next display ABI adaptation; keep0062 running.
+
+Earlier0062 BOOT-only uploaded100percent/success/reboot20:47UTC.
 Corrected0122 CI43759153171 SUCCESS28b8b81; six exact CI sources and
 0061 loader/ADT/only a03_hfs_swap=1 addition verified. Image0f63d63f...8cd24.
 Capture/deploy82030 waits CDC then100s; inspect root HFS exchange and

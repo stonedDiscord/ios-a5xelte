@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: BOOT0062 confirms HFS atomic-save repair
+
+USB CDC returned and initial100s capture completed371425bytes, SHA256
+a929c52f3a5946526b1024fbeeba5e1487d9be979a680fb084ee92388e092640.
+Three A03 HFS root regular-file RENAME_SWAP exchange results are0; zero
+Failed to atomically lines, versus two failures in0061. UMD creates system,
+default and universal personas. One SpringBoard and one backboardd spawn
+authorization; zero CRASH records in this bounded window. Spawn/absence of
+crashes is not proof of stable process/display. Notification registration8
+persists. Continuation session2668 reads300s;0062 stays running.
+
+Exact SwapSetLayer1ad7d68dc uses object+18 as transmitted record: swap ID
+object+68 => record+50; surface ID object+6c => record+54; source rect
+object+7c => record+64; destination object+dc => record+c4; mask object+11c
+=> record+104. These match donor offsets despite smaller total400 bytes.
+EnableNotifications1ad7daaf8 sends selector72 with four scalar inputs;
+GetID1ad7db130 sends selector7 with one output. IOSurface client helper
+1a291cc10 references a68-byte lock result, consistent with donor size.
+Read-only ABI evidence supports a scoped display-provider adaptation next,
+not a claim that donor generic-success selectors or A03 scanout are tested.
+
 ## 2026-11-15: corrected0122 deployed as BOOT0062
 
 CI43759153171 SUCCESS from28b8b81. Six source comparisons against validated
