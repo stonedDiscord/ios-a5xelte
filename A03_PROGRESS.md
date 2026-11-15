@@ -2987,3 +2987,16 @@ KeyBagKeys data5bytes (lab seed, not SEP-encrypted material). Boot trial uses
 in-memory software system bag; does not claim these5bytes are cryptographic
 keys. Existing defaults/no-effaceable-storage=1 selects plain plist loading.
 CI43730049732 has entered Build; no0050 device flash yet.
+
+## 2026-11-15: BOOT0050 software-AKS trial deployed
+
+CI43730049732 SUCCESS from09e658ffdbec16be4ec26087503dc0ceb88efa93.
+Kernel SHA623931b29ead3451e0d799450a8ed815da8605262c452c9150d5ce5da5d384f3.
+Independent nm confirms AppleKeyStore::start, user-client externalMethod and
+retained bindfs_vfsops. Required AKS/reply/USB/monitor strings present;
+actual start disassembly calls PE_parse_boot_argn and checks enable==1.
+BOOT0050 SHA39b298088a5633c0af00b76adaad96ffe5063c22a561a234e9d3f07183a72f19.
+Same0049 args plus a03_software_keystore=1. Host capture36560 started before
+Heimdall BOOT-only100%/success/reboot. USERDATA root/GPT/protected partitions
+not rewritten. Await A03 AKS registration/selectors and keybagd result.
+No hardware provider success, sustained launchd or GUI completion claimed.

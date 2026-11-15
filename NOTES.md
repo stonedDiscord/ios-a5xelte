@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT0050 flashed BOOT-only100%/success/reboot. CI43730049732 PASS.
+Kernel623931b2...384f3; image39b29808...72f19.0049 args+software keystore=1.
+Provider symbols + actual boot-arg gate verified. Await user A03 AKS and
+System Keybag loaded/final error lines; async question pending. Capture36560
+/tmp/a03-boot0050-usb-capture.log; root preserved, runtime success unproven.
+
 CURRENT0049 physical: keybagd fatal failed to load system bag, options
 warning. Passed prior firmware mount failure; sustained boot unproven.
 Kernel lacks AppleKeyStore; ReVa confirms actual iOS16 selector0/open and
