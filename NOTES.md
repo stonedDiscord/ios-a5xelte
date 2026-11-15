@@ -1,4 +1,9 @@
-ACTIVE0123 display/surface candidate prepared for full CI. Native720x1600,
+ACTIVE0123 CI43760748014 fromee1307c live. Package0063 session55131
+waits success, compares12 exact sources, preserves0062 loader/ADT except
+disp0 and only adds a03_display=1.0062 continuation300s completed6887bytes
+SHA3a713cf9...cd809, no CRASH; CDC remains. Full display runtime unproven.
+
+Earlier0123 display/surface candidate prepared for full CI. Native720x1600,
 exact iOS16.0 swap400 ABI, opt-in a03_display=1, unknown selectors unsupported;
 panel PA/stride/depth gates and64MiB allocation/96MiB wiring caps. Actual
 copier tests, four real kernel C++ compiles, plain git apply equality PASS.

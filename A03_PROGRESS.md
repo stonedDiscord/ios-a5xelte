@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: display CI43760748014 running; BOOT0062 extended window
+
+0123 commit ee1307c pushed; full CI43760748014 active. Package0063
+session55131 waits exact run success then12 exact source comparisons.
+It parses0062 ADT and adds only disp0; removing it must byte-match original.
+Loader check and sole argument addition a03_display=1 required before test.
+No0063 flash yet.0062 remains USB CDC. Its additional300s capture completed
+6887bytes SHA2563a713cf9cdb7eada55228938f0eb4b475cbe0b7eddb61ebcc8a8b6cf96fcd809,
+zero CRASH records. This still does not prove a GUI or running SpringBoard.
+Exact IOSurface lookup selector4/port lookup34 use one scalar input and
+a68-byte output; create selector0 also one scalar input/a68 output. Port
+lookup checks base=-1 to reuse cached client, supporting applied0068 fix.
+
 ## 2026-11-15: opt-in display/surface candidate0123 prepared
 
 Adapted pinned SWEET0046 software IOSurface/framebuffer provider, plus0068
