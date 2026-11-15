@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT0048 audit: exact CI43724877490 ipc_port.c/.h +USB source match
+locally tested files byte-for-byte; debug-hold call in actual kern_exit.c.
+No USB/Download detected. Await pending screen report; no further flash or
+USERDATA change justified until runtime evidence. Goal launchd still active.
+
 CURRENT BOOT0048 flashed BOOT-only100%/success/reboot; CI43724877490 PASS.
 Kernel f7f873be...0f5b4, image e9f8ee1d...6c6626.0047 args+ opt-in reply
 compatibility=1. Markers + actual predicate disassembly verified. Capture

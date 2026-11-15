@@ -2893,3 +2893,16 @@ BOOT0048 capture45847 completed with120-second enumeration timeout:
 A03 XNU CDC console did not enumerate. Host kernel journal shows only
 Download disconnect, no subsequent USB attach. Await physical PHY/CORE and
 IPC/launchd output before further code changes; not evidence about host_info.
+
+## 2026-11-15: BOOT0048 deployed-source audit
+
+Previous goal turn made progress: scoped reply compatibility implemented,
+full CI passed and BOOT0048 flashed; runtime outcome remains unverified.
+Downloaded exact CI43724877490 buildtree. ipc_port.c, ipc_port.h and
+bsd/dev/a03_usb_console.c byte-match the locally tested sources; actual
+kern_exit.c contains the debug-hold call. This rules out skipped/stale patches
+for these changes. Physical screen report is pending; no USB endpoint and
+no Download device currently visible. Do not infer whether host_info passed
+or flash a further trial without new device evidence. Additional read-only
+Linux audit identifies USB muxAON+374 and vendor OTG_EXT_CSR+34b as potential
+readback points; no observed wrong values or justified new MMIO writes.
