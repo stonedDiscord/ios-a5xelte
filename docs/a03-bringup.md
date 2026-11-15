@@ -1,13 +1,15 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-15, XNU BOOT0048 boots the verified 16GiB HFSX root on
-validated USERDATA p55 and reaches Apple's launchd boot-task orchestration.
-The prior libpthread host_info trap is passed with the opt-in iOS16
-provisional-reply compatibility flag. Current physical failure is
-mount-phase-1: bindfs firmware mount returns ENODEV19 and task exits74.
-The deployed0048 kernel lacks bindfs; portable config patch0037 is building
-in CI43727113402 for BOOT0049. This is not a sustained successful launchd
-bootstrap or iOS GUI result. The USB CDC console has not enumerated.
+As of 2026-11-15, XNU BOOT0049 boots the verified 16GiB HFSX root on
+validated USERDATA p55 and reaches Apple's launchd boot tasks and keybagd.
+The libpthread host_info assertion is passed with the iOS16 provisional-reply
+compatibility flag; enabling bindfs removes the preceding firmware-mount
+ENODEV failure. Current physical error is keybagd: failed to load system bag.
+The deployed kernel has no AppleKeyStore provider. Opt-in lab software AKS
+candidate0107 is building in CI43730049732 for BOOT0050. Its open/system-bag
+ABI matches actual iOS16.0 keybagd; it provides no SEP/passcode protection or
+key wrapping. No sustained successful bootstrap or GUI is established.
+The USB CDC console has not enumerated.
 
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve
