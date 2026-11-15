@@ -1,3 +1,10 @@
+ACTIVE0067 complete660s493437bytes SHA133fe88ab43b53d08c42020bbd453c0d30736b6da183939585f67fdbf4c7efb3.
+Four passes show slow SpringBoard initializers, one thread state9, no home
+screen.32HOST reports/3swaps. analyticsd195/197 and tccd189 crashes traced.
+0132 CI43768648670 exact9816151 Build live; package0068 session59465 waits
+20frozen-source expected0132 and identical0067 loader/ADT/args (batch off).
+No active CDC capture. Next0068 kernel waits/CPU times, not presumed IO fix.
+
 ACTIVE0067 pass2/420s SpringBoard25 advances to libobjc map_images_nolock,
 still state9/one thread; earlier same180/300s PC not permanent deadlock proof.
 analyticsd null strlen SIGSEGV and tccd189 profile-not-found SIGABRT captured.

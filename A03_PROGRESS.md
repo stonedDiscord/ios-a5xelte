@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0067 complete660s; four samples, no GUI completion proof
+
+Capture completed493437bytes SHA256
+133fe88ab43b53d08c42020bbd453c0d30736b6da183939585f67fdbf4c7efb3.
+Four sampler passes180/300/420/540s: SpringBoard25 remains one thread,
+state9; last two show same libobjc map_images_nolock stack. It progresses
+between middle samples, no permanent-deadlock conclusion.3frame swaps.
+HOST normal diagnostics capped32total as designed; no speedup inferred.
+Analyticsd195/197 SIGSEGV and tccd189 profile-not-found SIGABRT captured.
+0132 CI43768648670 exact9816151 live Build;0068 package59465 awaits20exact
+sources and identical0067 args/ADT/loader. No active CDC capture now.
+
 ## 2026-11-15:0067 third sample proves slow initializer progress
 
 Pass2 (420s) SpringBoard25 still one thread state9, but PC moves from dyld
