@@ -3617,3 +3617,23 @@ bounded sanitized path for known pathname syscalls; entitlement query first
 8 output bytes only when buffer length permits. No errno/user-state changes.
 Actual-source host selection/gating/path/header/cap test PASS; systemcalls.c
 kernel general-register compile PASS. Full CI/hardware pending;0059 retained.
+
+Read-only follow-up confirms exact IPC-denial mechanism in this userspace:
+launchd1000165f4 calls sandbox_check_by_audit_token and permits only return0;
+service resolver10002cefc returns159 when that wrapper denies mach-lookup.
+Exact cache sandbox_check_by_audit_token1cdc4cd98 builds the request passed
+to1cdc4cf10, which invokes __mac_syscall("Sandbox",2,arg) at1cdc4d0e8.
+Op2 request first64-bit word is pointer to zero-initialized64-bit result;
+nonzero syscall return maps to-1, successful call returns result!=0.
+Current compiled sweet_amfi.c registers only SWEET AMFI, and mac_base.c
+returns ENOPOLICY103 when no matching policy exists. This establishes an
+unimplemented API, not yet which failing media/container request hits it.
+Do not substitute broad success for unknown profile/token/data operations.
+
+Media notify path independently traced: notify_register_dispatch1a93336dc
+enters1a9333518 -> register helper1a933662c -> initialization1a9337828/
+1a9337008. Its bootstrap lookup block1a9336fb8 requests exact service
+com.apple.system.notification_center; failed lookup produces notify9.
+Init disabled flag instead produces8; these must not be conflated. Original
+root notifyd launch plist advertises that exact MachService. Runtime media
+failure still unproven; pending0120 boot has bounded syscall diagnostics.

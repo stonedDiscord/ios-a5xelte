@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0120 CI43754890342 running; package0060 process180250 live.
+Read-only exact launchd/cache confirms missing Sandbox op2 -> IPC159 path;
+need runtime syscall evidence before policy correction. notifyd service
+name matches root plist; media notify8(disabled) differs from9(bootstrap).
+
 ACTIVE0120 bounded startup syscall evidence locally tested/compiled. Next CI
 then0060 preserving0059 loader/ADT/args/root;0059 USB currently running.
 Target actual system-container lookup failure errno/IPC/entitlement evidence.
