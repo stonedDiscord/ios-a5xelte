@@ -276,6 +276,29 @@ static void emmc_gpt_probe(const unsigned char *header,uint32_t sectors) {
     }
     text("GPT ARRAY CRC + PIT BOOT/USERDATA MATCH",71);
     uint32_t words[128];const unsigned char *b=(const unsigned char*)words;
+#if A03_EMMC_SNAPSHOT == 6
+    /* Only read the mailbox inside validated USERDATA, beyond the HFS root. */
+    if(g.userdata_count<33554432u+8u)return;
+    unsigned char mailbox[4096];
+    for(unsigned i=0;i<8;i++){
+        if(!emmc_data_read(17,g.userdata+33554432u+i,words,44))return;
+        for(unsigned j=0;j<512;j++)mailbox[i*512+j]=b[j];
+    }
+    if(a03_le64(mailbox)!=0x3730474f4c333041ULL){text("NO LINUX MAILBOX MAGIC",4);return;}
+    unsigned length=a03_le32(mailbox+8);
+    if(length>4080||~a03_crc_update(~0u,mailbox+16,length)!=a03_le32(mailbox+12)){
+        text("LINUX MAILBOX CRC FAILED",4);return;
+    }
+    text("A03 STOCK LINUX REPORT - CRC VERIFIED",2);
+    char line[90];unsigned column=0,row=4;
+    for(unsigned i=0;i<length&&row<95;i++){
+        unsigned ch=mailbox[16+i];
+        if(ch==10||column==88){line[column]=0;text(line,row++);column=0;if(ch==10)continue;}
+        line[column++]=(ch>=32&&ch<=126)?ch:'?';
+    }
+    if(column){line[column]=0;text(line,row);}
+    for(;;)__asm__ volatile("wfe");
+#endif
     uint64_t kernel=*(const uint64_t*)(_start+16);
     if(!emmc_data_read(17,g.boot,words,44))return;
     if(a03_le64(b)!=0x2144494f52444e41ULL||a03_le32(b+8)!=kernel||

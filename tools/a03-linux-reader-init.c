@@ -1,9 +1,12 @@
 /* BOOT-only independent reader using matching stock Linux.
- * Never mounts USERDATA or opens a phone partition writable. */
+ * Never mounts USERDATA. USB is read-only; after GPT validation, writes
+ * only the 4 KiB diagnostic mailbox at USERDATA offset16GiB. */
 #define _GNU_SOURCE
 #include <sys/mount.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <sys/syscall.h>
+#include <linux/reboot.h>
 #include <linux/fb.h>
 #include "../shim/font.h"
 #include "../shim/a03/gpt-readonly.h"
@@ -18,6 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "a03-linux-reader-drm.h"
 static char report[16384];
 static size_t used;
 static void screen(void) {
@@ -27,7 +31,13 @@ static void screen(void) {
     if(!pixels){
         FILE *f=fopen("/sys/class/graphics/fb0/dev","r");
         unsigned maj=0,min=0;
-        if(!f)return;
+        if(!f){
+            if(!drm_pixels)drm_screen_init();
+            if(!drm_pixels)return;
+            pixels=drm_pixels;fix.line_length=drm_stride*4;
+            var.xres=drm_width;var.yres=drm_height;
+            goto draw;
+        }
         int n=fscanf(f,"%u:%u",&maj,&min);fclose(f);if(n!=2)return;
         mknod("/dev/fb0",S_IFCHR|0600,makedev(maj,min));
         int fd=open("/dev/fb0",O_RDWR|O_CLOEXEC);if(fd<0)return;
@@ -37,6 +47,7 @@ static void screen(void) {
         void *map=mmap(NULL,fix.smem_len,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
         close(fd);if(map==MAP_FAILED)return;pixels=map;
     }
+draw:;
     unsigned cols=var.xres/8,rows=var.yres/16,row=0,col=0;
     if(!cols||!rows)return;
     for(size_t i=0;i<used&&row<rows;i++){
@@ -91,10 +102,11 @@ int main(void) {
     mount("proc","/proc","proc",MS_NOSUID|MS_NODEV|MS_NOEXEC,NULL);
     mount("sysfs","/sys","sysfs",MS_NOSUID|MS_NODEV|MS_NOEXEC,NULL);
     mount("tmpfs","/run","tmpfs",MS_NOSUID|MS_NODEV,"mode=0700");
-    logmsg("A03_LINUX_READER_V3 PID=%ld; USERDATA read-only; no Android init\n",(long)getpid());
+    logmsg("A03_LINUX_READER_V7 PID=%ld; USERDATA read-only; no Android init\n",(long)getpid());
     char buf[256];
     int validated=0;
-    for(unsigned t=0;t<120;t++){
+    uint64_t part_sectors=0;
+    for(unsigned t=0;t<15;t++){
         if(!get("/sys/class/block/mmcblk0p55/dev",buf,sizeof(buf)))break;
         sleep(1);
     }
@@ -110,7 +122,7 @@ int main(void) {
     if(get("/sys/class/block/mmcblk0p55/size",buf,sizeof(buf))){
         logmsg("REFUSE: USERDATA size unavailable\n");goto usb_setup;
     }
-    uint64_t part_sectors=strtoull(buf,NULL,10);
+    part_sectors=strtoull(buf,NULL,10);
     if(get("/sys/class/block/mmcblk0/dev",buf,sizeof(buf))||
        sscanf(buf,"%u:%u",&maj,&min)!=2||!maj){
         logmsg("REFUSE: missing parent mmcblk0 identity\n");goto usb_setup;
@@ -145,7 +157,7 @@ usb_setup:
     if(dir("/config/usb_gadget/a03/strings/0x409"))goto idle;
     if(put("/config/usb_gadget/a03/strings/0x409/manufacturer","A03 bringup")||
        put("/config/usb_gadget/a03/strings/0x409/product","A03 USERDATA READ ONLY")||
-       put("/config/usb_gadget/a03/strings/0x409/serialnumber","A03LinuxReaderV3"))goto idle;
+       put("/config/usb_gadget/a03/strings/0x409/serialnumber","A03LinuxReaderV7"))goto idle;
     if(dir("/config/usb_gadget/a03/configs/c.1")||dir("/config/usb_gadget/a03/functions/mass_storage.0"))goto idle;
     int rf=open("/run/report.bin",O_CREAT|O_RDWR|O_CLOEXEC,0600);
     if(rf<0)goto idle;
@@ -162,7 +174,7 @@ usb_setup:
     if(symlink("../../functions/mass_storage.0","/config/usb_gadget/a03/configs/c.1/mass_storage.0")){
         logmsg("link mass storage: %s\n",strerror(errno));goto idle;
     }
-    for(unsigned t=0;t<120;t++){
+    for(unsigned t=0;t<15;t++){
         DIR *d=opendir("/sys/class/udc");struct dirent *de;
         if(d){
             while((de=readdir(d)))if(de->d_name[0]!='.'){
@@ -175,5 +187,26 @@ usb_setup:
     }
     logmsg("No UDC bound\n");
 idle:
-    for(;;){screen();sleep(2);}
+    /* Explicit A03 USERDATA diagnostic mailbox at16GiB, beyond HFS root.
+     * GPT identity/CRC and sysfs bounds were validated before this gate. */
+    if(validated&&part_sectors>=33554432ULL+8){
+        unsigned char mailbox[4096]={0};
+        memcpy(mailbox,"A03LOG07",8);
+        uint32_t length=used<sizeof(mailbox)-16?used:sizeof(mailbox)-16;
+        memcpy(mailbox+8,&length,4);memcpy(mailbox+16,report,length);
+        uint32_t crc=~a03_crc_update(~0u,mailbox+16,length);memcpy(mailbox+12,&crc,4);
+        int out=open("/dev/mmcblk0p55",O_WRONLY|O_CLOEXEC|O_SYNC);
+        if(out>=0){
+            if(pwrite(out,mailbox,sizeof(mailbox),16ULL<<30)!=(ssize_t)sizeof(mailbox)||fsync(out))
+                logmsg("MAILBOX WRITE FAILED\n");
+            close(out);
+        }
+    }
+    /* Return to Download after observation, proving init execution even if
+     * gadget/display setup failed. Linux restart handler only; no block writes. */
+    logmsg("Returning to Download in 45 seconds\n");
+    for(unsigned t=0;t<45;t++){screen();sleep(1);}
+    syscall(SYS_reboot,LINUX_REBOOT_MAGIC1,LINUX_REBOOT_MAGIC2,
+            LINUX_REBOOT_CMD_RESTART2,"download");
+    for(;;)pause();
 }

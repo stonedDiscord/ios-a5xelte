@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build BOOT-only Linux USERDATA reader; matching stock kernel/DT unchanged."""
+"""Build Linux reader with a bounded USERDATA report mailbox; kernel/DT unchanged."""
 import argparse
 import hashlib
 from pathlib import Path
@@ -32,7 +32,7 @@ def main():
     kernel=b[page:page+ks];dt_off=page+align(ks)+align(old_rs);dt=b[dt_off:dt_off+ds]
     with tempfile.TemporaryDirectory(prefix='a03-linux-reader-') as temp:
         binary=Path(temp)/'init'
-        subprocess.run(['aarch64-linux-gnu-gcc','-static','-Os','-Wall','-Wextra','-Werror',
+        subprocess.run(['aarch64-linux-gnu-gcc','-static','-Os','-I/usr/include/libdrm','-Wall','-Wextra','-Werror',
                         str(ROOT/'tools/a03-linux-reader-init.c'),'-o',str(binary)],check=True)
         ramdisk=cpio([(n,0o40755,b'') for n in ('dev','proc','sys','config','run')]+[('init',0o100755,binary.read_bytes())])
     out=bytearray(b[:page]);struct.pack_into('<I',out,16,len(ramdisk));digest=hashlib.sha1()
@@ -52,5 +52,5 @@ def main():
     print('BOOT-only Linux reader:',a.output)
     print('kernel SHA256',hashlib.sha256(kernel).hexdigest())
     print('BOOT SHA256',hashlib.sha256(out).hexdigest())
-    print('USERDATA is unmounted and exported read-only; no Android init.')
+    print('USERDATA unmounted; USB read-only. Writes 4 KiB report at offset 16 GiB after GPT validation.')
 if __name__=='__main__':main()

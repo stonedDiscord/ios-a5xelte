@@ -2399,3 +2399,26 @@ BOOT0041 image SHA256 is
 It was flashed only to `boot`, reached 100% and rebooted. USERDATA, GPT,
 recovery, bootloaders, EFS and NV were untouched. Runtime iOS progress is
 not yet observed.
+
+### Linux reader5 proves PID1; reader7 mailbox deployed
+
+Reader0004 BOOT-only upload100%/reboot succeeded; user saw only Samsung logo.
+Reader0005 SHA92c057c4175682495ffa28f21dc2165bdac22b0a7e59eabe80cdfaa0e4030410
+also uploaded BOOT-only. Its explicit Linux reboot(RESTART2,download) after
+observation fired: user reported spontaneous return to Download; host confirmed
+04e8:685d at10:36UTC. This establishes custom Linux init execution, independent
+of XNU, not Apple launchd. Reader0006 adds DRM/KMS dumb-buffer output using
+queried connector/CRTC/mode; flashed BOOT-only, user still saw no text.
+
+Reader0007 SHA4d9b83a1bd1a849727fba2908644fbc379c0ef628653745f2ccb8ab6ef2545b9
+flashed BOOT-only/upload100%/reboot at~10:40UTC. It saves a4096-byte report
+at USERDATA-relative16GiB only after GPT CRC/identity validation; this is an
+intentional authorized USERDATA write beyond the16GiB HFS root. USB remains
+read-only. Actual mailbox write success is not yet proven. It returns to
+Download after observation; next flash shim/a03/out/a03-linux-report-0001.img
+SHA37030f0f68def716322a8f5e042b02b22a11dea72432467bb0e28741ad8eb412
+BOOT-only to display magic/CRC-checked report through pre-Linux framebuffer.
+Snapshot6 halts before XNU and reads only the bounded validated mailbox.
+Host reader0008 adds explicit mailbox capacity guard; unflashed SHA
+46149eb8297f255926dcc29f8a006956ace65f6f1c9b26677e703698fcb83750.
+Host compilation, GPT and BSD harnesses pass. No protected partition write.

@@ -1,5 +1,19 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+## Latest A03 state — Linux diagnostic mailbox, 2026-11-15 10:40UTC
+
+Reader5's automatic return to Download was observed by user and host: custom
+stock-Linux PID1 executes. No Apple launchd result. USB/display still absent;
+reader6 DRM trial also produced no visible text. Reader7 is currently flashed
+(BOOT-only upload100%/reboot). It attempts a4096-byte report at validated
+USERDATA offset16GiB, beyond HFS root, then returns to Download. Mailbox write
+success unproven. NEXT: flash shim/a03/out/a03-linux-report-0001.img BOOT-only
+SHA37030f0f68def716322a8f5e042b02b22a11dea72432467bb0e28741ad8eb412;
+this pre-XNU shim validates GPT, reads mailbox, verifies magic/CRC, shows text
+and halts. No other partition is authorized. Earlier no-USERDATA-write claims
+refer only to pre-reader7 tests. Detailed hashes in A03_PROGRESS.md.
+
+
 ## Current A03 handoff — 2026-11-15, Linux reader pending
 
 Current BOOT is Linux reader0001, NOT XNU0042. BOOT-only upload100%/reboot

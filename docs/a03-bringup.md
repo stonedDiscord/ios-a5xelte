@@ -164,3 +164,17 @@ file containing raw diagnostic text; validated USERDATA LUN1 is read-only.
 No partition opens writable and no repair/write mode. FB0 output uses queried
 Linux geometry. Host builds do not prove execution or USB enumeration; consult
 A03_PROGRESS.md for current flashed candidate and runtime evidence.
+
+
+Reader revision7 adds one authorized diagnostic write: a4096-byte CRC-protected
+report at USERDATA-relative16GiB, immediately beyond the16GiB HFS volume.
+Requires successful existing GPT validation and sufficient partition capacity;
+never writes GPT or other partitions. USB export stays read-only. Reader5
+established init execution through its timed return to Download mode; display
+and USB output remained unavailable. Reader7 returns similarly after45seconds.
+To display its saved report through the known shim framebuffer:
+
+    A03_EMMC_SNAPSHOT=6 python3 tools/a03-xnu-image.py BASE PAYLOAD OUTPUT
+
+This profile validates GPT, reads only the bounded mailbox, checks magic/CRC,
+displays text and halts before XNU. It is not an XNU/launchd execution test.
