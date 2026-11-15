@@ -3000,3 +3000,8 @@ Same0049 args plus a03_software_keystore=1. Host capture36560 started before
 Heimdall BOOT-only100%/success/reboot. USERDATA root/GPT/protected partitions
 not rewritten. Await A03 AKS registration/selectors and keybagd result.
 No hardware provider success, sustained launchd or GUI completion claimed.
+
+Post-deployment source audit: exact CI43730049732 SweetKeyStore.cpp matches
+host-tested source byte-for-byte, actual IOKit Makefile includes general-regs
+flag. Capture36560 ended100s timeout/no enumeration. No AKS runtime outcome
+yet; pending screen report required before another provider change.

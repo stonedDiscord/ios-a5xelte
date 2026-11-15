@@ -4,7 +4,8 @@ CURRENT BOOT0050 flashed BOOT-only100%/success/reboot. CI43730049732 PASS.
 Kernel623931b2...384f3; image39b29808...72f19.0049 args+software keystore=1.
 Provider symbols + actual boot-arg gate verified. Await user A03 AKS and
 System Keybag loaded/final error lines; async question pending. Capture36560
-/tmp/a03-boot0050-usb-capture.log; root preserved, runtime success unproven.
+/tmp/a03-boot0050-usb-capture.log ended100s timeout/no USB. Exact CI provider
+source+general-regs flag audited. Await screen; root preserved, runtime unproven.
 
 CURRENT0049 physical: keybagd fatal failed to load system bag, options
 warning. Passed prior firmware mount failure; sustained boot unproven.
