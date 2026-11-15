@@ -3651,3 +3651,21 @@ Image SHA256
 PASS after transition delay.0060 BOOT-only upload100percent; runtime pending.
 Capture83189 waits900s then100s via newgrp uucp into private
 boot0060-usb-initial.log. No host USERDATA/protected partition write.
+
+BOOT0060 BOOT upload success/reboot confirmed; CDC capture opened without
+ACL change. Actual0120 traces now prove mediaserverd/backboardd/notifyd/
+containermanagerd all receive syscall381 errno103 ENOPOLICY for Sandbox op2.
+Other recorded operations include Sandbox op4 and AMFI op90; do not give
+unknown data-returning operations fake success. Container csops_audittoken
+op16 succeeds with nonzero DER header; blanket missing-entitlement claim
+unsupported. Backboardd still aborts with exact nil NSURL path exception.
+
+0121 implements only decoded Sandbox op2 scalar check for explicit
+ a03_sandbox_disabled=1 lab no-sandbox boot mode(default0).
+It copies in result pointer and copies out64-bit allow0; copyin/copyout
+errors propagate. Every other policy operation returns ENOTSUP, including
+profile installation, container paths and extension tokens. No Apple
+userspace patch.32 bounded reports, policy registration only for value1.
+Actual-source host tests unsupported ops/faults/null/result width/log cap
+PASS; sweet_amfi.c general-register kernel compile PASS. Full CI/runtime
+required. This repairs an observed missing API, not a claim media is fixed.

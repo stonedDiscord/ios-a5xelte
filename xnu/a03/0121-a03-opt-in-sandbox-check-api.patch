@@ -1,0 +1,57 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -272,6 +272,42 @@
+ 	return 0;
+ }
+ 
++/* Lab no-sandbox mode: implement only the decoded scalar check protocol.
++ * Profile installation, extensions and container paths remain unsupported. */
++static int
++a03_sandbox_check_syscall(struct proc *p, int call, user_addr_t arg)
++{
++    if (call != 2) return ENOTSUP;
++    user_addr_t result_address = 0;
++    int error = copyin(arg, &result_address, sizeof(result_address));
++    if (error) return error;
++    if (!result_address) return EFAULT;
++    const uint64_t allow = 0;
++    error = copyout(&allow, result_address, sizeof(allow));
++    static unsigned reports;
++    unsigned old = __atomic_load_n(&reports, __ATOMIC_RELAXED);
++    do {
++        if (old >= 32) return error;
++    } while (!__atomic_compare_exchange_n(&reports, &old, old + 1,
++        false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++    char name[32];
++    proc_name(proc_pid(p), name, sizeof(name));
++    printf("A03 Sandbox: %s[%d] check op2 result %d (lab no-sandbox)\n",
++        name, proc_pid(p), error);
++    return error;
++}
++
++static const struct mac_policy_ops a03_sandbox_mac_ops = {
++    .mpo_policy_syscall = a03_sandbox_check_syscall,
++};
++static struct mac_policy_conf a03_sandbox_mac_conf = {
++    .mpc_name = "Sandbox",
++    .mpc_fullname = "A03 opt-in lab no-sandbox scalar checks",
++    .mpc_ops = &a03_sandbox_mac_ops,
++};
++static mac_policy_handle_t a03_sandbox_mac_handle;
++static TUNABLE(uint32_t, a03_sandbox_disabled, "a03_sandbox_disabled", 0);
++
+ static const struct mac_policy_ops sweet_amfi_mac_ops = {
+ 	.mpo_vnode_check_signature = sweet_amfi_vnode_check_signature,
+ };
+@@ -293,5 +329,11 @@
+ 	int error = mac_policy_register(&sweet_amfi_mac_conf, &sweet_amfi_mac_handle, NULL);
+ 	printf("SWEET AMFI: platform binary policy %s (%d)\n",
+ 	    error ? "NOT registered" : "registered", error);
++    if (a03_sandbox_disabled == 1) {
++        error = mac_policy_register(&a03_sandbox_mac_conf,
++            &a03_sandbox_mac_handle, NULL);
++        printf("A03 Sandbox: lab no-sandbox scalar-check policy %s (%d)\n",
++            error ? "NOT registered" : "registered", error);
++    }
+ }
+ #endif /* ARM64_BOARD_CONFIG_SWEET */

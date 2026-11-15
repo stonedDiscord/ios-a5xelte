@@ -1,3 +1,8 @@
+ACTIVE0121:0060 proves Sandbox op2 ENOPOLICY103 in all four targets.
+Opt-in a03_sandbox_disabled=1 scalar-check policy prepared/tested/kernel
+compile PASS; unknown ops ENOTSUP. Need CI then0061, only add that arg.
+0060 capture83189 ongoing; exact nil-path backboardd crash persists.
+
 ACTIVE0060 BOOT-only upload100percent; CI43754890342 PASS39eef98.
 Capture83189 waiting USB then100s via newgrp uucp; no ACL needed.
 Exact0059 loader/ADT/args/root preserved. Need0120 actual syscall errors
