@@ -1,5 +1,18 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+STOPPED AT USER REQUEST (2026-11-15). BOOT0051 still installed, root preserved.
+Physical: watchdogd, backboardd and SpringBoard explicitly reported crashing;
+output continues. Spawn lines: fairplayd, mDNSResponder, repeated xpcproxy;
+bluetoothd/identityservicesd also appear. These latter names are not confirmed
+crashes or successful startup. Launchd orchestrates daemons; no stable GUI.
+Exact crash reasons/PCs absent; USB CDC still not enumerating.
+Uncommitted WIP0108 bounded crash diagnostics + profile/workflow staging;
+NOT validated/deployed. Syntax attempt blocked by absent ~/swift/usr/bin/clang
+(after fixing old CI path privately). No CI0052/image/flash. Actual backboardd
+imported ReVa /backboardd, not inspected. See final A03_PROGRESS.md entry for
+scratch paths and validation needed. Preserve WIP; resume only when asked.
+
+
 AUDIT0051: actual16.0 watchdogd connector0x1000057bc requires IOWatchdog,
 open type1; exact deployed kernel nm confirms absent. Candidate root cause,
 not yet observed specific error. Selector0=false selects own disabled/exit0

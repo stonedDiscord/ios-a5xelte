@@ -2,14 +2,15 @@
 
 As of 2026-11-15, XNU BOOT0051 boots the verified 16GiB HFSX root on
 validated USERDATA p55 and reaches launchd daemon orchestration. The user
-reports watchdogd crashing at PID576, Too many corpses being created, and
-continuing output. This is progress beyond the earlier cache-loader abort,
-but stable userspace and GUI remain unproven. Investigating actual iOS16.0
-watchdogd and awaiting its specific failure message/other crashing daemons.
-BOOT0051 uses the same0050 kernel plus launchd_unsecure_cache=1, verified in
-the actual loader as its lab path skipping AMFI signature/trust registration.
-Software AppleKeyStore is opt-in lab state without SEP/passcode protection.
-The USB CDC console has not enumerated; root is not being reinstalled.
+reports watchdogd, backboardd and SpringBoard crashing with continuing
+output and Too many corpses being created. Spawn messages also name
+fairplayd, mDNSResponder, repeated xpcproxy, bluetoothd and identityservicesd;
+these messages alone do not confirm crashes or successful startup.
+Stable userspace and GUI remain unproven; exact crash details are missing.
+BOOT0051 is same0050 kernel plus launchd_unsecure_cache=1. Software AKS is
+opt-in lab state without SEP/passcode protection; USB CDC has not enumerated.
+User requested stop. Unvalidated bounded crash-diagnostic patch0108 and its
+profile/workflow edits remain local WIP, with no CI build or new flash.
 
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve

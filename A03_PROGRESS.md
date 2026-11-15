@@ -3069,3 +3069,39 @@ and touches NVRAM; do not propose it as a standalone missing-service fix.
 Next: collect current failure line/other daemon names; then implement scoped
 opt-in lab IOWatchdog only if supported by crash evidence, preserving actual
 unsupported selectors and reporting that hardware watchdog is not provided.
+
+## 2026-11-15: BOOT0051 additional daemon observations; user requested stop
+
+User subsequently reports backboardd crashing, then SpringBoard crashing.
+They observe Allowing spawn of iOS binary for fairplayd, mDNSResponder and
+xpcproxy; xpcproxy appears most repeatedly, with bluetoothd and
+identityservicesd also appearing. Only watchdogd, backboardd and SpringBoard
+were explicitly reported crashing. Spawn lines alone do not establish that
+fairplayd/mDNSResponder/xpcproxy/bluetoothd/identityservicesd crashed or stayed
+alive. No exact crash PC/reason/stack yet, and no GUI or stable userspace proof.
+BOOT0051 remains installed; no additional flash or root rewrite occurred.
+
+Actual root backboardd was extracted privately and imported/analyzed in ReVa
+as /backboardd; no functions inspected yet. Donor display/HID failures are
+reference hypotheses, not A03 diagnoses. ReVa watchdogd audit remains as above.
+
+UNFINISHED LOCAL WORK (not validated, not deployed):
+- xnu/a03/0108-a03-bounded-daemon-crash-diagnostics.patch adds opt-in
+  a03crash_log=1 selected-daemon signal/reason/register/6-frame reports,
+  saturating two reports per selected name, independent of corpse capacity.
+- tools/a03-build-profile.py and .github/workflows/xnu.yml have uncommitted
+  staging/linked-marker edits for0108. No CI dispatched, no0052 image.
+- First local syntax attempt matched no commands because helper uses old
+  donor CI path. Private normalized log /tmp/a03-43720286686-normalized.log
+  fixes matching; retry could not execute compiler because expected
+  /home/stoned/swift/usr/bin/clang does not exist. No compile success claimed.
+- Scratch /tmp/a03-buildcheck-43712255840/xnu contains0108 working edits;
+  bsd Makefile baseline was recovered from exact0050 CI before adding flag.
+- Before using0108: inspect/recount hunks and actual p_comm truncation,
+  review bounded logging, apply against exact0050 source, find toolchain,
+  compile both C files, test rate limit/gating, then full CI + linked checks.
+  Do not flash unfinished patch. Missing IOWatchdog service remains likely
+  watchdog prerequisite, not a confirmed reason for all daemon crashes.
+
+User explicitly requested notes and stop. Work stopped after this handoff;
+no further build/flash/device transition requested. Resume only on user request.
