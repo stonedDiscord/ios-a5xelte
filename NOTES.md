@@ -1,3 +1,12 @@
+ACTIVE0063 runtime: initial120s422685bytes SHAa5d459ca...25aab9,
+zero CRASH; IOCoreSurfaceRoot/AppleCLCD registered720x1600. MobileGestalt
+size/dot-pitch calls succeed. Backboardd DOES reach FB selector29(out8),
+Unsupportede00002c7; no swaps or GUI verified. Also mkdir220 Caches EACCES13
+and work_interval_ctl499 op4 EPERM1. Diagnose exact ABI/permission causes,
+no generic-success bypass. Continuation49374/300s still running at read;
+75586-byte snapshot no CRASH/new FB calls. USB CDC present, no new flash.
+See latest A03_PROGRESS entry; previous pending-runtime notes are historical.
+
 ACTIVE0063 flashed BOOT-only100percent/success/reboot21:08UTC. CI43760748014
 SUCCESSee1307c;12 source/loader/ADT-only-disp0/arg-only-a03_display checks
 PASS. Imagedd217cf6...68f230. CDC Download control from0062 worked again.

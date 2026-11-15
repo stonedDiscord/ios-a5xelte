@@ -1,5 +1,30 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: BOOT0063 runtime reaches the display provider
+
+Initial120s USB capture completed422685bytes SHA256
+a5d459ca584ab49f3679244893655e6e3319c5496c08f16e8fc704411025aab9.
+Zero CRASH records; one SpringBoard/backboardd spawn authorization each.
+IOCoreSurfaceRoot registered; AppleCLCD reports720x1600 stride2880 at
+0x9e000000, default surface1. MobileGestaltHelper selectors8(display size)
+and28(dot pitch) return success. Backboardd reaches framebuffer selector29
+with8-byte structure output and receives Unsupported0xe00002c7. No swap
+submission or rendered SpringBoard established. This corrects the earlier
+initial-capture assessment that backboardd had not opened the framebuffer.
+
+Backboardd56 still records mkdir_extended220 EACCES13 for its resolved
+system-container Library/Caches. It also records work_interval_ctl499
+operation4 EPERM1. These are observed failures, not yet proven causes of
+missing GUI; selector29 meaning/required behavior also needs exact ABI
+review. No broad permission or selector-success bypass applied.
+
+Continuation300s capture is still running at this observation; its current
+75586-byte snapshot has zero CRASH and no additional framebuffer calls.
+Do not treat a growing log hash/length as a completed capture. USB CDC
+1d6b:0104 remains enumerated. HFS atomic-save repair and display-provider
+registration are concrete progress, not proof of a visible home screen.
+Private logs remain ignored; no additional flash or partition write.
+
 ## 2026-11-15: display candidate BOOT0063 deployed
 
 CI43760748014 SUCCESS exactee1307c. Twelve downloaded source comparisons
