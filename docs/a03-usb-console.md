@@ -136,3 +136,9 @@ If access is denied, grant this user access only to the detected tty:
 
 The ACL may need renewal if the tty is recreated. A new capture needs a new
 output path because the tool refuses to overwrite existing logs.
+
+
+Capture now waits for tty permission correction within the original --wait
+budget, before creating the log. This avoids silently losing early diagnosis
+time after enumeration while the host ACL is being applied. Reconnect while
+waiting is reported; exact VID/PID/serial matching remains required.

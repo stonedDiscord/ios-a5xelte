@@ -33,10 +33,30 @@ def main():
         if dev:break
         if time.monotonic()>=deadline:raise RuntimeError('A03 XNU CDC console did not enumerate')
         time.sleep(.25)
+    # A newly enumerated tty can need the host ACL fix before it is openable.
+    # Keep waiting for this exact identity within the original wait budget.
+    flags=(os.O_RDWR if a.command or a.interactive else os.O_RDONLY)|os.O_NOCTTY|os.O_NONBLOCK
+    permission_reported=False
+    while True:
+        try:
+            fd=os.open(dev,flags)
+            break
+        except PermissionError:
+            if time.monotonic()>=deadline:raise
+            if not permission_reported:
+                print('Waiting for access to '+dev+'; grant this user a tty ACL',file=sys.stderr)
+                permission_reported=True
+            time.sleep(.25)
+            dev=find()
+            if dev is None:raise RuntimeError('A03 console disconnected while waiting for access')
     a.output.parent.mkdir(parents=True,exist_ok=True)
     print('Capturing '+dev+' to '+str(a.output),file=sys.stderr)
-    with a.output.open('xb') as log:
-        fd=os.open(dev,(os.O_RDWR if a.command or a.interactive else os.O_RDONLY)|os.O_NOCTTY|os.O_NONBLOCK)
+    try:
+        log=a.output.open('xb')
+    except OSError:
+        os.close(fd)
+        raise
+    with log:
         try:
             attr=termios.tcgetattr(fd);attr[0]=attr[1]=attr[3]=0
             attr[2]=termios.CS8|termios.CREAD|termios.CLOCAL
