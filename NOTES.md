@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT: BOOT0047 flashed BOOT-only100%/success/reboot. Corrected CI43722354348
+PASS; kernel e4b5d6cf...03752, BOOT b6b3e90b...8b8bb; USB/monitor/reply
+markers independently verified. Args0046+console=1/debug_hold=1. Host capture
+session91167 to shim/a03/out/boot0047-usb-console.log; check enumeration next.
+No hardware USB/hold proof yet. Root preserved, launchd main unproven.
+
+
 ACTIVE corrected CI43722354348 at8d25855: exact-source USB context fixed,
 all USB/monitor/reply strings now required in CI.43720286686 artifact
 contains0102 only (0103/0104 skipped), rejected/no flash. Device Download.

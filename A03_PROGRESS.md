@@ -2834,3 +2834,13 @@ required string checks for reply diagnostics, USB console and hold monitor,
 so skipped requested features cause failure. Next corrected full build.
 
 Corrected CI43722354348 started at8d25855, includes required feature gates.
+
+## 2026-11-15: corrected BOOT0047 USB/monitor trial deployed
+
+CI43722354348 PASS at8d25855. Independent artifact SHA/feature-marker check
+PASS: kernele4b5d6cf1caa027476f41d8bf2a3231647053c5ce19ceb906f32f10d1c103752.
+BOOT0047 SHAb6b3e90bf5cbeb1a8770d6ce7d41ba184e00d9d813fe04402c394c874e68b8bb.
+Same0046 args+ a03usb_console=1 a03debug_hold=1, no RAM root. Started host
+capture session91167 before BOOT-only Heimdall upload100%/success/reboot.
+No USERDATA/GPT/protected-partition write. Await enumeration/screen evidence;
+no USB or monitor hardware success established yet. Root remains verified.
