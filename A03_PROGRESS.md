@@ -3547,3 +3547,8 @@ no-user-write behavior retained. Actual-source selector tests exercise all6
 paths/unselected rejection; parser and exception.c kernel compile PASS.
 Media null dictionary and configd null+54 persist; WDT disabled path remains.
 No stable GUI claim. Next combined build pending;0058 running, tty accessible.
+
+BOOT0058 final100s capture: 300945bytes/4678lines,
+SHA25607ec8085b129c122fdab54f1dc51a7065152b899b21a93f21453925e84b5155d.
+Combined0119 CI43752732761 from4e22af5 queued;0059 packaging waits on success
+and exact source/loader/ADT/args checks.0058 remains running; tty accessible.
