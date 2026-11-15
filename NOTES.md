@@ -1,5 +1,13 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT 2026-11-15: BOOT0046 flashed BOOT-only100%/success/reboot.
+CI43717108507 PASS, kernel61b680de...bce7e; BOOTa813167e...4f205.
+Adds0101 host_info/MIG/msg2 and preserved error x0/x8, host port x22 logs;
+same0045 args/root/1x font. Await user A03 HOST and new TRAP register line.
+Actual SIGTRAP is cached libpthread HOST_PRIORITY_INFO initialization;
+error still unknown. Root preserved; no sustained launchd/main proof yet.
+
+
 NEXT BUILD:0101 adds preserved host_info error x0/x8 and host port x22,
 msg2/MIG/host count diagnostics. Local four-file compile PASS.
 CI43717108507 running frome0e58a2; next package BOOT0046 on PASS.

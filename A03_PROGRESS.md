@@ -2747,3 +2747,16 @@ Direct cached branch stubs also resolve to libsystem_kernel host_info at
 
 Diagnostic CI43717108507 started frome0e58a2. Await link result, then
 package BOOT0046 with0045 args; user asked to prepare Download after dump.
+
+## 2026-11-15: BOOT0046 host-info diagnostic deployed
+
+CI43717108507 PASS frome0e58a2f1ec89c07f44bc421947829571e82170b.
+Kernel SHA25661b680debd48d1a3439f1b7eb6f6e876b4b2690b7210dfacba6ff968ea4bce7e;
+all five expected diagnostic markers present. Exact four-file patch reverse/
+forward roundtrip passes with zero fuzz. Packaged with same0044/0045 args,
+ADT and verified Magisk base, no RAM root. BOOT0046 SHA256:
+a813167e3fc63556108e8dfa7cb55c2100994790701b2fdb8308aeff6994f205.
+Heimdall detected Download; boot upload100%, success and reboot. Only BOOT
+was flashed; full verified USERDATA root preserved. Retains1x XNU font.
+User asked for A03 HOST request/reply and A03 TRAP x0/x8/x22 values.
+No new physical runtime result yet; launchd main remains unproven.
