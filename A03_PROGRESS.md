@@ -3435,3 +3435,19 @@ exact kernel exception.c general-register syntax compile PASS. Not deployed.
 
 Full0116 CI43748416531 dispatched fromf30d070; BOOT0056 retained.
 No extra flash before its pending watchdog/control-reset evidence.
+
+BOOT0056 access restored18:45UTC; waiting capture92355 opened automatically.
+Runtime confirms A03 WDT registration, selector0 disabled response and software
+boot stage255 on two watchdogd launches. No CRASH watchdogd in current capture;
+this validates the disabled path, not active watchdog functionality. Backboardd
+SIGABRT and mediaserverd null-dictionary crash persist. Control reset test next.
+
+BOOT0056 final100second capture313123bytes/4857lines SHA256
+f30aecb9e0fd6a2b0eabcc10443474ca838db056b46526c26717290f08b82283.
+Explicit --download-control FAILED at host ioctl with EOPNOTSUPP before any
+reset ACK; phone remains CDC. Descriptor advertises ACM0x02, lacking CAP_BRK.
+Linux v6.18 cdc-acm acm_tty_break_ctl explicitly rejects without CAP_BRK0x04;
+matching local4.14 does not have this check.0117 changes ACM capabilities
+0x02->0x06, retaining descriptors otherwise. Actual descriptor test asserts
+0x06; cumulative host test and kernel general-register syntax compile PASS.
+No evidence PMIC reset worker was reached. Full build/hardware retry required.

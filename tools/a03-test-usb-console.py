@@ -12,7 +12,8 @@ with tempfile.TemporaryDirectory(prefix='a03-cdc-source-') as d:
               '0110-a03-usb-download-command.patch',
               '0111-a03-usb-receive-diagnostics.patch',
               '0113-a03-usb-pio-takeover.patch',
-              '0115-a03-download-control-escape.patch'):
+              '0115-a03-download-control-escape.patch',
+              '0117-a03-advertise-cdc-break.patch'):
   subprocess.run(['git','apply','--include=bsd/dev/a03_usb_console.c',
                   str(root/'xnu/a03'/name)],cwd=d,check=True)
  source=(Path(d)/'bsd/dev/a03_usb_console.c').read_text()
@@ -50,12 +51,14 @@ int main(void) {
  assert(ep_reg(0,2)==0x102 && ep_reg(1,6)==0x116 && ep_reg(2,2)==0x122);
  assert(sizeof(device_desc)==18);assert(sizeof(config_desc)==67);
  assert(le16(config_desc+2)==sizeof(config_desc));
- unsigned interfaces=0,eps=0;
+ unsigned interfaces=0,eps=0;unsigned char acm_capabilities=0;
  for(unsigned o=0;o<sizeof(config_desc);o+=config_desc[o]) {
   assert(config_desc[o]>=2 && o+config_desc[o]<=sizeof(config_desc));
   interfaces+=config_desc[o+1]==4;eps+=config_desc[o+1]==5;
+  if(config_desc[o+1]==0x24 && config_desc[o+2]==2)acm_capabilities=config_desc[o+3];
  }
  assert(interfaces==2 && eps==3);
+ assert(acm_capabilities==6); /* Linux needs CAP_BRK before TIOCSBRK. */
  unsigned char getdev[8]={0x80,6,0,1,0,0,18,0};setup(getdev);
  assert(fifo_n==18 && !control_active && ep_read(0,2)==0x0a);
  fifo_n=0;unsigned char getcfg[8]={0x80,6,0,2,0,0,255,0};setup(getcfg);
