@@ -2797,3 +2797,10 @@ control-request harness PASS; exact patch zero-fuzz roundtrip PASS; three
 local component compiles PASS, general-register driver/spool. Enumeration/
 transport UNPROVEN. docs/a03-usb-console.md records limits/reproduction.
 Retain0102 reply-right diagnostics; no IPC validation bypass.
+
+Combined USB/reply-right CI43719832882 queued from5694793; supersedes
+43719778245 and43719205319 (cancelled by newer dispatch). Added bounded
+10s enumeration wait +1s drain before initproc, so early host failure can
+be captured. Updated patch roundtrip + final driver compile + protocol PASS.
+Download mode detected. Next download successful kernel, package0047 with
+ a03usb_console=1, start host tty capture, then BOOT-only flash/test.

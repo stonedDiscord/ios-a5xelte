@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE BUILD CI43719832882 at5694793: combined USB console + reply tracing.
+Earlier43719778245/43719205319 superseded/cancelled. Download detected.
+Final host checks PASS. Next BOOT0047 args0046+a03usb_console=1; launch
+host tty capture before BOOT-only flash. Actual USB hardware unproven.
+
+
 NEXT: combined0102 reply-right diagnostics +0103 USB CDC console mirror.
 Local compile/patch/protocol PASS; USB hardware unproven. Add a03usb_console=1
 in next BOOT0047. Screen retained; spool256KiB; serialA03XNUConsole01;
