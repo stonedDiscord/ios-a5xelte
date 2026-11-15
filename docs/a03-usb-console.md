@@ -5,7 +5,8 @@ through ttyACM0. A45-second host capture saved289235 bytes. Interactive
 monitor response and post-panic service remain unverified.
 
 Experimental opt-in a03usb_console=1 in patch0103. A03/T606 MUSB peripheral
-code; existing screen remains active. No storage operations are added.
+code; existing screen remains active. Download command0110 calls filesystem
+sync before its fixed reset sequence.
 
 Framebuffer serial callback spools256KiB, overwriting oldest bytes on full.
 Single-core profile masks IRQs in producer/consumer. BSD thread polls full-
@@ -148,4 +149,8 @@ waiting is reported; exact VID/PID/serial matching remains required.
 
 Use: python3 tools/a03-usb-console.py --command download --wait 30 --duration 10
 
-Runs in USB worker even outside PID1 hold. Syncs filesystems, then fixed stock SC2730 Download reset. Worker must still run. Diagnostic reboot, not full iOS shutdown. BOOT0052 lacks command; local compile/parser/reset tests PASS, device reset pending. Expected successful result: USB disconnect then Samsung Download mode.
+Runs in USB worker even outside PID1 hold. Syncs filesystems, then fixed stock SC2730 Download reset. Worker must still run. Diagnostic reboot, not full iOS shutdown. Installed in BOOT0053 (CI43740528122); BOOT0052 lacks command. Local compile/parser/reset tests PASS, device reset pending. Expected successful result: USB disconnect then Samsung Download mode.
+
+BOOT0053 hardware test: host writes drain but no download acknowledgement or
+reset; command is not yet functional on hardware. USB IN remains active.
+0111 receive diagnostics pending to distinguish RX FIFO/parser delivery.

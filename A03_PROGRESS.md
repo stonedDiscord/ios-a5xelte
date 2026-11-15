@@ -3240,3 +3240,35 @@ os_crash message and BRK; current runtime cause still awaiting0053 evidence.
 ## USB Download command0110
 
 Exact download line handled by worker outside PID1 hold; filesystem sync then stock Linux SC2730 restart:1bac lowbyte30 preserving high,1bf8 bit4,1824 bit0. Fixed bounded ADI operations with prerequisite/readback checks; no arbitrary register interface. Supply allowlist unchanged. Host parser/reset tests and kernel arm64 compile PASS; runtime reset unverified. Combined0108+0110 CI43740528122 from69882d3 supersedes crash-only43739909683. BOOT0052 lacks command; initial physical Download needed.
+
+
+## 2026-11-15: BOOT0053 Download command installed
+
+Combined CI43740528122 SUCCESS from69882d3. Kernel SHA256
+566611c65c26e5c9b37cc136de8171d5163363431f0aac4208ef9d250f2f1d7e.
+BOOT0053 image SHA256
+bca699fb0e9c0ffdb164394898a6b38b19744d48d547d58466aec4dfd82c2377.
+Independent image checks:0052 loader (excluding image_size) and ADT exact;
+args only add a03crash_log=1; Download acknowledgement present. Cumulative
+CDC/supply and actual-source fixed reset/parser tests PASS.
+
+Heimdall detected physical Download mode; authorized BOOT-only upload reached
+100%, reported boot upload successful and rebooted. No host USERDATA, GPT,
+recovery, bootloader, EFS/NV write. New USB capture started before flash,
+waiting for enumeration. Download reset and crash diagnostics hardware
+results pending; no new runtime or stable iOS claim.
+
+BOOT0053 USB reappeared47seconds after flash; host access available without
+another user request.60second capture356191bytes/4848lines, SHA256
+a0079227c49284a19ec67ef0c1971b1ad79877888bf3220336466b030c3b6cc5,
+private boot0053-usb-initial.log.0108 reports watchdogd SIGTRAP at main image
+offset0xb308 (both launches), bt offsets0x58a4/0x770c. Runtime now supplies
+exact PCs; other daemon reasons remain pending.
+
+Hardware Download command FAILED: normal host tool, newline-reset retry and
+slow-byte retry gave no acknowledgement/reset. Host TIOCOUTQ drained to0;
+USB IN continues. No evidence that reset sequence was reached. Do not claim
+Download works.0111 adds first4 RX packet byte logs and first4 periodic RX
+CSR/count/indexed/FIFO state snapshots to isolate transport before PMIC.
+Host test now exercises actual poll_usb FIFO->parser with split download
+line and rejects oversized packets. Kernel syntax compile PASS.

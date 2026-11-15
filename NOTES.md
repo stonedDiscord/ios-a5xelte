@@ -1,5 +1,20 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0053: USB reattached47s after flash;356191byte capture saved.
+Download command hardware test FAILED: no ACK/reset despite host queue0.
+Root retained;0053 still running, USB logs available.0111 receive diagnostics
+next build; do not claim reboot command functional.0108 watchdogd PC is
+main Mach-O+0xb308, bt+0x58a4/+0x770c. Exact logs private.
+
+ACTIVE 2026-11-15: BOOT0053 installed BOOT-only, upload100%/success/reboot.
+Combined CI43740528122 PASS from69882d3. Image SHA256
+bca699fb0e9c0ffdb164394898a6b38b19744d48d547d58466aec4dfd82c2377.
+0052 loader/ADT retained, args only +a03crash_log=1, USERDATA root retained.
+0110 adds exact USB command download outside PID1 hold, sync then fixed
+SC2730 reset matching stock Linux. Host cumulative parser/supply/reset tests
+PASS. USB capture33059 waiting; hardware reset still UNVERIFIED.
+
+
 ACTIVE combined0108+0110 CI43740528122 from69882d3. Local crash/download tests and kernel compile PASS; BOOT0053 after CI.0052 lacks download command; initial physical Download entry needed.
 ACTIVE iOS boot goal:0108 crash evidence completed/locally validated against
 exact0052; mediaserverd/configd/lockdownd included, two reports per name.

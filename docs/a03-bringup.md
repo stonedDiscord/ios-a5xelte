@@ -5,12 +5,12 @@ USERDATA p55 and reaches launchd daemon orchestration. USB CDC now enumerates
 and transfers kernel logs through host ttyACM0. A45-second capture saved
 289235 bytes, including USB supply/configuration evidence and repeated
 backboardd, mediaserverd, watchdogd, configd and lockdownd crash lines.
-Exact daemon crash reasons/PCs remain unavailable in this kernel; stable
+BOOT0053 now installs bounded daemon crash diagnostics and the USB download
+command; new runtime results are pending. Stable
 userspace and GUI remain unproven. See docs/a03-usb-console.md for capture.
 BOOT0052 retains0051 loader/ADT/arguments/root, adding0109 USB setup fixes.
-Software AKS is opt-in lab state without SEP/passcode protection. Unvalidated
-bounded crash-diagnostic patch0108 and its profile/workflow edits remain
-local WIP, excluded from0052.
+Software AKS is opt-in lab state without SEP/passcode protection. Patch0108 crash diagnostics and0110 Download reset passed local tests and
+combined CI43740528122; BOOT0053 was flashed BOOT-only.0052 lacks both.
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve
 checkpoint reproduction and should not be read as current-device status.

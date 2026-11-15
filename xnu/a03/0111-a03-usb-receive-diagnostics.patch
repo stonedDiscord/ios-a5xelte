@@ -1,0 +1,37 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -41,6 +41,7 @@
+ static vm_offset_t usb;
+ static volatile unsigned configured;
+ static unsigned reset_count, setup_count;
++static unsigned rx_reports, rx_polls, rx_state_reports;
+ static unsigned address_pending, address_valid;
+ static const unsigned char *control_data;
+ static unsigned control_length, control_offset, control_active, control_out, control_requested;
+@@ -203,7 +204,25 @@
+  } else if(control_active && !(csr&2)) control_send();
+  if(!configured)return;
+  csr=ep_read(1,6);
+- if(csr&1) { unsigned n=ep_read(1,8);for(unsigned i=0;i<n;i++)input_char(r8(0x24));ep_write(1,6,0); }
++ if(rx_state_reports<4 && ++rx_polls==10000) {
++  rx_polls=0;rx_state_reports++;
++  w8(0x0e,1);
++  printf("A03 USB RX state: csr=%04x count=%u indexed=%04x/%u fifo=%02x/%04x tx=%04x\n",
++   csr,ep_read(1,8),r16(0x16),r16(0x18),r8(0x63),r16(0x66),ep_read(1,2));
++  w8(0x0e,0);
++ }
++ if(csr&1) {
++  unsigned n=ep_read(1,8);
++  unsigned char bytes[64];unsigned kept=n<sizeof(bytes)?n:sizeof(bytes);
++  for(unsigned i=0;i<n;i++) { unsigned char c=r8(0x24);if(i<kept)bytes[i]=c; }
++  ep_write(1,6,0);
++  if(rx_reports<4) {
++   rx_reports++;printf("A03 USB RX: csr=%04x count=%u data",csr,n);
++   for(unsigned i=0;i<kept;i++)printf(" %02x",bytes[i]);
++   printf("\n");
++  }
++  if(n<=sizeof(bytes))for(unsigned i=0;i<kept;i++)input_char(bytes[i]);
++ }
+  csr=ep_read(1,2);
+  if(!(csr&1)) { unsigned char b[64];unsigned n=a03_console_read(b,64);if(n) { for(unsigned i=0;i<n;i++)w8(0x24,b[i]);ep_write(1,2,0x2001); } }
+  w8(0x0e,0);

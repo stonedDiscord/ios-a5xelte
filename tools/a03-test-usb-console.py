@@ -9,7 +9,8 @@ with tempfile.TemporaryDirectory(prefix='a03-cdc-source-') as d:
               '0104-a03-post-trap-usb-monitor.patch',
               '0106-a03-usb-peripheral-phy-readback.patch',
               '0109-a03-usb-supply-flat-endpoints.patch',
-              '0110-a03-usb-download-command.patch'):
+              '0110-a03-usb-download-command.patch',
+              '0111-a03-usb-receive-diagnostics.patch'):
   subprocess.run(['git','apply','--include=bsd/dev/a03_usb_console.c',
                   str(root/'xnu/a03'/name)],cwd=d,check=True)
  source=(Path(d)/'bsd/dev/a03_usb_console.c').read_text()
@@ -18,8 +19,8 @@ source=source.replace('__asm__ volatile("dsb sy" ::: "memory");','')
 a=source.index('/* Live DT uses sharkl5');b=source.index('static unsigned le16(',a)
 source=source[:a]+source[b:]
 start=source.index('static uint8_t r8(');end=source.index('static void update(',start)
-source=source[:start]+'''static unsigned char regs[8192], fifo[512];static unsigned fifo_n;
-static uint8_t r8(unsigned o) { return regs[o]; }
+source=source[:start]+'''static unsigned char regs[8192], fifo[512], rx_fifo[128];static unsigned fifo_n, rx_pos;
+static uint8_t r8(unsigned o) { if(o==0x24)return rx_fifo[rx_pos++];return regs[o]; }
 static uint16_t r16(unsigned o) { return regs[o]|(regs[o+1]<<8); }
 static void w8(unsigned o,uint8_t v) { if(o==0x20)fifo[fifo_n++]=v;else regs[o]=v; }
 static void w16(unsigned o,uint16_t v) { regs[o]=v;regs[o+1]=v>>8; }
@@ -74,6 +75,14 @@ int main(void) {
  setup(setcfg);ep_write(0,2,0);ep_write(1,6,0);ep_write(1,2,1);
  poll_usb();assert(ep_read(0,2)==0 && ep_read(1,2)==1);
 
+ /* Exercise real poll_usb FIFO -> parser delivery, including split packets. */
+ memcpy(rx_fifo,"down",4);rx_pos=0;ep_write(1,8,4);ep_write(1,6,1);poll_usb();
+ assert(!download_requested && rx_pos==4 && ep_read(1,6)==0);
+ memcpy(rx_fifo,"load\\n",5);rx_pos=0;ep_write(1,8,5);ep_write(1,6,1);poll_usb();
+ assert(download_requested && rx_pos==5 && ep_read(1,6)==0);download_requested=0;
+ /* Invalid oversized packet is drained but cannot request a reset. */
+ memset(rx_fifo,'x',65);memcpy(rx_fifo,"download\\n",9);rx_pos=0;
+ ep_write(1,8,65);ep_write(1,6,1);poll_usb();assert(!download_requested && rx_pos==65);
  input_char('r');input_char('e');input_char('g');input_char('s');input_char('\\n');
  char cmd[128];assert(a03_usb_debug_command(cmd,sizeof(cmd)) && cmd[0]=='r');
  puts("A03 cumulative CDC descriptor/control-request/command checks PASS (host only)");
