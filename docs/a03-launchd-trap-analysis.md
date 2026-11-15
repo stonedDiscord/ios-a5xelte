@@ -50,3 +50,30 @@ Use its observed address/message to distinguish loader failure, pthread/
 libplatform assertion, launchd assertion or another crash. Combined build
 43712255840 includes0100 and smaller XNU font. No binary patch is justified
 until that runtime evidence exists.
+
+## BOOT0045: observed libpthread assertion
+
+The runtime PC0x1e6f71f5c minus cache slide0x19274000 is0x1cdcfdf5c;
+LR0x1e6f6841c unslides to0x1cdcf441c. Both lie in cached
+/usr/lib/system/libsystem_pthread.dylib, base0x1cdcef000.
+Cache .23 file0x2fa1f5c contains200020d4 (BRK#1). The assertion at
+0x1cdcfdf38 stores "BUG IN LIBPTHREAD: host_info() failed" and sign-extended
+w0 into crash-info, then traps. The caller initializes count8 and invokes
+host_info(host,5,buffer,&count); nonzero return branches to this assertion.
+Kernel flavor5 is HOST_PRIORITY_INFO, also count8. This supersedes the
+unresolved candidate paths above; why the call fails remains under audit.
+
+ReVa program /libsystem_pthread.text-only.dylib is an offline TEXT-only
+extraction from the pinned cache with a rewritten standalone header;
+295 functions analyzed/saved. It is not an intact dylib and absent data or
+linkedit must not be treated as actual zero data or unresolved runtime code.
+Apple bytes and generated disassembly remain private/ignored.
+
+Added0101 diagnostics: trap x0/x8 (the assertion preserves its error in x8),
+x20/x21/x22 (x22 holds host port in this initializer), msg2 request options,
+host_info request host validity/count, MIG request/reply status/size.
+No return values or security checks changed. Four affected source files pass
+local syntax checks using recovered CI commands (environment/header warnings
+remain). Full CI/link/runtime validation pending. Physical Download absent.
+Direct cached branch stubs also resolve to libsystem_kernel host_info at
+0x1bf1361a4, message ID200, and host-self target0x1bf1307f8.

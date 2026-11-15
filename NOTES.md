@@ -1,5 +1,19 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+NEXT BUILD:0101 adds preserved host_info error x0/x8 and host port x22,
+msg2/MIG/host count diagnostics. Local four-file compile PASS; next full CI.
+Diagnostics only, no forced-success or security bypass. Download not detected.
+
+
+CURRENT 2026-11-15: BOOT0045 trap symbolicated exactly: cached libpthread
+PC0x1cdcfdf5c BRK#1, "BUG IN LIBPTHREAD: host_info() failed".
+Observed slide0x19274000; LR0x1cdcf441c. ReVa caller0x1cdcf4050 sends
+HOST_PRIORITY_INFO(flavor5), count8. Investigating Mach/kernel reply;
+no bypass or new root install justified. Phone remains crashed XNU0045.
+Next: establish error/host port/MIG response and fix cause, BOOT0046 test.
+No launchd main success proven. Full16GiB verified root preserved.
+
+
 CURRENT 2026-11-15 12:55UTC = XNU BOOT0045 flashed BOOT-only100%/success/reboot.
 CI43714631683 PASS; kernel80cdfc51...c2653, BOOTa348ba5b...ad5a0.
 Contains1x XNU font and pre-coredump SIGTRAP PC/LR, dyld/main bases, slide,

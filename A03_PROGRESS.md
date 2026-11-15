@@ -2718,3 +2718,29 @@ User confirmed Download; independent Heimdall detection/protocol/PIT pass.
 Only boot uploaded100%, boot upload successful and rebooted. No root reinstall
 or GPT/recovery/bootloader/EFS/NV write. Await actual smaller-font confirmation
 and A03 TRAP PC/dyld/x19 diagnostic; launchd main execution remains unproven.
+
+## 2026-11-15: BOOT0045 SIGTRAP identified in cached libpthread
+
+User reports pid1 PC=0x1e6f71f5c, LR=0x1e6f6841c,
+SP=0x16b31ab30, FP=0x16b31ac00, main=0x104ae4000,
+dyld=0x104c30000, cache_slide=0x19274000, x19=0x16b31bde8,
+instruction=0xd4200020. Subtracting the measured cache slide gives
+PC=0x1cdcfdf5c and LR=0x1cdcf441c in libsystem_pthread.
+The pinned cache .23 has BRK #1 at that exact PC, following storage of
+"BUG IN LIBPTHREAD: host_info() failed" and the error value in crash info.
+ReVa analysis of a private TEXT-only extraction (295 functions) resolves
+the caller to initialization at0x1cdcf4050: host_info(host,5,buffer,&count),
+count initially8, failure branches at0x1cdcf40f4 to0x1cdcf4418.
+Flavor5 is HOST_PRIORITY_INFO; XNU's structure is eight integer_t fields.
+This identifies the assertion but not yet why host_info returns failure.
+TEXT-only import omits DATA/LINKEDIT; external call names need separate
+verification. No new flash/root write; launchd main remains unproven.
+
+Added0101 diagnostics: trap x0/x8 (the assertion preserves its error in x8),
+x20/x21/x22 (x22 holds host port in this initializer), msg2 request options,
+host_info request host validity/count, MIG request/reply status/size.
+No return values or security checks changed. Four affected source files pass
+local syntax checks using recovered CI commands (environment/header warnings
+remain). Full CI/link/runtime validation pending. Physical Download absent.
+Direct cached branch stubs also resolve to libsystem_kernel host_info at
+0x1bf1361a4, message ID200, and host-self target0x1bf1307f8.

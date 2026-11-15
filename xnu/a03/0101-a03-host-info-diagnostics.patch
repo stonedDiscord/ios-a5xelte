@@ -1,0 +1,72 @@
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -851,6 +851,10 @@
+         pid, pc, get_saved_state_lr(ss), get_saved_state_sp(ss), fp);
+     printf("A03 TRAP main=%llx dyld=%llx cache_slide=%llx x19=%llx\n",
+         task->mach_header_vm_address, dyld, slide, saved_state64(ss)->x[19]);
++    printf("A03 TRAP x0=%llx x8=%llx x20=%llx x21=%llx x22=%llx\n",
++        saved_state64(ss)->x[0], saved_state64(ss)->x[8],
++        saved_state64(ss)->x[20], saved_state64(ss)->x[21],
++        saved_state64(ss)->x[22]);
+     uint32_t instruction = 0;
+     if (copyin((user_addr_t)pc, &instruction, sizeof(instruction)) == 0) {
+         printf("A03 TRAP instruction=%08x\n", instruction);
+--- a/osfmk/kern/host.c
++++ b/osfmk/kern/host.c
+@@ -189,6 +189,12 @@
+ kern_return_t
+ host_info(host_t host, host_flavor_t flavor, host_info_t info, mach_msg_type_number_t * count)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if (flavor == HOST_PRIORITY_INFO) {
++        printf("A03 HOST priority host_valid=%d count=%u need=%u\n",
++            host != HOST_NULL, *count, HOST_PRIORITY_INFO_COUNT);
++    }
++#endif
+ 	if (host == HOST_NULL) {
+ 		return KERN_INVALID_ARGUMENT;
+ 	}
+--- a/osfmk/kern/ipc_kobject.c
++++ b/osfmk/kern/ipc_kobject.c
+@@ -394,6 +394,12 @@
+ 
+ 	req_hdr = ikm_header(request);
+ 	request_msgh_id = req_hdr->msgh_id;
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if (request_msgh_id == 200) {
++        printf("A03 HOST MIG request size=%u bits=%x\n",
++            req_hdr->msgh_size, req_hdr->msgh_bits);
++    }
++#endif
+ 
+ 	/* Find corresponding mig_hash entry, if any */
+ 	ptr = find_mig_hash_entry(request_msgh_id);
+@@ -462,6 +468,12 @@
+ 		((mig_reply_error_t *)reply_hdr)->RetCode = MIG_BAD_ID;
+ 	}
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if (request_msgh_id == 200) {
++        printf("A03 HOST MIG reply size=%u status=%d\n",
++            reply_hdr->msgh_size, ipc_kobject_reply_status(reply));
++    }
++#endif
+ 	if (ipc_kobject_reply_status(reply) == MIG_NO_REPLY) {
+ 		/*
+ 		 *	The server function will send a reply message
+--- a/osfmk/ipc/mach_msg.c
++++ b/osfmk/ipc/mach_msg.c
+@@ -1107,6 +1107,13 @@
+ 	mach_msg_user_header_t user_header = {};
+ 	mach_msg_vector_t msg_vec = {}, aux_vec = {};         /* zeroed */
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if ((mach_msg_id_t)(mv_id >> 32) == 200) {
++        printf("A03 HOST msg2 options=%llx size=%u remote=%x reply=%x\n",
++            option64, (unsigned)(mb_ss >> 32), (unsigned)mr_lp,
++            (unsigned)(mr_lp >> 32));
++    }
++#endif
+ 	option64 &= MACH64_MSG_OPTION_USER;
+ 	option64 |= MACH64_MACH_MSG2;
+ 
