@@ -2980,3 +2980,10 @@ PASS. Profile stages54patches including0107. Full CI and hardware pending.
 
 Full build CI43730049732 started from09e658ffdbec16be4ec26087503dc0ceb88efa93.
 Actual deployed ADT defaults/no-effaceable-storage=1 confirmed.
+
+Host Download mode now detected for0050. Additional actual16.0 ReVa audit:
+selector7 lock state is1 scalar in/1 out. Root systembag plist parses with
+KeyBagKeys data5bytes (lab seed, not SEP-encrypted material). Boot trial uses
+in-memory software system bag; does not claim these5bytes are cryptographic
+keys. Existing defaults/no-effaceable-storage=1 selects plain plist loading.
+CI43730049732 has entered Build; no0050 device flash yet.
