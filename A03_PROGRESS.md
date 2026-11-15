@@ -2614,3 +2614,14 @@ path; source confirms DEVELOPMENT enables it. Flags select /sbin/launchd and
 existing validated USERDATA. Await user Download transition; no USB visible
 at final host check, no new device write since0043. Actual launchd instruction
 execution remains unproven until next boot output.
+
+
+## 2026-11-15 11:53UTC: BOOT0044 iOS exec-option trial flashed
+
+User returned Download; independently detected with Heimdall. Reverified
+BOOT0044 SHA2562f2dc75f240c7f0729e02d9d6eb79087050ff600fdefe4855cddde229b7f3131.
+Protocol/PIT successful; only boot uploaded to100%, boot upload successful,
+rebooted. Same CI43708471929 kernel, adds existing DEVELOPMENT tunable
+unentitled_ios_sim_launch=1 and launchdsuffix=release. Root not reinstalled;
+GPT/recovery/bootloaders/EFS/NV untouched. Await screen result for iOS exec,
+dyld or next panic. Launchd user-instruction execution remains unproven.

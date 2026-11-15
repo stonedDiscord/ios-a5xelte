@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT 2026-11-15 11:53UTC = BOOT0044 flashed BOOT-only100%/success/reboot.
+SHA2f2dc75f...7f3131; same CI43708471929 kernel plus DEVELOPMENT iOS exec
+option unentitled_ios_sim_launch=1 and launchdsuffix=release. Fixes observed
+0043 EXEC WRONG_PLATFORM gate. Await physical allowing-spawn/launchd/dyld/panic
+lines; no actual launchd userspace success proven yet. User asked via async.
+Full16GiB root remains verified; no reinstall. Protected partitions untouched.
+
 CURRENT: BOOT0043 screen panic launchd CS_KILLED namespace9/code0xe.
 Exact XNU source identifies EXEC WRONG_PLATFORM, not invalid code page. Root
 mount now passes; actual launchd userspace execution remains unproven. Prepare
