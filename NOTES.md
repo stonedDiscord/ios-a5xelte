@@ -1,5 +1,17 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+AUDIT0051: actual16.0 watchdogd connector0x1000057bc requires IOWatchdog,
+open type1; exact deployed kernel nm confirms absent. Candidate root cause,
+not yet observed specific error. Selector0=false selects own disabled/exit0
+path. wdt_test is too late/internal gated/NVRAM-dependent; not a fix alone.
+No provider/new build/flash yet pending screen evidence and other names.
+
+CURRENT BOOT0051 user: Process[576] crashed watchdogd; Too many corpses being
+created; output continues. Daemon orchestration reached beyond cache loader,
+but unstable userspace. Exact watchdog error/other names requested; leave boot
+running. Actual16.0 watchdogd extracted for ReVa; no speculative new flash.
+USB0051 capture ended100s timeout/no CDC. Root preserved.
+
 CURRENT BOOT0051 flashed BOOT-only100%/success/reboot after host Download
 confirmation. Image fbe87658...fad23, same0050 kernel +literal
 launchd_unsecure_cache=1. User reported prior bootloop during Download entry.

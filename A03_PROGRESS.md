@@ -3043,3 +3043,29 @@ USB capture session76745 started before flash; host log is
 /tmp/a03-boot0051-usb-capture.log, private tty output if enumerated is
 shim/a03/out/boot0051-usb-console.log. Physical cache-loader outcome and
 sustained bootstrap still pending; requested last screen lines/reboot state.
+
+## 2026-11-15: BOOT0051 starts daemons; repeated watchdogd crashes
+
+User reports Process[576] crashed: watchdogd, Too many corpses being created,
+and says output continues. This is evidence of launchd daemon orchestration
+beyond the cache-loader boot-task failure, but not healthy/stable userspace.
+The direct Using unsecure cache log was not transcribed. The exact watchdogd
+reason and whether other services also crash are pending screen evidence.
+USB capture0051 ended100s timeout without CDC enumeration.
+Extracted actual installed iOS16.0 watchdogd privately for ReVa; donor service
+is reference only until actual ABI/failure is inspected. No new flash/root write.
+
+Actual16.0 watchdogd ReVa: entry0x1000076c0 calls connector0x1000057bc
+before examining monitoring/test args. Connector matches IOWatchdog, opens
+type1; missing service leads to failed-to-discover then fatal helper unless
+VM detection succeeds. nm on deployed0050/0051 kernel shows no IOWatchdog
+symbols (AppleKeyStore::start and bindfs_vfsops do exist). This identifies a
+missing prerequisite, but no direct watchdog error/PC has yet been reported.
+Selector0 asks enabled with one scalar output; false takes the daemon's own
+monitoring-disabled path and sleep2/exit0 helper0x1000076a8. The donor generic
+accept-all stub is not deployed. wdt_test=no_user_checkin is checked only
+after service connection/enabled query, behind internal-diagnostics gating,
+and touches NVRAM; do not propose it as a standalone missing-service fix.
+Next: collect current failure line/other daemon names; then implement scoped
+opt-in lab IOWatchdog only if supported by crash evidence, preserving actual
+unsupported selectors and reporting that hardware watchdog is not provided.

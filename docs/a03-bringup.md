@@ -1,16 +1,15 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-15, XNU BOOT0050 boots the verified 16GiB HFSX root on
-validated USERDATA p55 and reaches Apple's launchd_cache_loader boot task.
-The preceding provisional-reply, firmware bindfs and keybag failures have
-been passed. Current physical error is abort: Unable to find AMFI, followed
-by launchd_cache_loader SIGABRT. The kernel has no AppleMobileFileIntegrity
-IOKit service. ReVa confirms the actual iOS16.0 loader's built-in
-launchd_unsecure_cache=1 lab path skips signature/trust registration.
-BOOT0051 is flashed BOOT-only with that additional argument, same0050 kernel.
-Cache-loader outcome and sustained bootstrap remain pending. Software AppleKeyStore remains an explicit opt-in lab
-provider without SEP/passcode protection. No sustained successful bootstrap
-or GUI is established. The USB CDC console has not enumerated.
+As of 2026-11-15, XNU BOOT0051 boots the verified 16GiB HFSX root on
+validated USERDATA p55 and reaches launchd daemon orchestration. The user
+reports watchdogd crashing at PID576, Too many corpses being created, and
+continuing output. This is progress beyond the earlier cache-loader abort,
+but stable userspace and GUI remain unproven. Investigating actual iOS16.0
+watchdogd and awaiting its specific failure message/other crashing daemons.
+BOOT0051 uses the same0050 kernel plus launchd_unsecure_cache=1, verified in
+the actual loader as its lab path skipping AMFI signature/trust registration.
+Software AppleKeyStore is opt-in lab state without SEP/passcode protection.
+The USB CDC console has not enumerated; root is not being reinstalled.
 
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve
