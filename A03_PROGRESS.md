@@ -3559,3 +3559,13 @@ collection route: call181d40598 converts formatted exception diagnostic, then
 Thus0119 CoreFoundation selector targets the actual exception reason owner,
 not speculative display behavior. Next runtime must verify whether handler
 ran and populated it; no Apple userspace mutation.
+
+Media dictionary clarified by exact-cache read-only code/CFString decoding:
+FigNotificationListenerCreate1954f2c90 constructs a mutable dictionary with
+notificationCenter/observedObject/notificationName/serializationQueue keys.
+StartNotifications1954f2e6c first reads notificationCenter at1954f2ea0;
+matching captured LR1954f2ea4 and CFDictionaryGetValue FAR0 prove the entire
+listener dictionary pointer is NULL, not an absent key or on-disk plist.
+Constructor returns NULL for absent predictor/object or notification name;
+which input is missing remains runtime-unproven (allocation failure also
+not excluded). Do not silently replace dictionary or fake notify success.
