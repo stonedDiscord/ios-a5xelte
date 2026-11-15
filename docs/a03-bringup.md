@@ -149,3 +149,18 @@ write-enabled USERDATA device. HFS dirty-volume/journal checks remain active.
 small RAM image in the payload; repackage without the flag to use RAM root.
 This root-selection revision requires a fresh full build and runtime test.
 No Apple launchd or SpringBoard execution is established by image preparation.
+
+
+## Independent stock-Linux reader (2026-11-15)
+
+Build BOOT-only diagnostic with matching verified Magisk base:
+
+    python3 tools/a03-linux-reader-image.py shim/a03/out/a03-linux-reader-NEW.img
+
+Requires aarch64-linux-gnu-gcc/static libc. Kernel/DT unchanged; only initramfs
+replaced. No Android init/fstab or USERDATA mount. Existing GPT CRC/range/
+identity validator gates reads/export. USB mass-storage LUN0 is a1MiB RAM
+file containing raw diagnostic text; validated USERDATA LUN1 is read-only.
+No partition opens writable and no repair/write mode. FB0 output uses queried
+Linux geometry. Host builds do not prove execution or USB enumeration; consult
+A03_PROGRESS.md for current flashed candidate and runtime evidence.

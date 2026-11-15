@@ -1,5 +1,25 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+## Current A03 handoff — 2026-11-15, Linux reader pending
+
+Current BOOT is Linux reader0001, NOT XNU0042. BOOT-only upload100%/reboot
+succeeded; user reports Samsung logo; no USB. Linux init execution unproven.
+V1 had an unjustified partition179:55 assumption, now fixed using sysfs.
+Latest UNFLASHED reader0004: shim/a03/out/a03-linux-reader-0004.img SHA256
+59ecbf0d2de5d58e77c36e6ae8e498c7e956b507f9c2f72221b5474a8e56db42.
+Unchanged stock kernel/DT, no Android init or USERDATA mount, existing GPT
+validator, partition O_RDONLY, USB RAM report LUN0 + read-only USERDATA LUN1.
+FB0 output attempted using queried geometry. Host compile/GPT/BSD checks pass.
+Next: return phone to Download, flash reader0004 BOOT-only and compare catalog
+bytes using Linux MMC. No USERDATA/protected write this session. Matching
+Magisk restore and XNU0042 remain available. Apple launchd has not run.
+
+Latest photos confirm XNU0042 direct catalog-header CMD17 at0x1097c10 returns
+zeros. Its second probe address0x1097d22 was wrong: node274*8192 gives relative
+0x2cfa6000 / absolute LBA0x1098d30. Patch0098 fixed, needs fresh CI build.
+Catalog-header zero evidence unaffected. Full evidence in A03_PROGRESS.md.
+
+
 Latest BOOT0042 output identifies the A03 USB state: `A03 USB: AON
 EB1=001eb8f3 RST1=00000000 PHY_TEST=00000000 PHY_CTRL=0000000a CTRL1=00000000
 CLK_REF=00000000`, then `MUSB clock gated; controller not accessed`. AON reset

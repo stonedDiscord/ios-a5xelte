@@ -1,5 +1,47 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+
+## 2026-11-15: independent Linux reader; corrected catalog root address
+
+Current photos IMG_20261115_012537_763.jpg/012540_967/012610_175 confirm
+BOOT0042 direct CMD17 at absolute catalog LBA0x1097c10 returns sixteen zero
+bytes. GPT CRC matches bb4c2987. HFS node0 still fails. This bypasses BSD/HFS
+but cannot yet separate on-card contents from SDMA behavior.
+
+Found second diagnostic address error: local B-tree root=274, nodeSize=8192.
+Actual root relative offset=0x2cd82000+274*8192=0x2cfa6000, absolute
+LBA0x1098d30. Previous0x1097d22 added node index as sectors. Patch0098 fixed;
+not rebuilt/flashed. Local root first32:
+0000000000000000000300400000001a00000001000a0041003000330069004f.
+Catalog-header zero evidence is unaffected by this correction.
+
+Added tools/a03-linux-reader-image.py and tools/a03-linux-reader-init.c:
+unchanged matching stock Linux kernel/DT, static init instead of Android
+init, no USERDATA mount, all partition opens O_RDONLY. Existing GPT
+CRC/range/identity validator and sysfs device numbers gate reads/export.
+Configfs mass-storage LUN0 is RAM diagnostic text; validated USERDATA LUN1
+is read-only, set before backing file. FB0 display uses queried geometry.
+This is a storage diagnostic toward launchd, not replacement iOS userspace.
+
+Reader0001 BOOT SHA256:
+6ff699daf728b0a1b451fcdaf2d154e2ee092f93d76495a6dd02abbe7aaf61a4.
+Heimdall BOOT-only upload100%, success and reboot; initial sandbox USB-open
+failure occurred before protocol, escalated retry succeeded. User reports
+Samsung logo; no USB reader. Linux init execution is UNPROVEN. V1 incorrectly
+assumed partition device179:55; CONFIG_MMC_BLOCK_MINORS=8 and extended device
+numbers make that unjustified. V1 validation failure could not expose report.
+Fixed device-number discovery, report-on-validation-failure and FB0 output.
+
+Latest UNFLASHED candidate shim/a03/out/a03-linux-reader-0004.img SHA256:
+59ecbf0d2de5d58e77c36e6ae8e498c7e956b507f9c2f72221b5474a8e56db42.
+Original kernel SHA256 retained:
+1d1266f15bb8f0f1f9f501fc763c0c7451aa7cdc7db04693ea3d5d49c2646d90.
+Static AArch64 -Wall -Wextra -Werror build PASS; newc entries/modes/ELF,
+unchanged kernel/DT checked. GPT parser and BSD harnesses PASS; Python compile
+and diff checks PASS. No Download/reader USB at last check. Next: return to
+Download, flash reader0004 BOOT-only, inspect report and USERDATA catalog.
+No USERDATA/protected-partition write this session. No launchd/SpringBoard.
+
 ## 2026-11-15: latest catalog failure remains below userspace
 
 Screenshot `IMG_20261115_004550_780.jpg` shows GPT CRC validation, USERDATA
