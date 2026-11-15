@@ -7,7 +7,8 @@ args only +a03_watchdog_disabled=1. Image SHA256
 CDC enumerated; capture21837 expired EACCES. Replacement92355 waits900s
 for tty ACL (user already asked once); private boot0056-usb-access.log.
 Need capture watchdog selector0/software stage and test --download-control.
-0116 bounded24-frame crash walker locally tested/compiled; not deployed.
+0116 bounded24-frame crash walker locally tested/compiled; CI43748416531
+fromf30d070 running, not deployed. Preserve0056 while capturing.
 Control reset unproven; bulk RX remains broken. Root/protected parts retained.
 
 CURRENT0055: USB IN works, PIO takeover did NOT fix RX (0800/count1 zero).

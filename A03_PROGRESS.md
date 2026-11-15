@@ -3432,3 +3432,6 @@ Existing bootarg/name selection/two-report cap, checked copyin/alignment and
 strictly increasing frame pointers retained. Actual patched walker host tests
 cover24-frame cap, null/unaligned FP, failed copy and nonincreasing chain PASS;
 exact kernel exception.c general-register syntax compile PASS. Not deployed.
+
+Full0116 CI43748416531 dispatched fromf30d070; BOOT0056 retained.
+No extra flash before its pending watchdog/control-reset evidence.
