@@ -1,3 +1,8 @@
+ACTIVE0060 BOOT-only upload100percent; CI43754890342 PASS39eef98.
+Capture83189 waiting USB then100s via newgrp uucp; no ACL needed.
+Exact0059 loader/ADT/args/root preserved. Need0120 actual syscall errors
+before choosing correction; stable GUI unproven.0059 control Download works.
+
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
 ACTIVE0120 CI43754890342 running; package0060 process180250 live.

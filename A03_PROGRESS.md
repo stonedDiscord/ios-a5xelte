@@ -3637,3 +3637,17 @@ com.apple.system.notification_center; failed lookup produces notify9.
 Init disabled flag instead produces8; these must not be conflated. Original
 root notifyd launch plist advertises that exact MachService. Runtime media
 failure still unproven; pending0120 boot has bounded syscall diagnostics.
+
+## 2026-11-15: BOOT0060 startup syscall diagnostic deployed
+
+CI43754890342 SUCCESS from39eef988e961424e8ba254bc539daa449437abe6.
+Packaged sources exception/USB/systemcalls/bsd Makefile match local validated
+through0120. Exact0059 loader(except image_size), ADT and args preserved;
+no RAMDisk/root rewrite. Kernel SHA256
+ eb4d7433147aa6148fd9a942e7fefe25f0fb8d35d401babb33a50988ffc0cc92
+Image SHA256
+ 2736fe2a13ac3cb7d16d881c5b505509a574f7f6f60219ee665551e7800f757a
+0059 control Download reset disconnected CDC; subsequent Heimdall detect
+PASS after transition delay.0060 BOOT-only upload100percent; runtime pending.
+Capture83189 waits900s then100s via newgrp uucp into private
+boot0060-usb-initial.log. No host USERDATA/protected partition write.
