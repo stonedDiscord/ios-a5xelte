@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT0048 physical: launchd runs boot task mount-phase-1, exits74 after
+firmware bind mount ENODEV19. Old pthread trap passed; sustained boot not yet.
+Kernel lacks bindfs_vfsops; A03 omitted portable donor0037. Profile now stages
+0037, exact config apply PASS, CI gate requires symbol. Next0049 BOOT-only.
+No root reinstall. Need Download when new kernel ready; USB still absent.
+
 CURRENT0048 audit: exact CI43724877490 ipc_port.c/.h +USB source match
 locally tested files byte-for-byte; debug-hold call in actual kern_exit.c.
 No USB/Download detected. Await pending screen report; no further flash or

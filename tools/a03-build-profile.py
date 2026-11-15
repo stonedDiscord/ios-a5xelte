@@ -83,6 +83,9 @@ def main():
     shutil.copyfile(ROOT/'xnu/patches/0089-a03-hfs-general-register-codegen.patch', a.destination/'0089-a03-hfs-general-register-codegen.patch')
     shutil.copyfile(ROOT/'xnu/patches/0090-a03-readonly-sdma-bsd.patch', a.destination/'0090-a03-readonly-sdma-bsd.patch')
     if a.ios_userspace:
+        # Apple mount -P 1 uses bindfs for preboot firmware.
+        name = '0037-sweet-config-bindfs.patch'
+        shutil.copyfile(ROOT/'xnu/patches'/name, a.destination/name)
         name = '0091-a03-entitlements-general-register-codegen.patch'
         shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
         name = '0092-a03-userdata-root-selection.patch'
@@ -115,7 +118,7 @@ def main():
         'Pinned libpthread and mockfs/HFS RAM-root.',
         'Experimental XML entitlements/platform CS_SIGNED support (0035/0036).' if a.ios_userspace else 'Minimal AMFI interface for static test init.',
         'Opt-in A03 SDMA; BOOT reads confirmed0024; USERDATA writes hardware-unverified.', '']))
-    print('A03 profile staged:', len(patches)+8+13*int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
+    print('A03 profile staged:', len(patches)+8+14*int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':

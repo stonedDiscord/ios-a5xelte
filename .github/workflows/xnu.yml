@@ -258,6 +258,10 @@ jobs:
               exit 1
             fi
           done
+          if ! nm "$kernel" | grep -F '_bindfs_vfsops' >/dev/null; then
+            echo 'A03 iOS mount tasks require bindfs, but its VFS operations are absent' >&2
+            exit 1
+          fi
           echo "A03 USB state probe linked: $kernel"
 
       - name: Compiler cache statistics

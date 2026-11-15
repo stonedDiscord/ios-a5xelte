@@ -2906,3 +2906,15 @@ no Download device currently visible. Do not infer whether host_info passed
 or flash a further trial without new device evidence. Additional read-only
 Linux audit identifies USB muxAON+374 and vendor OTG_EXT_CSR+34b as potential
 readback points; no observed wrong values or justified new MMIO writes.
+
+## 2026-11-15: BOOT0048 reaches launchd boot tasks; missing bindfs
+
+User reports userspace panic: boot task failure: mount-phase-1, exit74;
+preceding error failed to mount /usr/standalone/firmware, Operation not
+supported by device(19). This is launchd boot-task execution beyond the
+libpthread host_info assertion, not sustained successful boot. Exact0048
+kernel nm has nullfs_vfsops but NO bindfs_vfsops. A03 iOS profile omitted
+portable donor0037; matching prior donor evidence reports the same bindfs
+ENODEV/exit74 failure. Enable actual bindfs VFS, not suppress mount failure.
+0037 exact deployed config apply PASS; add required linked-symbol CI gate.
+Root stays installed; only new kernel BOOT needed. USB remains unproven.
