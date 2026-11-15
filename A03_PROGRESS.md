@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0064 initial360s capture complete
+
+Completed504774bytes SHA256
+dec6bfa097c7ab88876237faa6c26937f71d40b55c6c856fa9e39fff5f4dc352.
+Zero CRASH, four entitlement grants, three full-screen swaps. Repeated
+instance-start op6 ENOTSUP persists; no claim this hint failure is fatal.
+Backboardd/SpringBoard each have a single spawn authorization. Continued
+300s capture18693 now active in boot0064-usb-continuing.log. Diagnostic
+CI43764128179 still in Build;0064 left running. No home-screen proof.
+
 ## 2026-11-15:0064 reaches frame submission; instance notification ABI gap
 
 0064 live capture now records three successful full-screen swaps, four

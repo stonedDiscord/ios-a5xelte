@@ -1,3 +1,8 @@
+ACTIVE0064 initial360 complete504774bytes SHAdec6bfa0...dc352: zero CRASH,
+4 WI grants/3 full-screen swaps, single SB/backboard spawn authorization.
+Continuation300s18693 active boot0064-usb-continuing.log. CI43764128179
+still Build;0065 package34897 waits success. No home-screen proof.
+
 ACTIVE0064 reaches three full-screen swaps,4 entitled WI grants, no CRASH.
 New repeated499 op6/len38 ENOTSUP is work_interval_instance_start (not
 workload config); exact wrappers update7/finish8, all absent current XNU.
