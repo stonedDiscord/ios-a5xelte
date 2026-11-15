@@ -2760,3 +2760,16 @@ Heimdall detected Download; boot upload100%, success and reboot. Only BOOT
 was flashed; full verified USERDATA root preserved. Retains1x XNU font.
 User asked for A03 HOST request/reply and A03 TRAP x0/x8/x22 values.
 No new physical runtime result yet; launchd main remains unproven.
+
+## 2026-11-15: BOOT0046 identifies invalid reply right; font confirmed
+
+User reports PC0x1e41d5f5c, cache_slide0x164d8000 (unslid PC0x1cdcfdf5c,
+same cached pthread host_info assertion), dyld0x102898000,
+x19=0x16d60bde8, x0=x8=0x10000009, x20=0x102921e00,
+x21=0x16d60bdf0, x22=0x503, instruction0xd4200020,
+frames0x1e425c778/0x10289ebdc/0x1028edd08.
+XNU message.h defines0x10000009 as MACH_SEND_INVALID_REPLY, not invalid
+destination (0x10000003). x22 retains the host port name0x503. This narrows
+the failure to reply-right transport/validation; host_info handler failure is
+not established. Requested A03 HOST msg2/MIG lines to identify reply name.
+User explicitly confirms XNU font is now fine. No new flash/root write yet.

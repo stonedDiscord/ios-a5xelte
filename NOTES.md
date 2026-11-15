@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT0046 physical evidence: x0=x8=0x10000009 =
+MACH_SEND_INVALID_REPLY. host port x22=0x503; same pthread BRK after
+unsliding PC by0x164d8000. Await A03 HOST msg2/MIG/priority lines;
+investigate MIG reply TSD/right setup, do not bypass IPC validation.
+User confirms XNU font fine. Root preserved; launchd main unproven.
+
+
 CURRENT 2026-11-15: BOOT0046 flashed BOOT-only100%/success/reboot.
 CI43717108507 PASS, kernel61b680de...bce7e; BOOTa813167e...4f205.
 Adds0101 host_info/MIG/msg2 and preserved error x0/x8, host port x22 logs;
