@@ -1,5 +1,15 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+VERIFIED ROOT 2026-11-15 11:13UTC: session63894 exited0 FULL DEVICE READBACK
+PASS eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108.
+Entire16GiB root now matches source via O_DIRECT; catalog header/root correct.
+No more root reflash needed absent new evidence. Current BOOT installer0011.
+User asked visible USB status; status0015 RO image12915ef3...5c5ad4f ready,
+unflashed. Await Download, flash status0015 BOOT-only, inspect screen/USB;
+then boot XNU0042 (6c729a41...c6115) to test actual launchd. Protected
+partitions intact. No Apple launchd runtime proof yet.
+
+
 11:04UTC LIVE UPDATE: session63894 completed16GiB write (551.6s), now full
 O_DIRECT readback (first1GiB done). Do not reboot/flash until FULL DEVICE
 READBACK PASS. Next after pass: status0015 RO USB screen test, then XNU0042.

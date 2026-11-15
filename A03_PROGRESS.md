@@ -2508,3 +2508,22 @@ Current installer remains0011 while16GiB transfer is active; no interruption.
 11:03UTC: installer completed exactly16384MiB writes in551.6seconds and
 entered full O_DIRECT readback. Same live process63894; verification pending.
 No reboot/BOOT flash until process terminates with matching hash.
+
+
+## 2026-11-15 11:13UTC: full USERDATA root install independently verified
+
+Guarded installer session63894 exited0 after16384MiB writes, fsync and full
+O_DIRECT readback. Device SHA256 equals pinned source:
+eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108.
+Readback catalog header first32:
+00000000000000000100000300000003000001120009196c0000248d00000001;
+root node274 first32:
+0000000000000000000300400000001a00000001000a0041003000330069004f.
+Exactly16GiB written through GPT-validated p55-only USB LUN, no whole-card
+export, protected partitions unchanged. Source fsck read-only PASS. This is
+now full installed-byte proof, not merely Heimdall transport success.
+
+Current BOOT remains installer0011; no Apple launchd result yet. Next user
+returns Download for BOOT-only RO status0015 display test, then XNU0042 boot
+with repaired root. Never rerun installer just because physical output is
+missing; image is fully verified. Status0015 on-screen behavior unproven.
