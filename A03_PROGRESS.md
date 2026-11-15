@@ -2948,3 +2948,8 @@ Capture63535 started before Heimdall BOOT-only upload100%/success/reboot.
 No root reinstall or host USERDATA/GPT/protected-partition write. Await
 physical mount-phase progression or next boot-task failure; no sustained
 launchd/bootstrap completion claim yet. USB remains hardware-unproven.
+
+BOOT0049 host capture ended100s timeout without enumeration; host journal
+only records Download disconnect. Await user screen report; USB startup
+cannot yet replace physical transcription. No further trial justified until
+mount task outcome is observed.

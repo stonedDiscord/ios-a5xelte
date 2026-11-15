@@ -4,7 +4,7 @@ CURRENT BOOT0049 flashed BOOT-only100%/success/reboot. CI43727113402 PASS;
 kernel7cc96acf...651cb, image d93f2325...d1c18. Real bindfs_mount/vfsops
 independently verified. Same0048 cmdline/root. Await final screen/mount-phase
 progression; async question pending. Capture63535 to /tmp/a03-boot0049-usb-capture.log;
-private console log only created if tty enumerates. No sustained boot proof.
+private console log only created if tty enumerates. Capture ended100s timeout/no USB. Await screen; no sustained boot proof.
 
 CURRENT0048 physical: launchd runs boot task mount-phase-1, exits74 after
 firmware bind mount ENODEV19. Old pthread trap passed; sustained boot not yet.
