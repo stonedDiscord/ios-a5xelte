@@ -1,23 +1,24 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-15, BOOT0055 demonstrated validated USERDATA p55 HFSX boot
-and kernel logs over USB CDC. BOOT0056 is installed and enumerates; its
-runtime capture awaits tty access. Stable GUI is unproven.
+As of 2026-11-15, BOOT0056 boots validated USERDATA p55 HFSX and transfers
+kernel logs over USB CDC. Watchdogd reaches its disabled-monitoring path
+(selector0 false, software boot stage255) on two launches without a captured
+watchdogd crash. This does not implement an active hardware watchdog.
+Stable GUI is unproven.
 
-Prior captures show watchdogd trapping on missing IOWatchdog. SpringBoard asserts because
-CADisplay.displays.firstObject is nil. Mediaserverd faults in
-CFDictionaryGetValue with a null dictionary passed by
-FigNotificationListenerStartNotifications; missing initialization remains
-unresolved. Backboardd aborts through Objective-C/C++ terminate; its
-underlying exception reason is unknown.
+SpringBoard previously asserted because CADisplay.displays.firstObject is
+nil. Mediaserverd still faults in CFDictionaryGetValue with a null dictionary
+passed by FigNotificationListenerStartNotifications. Backboardd still aborts
+through Objective-C/C++ terminate; its underlying exception reason is unknown.
+0116 expands bounded crash traces to24frames to reach beyond these wrappers.
 
 Bulk USB download has no hardware ACK/reset. BOOT0055 PIO takeover did not
-fix RX: CSR0800 and one-byte zero packets persist. Do not attribute this
-solely to inherited DMA. CI43746383199 builds0115 explicit CDC SEND_BREAK
-Download escape and0114 software PMU bookkeeping for0112 opt-in disabled-
-watchdog capability. CI passed; BOOT0056 enumerates, capture awaits tty access.
-BOOT0056 preserves root/loader/ADT and adds a03_watchdog_disabled=1.
-Control reset and watchdog runtime results remain unverified.
+fix RX: CSR0800 and one-byte zero packets persist. BOOT0056 control reset
+failed before transmission: host TIOCSBRK returned EOPNOTSUPP because the ACM
+descriptor omitted CAP_BRK.0117 changes capabilities02->06; host protocol
+tests and kernel syntax pass. Combined0116+0117 CI43748823542 is building;
+reset remains hardware-unverified. Preserve root/loader/ADT and the enabled
+a03_watchdog_disabled=1 argument for the next BOOT-only test.
 Software AKS remains lab-only without SEP/passcode protection.
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve

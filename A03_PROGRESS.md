@@ -3451,3 +3451,7 @@ matching local4.14 does not have this check.0117 changes ACM capabilities
 0x02->0x06, retaining descriptors otherwise. Actual descriptor test asserts
 0x06; cumulative host test and kernel general-register syntax compile PASS.
 No evidence PMIC reset worker was reached. Full build/hardware retry required.
+
+Combined0116+0117 CI43748823542 dispatched from1ab9e92; cancellation of
+0116-only43748416531 requested. Physical Download requested once for0057.
+BOOT0056 remains installed; no new partition write after that test.

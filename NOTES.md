@@ -3,7 +3,8 @@
 ACTIVE0056 USB capture complete313123bytes/4857lines; watchdog disabled
 selector0/software stage255 confirmed twice, no watchdog CRASH. Media/backboard
 crashes persist. --download-control ioctl EOPNOTSUPP: descriptor lacks CAP_BRK.
-0117 ACM02->06 validated host+kernel; supersede0116-onlyCI43748416531.
+0117 ACM02->06 validated host+kernel; combinedCI43748823542 from1ab9e92
+started, supersedes cancelled0116-onlyCI43748416531.
 Phone still CDC, need physical Download for corrected0057 after full CI.
 Root/protected parts retained.0056 image9ec37ad1...09b880.
 
