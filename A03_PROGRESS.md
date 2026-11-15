@@ -2625,3 +2625,26 @@ rebooted. Same CI43708471929 kernel, adds existing DEVELOPMENT tunable
 unentitled_ios_sim_launch=1 and launchdsuffix=release. Root not reinstalled;
 GPT/recovery/bootloaders/EFS/NV untouched. Await screen result for iOS exec,
 dyld or next panic. Launchd user-instruction execution remains unproven.
+
+
+## 2026-11-15: BOOT0044 reaches dyld, SIGTRAP; XNU font correction
+
+User observed shared_region mapping requests from pid1(launchd), including
+not-in-trust-cache warnings, followed by namespace2/code5 exit and writing
+core to /cores/core.1. This proves userspace dyld activity in the launchd task,
+not sustained Apple launchd main execution. Namespace2=SIGNAL,5=SIGTRAP.
+Source vm_unix.c falls back to root ownership on missing trust cache; warning
+alone is not mapping-failure evidence. User let dump finish then Download.
+Flashed RO USB status0015 BOOT-only100%/success/reboot. Validated USERDATA
+USB connected with host read permission already available. Read-only catalog
+inspection: /cores exists but is EMPTY; /cores/core.1 is absent, likewise no
+launchd log file. Cannot claim core recovery; dump completion text unknown.
+Added tools/a03-read-usb-hfs.py with exact reader USB identity/LUN1/RO/capacity
+checks, source O_RDONLY and local image mode. Parser portion reused without
+any donor device path. Offline launchd stat and on-device directory reads pass.
+
+User clarified font request applies to XNU, not USB. Found pinned donor0003
+has FBCON_SCALE2 while local donor patch already has1; A03 pulls pinned donor,
+so local patch was not used. A03 profile now transforms pinned2 to1, yielding
+8x16 cells /90columns x100rows at720x1600 instead of16x32 /45x50. USB untouched.
+New font is source-only until next kernel build and BOOT test.

@@ -57,6 +57,7 @@ def main():
     (a.destination/'0019-stage-libpthread.sh').write_bytes(pthread_stage)
     (a.destination/'0026-stage-hfs.sh').write_bytes(hfs_stage)
     changes = {
+        '0003-sweet-framebuffer-serial-console.patch': [('FBCON_SCALE     2', 'FBCON_SCALE     1')],
         '0004-sweet-machine-config.patch': [('SWEET_VTIMER_INTID        19','SWEET_VTIMER_INTID        27')],
         '0010-sweet-early-framebuffer-debug.patch': [
             ('0x9c000000','0x9e000000'),('2368 * 4320','1568 * 2880'),
