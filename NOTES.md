@@ -1,3 +1,11 @@
+ACTIVE0064 package verified CI43762755721 SUCCESS640a2a1,12 exact sources,
+identical loader(except size)/ADT/root; sole arg a03_work_interval=1.
+BOOTf98965ef...13d05. CDC reset from0063 worked; Download observed.
+Deploy87223 BOOT-only then360s capture boot0064-usb-initial.log. Need check
+upload result, entitled work-interval grant, CRASH/swaps/SpringBoard evidence.
+0063 late capture interrupted deliberately4006bytes SHA3d8b239d...3d687,
+zero CRASH.0125/0126 remain unflashed follow-up diagnostics.
+
 ACTIVE0063 extended600s completed90815bytes SHA07d49975...d4193, zero
 CRASH, swaps4..11. Capture stopped normally, CDC remains; no GUI proof.
 0124 CI43762755721 still Build21:28UTC, package54915 live.0126 follow-up

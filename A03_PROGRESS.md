@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0124 full CI success and verified0064 package
+
+CI43762755721 SUCCESS from640a2a1. Twelve downloaded source comparisons
+against frozen0124 source PASS.0064 loader unchanged excluding image_size,
+ADT identical, root unchanged; sole added arg a03_work_interval=1.
+Kernel SHA2567a20a47f23c1ec5e7c6774e823012ae95431389ff86512b8c5443e0007f4e1b4.
+BOOT SHA256f98965ef3f0f05f98a18ff36cd5dea9834869d5308b799445786022f36113d05.
+Late0063 capture intentionally stopped before reset:4006bytes SHA256
+3d8b239decc650bfb4c6c3e47908da3d7ea970615110277e69d28fb85063d687,
+zero CRASH. CDC Download-control reset succeeds; Samsung Download now
+observed. Deployment87223 proceeds authorized BOOT-only flash, then360s
+initial capture. Upload/runtime result pending; no home-screen proof.
+
 ## 2026-11-15: extended0063 capture complete; SpringBoard diagnostic coverage
 
 Extended600s capture completed90815bytes SHA256
