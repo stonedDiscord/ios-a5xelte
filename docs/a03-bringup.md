@@ -7,12 +7,20 @@ backboardd successfully submits full-screen720x1600 BGRA frames. The user
 physically reports an Apple logo. These observations do not establish a
 rendered SpringBoard home screen or working input.
 
-Earlier Sandbox scalar-check and HFS atomic-save failures are repaired in
-this checkpoint. Bounded captures show no new crash records. Backboardd
-still records a Caches mkdir EACCES and work-interval CREATE2 EPERM;
-neither is yet proven to block the GUI. An opted-in entitlement-based
-work-interval grant is under isolated CI/runtime evaluation. See the newest
-A03_PROGRESS.md entry and top NOTES.md handoff for exact current test state.
+Earlier Sandbox scalar-check and HFS atomic-save failures are repaired.
+BOOT0064 hardware confirms the entitled backboardd work-interval privilege
+grant; subsequent op6 ENOTSUP is work_interval_instance_start, not workload
+configuration, and is not yet established as the GUI blocker. BOOT0065
+confirms SpringBoard executes startup syscalls. Generic corpse records also
+confirm analyticsd, dmd and tccd crashes; the earlier selected-process crash
+logger omitted these names, so its silence did not establish no crashes.
+
+BOOT0066 is under runtime capture with a corrected default-surface dimension
+ABI and expanded crash tracing. BOOT0067 is building a bounded HOST log cap
+and read-only SpringBoard/backboardd thread snapshots. Successful host-info
+IPC spam is not itself crash evidence; no measured speedup or home-screen
+success is established. See newest A03_PROGRESS.md and NOTES.md for live
+build/deployment state and exact artifacts.
 
 BOOT0057 control Download reset is hardware-confirmed: run
 python3 tools/a03-usb-console.py --download-control --wait 30 --duration 10
