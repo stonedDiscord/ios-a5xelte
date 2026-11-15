@@ -3353,3 +3353,11 @@ minus slide0bf3c000 = CoreFoundation181cb11b0; caller1954f2ea4 in
 FigNotificationListenerStartNotifications. Backboardd SIGABRT stack passes
 libobjc objc_terminate and libc++abi terminate path; underlying exception
 reason not printed. Neither supports an arbitrary hardware-provider fix.
+
+Read-only watchdogd audit found additional prerequisite before selector0:
+0x100009d08 requires IOPropertyMatch IOPMUPrimary, and disabled cleanup writes
+IOPMUBootStage255. Customer build ignores internal-only -wdt_no_pmu.0114
+provides strict one-key integer0..255 software bookkeeping property, no
+PMU hardware writes, unknown property dictionaries unsupported.0112 alone
+will remain disabled in the next USB-only test. Host property shape/range
+tests and kernel C++ syntax PASS. Full build/runtime pending.

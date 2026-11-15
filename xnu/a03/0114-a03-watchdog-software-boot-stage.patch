@@ -1,0 +1,40 @@
+--- a/iokit/Kernel/arm/A03Watchdog.cpp
++++ b/iokit/Kernel/arm/A03Watchdog.cpp
+@@ -9,11 +9,14 @@
+ #include <IOKit/IOKitKeys.h>
+ #include <IOKit/IOLib.h>
+ #include <pexpert/pexpert.h>
++#include <libkern/c++/OSDictionary.h>
++#include <libkern/c++/OSNumber.h>
+ 
+ class IOWatchdog : public IOService {
+  OSDeclareDefaultStructors(IOWatchdog);
+ public:
+  bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++ IOReturn setProperties(OSObject *properties) APPLE_KEXT_OVERRIDE;
+ };
+ OSDefineMetaClassAndStructors(IOWatchdog, IOService);
+ bool IOWatchdog::start(IOService *provider) {
+@@ -21,10 +24,22 @@
+  PE_parse_boot_argn("a03_watchdog_disabled",&enabled,sizeof(enabled));
+  if(enabled!=1 || !IOService::start(provider))return false;
+  setProperty(kIOUserClientClassKey,"A03WatchdogUserClient");
++ /* Required by watchdogd before its disabled-capability query. This is
++  * software boot-stage bookkeeping only; no Apple PMU/MMIO is exposed. */
++ setProperty("IOPMUPrimary",1ULL,32);
+  registerService();
+  IOLog("A03 WDT: registered; userspace monitoring disabled (no hardware watchdog)\n");
+  return true;
+ }
++IOReturn IOWatchdog::setProperties(OSObject *properties) {
++ OSDictionary *dict=OSDynamicCast(OSDictionary,properties);
++ if(!dict || dict->getCount()!=1)return kIOReturnUnsupported;
++ OSNumber *stage=OSDynamicCast(OSNumber,dict->getObject("IOPMUBootStage"));
++ if(!stage || stage->unsigned64BitValue()>255)return kIOReturnBadArgument;
++ if(!setProperty("IOPMUBootStage",stage))return kIOReturnNoMemory;
++ IOLog("A03 WDT: software boot stage %llu (no PMU write)\n",stage->unsigned64BitValue());
++ return kIOReturnSuccess;
++}
+ class A03WatchdogUserClient : public IOUserClient {
+  OSDeclareDefaultStructors(A03WatchdogUserClient);
+ public:
