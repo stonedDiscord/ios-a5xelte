@@ -3,7 +3,7 @@
 Only opens a tty with exact diagnostic serial + VID/PID. Optional monitor
 commands are sent only when explicitly requested; no partition access.
 """
-import argparse,os,select,sys,termios,time
+import argparse,fcntl,os,select,sys,termios,time
 from pathlib import Path
 
 def find():
@@ -26,6 +26,7 @@ def main():
     ap.add_argument('--wait',type=float,default=120,help='seconds to wait for enumeration')
     ap.add_argument('--duration',type=float,default=300,help='maximum capture seconds')
     ap.add_argument('--command',action='append',default=[],help='monitor command; repeat for multiple commands')
+    ap.add_argument("--download-control",action="store_true",help="request Download reset over CDC SEND_BREAK (0115 required)")
     ap.add_argument('--interactive',action='store_true',help='forward terminal input to USB monitor')
     a=ap.parse_args();deadline=time.monotonic()+a.wait;dev=None
     while dev is None:
@@ -35,7 +36,7 @@ def main():
         time.sleep(.25)
     # A newly enumerated tty can need the host ACL fix before it is openable.
     # Keep waiting for this exact identity within the original wait budget.
-    flags=(os.O_RDWR if a.command or a.interactive else os.O_RDONLY)|os.O_NOCTTY|os.O_NONBLOCK
+    flags=(os.O_RDWR if a.command or a.interactive or a.download_control else os.O_RDONLY)|os.O_NOCTTY|os.O_NONBLOCK
     permission_reported=False
     while True:
         try:
@@ -63,6 +64,9 @@ def main():
             attr[4]=attr[5]=termios.B115200
             attr[6][termios.VMIN]=1;attr[6][termios.VTIME]=0
             termios.tcsetattr(fd,termios.TCSANOW,attr)
+            if a.download_control:
+                # Linux TIOCSBRK -> CDC SEND_BREAK value0xffff. Explicit reset only.
+                fcntl.ioctl(fd,0x5427)  # Linux asm-generic/ioctls.h TIOCSBRK
             for command in a.command:
                 if len(command)>126 or any(ord(c)<32 or ord(c)>126 for c in command):
                     raise RuntimeError('Commands must contain at most126 printable ASCII characters')

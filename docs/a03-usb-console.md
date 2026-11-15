@@ -160,3 +160,8 @@ unsolicited count1 zero bytes before the command retry.0113 next test
 clears documented SPRD DMA channel enables, endpoint DMA state, and flushes
 EP1 twice before attachment. This is a candidate correction; no interactive
 command success yet. Existing capture proved only device-to-host logs.
+
+0115 candidate offers explicit control-endpoint Download request independent
+of bulk OUT: python3 tools/a03-usb-console.py --download-control --duration 10
+This sends CDC SEND_BREAK(0xffff); only use with0115 kernel. No automatic
+fallback or break is sent by ordinary captures. Hardware reset pending.

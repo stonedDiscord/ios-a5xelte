@@ -11,7 +11,8 @@ with tempfile.TemporaryDirectory(prefix='a03-cdc-source-') as d:
               '0109-a03-usb-supply-flat-endpoints.patch',
               '0110-a03-usb-download-command.patch',
               '0111-a03-usb-receive-diagnostics.patch',
-              '0113-a03-usb-pio-takeover.patch'):
+              '0113-a03-usb-pio-takeover.patch',
+              '0115-a03-download-control-escape.patch'):
   subprocess.run(['git','apply','--include=bsd/dev/a03_usb_console.c',
                   str(root/'xnu/a03'/name)],cwd=d,check=True)
  source=(Path(d)/'bsd/dev/a03_usb_console.c').read_text()
@@ -89,6 +90,9 @@ int main(void) {
  /* Invalid oversized packet is drained but cannot request a reset. */
  memset(rx_fifo,'x',65);memcpy(rx_fifo,"download\\n",9);rx_pos=0;
  ep_write(1,8,65);ep_write(1,6,1);poll_usb();assert(!download_requested && rx_pos==65);
+ unsigned char resetctl[8]={0x21,0x23,0xff,0xff,0,0,0,0};
+ setup(resetctl);assert(download_requested && ep_read(0,2)==0x48);download_requested=0;
+ resetctl[2]=resetctl[3]=0;setup(resetctl);assert(!download_requested);
  input_char('r');input_char('e');input_char('g');input_char('s');input_char('\\n');
  char cmd[128];assert(a03_usb_debug_command(cmd,sizeof(cmd)) && cmd[0]=='r');
  puts("A03 cumulative CDC descriptor/control-request/command checks PASS (host only)");

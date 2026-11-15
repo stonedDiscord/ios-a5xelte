@@ -3378,3 +3378,17 @@ enumeration then100s. Watchdog0114 CI43746031809 frome55d573 started.
 
 BOOT0055 kernel SHA256
 f527d6df8be4cf30d0082ad4d89263a70a205295067c558bd97b3d11f5c630b8.
+
+BOOT0055 enumerated46s after flash; capture opened with ACL available.
+PIO takeover logs RXCSR0800 despite writes clearing DMA mode. First4 RX
+packets still count1/data00; newline/download10bytes no ACK/reset. This
+contradicts the claim that simply clearing inherited DMA fixes input.
+Capture375665bytes/5183lines SHA256
+f72be59d47bff337666edb26eece67bd22dfc1bd0c9425aa99c93a4a9e6097b0.
+
+0115 adds explicit CDC SEND_BREAK valueffff/index0 escape to same bounded
+sync/reset worker. Host --download-control uses Linux TIOCSBRK5427, only
+when explicitly requested. Ordinary capture/CDC open and break-clear0 do
+not trigger reset. EP0 setup path works for enumeration; reset still must
+be hardware tested. Bulk command remains for eventual RX repair. Actual
+protocol positive/clear-break tests and kernel syntax PASS.

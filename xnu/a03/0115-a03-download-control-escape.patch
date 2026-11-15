@@ -1,0 +1,14 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -197,6 +197,11 @@
+  if(type==1 && request==11 && value==0 && index<2 && !length) { ep_write(0,2,0x48);return; }
+  if(type==0x21 && request==0x20 && length==7) { control_out=1;ep_write(0,2,0x40);return; }
+  if(type==0xa1 && request==0x21) { respond(line_coding,7,length);return; }
++ /* Explicit host download escape: CDC SEND_BREAK indefinite. EP0 remains
++  * usable if the bulk OUT path is wedged. Clearing break never resets. */
++ if(type==0x21 && request==0x23 && index==0 && value==0xffff && !length) {
++  download_requested=1;ep_write(0,2,0x48);return;
++ }
+  if(type==0x21 && (request==0x22||request==0x23) && !length) { ep_write(0,2,0x48);return; }
+  if(type==2 && request==1 && value==0 && !length) {
+   unsigned ep=index&15;if(ep==1||ep==2) { w8(0x0e,ep);ep_write(ep,(index&0x80)?2:6,(index&0x80)?0x2048:0x90);w8(0x0e,0);ep_write(0,2,0x48);return; }
