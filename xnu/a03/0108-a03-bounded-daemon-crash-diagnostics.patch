@@ -1,0 +1,143 @@
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1840,6 +1840,41 @@
+ 	}
+ }
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++/* Bounded USB/screen diagnostics independent of corpse/ReportCrash availability. */
++static bool
++a03_should_log_daemon_crash(const char *name, int sig)
++{
++    uint32_t enabled = 0;
++    PE_parse_boot_argn("a03crash_log", &enabled, sizeof(enabled));
++    if (enabled != 1 || (sig != SIGABRT && sig != SIGTRAP && sig != SIGSEGV &&
++        sig != SIGBUS && sig != SIGILL && sig != SIGKILL)) {
++        return false;
++    }
++    static _Atomic uint32_t counts[11];
++    unsigned slot;
++    if (!strcmp(name, "watchdogd")) slot = 0;
++    else if (!strcmp(name, "backboardd")) slot = 1;
++    else if (!strcmp(name, "SpringBoard")) slot = 2;
++    else if (!strcmp(name, "launchd")) slot = 3;
++    else if (!strcmp(name, "xpcproxy")) slot = 4;
++    else if (!strcmp(name, "bluetoothd")) slot = 5;
++    else if (!strcmp(name, "identityservices")) slot = 6;
++    else if (!strcmp(name, "fairplayd.H2") || !strcmp(name, "fairplayd")) slot = 7;
++    else if (!strcmp(name, "mediaserverd")) slot = 8;
++    else if (!strcmp(name, "configd")) slot = 9;
++    else if (!strcmp(name, "lockdownd")) slot = 10;
++    else return false;
++    /* Saturate: never wrap and resume flooding after a long crash loop. */
++    uint32_t count = atomic_load_explicit(&counts[slot], memory_order_relaxed);
++    while (count < 2) {
++        if (atomic_compare_exchange_weak_explicit(&counts[slot], &count, count + 1,
++            memory_order_relaxed, memory_order_relaxed)) return true;
++    }
++    return false;
++}
++#endif
++
+ void
+ proc_prepareexit(proc_t p, int rv, boolean_t perf_notify)
+ {
+@@ -1852,6 +1887,22 @@
+ 	struct rusage_superset *rup;
+ 	int kr = 0;
+ 	int create_corpse = FALSE;
++
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if (p == current_proc() && WIFSIGNALED(rv) &&
++        a03_should_log_daemon_crash(p->p_comm, WTERMSIG(rv))) {
++        extern void a03_daemon_crash_log(const char *, int, int, uint64_t, uint64_t);
++        a03_daemon_crash_log(p->p_comm, proc_getpid(p), WTERMSIG(rv),
++            ((uint64_t)ut->uu_exception << 32) | (uint32_t)ut->uu_code,
++            ut->uu_subcode);
++        if (PROC_HAS_EXITREASON(p)) {
++            char *desc = exit_reason_get_string_desc(p->p_exit_reason);
++            printf("CRASH %s reason ns %u code 0x%llx: %.160s\n", p->p_comm,
++                p->p_exit_reason->osr_namespace, p->p_exit_reason->osr_code,
++                desc != NULL ? desc : "(none)");
++        }
++    }
++#endif
+ 
+ 	if (p->p_crash_behavior != 0 || p == initproc) {
+ 		proc_handle_critical_exit(p, rv);
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -941,6 +941,63 @@
+ #endif
+ 
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++/* Read-only crash evidence before corpse limits discard the report. The caller
++ * selects processes, gates the boot argument and permits two reports per name.
++ * Saved user state belongs to the exiting thread; no task mutation or resume.
++ */
++void a03_daemon_crash_log(const char *name, int pid, int sig, uint64_t code, uint64_t subcode);
++
++void
++a03_daemon_crash_log(const char *name, int pid, int sig, uint64_t code, uint64_t subcode)
++{
++	thread_t thread = current_thread();
++	task_t task = current_task();
++	arm_saved_state_t *ss = find_user_regs(thread);
++	uint64_t slide = 0, mh = task->mach_header_vm_address;
++
++	vm_shared_region_t sr = vm_shared_region_get(task);
++	if (sr != NULL) {
++		slide = sr->sr_slide;
++		vm_shared_region_deallocate(sr);
++	}
++	printf("CRASH %s[%d] sig %d code 0x%llx sub 0x%llx slide 0x%llx mh 0x%llx\n",
++	    name, pid, sig, code, subcode, slide, mh);
++	if (ss == NULL || !is_saved_state64(ss)) {
++		return;
++	}
++	uint64_t x19 = saved_state64(ss)->x[19];
++	char message[160];
++	vm_size_t copied = 0;
++	if (x19 != 0 && copyinstr((user_addr_t)x19, message, sizeof(message), &copied) == 0) {
++		bool printable = copied > 1;
++		for (vm_size_t i = 0; i + 1 < copied; i++) {
++			if ((unsigned char)message[i] < 32 || (unsigned char)message[i] > 126) printable = false;
++		}
++		if (printable) printf("CRASH %s x19: %s\n", name, message);
++	}
++	uint64_t fp = get_saved_state_fp(ss);
++	printf("CRASH %s pc 0x%llx lr 0x%llx sp 0x%llx fp 0x%llx far 0x%llx\n", name,
++	    get_saved_state_pc(ss), get_saved_state_lr(ss), get_saved_state_sp(ss), fp,
++	    (uint64_t)saved_state64(ss)->far);
++
++	char line[200];
++	int n = snprintf(line, sizeof(line), "CRASH %s bt", name);
++	for (int i = 0; i < 6 && fp != 0 && (fp & 7) == 0 && n < (int)sizeof(line) - 20; i++) {
++		uint64_t frame[2];
++		if (copyin((user_addr_t)fp, frame, sizeof(frame)) != 0) {
++			break;
++		}
++		n += snprintf(line + n, sizeof(line) - n, " 0x%llx", frame[1]);
++		if (frame[0] <= fp) {
++			break;
++		}
++		fp = frame[0];
++	}
++	printf("%s\n", line);
++}
++#endif /* ARM64_BOARD_CONFIG_SWEET */
++
+ kern_return_t
+ bsd_exception(
+ 	exception_type_t        exception,
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -95,6 +95,7 @@
+ 
+ # A03: BSD is a separate make target from osfmk.
+ bsd_init.o_CFLAGS_ADD += -mgeneral-regs-only
++kern_exit.o_CFLAGS_ADD += -mgeneral-regs-only
+ a03_usb_console.o_CFLAGS_ADD += -mgeneral-regs-only
+ a03_emmc.o_CFLAGS_ADD += -mgeneral-regs-only
+ 

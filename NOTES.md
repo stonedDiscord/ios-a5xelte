@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE iOS boot goal:0108 crash evidence completed/locally validated against
+exact0052; mediaserverd/configd/lockdownd included, two reports per name.
+Next full CI/BOOT0053 adds only kernel diagnostics +a03crash_log=1, retains
+working0109 USB/root/loader/ADT. Need USB capture of reasons/PCs before fixes.
+
+
 CURRENT USB0052 BULK LOG TRANSFER CONFIRMED after user tty ACL fix.
 45second capture289235 bytes/5002 lines: private
 shim/a03/out/boot0052-usb-perms-fixed.log. Supply PD1->0, voltage d2 retained;

@@ -3206,3 +3206,19 @@ Started an additional300second capture79265 to ignored
 shim/a03/out/boot0052-usb-continuing.log (host stderr/stdout
 /tmp/a03-boot0052-usb-continuing.log). BOOT0052/root remain installed; no
 phone writes/reboot in this follow-up.0108 WIP preserved, not deployed.
+
+## 2026-11-15: resume iOS boot goal with USB crash evidence
+
+User asks to advance iOS boot using the working USB tooling. Finished0108
+against exact deployed0052 sources: opt-in a03crash_log=1, two saturating
+reports per selected daemon, before corpse limits. Added actually observed
+mediaserverd/configd/lockdownd; corrected identityservicesd p_comm truncation
+to16characters. Prints signal/exception, exit reason, user PC/LR/SP/FP/FAR,
+cache slide/main header, up to6frames and bounded printable x19 text.
+Read-only diagnostics do not bypass exits or create providers.
+
+Actual-source boot-gate/name/two-report saturation tests PASS, exact0052
+patch apply/reverse PASS, both affected C files arm64 kernel syntax using
+actual CI flags plus -mgeneral-regs-only PASS. Existing0108 profile/workflow
+WIP now validated for this diagnostic build; full CI/runtime still pending.
+Next0053 uses0052 loader/ADT/root/args plus a03crash_log=1. No root rewrite.
