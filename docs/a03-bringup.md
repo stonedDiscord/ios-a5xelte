@@ -7,8 +7,8 @@ been passed. Current physical error is abort: Unable to find AMFI, followed
 by launchd_cache_loader SIGABRT. The kernel has no AppleMobileFileIntegrity
 IOKit service. ReVa confirms the actual iOS16.0 loader's built-in
 launchd_unsecure_cache=1 lab path skips signature/trust registration.
-BOOT0051 is prepared with only that additional argument, same0050 kernel.
-It is not flashed yet. Software AppleKeyStore remains an explicit opt-in lab
+BOOT0051 is flashed BOOT-only with that additional argument, same0050 kernel.
+Cache-loader outcome and sustained bootstrap remain pending. Software AppleKeyStore remains an explicit opt-in lab
 provider without SEP/passcode protection. No sustained successful bootstrap
 or GUI is established. The USB CDC console has not enumerated.
 

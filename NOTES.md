@@ -1,5 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT0051 flashed BOOT-only100%/success/reboot after host Download
+confirmation. Image fbe87658...fad23, same0050 kernel +literal
+launchd_unsecure_cache=1. User reported prior bootloop during Download entry.
+Await cache-loader/next screen lines or reboot state; no successful sustained
+bootstrap claim. USB capture76745 at /tmp/a03-boot0051-usb-capture.log pending.
+Root preserved; no host USERDATA/GPT/protected-partition write.
+
 ACTIVE BOOT0050 physical: launchd_cache_loader abort Unable to find AMFI;
 SIGABRT boot-task failure. Advanced past prior keybag failure; sustained
 bootstrap unproven. ReVa actual16.0 loader confirms literal

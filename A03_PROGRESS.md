@@ -3030,3 +3030,16 @@ ramdisk/DT/tail identical. Android header digest updated by verified packer.
 No new CI needed, no root reinstall or device write yet. Host Download absent;
 physical Download transition requested. Next: BOOT-only flash and observe
 cache-loader completion/next actual error. Do not preemptively stub daemons.
+
+## 2026-11-15: BOOT0051 cache-loader option deployed
+
+User reports prior image bootlooped while attempting Download buttons, then
+confirms ready. Host independently detected Download mode. Rechecked0051
+SHA256 fbe8765853e9b542c61505b0fa2c677ee014311d50bf18e9be3ac932a11fad23
+and cmdline with literal launchd_unsecure_cache=1. Heimdall BOOT-only upload
+reached100%, reported boot upload successful and rebooted. No host USERDATA,
+GPT, recovery, bootloader or EFS/NV write. Same0050 kernel/root/font retained.
+USB capture session76745 started before flash; host log is
+/tmp/a03-boot0051-usb-capture.log, private tty output if enumerated is
+shim/a03/out/boot0051-usb-console.log. Physical cache-loader outcome and
+sustained bootstrap still pending; requested last screen lines/reboot state.
