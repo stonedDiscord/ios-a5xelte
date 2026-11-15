@@ -3,7 +3,7 @@
 ACTIVE0053: USB reattached47s after flash;356191byte capture saved.
 Download command hardware test FAILED: no ACK/reset despite host queue0.
 Root retained;0053 still running, USB logs available.0111 receive diagnostics
-next build; do not claim reboot command functional.0108 watchdogd PC is
+CI43742555051 running fromf28fc71; do not claim reboot command functional.0108 watchdogd PC is
 main Mach-O+0xb308, bt+0x58a4/+0x770c. Exact logs private.
 
 ACTIVE 2026-11-15: BOOT0053 installed BOOT-only, upload100%/success/reboot.

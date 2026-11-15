@@ -3272,3 +3272,6 @@ Download works.0111 adds first4 RX packet byte logs and first4 periodic RX
 CSR/count/indexed/FIFO state snapshots to isolate transport before PMIC.
 Host test now exercises actual poll_usb FIFO->parser with split download
 line and rejects oversized packets. Kernel syntax compile PASS.
+
+Receive-diagnostic CI43742555051 started fromf28fc71. BOOT0053 remains
+installed; next diagnostic not yet built/flashed.
