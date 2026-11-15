@@ -3375,3 +3375,6 @@ Exact CI USB source equals tested source;0054 loader/ADT/args preserved,
 0112 opt-in remains OFF pending0114 full build. BOOT-only upload100percent,
 success/reboot. No host root/protected write. Capture99106 waiting240s for
 enumeration then100s. Watchdog0114 CI43746031809 frome55d573 started.
+
+BOOT0055 kernel SHA256
+f527d6df8be4cf30d0082ad4d89263a70a205295067c558bd97b3d11f5c630b8.
