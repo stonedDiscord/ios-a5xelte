@@ -1,20 +1,22 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-15, BOOT0056 boots validated USERDATA p55 HFSX and transfers
-kernel logs over USB CDC. Watchdogd reaches its disabled-monitoring path
-(selector0 false, software boot stage255) on two launches without a captured
-watchdogd crash. This does not implement an active hardware watchdog.
-Stable GUI is unproven.
+As of 2026-11-15, BOOT0059 boots validated USERDATA p55 HFSX and transfers
+kernel logs over USB CDC. Watchdogd reaches its disabled-monitoring path;
+this does not implement an active hardware watchdog. Stable GUI is unproven.
 
-SpringBoard previously asserted because CADisplay.displays.firstObject is
-nil. Mediaserverd still faults in CFDictionaryGetValue with a null dictionary
-passed by FigNotificationListenerStartNotifications. Backboardd still aborts
-through Objective-C/C++ terminate; its underlying exception reason is unknown.
-0116 expands bounded crash traces to24frames to reach beyond these wrappers.
+BOOT0059 captures the exact backboardd exception: NSInvalidArgumentException,
+NSURL initFileURLWithPath receives a nil string. Startup system-container
+path resolution is the current lead; it is not fixed. Mediaserverd still
+passes a null notification-listener dictionary to CFDictionaryGetValue
+while waiting for AirPlay route predictions. Its missing constructor input
+is not yet runtime-proven. Bounded crash annotations now expose framework
+termination messages as well as PCs/backtraces.
 
 BOOT0057 control Download reset is hardware-confirmed: run
 python3 tools/a03-usb-console.py --download-control --wait 30 --duration 10
 with host tty access. CDC disconnects and Heimdall detects Download mode.
+If this session lacks uucp despite account membership, run capture/control
+from a newgrp uucp shell; no persistent tty ACL change is required.
 This uses explicit CDC SEND_BREAKffff; ordinary capture does not request it.
 Bulk line download remains broken/unverified; PIO takeover did not fix RX.
 0117 advertises ACM CAP_BRK required by current Linux before sending break.
