@@ -3669,3 +3669,14 @@ userspace patch.32 bounded reports, policy registration only for value1.
 Actual-source host tests unsupported ops/faults/null/result width/log cap
 PASS; sweet_amfi.c general-register kernel compile PASS. Full CI/runtime
 required. This repairs an observed missing API, not a claim media is fixed.
+
+BOOT0060 initial100s capture completed:494160bytes/6744splitlines SHA256
+038949c56f1d04a6d70c716f9d86a84cedb68de223ed866bea0273f303f93278.
+Runtime cache slide08074000. Two bounded backboardd reports retain nil URL
+exception; two media SIGSEGV reports retain null listener dictionary. Logged
+syscall286 ESRCH is gettid(no per-thread override), not missing process:
+actual kern_prot.c explicitly defines that expected case. Avoid treating
+all diagnostic errno lines as blockers. Bootloader/USERDATA unchanged.
+0121 CI43756243470 running fromd640287. Package0061 session16037 waits for
+success and exact source check; will preserve0060 loader/ADT/root and add
+only a03_sandbox_disabled=1. No0061 flash until full build/package verified.

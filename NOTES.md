@@ -1,3 +1,10 @@
+ACTIVE0121 CI43756243470 fromd640287 running; package0061 session16037.
+0060 capture83189 complete494160bytes; media null listener/backboard nil
+path persist. Sandbox op2 errno103 proven.0061 adds only explicit sandbox
+check-mode arg, pending verified CI/package then authorized BOOT-only test.
+Candidate sweet_amfi.c in /tmp/a03-ci0053 includes0121 now; avoid stale
+0059/0060 full-tree comparisons against that changed file.
+
 ACTIVE0121:0060 proves Sandbox op2 ENOPOLICY103 in all four targets.
 Opt-in a03_sandbox_disabled=1 scalar-check policy prepared/tested/kernel
 compile PASS; unknown ops ENOTSUP. Need CI then0061, only add that arg.
