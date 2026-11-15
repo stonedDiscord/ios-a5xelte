@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT0054 flashed BOOT-only100%/success/reboot; capture16470 waiting.
+0112 opt-in disabled-watchdog capability locally tested; full CI pending.
+0053 watchdogd missing IOWatchdog confirmed by runtime PC+matching BRK.
+SpringBoard main CADisplay assertion decoded; no display patch yet.
+
 CURRENT: CI43742555051 SUCCESS; BOOT0054 receive-diagnostic ready UNFLASHED.
 Image e5082d921d19c084b63d0f46a2c369dda665e10b1196cf0f4e0d2b633614511a.
 Exact CI source matches tested source;0053 loader/ADT/args preserved.

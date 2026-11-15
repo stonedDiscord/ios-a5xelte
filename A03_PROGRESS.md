@@ -3298,3 +3298,25 @@ Independent check confirms0053 loader/ADT/args retained and exact CI USB
 source equals locally tested source. No RAMDisk/root rewrite. Host still
 sees CDC, not Download; physical transition requested for next BOOT test.
 No working Download-command claim.
+
+## 2026-11-15: runtime causes narrowed; BOOT0054 deployed
+
+BOOT0053 watchdogd PC main+0xb308 matches BRK at actual iOS16 watchdogd
+0x10000b308: connect_to_kext unexpectedly failed, unable to lookup watchdog
+KEXT service. This is now runtime-confirmed missing IOWatchdog, not only
+a string-based candidate. Its selector0 boolean false takes existing
+userspace-monitoring-disabled cleanup/exit path.0112 adds opt-in
+a03_watchdog_disabled=1 service, open type1 only, selector0 false only;
+unknown selectors unsupported and argument shapes checked. No hardware
+watchdog/check-in success fiction. Host actual-source gate/type/shape tests
+and two kernel C++ syntax compiles PASS; full build/runtime pending.
+
+SpringBoard trap0x19af979a4 (unslid) decodes assertion: failed to find the
+main CADisplay. Branch comes from nil result in FBSDisplayMonitor init;
+this identifies missing display discovery, not enough for an arbitrary
+display stub. Apple code extracted/read only under private /tmp files.
+
+Host detected physical Download. BOOT0054 e5082d92...4511a flashed only
+boot,100percent/success/reboot; no host USERDATA or protected writes.
+Capture16470 waits240seconds for USB, then90seconds. Need RX state/packet
+evidence and Download retry.

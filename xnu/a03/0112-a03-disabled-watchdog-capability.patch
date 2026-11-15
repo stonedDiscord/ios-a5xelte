@@ -1,0 +1,84 @@
+--- /dev/null
++++ b/iokit/Kernel/arm/A03Watchdog.cpp
+@@ -0,0 +1,60 @@
++/* A03 lab watchdog presence with truthful disabled-monitoring capability.
++ * Actual iOS16 watchdogd queries selector0 before starting monitoring; returning
++ * false takes its built-in disabled path. No hardware watchdog is armed and
++ * check-ins are not accepted. Missing-provider trap confirmed on BOOT0053. */
++#include <pexpert/arm64/board_config.h>
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <IOKit/IOService.h>
++#include <IOKit/IOUserClient.h>
++#include <IOKit/IOKitKeys.h>
++#include <IOKit/IOLib.h>
++#include <pexpert/pexpert.h>
++
++class IOWatchdog : public IOService {
++ OSDeclareDefaultStructors(IOWatchdog);
++public:
++ bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
++};
++OSDefineMetaClassAndStructors(IOWatchdog, IOService);
++bool IOWatchdog::start(IOService *provider) {
++ uint32_t enabled=0;
++ PE_parse_boot_argn("a03_watchdog_disabled",&enabled,sizeof(enabled));
++ if(enabled!=1 || !IOService::start(provider))return false;
++ setProperty(kIOUserClientClassKey,"A03WatchdogUserClient");
++ registerService();
++ IOLog("A03 WDT: registered; userspace monitoring disabled (no hardware watchdog)\n");
++ return true;
++}
++class A03WatchdogUserClient : public IOUserClient {
++ OSDeclareDefaultStructors(A03WatchdogUserClient);
++public:
++ bool initWithTask(task_t task, void *security, UInt32 type,
++     OSDictionary *properties) APPLE_KEXT_OVERRIDE;
++ IOReturn clientClose(void) APPLE_KEXT_OVERRIDE;
++ IOReturn externalMethod(uint32_t selector, IOExternalMethodArguments *args,
++     IOExternalMethodDispatch *dispatch, OSObject *target,
++     void *reference) APPLE_KEXT_OVERRIDE;
++};
++OSDefineMetaClassAndStructors(A03WatchdogUserClient, IOUserClient);
++bool A03WatchdogUserClient::initWithTask(task_t task, void *security, UInt32 type,
++    OSDictionary *properties) {
++ return type==1 && IOUserClient::initWithTask(task,security,type,properties);
++}
++IOReturn A03WatchdogUserClient::clientClose(void) {
++ terminate();return kIOReturnSuccess;
++}
++IOReturn A03WatchdogUserClient::externalMethod(uint32_t selector,
++    IOExternalMethodArguments *args, __unused IOExternalMethodDispatch *dispatch,
++    __unused OSObject *target, __unused void *reference) {
++ /* Selector0: no inputs, exactly one scalar boolean output. All other
++  * selectors fail explicitly; no pretend monitoring/check-in service. */
++ if(selector!=0)return kIOReturnUnsupported;
++ if(!args || args->scalarInputCount || args->structureInputSize ||
++    args->structureInputDescriptor || args->scalarOutputCount!=1 ||
++    !args->scalarOutput || args->structureOutputSize ||
++    args->structureOutputDescriptor)return kIOReturnBadArgument;
++ args->scalarOutput[0]=0;
++ IOLog("A03 WDT: selector0 userspace monitoring disabled\n");
++ return kIOReturnSuccess;
++}
++#endif
+--- a/iokit/KernelConfigTables.cpp
++++ b/iokit/KernelConfigTables.cpp
+@@ -52,6 +52,11 @@
+     "     'IOProviderClass' = IOResources;"
+     "     'IOMatchCategory' = AppleKeyStore;"
+     "   },"
++    "   {"
++    "     'IOClass' = IOWatchdog;"
++    "     'IOProviderClass' = IOResources;"
++    "     'IOMatchCategory' = IOWatchdog;"
++    "   },"
+ #endif
+     "   {"
+     "     'IOClass'         = IOPanicPlatform;"
+--- a/iokit/conf/files.arm64
++++ b/iokit/conf/files.arm64
+@@ -12,3 +12,4 @@
+ iokit/Kernel/arm/SweetCPU.cpp                                    optional iokitcpp
+ iokit/Kernel/arm/SweetEntitlements.cpp                           optional iokitcpp
+ iokit/Kernel/arm/SweetKeyStore.cpp                               optional iokitcpp
++iokit/Kernel/arm/A03Watchdog.cpp                                 optional iokitcpp
