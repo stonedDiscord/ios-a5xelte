@@ -1,3 +1,9 @@
+ACTIVE0068 complete660s502735bytes SHAad1bb41db9fca94ed049284f810644874f1d3ee38257b7cfe43b14414495087c.
+All4samples same eMMC mutex/page-in wait; final CPU user.025/system13.45,
+runnable118.09s.3swaps/no home-screen proof. No active CDC capture.
+0069 CI43770218935 Build live; package7359/deploy58959 wait verified20
+frozen-source matches + identical loader/ADT/args. Need hardware fairness.
+
 ACTIVE0068 first3 samples180/300/420 all eMMC mutex page-in wait;
 SB system5.71/8.38/10.99s, runnable59.4/80.7/99.3s, advances objc pass2.
 CI43770218935 exactf1b31e1 read fairness/A03 identity builds.0069 package

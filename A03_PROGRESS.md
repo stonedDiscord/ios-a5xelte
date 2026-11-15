@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0068 baseline capture completed; all four page-in mutex waits
+
+660s completed502735bytes SHA256
+ad1bb41db9fca94ed049284f810644874f1d3ee38257b7cfe43b14414495087c. All four SpringBoard samples180/300/420/540s
+wait in emmc_strategy mutex during cluster_pagein. Final user0.024999s,
+system13.448565s/runnable118.094361s.3full-screen swaps, no GUI completion
+proof. CACHE_CTRL0 excludes flush batching benefit; no bulk encryption
+setup evidence. Physical media saturation not established from lock waits.
+0133 read fairness test CI43770218935 still Build;0069 packaging/deploy
+waiters live. No current capture; protected partitions/root unchanged.
+
 ## 2026-11-15:0068 three samples repeat controller lock wait
 
 Pass0/1/2 (180/300/420s) all resolve to same eMMC mutex in page-in.
