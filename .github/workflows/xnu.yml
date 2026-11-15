@@ -244,6 +244,10 @@ jobs:
             echo 'A03 USERDATA root selection was requested but its panic guard is absent from the kernel' >&2
             exit 1
           fi
+          if ! strings "$kernel" | grep -F 'A03: validated USERDATA root mounted unsealed' >/dev/null; then
+            echo 'A03 scoped unsealed-root support is absent from the kernel' >&2
+            exit 1
+          fi
           echo "A03 USB state probe linked: $kernel"
 
       - name: Compiler cache statistics

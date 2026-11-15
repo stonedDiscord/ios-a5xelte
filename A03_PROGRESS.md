@@ -2551,3 +2551,16 @@ to100%/success and rebooted. USERDATA not reflashed by this operation; full
 root remains previously verified. Await new HFS/launchd screen evidence.
 Known0042 second-root diagnostic LBA is obsolete/wrong; catalog-header direct
 read valid. No Apple launchd runtime claim until current boot output proves it.
+
+
+## 2026-11-15: verified root reaches root-vnode authentication
+
+User reports XNU0042 panic(cpu 0 caller 0xfffffe0007acec5c):
+rootvp not authenticated after mounting @bsd_init.c:946. Source places this
+after successful vfs_mountroot, VFS_ROOT, and rootvnode installation. Thus
+the repaired USERDATA HFS root now mounts; Apple launchd has not run yet.
+The A03 minimal profile omitted donor0029 unsealed-root support. Added
+0099 with explicit a03_unsealed_root=1 and exact validated writable USERDATA
+rootdev guard; other roots retain the original authentication panic. Packer
+sets the opt-in only with --userdata-root. CI checks its linked marker.
+No filesystem reinstall is indicated. BOOT0042 remains current pending build.

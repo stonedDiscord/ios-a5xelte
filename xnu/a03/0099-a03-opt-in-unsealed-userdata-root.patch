@@ -1,0 +1,23 @@
+--- a/bsd/kern/bsd_init.c
++++ b/bsd/kern/bsd_init.c
+@@ -943,7 +943,19 @@
+ 			/* enforce sealedness */
+ 			int autherr = VNOP_IOCTL(rootvnode, FSIOC_KERNEL_ROOTAUTH, NULL, 0, vfs_context_kernel());
+ 			if (autherr) {
+-				panic("rootvp not authenticated after mounting");
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++                /* Explicit development opt-in, only validated A03 USERDATA.
++                 * This permits an unsealed HFS root; it does not authenticate it. */
++                extern int a03_emmc_writable_root(dev_t);
++                uint32_t unsealed = 0;
++                if (PE_parse_boot_argn("a03_unsealed_root", &unsealed, sizeof(unsealed)) &&
++                    unsealed == 1 && a03_emmc_writable_root(rootdev)) {
++                    printf("A03: validated USERDATA root mounted unsealed (auth error %d)\n", autherr);
++                } else
++#endif
++                {
++                    panic("rootvp not authenticated after mounting");
++                }
+ 			}
+ 		}
+ 	}
