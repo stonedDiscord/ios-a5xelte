@@ -55,7 +55,7 @@
 +                a03_crash_read(commands + offset, &seg, sizeof(seg)) ||
 +                seg.nsects > 128 || seg.nsects > (lc.cmdsize - sizeof(seg)) / sizeof(struct section_64) ||
 +                seg.vmaddr + seg.vmsize < seg.vmaddr) return;
-+            if (!strncmp(seg.segname, "__TEXT", 16) && seg.fileoff == 0 &&
++            if (!strncmp(seg.segname, "__TEXT", 16) &&
 +                seg.filesize >= sizeof(mh) + mh.sizeofcmds) {
 +                text_vmaddr = seg.vmaddr;
 +                have_text = true;

@@ -51,7 +51,7 @@ int main(void) {
  struct section_64 *sec=(void*)(memory+32+72);
  uint64_t *info=(void*)(memory+4096);
  mh->magic=MH_MAGIC_64;mh->cputype=CPU_TYPE_ARM64;mh->ncmds=1;mh->sizeofcmds=152;
- seg->cmd=LC_SEGMENT_64;seg->cmdsize=152;strcpy(seg->segname,"__TEXT");seg->vmaddr=0x1000;seg->vmsize=8192;seg->filesize=8192;seg->nsects=1;
+ seg->cmd=LC_SEGMENT_64;seg->cmdsize=152;strcpy(seg->segname,"__TEXT");seg->vmaddr=0x1000;seg->vmsize=8192;seg->filesize=8192;seg->fileoff=0x2eca000;seg->nsects=1;
  strcpy(sec->sectname,"__crash_info");strcpy(sec->segname,"__TEXT");sec->addr=0x2000;sec->size=64;
  info[0]=5;info[1]=0x102000;info[4]=0x102100;
  strcpy((char*)memory+8192,"termination\nreason");strcpy((char*)memory+8448,"second message");
