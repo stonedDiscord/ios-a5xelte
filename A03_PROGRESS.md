@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0068 three samples repeat controller lock wait
+
+Pass0/1/2 (180/300/420s) all resolve to same eMMC mutex in page-in.
+SpringBoard user CPU0.017560/0.019297/0.022635s; system5.714774/8.379390/
+10.986783s; runnable59.395987/80.684104/99.274449s. PC changes at pass2 to
+objc map_images_nolock, so slow progression persists. These samples identify
+lock contention but do not prove all elapsed time has the same cause.
+0133/0134 CI43770218935 exactf1b31e1 running; package0069 session7359
+checks20frozen-source expected0134, identical0068 ADT/args/loader. Deploy
+waiter58959 awaits verified package and normal0068 capture completion.
+No additional CPU/clock/memory/storage-format changes. Runtime effect pending.
+
 ## 2026-11-15:0068 identifies storage mutex wait; Redmi product leak fixed locally
 
 First kernel snapshot: SpringBoard26 state9 waits in lck_mtx_lock_contended

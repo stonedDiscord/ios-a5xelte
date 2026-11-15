@@ -1,3 +1,10 @@
+ACTIVE0068 first3 samples180/300/420 all eMMC mutex page-in wait;
+SB system5.71/8.38/10.99s, runnable59.4/80.7/99.3s, advances objc pass2.
+CI43770218935 exactf1b31e1 read fairness/A03 identity builds.0069 package
+7359 verifies20sources frozen0134 and identical0068 loader/ADT/args;
+deploy58959 waits verified package +0068 capture239781 normal completion.
+No measured fairness effect/home screen yet. CPU count1/memory256MiB stay.
+
 ACTIVE0068 first stack proves SpringBoard controller mutex wait during
 cluster_pagein, event=a03_emmc_lock+8. Not XPC timeout. CACHE_CTRL0 means
 flush-batching benefit absent. IO~81.56s/8192requests excludes lock wait.
