@@ -90,3 +90,15 @@ destination (0x10000003). x22 retains the host port name0x503. This narrows
 the failure to reply-right transport/validation; host_info handler failure is
 not established. Requested A03 HOST msg2/MIG lines to identify reply name.
 User explicitly confirms XNU font is now fine. No new flash/root write yet.
+
+## 2026-11-15: host_info request rejected before MIG dispatch
+
+User supplies A03 HOST msg2 options=0x200000003 size40 remote0x503 reply0x603;
+no MIG output. Combined send/receive, kobject call; cached host_info uses
+MAKE_SEND_ONCE reply disposition. With observed MACH_SEND_INVALID_REPLY,
+next measure receive-right lookup/type/semantics and port construction.
+Added0102 diagnostics for ID200 invalid-reply branches, snapshotting entry
+bits/semantics under existing space lock and printing after unlock; PID1
+mach_port_construct logs flags/status/name. No validation bypass or forced
+success. Both affected files locally compile using exact CI headers/flags;
+patch reverse/forward roundtrip zero-fuzz PASS. No new phone write yet.

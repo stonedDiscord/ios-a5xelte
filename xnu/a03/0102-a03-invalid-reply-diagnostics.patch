@@ -1,0 +1,71 @@
+--- a/osfmk/ipc/ipc_kmsg.c
++++ b/osfmk/ipc/ipc_kmsg.c
+@@ -3913,6 +3913,11 @@
+ 			    (MPG_FLAGS_STRICT_REPLY_INVALID_REPLY_DISP | reply_type),
+ 			    kGUARD_EXC_STRICT_REPLY);
+ 		}
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++        if (msg->msgh_id == 200) {
++            printf("A03 REPLY strict disposition name=%x type=%u\n", reply_name, reply_type);
++        }
++#endif
+ 		return MACH_SEND_INVALID_REPLY;
+ 	}
+ 
+@@ -4295,6 +4300,11 @@
+ 				    (MPG_FLAGS_STRICT_REPLY_INVALID_REPLY_PORT | kr),
+ 				    kGUARD_EXC_STRICT_REPLY);
+ 			}
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++            if (msg->msgh_id == 200) {
++                printf("A03 REPLY strict validation name=%x kr=%d\n", reply_name, kr);
++            }
++#endif
+ 			return MACH_SEND_INVALID_REPLY;
+ 		}
+ 	}
+@@ -4320,7 +4330,29 @@
+ 	return MACH_MSG_SUCCESS;
+ 
+ invalid_reply:
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    /* Snapshot under the existing space lock; print only after unlocking. */
++    ;
++    bool a03_host_request = msg->msgh_id == 200;
++    ipc_entry_bits_t a03_reply_bits = reply_entry != IE_NULL ? reply_entry->ie_bits : 0;
++    unsigned a03_reply_semantics = 0, a03_dest_semantics = 0;
++    if (reply_entry != IE_NULL && IO_VALID(reply_entry->ie_object) &&
++        (reply_entry->ie_bits & MACH_PORT_TYPE_PORT_RIGHTS)) {
++        a03_reply_semantics = ip_object_to_port(reply_entry->ie_object)->ip_reply_port_semantics;
++    }
++    if (dest_entry != IE_NULL && IO_VALID(dest_entry->ie_object) &&
++        (dest_entry->ie_bits & MACH_PORT_TYPE_PORT_RIGHTS)) {
++        a03_dest_semantics = ip_object_to_port(dest_entry->ie_object)->ip_reply_port_semantics;
++    }
++#endif
+ 	is_write_unlock(space);
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if (a03_host_request) {
++        printf("A03 REPLY invalid name=%x type=%u entry=%d bits=%x semantics=%u dest_semantics=%u\n",
++            reply_name, reply_type, reply_entry != IE_NULL, a03_reply_bits,
++            a03_reply_semantics, a03_dest_semantics);
++    }
++#endif
+ 
+ 	if (release_port != IP_NULL) {
+ 		ip_release(release_port);
+--- a/osfmk/ipc/mach_kernelrpc.c
++++ b/osfmk/ipc/mach_kernelrpc.c
+@@ -357,6 +357,12 @@
+ 	}
+ 
+ 	rv = mach_port_construct(task->itk_space, &options, args->context, &name);
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    if (task_pid(task) == 1) {
++        printf("A03 REPLY construct flags=%x rv=%x name=%x\n",
++            options.flags, rv, rv == KERN_SUCCESS ? name : 0);
++    }
++#endif
+ 	if (rv == KERN_SUCCESS) {
+ 		rv = mach_copyout(&name, args->name, sizeof(name));
+ 	}

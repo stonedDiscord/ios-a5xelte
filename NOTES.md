@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT: user msg2 options0x200000003,size40,remote0x503,reply0x603;
+no MIG. Invalid reply before dispatch.0102 logs reply rights/semantics and
+PID1 port construct. Local two-file compile and patch checks PASS.
+Next full build/BOOT0047; retain0046 args/root/font. No bypass.
+
+
 CURRENT BOOT0046 physical evidence: x0=x8=0x10000009 =
 MACH_SEND_INVALID_REPLY. host port x22=0x503; same pthread BRK after
 unsliding PC by0x164d8000. Await A03 HOST msg2/MIG/priority lines;
