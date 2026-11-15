@@ -3366,3 +3366,12 @@ User confirms Download ready again; host detects it. Combined CI43744564237
 remains building.0055 will preserve0054 arguments, keeping0112 disabled
 until0114 is fully built. Later workflow marker gate now requires PIO and
 watchdog software-stage strings. No new flash after0054 yet.
+
+## BOOT0055 isolated USB PIO takeover test
+
+CI43744564237 SUCCESS from62736e7. Image SHA256
+2cf20091b428f9043fd3a77b09903df0de3f4c3ab0b337c3d9dd1549d1043aec.
+Exact CI USB source equals tested source;0054 loader/ADT/args preserved,
+0112 opt-in remains OFF pending0114 full build. BOOT-only upload100percent,
+success/reboot. No host root/protected write. Capture99106 waiting240s for
+enumeration then100s. Watchdog0114 CI43746031809 frome55d573 started.
