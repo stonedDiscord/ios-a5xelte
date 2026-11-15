@@ -1,3 +1,10 @@
+ACTIVE0068 BOOT-only100percent/success/reboot22:30UTC. CI43768648670
+SUCCESS9816151,20frozen sources/loader/ADT/args match. BOOTbd6682dc...81582.
+Capture239781660s boot0068-usb-initial.log waits USB; sample180/300/420/540
+includes CPU times and kernel WAIT traces. Resolve with exact0068 kernel
+and tools/a03-symbolicate-kernel-waits.py. Batch off; no root/SMP changes.
+No home screen. Need actual blocking kernel call before next functional fix.
+
 ACTIVE0067 late180s complete30411bytes SHA34011d2f76b428bef7fc9a1d7901806dd144cbfb9623064e187a4fa22390613b.
 7more swaps4..10; analyticsd231 generic crash. No GUI content proof.
 0132 CI43768648670 Build passed/artifacts uploading; package59465 +

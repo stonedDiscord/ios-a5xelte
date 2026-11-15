@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0068 kernel-wait/CPU-time boot deployed
+
+CI43768648670 SUCCESS exact981615130da8f1c0539f3cd2a203899ba3af96c7.
+Twenty frozen-source matches PASS, loader identical except image_size,
+ADT/args identical0067; a03emmc_batch absent (off). Kernel SHA256
+ac02efc2564ccb4c81c92c5fb5b306802b28d1d5f27f0afda91522d94dab4ccb;
+BOOTbd6682dcf68e43ddfcac1330d6863dadfe00ea74931a8113cd9c257df1d81582.
+CDC Download reset succeeded; BOOT-only100percent/upload success/reboot
+~22:30UTC.660s capture239781 waits CDC then timed GUI samples with
+A03 CPU/A03 WAIT lines. No root rewrite, protected partition or SMP changes.
+No home-screen proof. Kernel traces resolve with exact0068 artifact using
+tools/a03-symbolicate-kernel-waits.py. No earlier log file reused.
+
 ## 2026-11-15:0067 late180s continues rendering;0132 Build passed
 
 Late capture completed30411bytes SHA256
