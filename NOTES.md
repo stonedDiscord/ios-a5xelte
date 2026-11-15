@@ -1,3 +1,13 @@
+ACTIVE speed optimization priority:0131 opt-in a03emmc_batch=1 batches
+card-cache flush per buffered request, retains CMD24/status per sector,
+flush-before-completion and raw durability. CACHE_CTRL unknown until new
+probe log; optimization conditional on enabled card cache. Bounded8-line
+I/O tick/sector counters added for profiling. Host MMIO/BSD error/bounds,
+real kernel object compile, plain-apply exact equality/profile staging PASS.
+Not in0066/0067. Need0131 CI after43766598769 finishes (avoid cancellation),
+then identical batch-off/on BOOT builds and device timing. No speedup claim.
+0066 still capture360s; selector3 success and3 actual swaps now recorded.
+
 ACTIVE0066 BOOT-only upload100percent/success/reboot and CDC return verified.
 CI43765717894 SUCCESS2a79856;15 frozen sources/loader/ADT/args verified.
 BOOT82df93a9...1d2e4.360s capture227343 boot0066-usb-initial.log active.

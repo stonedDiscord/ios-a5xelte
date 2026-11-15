@@ -1,0 +1,126 @@
+--- a/bsd/dev/a03_emmc.c
++++ b/bsd/dev/a03_emmc.c
+@@ -32,6 +32,8 @@
+     uint32_t sectors;
+     struct a03_gpt gpt;
+     bool poisoned, ready, writable, cache_enabled;
++    uint32_t batch_flush;
++    uint64_t requests,read_sectors,write_sectors,io_ticks;
+     uint32_t rca;
+     bool a03_trace;
+     unsigned a03_trace_count, a03_uio_trace_count;
+@@ -129,7 +131,7 @@
+ }
+ /* Single-sector writes are confined again here, below every BSD entry point.
+  * A cached card is flushed after each sector before acknowledging completion. */
+-static int data_write(uint32_t lba,const unsigned char *in) {
++static int data_write_sector(uint32_t lba,const unsigned char *in,bool flush_cache) {
+     if(!ae.writable)return EROFS;
+     if(ae.poisoned||lba<ae.gpt.userdata||
+        (uint64_t)lba-ae.gpt.userdata>=ae.gpt.userdata_count||
+@@ -155,7 +157,7 @@
+     if(rd(0x24)&3)ok=false;
+     if(ok) {
+         wr(0x30,rd(0x30)&0xffff8033);
+-        if(ae.cache_enabled) {
++        if(ae.cache_enabled&&flush_cache) {
+             /* MMC_SWITCH WRITE_BYTE EXT_CSD_FLUSH_CACHE=1, normal command set.
+              * No timing/partition/cache-enable configuration is changed. */
+             wr(8,0x03200100);wr(0xc,0x061b0000);
+@@ -179,6 +181,35 @@
+     *(volatile uint8_t *)(ae.regs+0x28)=(uint8_t)host;barrier();
+     wr(4,block);wr(0,count);wr(0x34,enable);wr(0x38,signal);return 0;
+ }
++/* Raw callers retain per-sector durability. Buffered requests may opt in to
++ * one cache flush before completing the entire request, under the same lock. */
++static int data_write(uint32_t lba,const unsigned char *in) {
++    return data_write_sector(lba,in,true);
++}
++static int data_flush_cache(void) {
++    if(!ae.cache_enabled)return 0;
++    if(ae.poisoned||(rd(0x24)&3)||rd(0x30))return EIO;
++    uint32_t enable=rd(0x34),signal=rd(0x38);
++    wr(0x38,0);wr(0x34,enable|0x037f8033);
++    wr(8,0x03200100);wr(0xc,0x061b0000);
++    bool ok=poll(1);uint32_t response=rd(0x10);
++    if(response&0xffffe080u)ok=false;
++    if(ok) {wr(0x30,1);ok=poll(2);}
++    if(ok) {
++        wr(0x30,rd(0x30)&0xffff8033);
++        wr(8,ae.rca);wr(0xc,0x0d1a0000);
++        ok=poll(1);response=rd(0x10);
++        if((response&0xffffe180u)!=0x100||(response&0x1e00)!=0x800)ok=false;
++    }
++    if(rd(0x24)&3)ok=false;
++    if(!ok) {
++        ae.poisoned=true;wr(0x38,0);
++        printf("A03 eMMC: request FLUSH FAILED int=%x r1=%x; disabled\n",rd(0x30),response);
++        return EIO;
++    }
++    wr(0x30,rd(0x30)&0xffff8033);wr(0x34,enable);wr(0x38,signal);
++    return 0;
++}
+ /* Minor0 exposes validated BOOT read-only for an independent userspace
+  * check; minor1 exposes validated USERDATA with separately gated writes. */
+ static uint32_t part_first(dev_t dev) {return minor(dev)?ae.gpt.userdata:ae.gpt.boot;}
+@@ -190,6 +221,7 @@
+ static int emmc_close(__unused dev_t dev,__unused int flags,__unused int type,__unused struct proc *p) {return 0;}
+ static void emmc_strategy(buf_t bp) {
+     int error=0;caddr_t addr=NULL;uint32_t count=buf_count(bp),done=0;
++    bool pending_flush=false;
+     dev_t dev=buf_device(bp);uint64_t offset=0;
+     buf_setresid(bp,count);
+     if(!ae.ready||ae.poisoned||minor(dev)>1)error=ENXIO;
+@@ -204,6 +236,8 @@
+     if(error||!count)goto finish;
+     if(buf_map(bp,&addr)) {error=EIO;goto finish;}
+     lck_mtx_lock(&a03_emmc_lock);
++    uint64_t tick_start,tick_end;
++    __asm__ volatile("mrs %0,cntpct_el0":"=r"(tick_start));
+     while(done<count) {
+         unsigned char sector[512];uint64_t pos=offset+done;
+         unsigned skip=pos&511,take=MIN(count-done,512-skip);
+@@ -211,14 +245,33 @@
+         bool reading=(buf_flags(bp)&B_READ)!=0;
+         if(reading||skip||take!=512) {
+             error=data_read(17,lba,sector);if(error)break;
++            ae.read_sectors++;
+         }
+         if(reading) {
+             for(unsigned i=0;i<take;i++)addr[done+i]=sector[skip+i];
+         } else {
+             for(unsigned i=0;i<take;i++)sector[skip+i]=addr[done+i];
+-            error=data_write(lba,sector);if(error)break;
++            bool defer=ae.batch_flush==1&&ae.cache_enabled;
++            error=data_write_sector(lba,sector,!defer);if(error)break;
++            pending_flush|=defer;
++            ae.write_sectors++;
+         }
+         done+=take;buf_setresid(bp,count-done);
++    }
++    if(pending_flush) {
++        int flush_error=data_flush_cache();
++        if(flush_error) {
++            if(!error)error=flush_error;
++            /* No bytes are acknowledged durable when the flush failed. */
++            buf_setresid(bp,count);
++        }
++    }
++    __asm__ volatile("mrs %0,cntpct_el0":"=r"(tick_end));
++    ae.io_ticks+=tick_end-tick_start;
++    if((++ae.requests&1023)==0&&ae.requests<=8192) {
++        uint64_t freq;__asm__ volatile("mrs %0,cntfrq_el0":"=r"(freq));
++        printf("A03 IO: requests=%llu read-sectors=%llu write-sectors=%llu ticks=%llu hz=%llu batch=%u cache=%u\n",
++            ae.requests,ae.read_sectors,ae.write_sectors,ae.io_ticks,freq,ae.batch_flush==1,ae.cache_enabled);
+     }
+     lck_mtx_unlock(&a03_emmc_lock);buf_unmap(bp);
+ finish:
+@@ -329,6 +382,8 @@
+     if(data_read(8,0,sector))return;
+     uint32_t rw=0;PE_parse_boot_argn("a03emmc_rw",&rw,sizeof(rw));
+     ae.cache_enabled=(sector[33]&1)!=0;
++    PE_parse_boot_argn("a03emmc_batch",&ae.batch_flush,sizeof(ae.batch_flush));
++    printf("A03 eMMC: cache=%u request-flush batching=%u\n",ae.cache_enabled,ae.batch_flush==1);
+     bool allow_write=rw==1&&sector[33]<=1; /* known CACHE_CTRL encoding */
+     if(rw==1&&!allow_write)printf("A03 eMMC: writes refused, unknown CACHE_CTRL encoding\n");
+     ae.sectors=a03_le32(sector+212);

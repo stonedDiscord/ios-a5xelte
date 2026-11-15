@@ -133,7 +133,8 @@ def main():
                      '0127-a03-default-surface-dimensions.patch',
                      '0128-a03-analytics-crash-evidence.patch',
                      '0129-a03-bounded-gui-thread-snapshots.patch',
-                     '0130-a03-bound-host-mig-diagnostics.patch'):
+                     '0130-a03-bound-host-mig-diagnostics.patch',
+                     '0131-a03-request-durable-write-batching.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

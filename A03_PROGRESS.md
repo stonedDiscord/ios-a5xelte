@@ -1,5 +1,32 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: speed optimization priority;0131 durable request batching
+
+User clarifies actual speed optimization is priority, not quiet logs.
+Inspected live candidate eMMC path: synchronous single512-byte CMD17 reads,
+CMD24 writes plus CMD13 status; enabled card cache additionally flushed per
+sector. Runtime CACHE_CTRL not previously recorded, so enabled-cache cost
+on this phone remains unproven. Current CPU/memory remain1/256MiB.
+
+Implemented opt-in a03emmc_batch=1: buffered USERDATA writes may defer card
+cache flush until end of current BSD request, while retaining per-sector
+CMD24/status checks and flushing before buf_biodone. No cross-request dirty
+cache retained on success. Raw writes retain old per-sector durability.
+On later write/read error, previously submitted sectors are flushed if the
+controller remains usable; failed flush acknowledges zero durable bytes,
+poisons controller and never retries. No timing/clock/GPT/write-scope changes.
+16KiB fake request now32sector writes/one flush, versus32flushes when card
+cache enabled. This is operation-count evidence, not measured device speedup.
+
+0131 also prints actual CACHE_CTRL and bounded aggregate I/O sector/tick
+counters (max8 lines), allowing hardware profiling and batch-off/on tests.
+Actual-production MMIO and BSD handler host tests PASS, including bounds,
+partial failures and flush failure; real kernel object compile PASS;
+plain git apply exact complete-file equality PASS; profile staging PASS.
+Not in running0066 or already-building0067 CI43766598769. New CI pending
+completion of existing run to avoid concurrency cancellation. Need baseline
+and batch-enabled hardware comparison; no speedup/home-screen claim.
+
 ## 2026-11-15:0066 BOOT-only deployment verified;0130 CI building
 
 CI43765717894 SUCCESS exact2a79856ddc1b10878616bd8ec2979c5331fbfc76.
