@@ -1,16 +1,23 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-15, XNU BOOT0054 boots the validated USERDATA p55 HFSX
-root and transfers kernel logs over USB CDC. Bounded crash diagnostics
-confirm watchdogd traps on missing IOWatchdog and SpringBoard traps in
-FBSDisplayMonitor because CADisplay.displays.firstObject is nil. Exact
-causes for backboardd/mediaserverd remain unresolved. Stable GUI is unproven.
+As of 2026-11-15, BOOT0055 demonstrated validated USERDATA p55 HFSX boot
+and kernel logs over USB CDC. BOOT0056 is installed and enumerates; its
+runtime capture awaits tty access. Stable GUI is unproven.
 
-USB download command is implemented but hardware attempts give no ACK/reset.
-BOOT0054 RX evidence shows DMAMODE retained (CSR0800). Combined CI43744564237
-builds0113 PIO takeover plus0112 opt-in watchdog capability reporting userspace
-monitoring disabled. Neither correction is hardware validated. Preserve
-existing root/loader/ADT; next BOOT adds a03_watchdog_disabled=1.
+Prior captures show watchdogd trapping on missing IOWatchdog. SpringBoard asserts because
+CADisplay.displays.firstObject is nil. Mediaserverd faults in
+CFDictionaryGetValue with a null dictionary passed by
+FigNotificationListenerStartNotifications; missing initialization remains
+unresolved. Backboardd aborts through Objective-C/C++ terminate; its
+underlying exception reason is unknown.
+
+Bulk USB download has no hardware ACK/reset. BOOT0055 PIO takeover did not
+fix RX: CSR0800 and one-byte zero packets persist. Do not attribute this
+solely to inherited DMA. CI43746383199 builds0115 explicit CDC SEND_BREAK
+Download escape and0114 software PMU bookkeeping for0112 opt-in disabled-
+watchdog capability. CI passed; BOOT0056 enumerates, capture awaits tty access.
+BOOT0056 preserves root/loader/ADT and adds a03_watchdog_disabled=1.
+Control reset and watchdog runtime results remain unverified.
 Software AKS remains lab-only without SEP/passcode protection.
 See the latest A03_PROGRESS.md entry and top active handoff in NOTES.md for
 exact artifacts and runtime observations. Older sections below preserve

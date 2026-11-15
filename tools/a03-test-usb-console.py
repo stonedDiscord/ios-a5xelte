@@ -93,6 +93,13 @@ int main(void) {
  unsigned char resetctl[8]={0x21,0x23,0xff,0xff,0,0,0,0};
  setup(resetctl);assert(download_requested && ep_read(0,2)==0x48);download_requested=0;
  resetctl[2]=resetctl[3]=0;setup(resetctl);assert(!download_requested);
+ /* Only exact interface0 indefinite SEND_BREAK may request Download. */
+ const unsigned fields[]={0,1,2,3,4,5,6,7};
+ const unsigned char wrong[]={0x20,0x22,0xfe,0xfe,1,1,1,1};
+ for(unsigned i=0;i<8;i++) {
+  unsigned char malformed[8]={0x21,0x23,0xff,0xff,0,0,0,0};
+  malformed[fields[i]]=wrong[i];setup(malformed);assert(!download_requested);
+ }
  input_char('r');input_char('e');input_char('g');input_char('s');input_char('\\n');
  char cmd[128];assert(a03_usb_debug_command(cmd,sizeof(cmd)) && cmd[0]=='r');
  puts("A03 cumulative CDC descriptor/control-request/command checks PASS (host only)");

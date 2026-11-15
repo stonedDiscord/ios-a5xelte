@@ -3402,3 +3402,20 @@ Matching instruction ldr x8,[x0] with captured FAR0 establishes null dictionary
 passed by FigNotificationListenerStartNotifications+0x38. Extended tool
 reports nearest local AND exported symbols, retaining proximity caveat.
 No Apple binary edits. Need trace listener initialization before patching.
+
+## 2026-11-15: BOOT0056 control Download and watchdog test deployed
+
+CI43746383199 SUCCESS from3a3f19a. Exact downloaded USB/watchdog sources
+match locally tested source. Loader excluding image_size and ADT equal0055;
+args only add a03_watchdog_disabled=1; no RAMDisk or root rewrite.
+Kernel SHA2566f4e9160a2dbe76a54dbf4d14cbb2ad841f419aaefb90a8ac058f4148a7cc19b.
+Image SHA2569ec37ad159f9d16f0b1ba2deafdba09021e9aea3c877c89978d1d751ad09b880.
+BOOT-only upload100percent/success/reboot at18:39UTC. USB enumerated within
+55seconds; new tty access is denied. Capture21837 waits240s then100s; user
+asked scoped ACL once. Control reset and disabled-watchdog runtime pending.
+No host USERDATA/GPT/recovery/bootloader/EFS/NV write.
+
+All USB/watchdog host suites and crash/symbolication suites PASS. Extended
+actual-source control test rejects wrong type/request/value/interface/length;
+only exact indefinite SEND_BREAK requests reset. Matching local Linux CDC
+break callback maps nonzero state to0xffff, clear to0.

@@ -1,9 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
-ACTIVE: CI43746383199 running; host Download detected,0056 pending.
-Symbolicator now includes LC_SYMTAB exports: mediaserverd crash is null
-CFDictionaryGetValue+48 (ldr x8,[x0]), caller FigNotificationListenerStartNotifications+38.
-Root preserved; no full iOS success.
+ACTIVE0056 installed BOOT-only100percent/success/reboot18:39UTC.
+CI43746383199 PASS; exact tested USB/watchdog source,0055 loader/ADT retained;
+args only +a03_watchdog_disabled=1. Image SHA256
+9ec37ad159f9d16f0b1ba2deafdba09021e9aea3c877c89978d1d751ad09b880.
+CDC enumerated; capture21837 waits for tty ACL (user asked once).
+Need capture watchdog selector0/software stage and test --download-control.
+Control reset unproven; bulk RX remains broken. Root/protected parts retained.
 
 CURRENT0055: USB IN works, PIO takeover did NOT fix RX (0800/count1 zero).
 0115 explicit --download-control -> CDC SEND_BREAKffff bypasses bulk OUT
