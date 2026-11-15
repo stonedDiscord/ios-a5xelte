@@ -2701,3 +2701,7 @@ and recovered982 compile commands; local Clang syntax checks of modified
 bsd/kern/kern_exit.c and osfmk/kern/exception.c both PASS using actual component
 flags/headers. Patch applies with zero fuzz. Full CI/link/runtime still needed.
 Current phone BOOT remains RO Linux USB status0015; no device write for fix.
+
+Corrected CI43714631683 queued from714d2da7a4a4fc37fe1ae45c1a85476572d037da,
+DEVELOPMENT/A03 iOS userspace/macOS15 Intel. Includes1x XNU font and full
+pre-coredump trap helper. No new kernel success or hardware result yet.

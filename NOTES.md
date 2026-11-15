@@ -3,7 +3,8 @@
 BUILD FIX: CI43712255840 failed due opaque Mach structs in BSD diagnostic.
 Moved helper to osfmk/kern/exception.c; BSD only passes pid under SIGTRAP guard.
 Exact failed buildtree/compile flags local syntax PASS for both affected C
-files. Small-font change retained. Next dispatch corrected CI, then BOOT0045.
+files. Small-font retained. Corrected CI43714631683 queued at714d2da;
+next package BOOT0045 after successful link, then BOOT-only test.
 Current phone remains RO USB status0015; no new XNU flash yet.
 
 ReVa audit saved: docs/a03-launchd-trap-analysis.md; exact live binaries
