@@ -1,5 +1,16 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+NEXT0048:0105 opt-in iOS16 SDK16 provisional reply compatibility only;
+0106 matching A03 peripheral PHY/trim correction + register/counter logs.
+Cross-compile/exact patch/384-case predicate/CDC/parser PASS. Full CI pending.
+Add a03_ios16_provisional_reply=1 to0047 args. No new flash/root write.
+
+CURRENT0047 evidence: construct4000/rv0/name603; invalid reply type21,
+entry1/bits38200000/semantics3/dest4. Proven provisional-vs-strict rejection
+before MIG, not missing receive right. CDC starts but host100s timeout/no USB.
+Next scoped iOS16 reply compatibility + matching PHY audit. Hold unconfirmed.
+Root preserved; launchd main unproven.
+
 CURRENT: BOOT0047 flashed BOOT-only100%/success/reboot. Corrected CI43722354348
 PASS; kernel e4b5d6cf...03752, BOOT b6b3e90b...8b8bb; USB/monitor/reply
 markers independently verified. Args0046+console=1/debug_hold=1. Host capture

@@ -1,0 +1,57 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -35,6 +35,7 @@
+ }
+ static vm_offset_t usb;
+ static volatile unsigned configured;
++static unsigned reset_count, setup_count;
+ static unsigned address_pending, address_valid;
+ static const unsigned char *control_data;
+ static unsigned control_length, control_offset, control_active, control_out, control_requested;
+@@ -79,6 +80,7 @@
+ }
+ static void setup(const unsigned char *s) {
+  unsigned type=s[0],request=s[1],value=le16(s+2),index=le16(s+4),length=le16(s+6);
++ setup_count++;
+  control_active=control_out=0;
+  if(type==0x80 && request==6) {
+   if(value>>8==1) { respond(device_desc,sizeof(device_desc),length);return; }
+@@ -107,7 +109,7 @@
+ }
+ static void poll_usb(void) {
+  unsigned intr=r8(0x0a); /* MUSB status is read-to-clear. Only this thread reads. */
+- if(intr&4) { configured=address_valid=control_active=control_out=0;w8(0,0);endpoints(); }
++ if(intr&4) { reset_count++;configured=address_valid=control_active=control_out=0;w8(0,0);endpoints(); }
+  w8(0x0e,0);unsigned csr=r16(0x12);
+  if(address_valid && !(csr&0x0a)) { w8(0,address_pending);address_valid=0; }
+  if(csr&4) { w16(0x12,0);control_active=control_out=0; }
+@@ -137,17 +139,27 @@
+  update(aon,0x004,0,1u<<8);update(aon,0x138,0,0x1400);
+  update(ana,0x1c,1,0);update(ana,8,0x18,0);
+  update(aon,0x204,0,1u<<24);update(ana,4,0,0x10010000);
+- update(aon,0x208,0,0x40000008);update(ana,0x10,0xffffffff,0x04f3d1c0);
++ update(aon,0x208,0,0x40000008);
++ /* Matching ums9230-25c10 overlay trim and sprd_hostphy_set(peripheral).
++  * Explicitly remove host pulldowns inherited from firmware. */
++ update(ana,0x10,0xffffffff,0x04b3d1c0);
++ update(ana,0x20,0,6);update(ana,0x0c,0x18,0);update(ana,4,0xffff,0);
+  update(aon,0x10,0,0x300);delay(25000);update(aon,0x10,0x300,0);delay(1000);
+  usb=ml_io_map(0x64900000,0x2000);if(!usb){printf("A03 USB console: core map failed\n");return;}
+  w8(1,0);w8(0,0);w16(6,0);w16(8,0);w8(0x0b,0);w8(0x60,0);w8(0x0f,0);endpoints();
+  thread_t thread=THREAD_NULL;kern_return_t kr=kernel_thread_start(worker,NULL,&thread);
+  if(kr!=KERN_SUCCESS){usb=0;printf("A03 USB console: thread error %d\n",kr);return;}
+  thread_deallocate(thread);w8(1,0x40);
++ printf("A03 USB PHY: trim=%08x ctl1=%08x ctl2=%08x sel=%08x\n",
++  *(volatile uint32_t *)(ana+0x10),*(volatile uint32_t *)(ana+4),
++  *(volatile uint32_t *)(ana+0x0c),*(volatile uint32_t *)(ana+0x20));
++ printf("A03 USB CORE: power=%02x devctl=%02x hwvers=%04x\n",r8(1),r8(0x60),r16(0x6c));
++ uint32_t compat=0;PE_parse_boot_argn("a03_ios16_provisional_reply",&compat,sizeof(compat));
++ printf("A03 IPC: iOS16 provisional reply compatibility=%u\n",compat);
+  printf("A03 USB console: full-speed CDC ACM initialized, awaiting host\n");
+  /* Give the host time to enumerate before a fast initproc failure. */
+  for(unsigned i=0;i<1000 && !configured;i++) IOSleep(10);
+  if(configured) IOSleep(1000);
+- printf("A03 USB console: configuration=%u; continuing boot\n",configured);
++ printf("A03 USB console: configuration=%u resets=%u setups=%u; continuing boot\n",configured,reset_count,setup_count);
+ }
+ #endif

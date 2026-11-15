@@ -56,3 +56,14 @@ Opt out by omitting the boot arg; no filesystem change needed.
 
 Host parser/queue checks, patch roundtrip and three affected source syntax
 compiles pass. Runtime survival/USB responsiveness remain unproven.
+
+## BOOT0047 hardware evidence and next PHY candidate
+
+Startup reaches CDC initialized, but host100-second capture sees no USB
+attach. No enumeration or interactive monitor success is established.
+Patch0106 uses matching ums9230-25c10 device trim04b3d1c0 instead of generic
+04f3d1c0. It mirrors sprd_hostphy_set(peripheral): REG_SEL_CFG_0+20 bits6,
+UTMI_CTL2+c clear18 pulldowns, UTMI_CTL1+4 clear low16 reserved bits.
+Readbacks print trim/CTL1/CTL2/select, MUSB power/devctl/version and ten-second
+reset/setup counts. Regulator state is still inherited; no PMIC writes.
+These changes require a new kernel and physical enumeration evidence.

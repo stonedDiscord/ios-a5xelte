@@ -102,3 +102,22 @@ bits/semantics under existing space lock and printing after unlock; PID1
 mach_port_construct logs flags/status/name. No validation bypass or forced
 success. Both affected files locally compile using exact CI headers/flags;
 patch reverse/forward roundtrip zero-fuzz PASS. No new phone write yet.
+
+## BOOT0047: rejection identified, compatibility candidate0105
+
+User's exact trace: construct flags4000 rv0 name603; invalid reply603,
+type21 (MAKE_SEND_ONCE), entry1, bits38200000, semantics3, destination4.
+The RECEIVE right is present. IPC rejects provisional reply semantics3
+against strict kernel-object semantics4 before MIG dispatch. Kernel XNU22.6
+strictness applies to platform binaries; live launchd LC_BUILD_VERSION is
+PLATFORM_IOS2, minOS16.0, SDK16.0. Its libsystem_kernel mig_get_reply_port
+uses MPO_PROVISIONAL_REPLY_PORT4000. This is the measured compatibility
+mismatch behind MACH_SEND_INVALID_REPLY10000009 and the pthread BRK.
+
+Candidate0105 introduces opt-in a03_ios16_provisional_reply=1. Only
+PLATFORM_IOS processes with SDK major16 and an actual provisional reply
+port are exempt from strict-vs-provisional rejection. Ordinary ports remain
+rejected; receive-right checks, dispositions, regular reply semantics,
+MIG dispatch and host_info implementation remain unchanged. This preserves
+the real host_info operation rather than returning synthetic success.
+Host predicate matrix and cross-compile pass; runtime fix remains unproven.

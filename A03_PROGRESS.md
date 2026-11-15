@@ -2844,3 +2844,26 @@ Same0046 args+ a03usb_console=1 a03debug_hold=1, no RAM root. Started host
 capture session91167 before BOOT-only Heimdall upload100%/success/reboot.
 No USERDATA/GPT/protected-partition write. Await enumeration/screen evidence;
 no USB or monitor hardware success established yet. Root remains verified.
+
+## 2026-11-15: BOOT0047 identifies provisional/strict reply mismatch
+
+User reports CDC startup marker and PID1 signal exit2/5. Host capture waited
+100 seconds without enumeration; startup alone is not USB transport proof.
+Physical IPC trace: construct flags=4000 rv=0 name=603; invalid name=603
+type=21 entry=1 bits=38200000 semantics=3 dest_semantics=4. Receive right
+exists and MAKE_SEND_ONCE is correct. Provisional reply semantics3 conflict
+with kernel-object strict semantics4. Exact ipc_right_copyin_check_reply
+rejects this through __ip_strict_reply_port_semantics_violation for a
+platform binary; no MIG host_info handler runs. This explains error10000009
+and cached libpthread assertion. Investigating narrow iOS16 compatibility
+policy; do not force host_info success or change reply right ownership.
+Monitor hold is still physically unconfirmed. Verified root preserved.
+
+Candidate0105 scopes provisional reply compatibility to opt-in boot arg,
+PLATFORM_IOS2/SDK major16 and actual provisional reply ports. Original
+receive-right/disposition/MIG checks retained. launchd Mach-O SDK16 verified.
+Candidate0106 mirrors matching A03 Linux peripheral PHY pulldowns/reserved
+bits and board-specific eye trim04b3d1c0; adds PHY/core readbacks and reset/
+setup counts. No PMIC writes. Three changed consumers cross-compile PASS;
+exact-source sequential apply PASS; CDC/parser and384-case predicate PASS.
+Next full CI, BOOT0048 +a03_ios16_provisional_reply=1; hardware unproven.

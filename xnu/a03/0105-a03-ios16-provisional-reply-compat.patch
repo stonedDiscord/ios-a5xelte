@@ -1,0 +1,60 @@
+--- a/osfmk/ipc/ipc_port.c
++++ b/osfmk/ipc/ipc_port.c
+@@ -105,6 +105,15 @@
+ typedef struct proc *proc_t;
+ extern boolean_t proc_is_simulated(const proc_t p);
+ extern struct proc *current_proc(void);
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++extern uint32_t proc_platform(const proc_t p);
++extern uint32_t proc_sdk(proc_t p);
++/* iOS 16 libsystem_kernel creates MPO_PROVISIONAL_REPLY_PORT in
++ * mig_get_reply_port. Opt-in compatibility for this older userspace only;
++ * receive rights, dispositions and ordinary reply semantics stay checked. */
++static TUNABLE(bool, a03_ios16_provisional_reply,
++    "a03_ios16_provisional_reply", false);
++#endif
+ 
+ static TUNABLE(bool, prioritize_launch, "prioritize_launch", true);
+ TUNABLE_WRITEABLE(int, ipc_portbt, "ipc_portbt", false);
+@@ -3436,8 +3445,19 @@
+ }
+ 
+ boolean_t
+-__ip_strict_reply_port_semantics_violation(void)
+-{
++__ip_strict_reply_port_semantics_violation(boolean_t provisional_reply)
++{
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++	proc_t p = current_proc();
++	uint32_t sdk = proc_sdk(p);
++	/* Mach-O PLATFORM_IOS == 2; packed SDK major is bits 16..31. */
++	if (provisional_reply && a03_ios16_provisional_reply && proc_platform(p) == 2 &&
++	    (sdk >> 16) == 16) {
++		return FALSE;
++	}
++#else
++	(void)provisional_reply;
++#endif
+ 	return task_get_platform_binary(current_task())
+ #if CONFIG_ROSETTA
+ 	       && !task_is_translated(current_task()) /* ignore rosetta violators */
+--- a/osfmk/ipc/ipc_port.h
++++ b/osfmk/ipc/ipc_port.h
+@@ -328,7 +328,7 @@
+ #define ip_full(port)                   imq_full(&(port)->ip_messages)
+ 
+ boolean_t
+-__ip_strict_reply_port_semantics_violation(void);
++__ip_strict_reply_port_semantics_violation(boolean_t provisional_reply);
+ 
+ /*
+  * IPC Port flags for reply port defense in depth
+@@ -370,7 +370,7 @@
+ 	(!ip_is_kolabeled(port) && (!(port)->ip_service_port) && ((port)->ip_splabel != NULL))
+ 
+ #define ip_violates_strict_reply_port_semantics(dest_port, reply_port) \
+-	(ip_require_strict_reply_port_semantics(dest_port) && !ip_is_reply_port(reply_port) && __ip_strict_reply_port_semantics_violation())
++	(ip_require_strict_reply_port_semantics(dest_port) && !ip_is_reply_port(reply_port) && __ip_strict_reply_port_semantics_violation(ip_is_provisional_reply_port(reply_port)))
+ 
+ #define ip_violates_reply_port_semantics(dest_port, reply_port) \
+ 	(ip_require_reply_port_semantics(dest_port) && !ip_is_reply_port(reply_port) && !ip_is_provisional_reply_port(reply_port))
