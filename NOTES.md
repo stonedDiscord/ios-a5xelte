@@ -1,5 +1,15 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE BOOT0050 physical: launchd_cache_loader abort Unable to find AMFI;
+SIGABRT boot-task failure. Advanced past prior keybag failure; sustained
+bootstrap unproven. ReVa actual16.0 loader confirms literal
+launchd_unsecure_cache=1 skips absent AMFI IOKit trust registration via its
+built-in lab path. BOOT0051 prepared, same0050 kernel/loader/ADT/root/font;
+only cmdline + Android digest changed, full image comparison PASS.
+SHA fbe8765853e9b542c61505b0fa2c677ee014311d50bf18e9be3ac932a11fad23.
+Await physical Download transition (host not detected); then BOOT-only flash.
+No root rewrite; no new AMFI service/full trust enforcement claim. USB unproven.
+
 CURRENT BOOT0050 flashed BOOT-only100%/success/reboot. CI43730049732 PASS.
 Kernel623931b2...384f3; image39b29808...72f19.0049 args+software keystore=1.
 Provider symbols + actual boot-arg gate verified. Await user A03 AKS and

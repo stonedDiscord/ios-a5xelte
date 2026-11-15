@@ -3005,3 +3005,28 @@ Post-deployment source audit: exact CI43730049732 SweetKeyStore.cpp matches
 host-tested source byte-for-byte, actual IOKit Makefile includes general-regs
 flag. Capture36560 ended100s timeout/no enumeration. No AKS runtime outcome
 yet; pending screen report required before another provider change.
+
+## 2026-11-15: BOOT0050 reaches launchd_cache_loader; BOOT0051 prepared
+
+User reports abort: Unable to find AMFI, followed by boot task failure
+launchd_cache_loader / SIGABRT, caller0xfffffe0007add2f8. This advances beyond
+the preceding keybag task; specific AKS selector/success logs were not reported.
+Sustained bootstrap and USB CDC transport remain unproven.
+
+ReVa on the actual installed iOS16.0 launchd_cache_loader confirms helper
+0x100002414 reads kern.bootargs, tests launchd_unsecure_cache= via helper
+0x100002dc8 (strtoul base10), and on nonzero logs Using unsecure cache before
+calling common cache-loading helper0x1000028e8. It skips detached-signature
+and AppleMobileFileIntegrity service/open/selector6 trust registration.
+The observed abort is the missing-service branch0x100003074. Existing kernel
+AMFI policy hooks do not provide that IOKit service. This is a loader lab
+option, not implementation of full AMFI/trust enforcement.
+
+Prepared BOOT0051 from exact0050 payload; only adds literal
+launchd_unsecure_cache=1. Kernel remains CI43730049732 SHA623931b2...384f3.
+Image SHA256 fbe8765853e9b542c61505b0fa2c677ee014311d50bf18e9be3ac932a11fad23.
+Compared complete images: loader identical; payload identical outside cmdline;
+ramdisk/DT/tail identical. Android header digest updated by verified packer.
+No new CI needed, no root reinstall or device write yet. Host Download absent;
+physical Download transition requested. Next: BOOT-only flash and observe
+cache-loader completion/next actual error. Do not preemptively stub daemons.
