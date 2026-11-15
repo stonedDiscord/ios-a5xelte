@@ -1,7 +1,12 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT: user confirms physical Download, host detect PASS. CI43744564237
+(0112+0113) building.0055 MUST omit a03_watchdog_disabled=1:0114 software
+PMU prerequisite is later commita4b45ea, locally validated but not in this
+CI.0055 is USB-only activation test.0114 needs later full CI before enabling.
+
 NEXT: combined0112+0113 CI43744564237 from62736e7; supersedes watchdog-only.
-0055 needs exact0054 ADT/loader/args +a03_watchdog_disabled=1, no root rewrite.
+0055 needs exact0054 ADT/loader/args; watchdog remains off, no root rewrite.
 Next physical Download when build ready; no functional reset claim yet.
 
 RX0054: csr0800 DMAMODE survives, unsolicited count1 zero packets.
