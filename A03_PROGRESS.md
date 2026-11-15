@@ -3708,3 +3708,15 @@ Actual-source host gates/error/log tests PASS; real kpi_vfs.c arm64 kernel
 compile PASS; exact patch application/source comparison PASS. Hardware
 pending. Existing0121 CI43756243470/package0061 remain independent and
 unchanged; do not enable swap in0061. New CI not started at this milestone.
+
+## 2026-11-15: isolated Sandbox test BOOT0061 flashed
+
+CI43756243470 SUCCESS fromd6402879ba93371caed2338256e86e1c78e867e3.
+Kernel SHA25643cfd51d9940e6788b49b646325e113a90457890bc047ee5737159852ade4786.
+Image SHA256a3976e921bf2be0f6c8e1b6259747a45702ab5283112452c399d074b919098bf.
+Exact CI exception/USB/systemcalls/Makefile/AMFI source comparison PASS.
+0060 loader(except image_size), ADT and root retained; only boot argument
+addition a03_sandbox_disabled=1.0122 HFS fallback is NOT in this kernel.
+Host already detected Download; BOOT-only upload100percent/success/reboot
+confirmed20:21UTC. Capture190652 waits900s then100s through newgrp uucp.
+Runtime result pending. No host USERDATA/protected-partition write.

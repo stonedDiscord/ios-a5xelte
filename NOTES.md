@@ -1,3 +1,9 @@
+ACTIVE0061 flashed BOOT-only100percent/success/reboot20:21UTC. CI43756243470
+SUCCESSd640287; exact source/loader/ADT/arg checks PASS. Capture190652
+waits USB then100s; deploy session10796. Need observe0121 Sandbox scalar
+check and media/backboard/container progression.0122 not in0061; locally
+validated/committed038d3f1, no new CI yet. Host was already Download.
+
 ACTIVE0122 prepared: opt-in HFS SWAP -> existing VNOP_EXCHANGE scoped to
 writable HFS /dev/a03userdata0 root and a03emmc_rw=1. Actual-source host
 checks, kernel compile, patch equality PASS; hardware pending. First finish
