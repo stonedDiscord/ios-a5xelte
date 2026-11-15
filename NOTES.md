@@ -1,3 +1,9 @@
+ACTIVE0122 prepared: opt-in HFS SWAP -> existing VNOP_EXCHANGE scoped to
+writable HFS /dev/a03userdata0 root and a03emmc_rw=1. Actual-source host
+checks, kernel compile, patch equality PASS; hardware pending. First finish
+existing0121 CI43756243470/package0061 and isolated Sandbox boot. No swap
+arg in0061. No additional CI yet. Cross-reference remains below.
+
 ACTIVE cross-reference: docs/a03-userspace-cross-reference.md.
 A5 nil-container crash improved after HFS swap0117; A03 omits0052.
 A03 retains external ACL resolver, omits work-interval grant. SWEET45263be

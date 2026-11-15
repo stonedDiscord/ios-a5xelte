@@ -1,0 +1,59 @@
+--- a/bsd/vfs/kpi_vfs.c
++++ b/bsd/vfs/kpi_vfs.c
+@@ -105,6 +105,7 @@
+ #include <sys/lockf.h>
+ #include <sys/xattr.h>
+ #include <sys/kdebug.h>
++#include <pexpert/pexpert.h>
+ 
+ #include <kern/assert.h>
+ #include <kern/zalloc.h>
+@@ -4343,6 +4344,40 @@
+ 	return _err;
+ }
+ 
++/* A03 lab root only: HFS implements atomic file exchange, not RENAMEX. */
++static int
++a03_hfs_rename_swap(int error, vfs_rename_flags_t flags, vnode_t from,
++    vnode_t to, vfs_context_t ctx)
++{
++	uint32_t enabled = 0, writable = 0;
++	mount_t mp;
++	static unsigned reports;
++
++	if (error != ENOTSUP || flags != VFS_RENAME_SWAP ||
++	    from == NULLVP || to == NULLVP || from == to ||
++	    !vnode_isreg(from) || !vnode_isreg(to)) {
++		return error;
++	}
++	mp = vnode_mount(from);
++	if (mp == NULL || mp != vnode_mount(to) ||
++	    !(mp->mnt_flag & MNT_ROOTFS) || (mp->mnt_flag & MNT_RDONLY) ||
++	    strcmp(mp->mnt_vfsstat.f_fstypename, "hfs") != 0 ||
++	    strcmp(mp->mnt_vfsstat.f_mntfromname, "/dev/a03userdata0") != 0) {
++		return error;
++	}
++	PE_parse_boot_argn("a03_hfs_swap", &enabled, sizeof(enabled));
++	PE_parse_boot_argn("a03emmc_rw", &writable, sizeof(writable));
++	if (enabled != 1 || writable != 1) {
++		return error;
++	}
++	/* Existing HFS journal/locking/error handling remains authoritative. */
++	error = VNOP_EXCHANGE(from, to, 0, ctx);
++	if (__atomic_fetch_add(&reports, 1, __ATOMIC_RELAXED) < 32) {
++		printf("A03 HFS: root regular-file RENAME_SWAP exchange error=%d\n", error);
++	}
++	return error;
++}
++
+ errno_t
+ vn_rename(struct vnode *fdvp, struct vnode **fvpp, struct componentname *fcnp, struct vnode_attr *fvap,
+     struct vnode *tdvp, struct vnode **tvpp, struct componentname *tcnp, struct vnode_attr *tvap,
+@@ -4452,6 +4487,7 @@
+ 	} else {
+ 		if (flags) {
+ 			_err = VNOP_RENAMEX(fdvp, *fvpp, fcnp, tdvp, *tvpp, tcnp, flags, ctx);
++			_err = a03_hfs_rename_swap(_err, flags, *fvpp, *tvpp, ctx);
+ 			if (_err == ENOTSUP && flags == VFS_RENAME_SECLUDE) {
+ 				// Legacy...
+ 				if ((*fvpp)->v_mount->mnt_vtable->vfc_vfsflags & VFC_VFSVNOP_SECLUDE_RENAME) {

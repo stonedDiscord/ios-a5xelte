@@ -3693,3 +3693,18 @@ Sandbox0050 functionality. Actual generated Makefile has EXT_RESOLVER.
 HakiOS XNU8796.121.2 vs our8796.141.3; broad Sandbox stub not copied.
 Staged A03 SystemVersion confirmed16.0/20A362, not donor16.7.16/20H392.
 Other repositories inspected only; no phone USERDATA write.
+
+## 2026-11-15: scoped HFS atomic-swap candidate (0122)
+
+Cross-reference established A5's same nil system-container NSURL/UMD ENOTSUP
+pattern improved with donor HFS swap support. Prepared0122 using existing
+HFS VNOP_EXCHANGE only after VNOP_RENAMEX returns ENOTSUP for exactly SWAP.
+Requires two distinct regular vnodes on the same writable HFS root mounted
+from /dev/a03userdata0, plus explicit a03_hfs_swap=1 AND a03emmc_rw=1.
+Other mounts/flags/types/errors retain existing behavior; exchange errors
+propagate. HFS journal/locking remain existing implementation.32 bounded
+result logs. This does not rewrite the root image or add partition access.
+Actual-source host gates/error/log tests PASS; real kpi_vfs.c arm64 kernel
+compile PASS; exact patch application/source comparison PASS. Hardware
+pending. Existing0121 CI43756243470/package0061 remain independent and
+unchanged; do not enable swap in0061. New CI not started at this milestone.
