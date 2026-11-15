@@ -1,0 +1,63 @@
+--- a/osfmk/kern/host.c
++++ b/osfmk/kern/host.c
+@@ -185,4 +185,24 @@
+ }
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++/* Diagnostic output budget only: do not change host/Mach IPC decisions.
++ * Eight normal reports per site; an independent16-report failure budget. */
++boolean_t a03_host_log_allowed(unsigned site, boolean_t failed);
++boolean_t
++a03_host_log_allowed(unsigned site, boolean_t failed)
++{
++    static unsigned reports[5];
++    if (site >= 4) return FALSE;
++    unsigned slot = failed ? 4 : site;
++    unsigned limit = failed ? 16 : 8;
++    unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
++    do {
++        if (old >= limit) return FALSE;
++    } while (!__atomic_compare_exchange_n(&reports[slot], &old, old + 1,
++        false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++    return TRUE;
++}
++#endif
++
+ extern int sched_allow_NO_SMT_threads;
+ 
+@@ -191,5 +211,6 @@
+ {
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+-    if (flavor == HOST_PRIORITY_INFO) {
++    if (flavor == HOST_PRIORITY_INFO &&
++        a03_host_log_allowed(0, host == HOST_NULL || *count < HOST_PRIORITY_INFO_COUNT)) {
+         printf("A03 HOST priority host_valid=%d count=%u need=%u\n",
+             host != HOST_NULL, *count, HOST_PRIORITY_INFO_COUNT);
+--- a/osfmk/kern/ipc_kobject.c
++++ b/osfmk/kern/ipc_kobject.c
+@@ -396,5 +396,6 @@
+ 	request_msgh_id = req_hdr->msgh_id;
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+-    if (request_msgh_id == 200) {
++    extern boolean_t a03_host_log_allowed(unsigned, boolean_t);
++    if (request_msgh_id == 200 && a03_host_log_allowed(1, FALSE)) {
+         printf("A03 HOST MIG request size=%u bits=%x\n",
+             req_hdr->msgh_size, req_hdr->msgh_bits);
+@@ -470,5 +471,6 @@
+ 
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+-    if (request_msgh_id == 200) {
++    if (request_msgh_id == 200 &&
++        a03_host_log_allowed(2, ipc_kobject_reply_status(reply) != KERN_SUCCESS)) {
+         printf("A03 HOST MIG reply size=%u status=%d\n",
+             reply_hdr->msgh_size, ipc_kobject_reply_status(reply));
+--- a/osfmk/ipc/mach_msg.c
++++ b/osfmk/ipc/mach_msg.c
+@@ -1109,5 +1109,6 @@
+ 
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+-    if ((mach_msg_id_t)(mv_id >> 32) == 200) {
++    extern boolean_t a03_host_log_allowed(unsigned, boolean_t);
++    if ((mach_msg_id_t)(mv_id >> 32) == 200 && a03_host_log_allowed(3, FALSE)) {
+         printf("A03 HOST msg2 options=%llx size=%u remote=%x reply=%x\n",
+             option64, (unsigned)(mb_ss >> 32), (unsigned)mr_lp,

@@ -1,3 +1,10 @@
+ACTIVE user confirms logo-only, slow with HOST MIG spam.0130 now caps
+normal HOST logs8/site(4sites)+separate16errors, actual host/kernel objects/
+plain apply PASS; no IPC behavior changes.0065 initial1694 HOST lines78KB.
+0127/0128 CI43765717894 SUCCESS;0066 package63560 downloading/checking.
+Need build0129+0130 next for quiet logs and actual GUI thread snapshots.
+No runtime speedup/home screen claimed.0065 continuation85699 still active.
+
 ACTIVE0065 initial360 complete554042bytes SHA3228ff83...15dfb:3 swaps,
 5 actual SpringBoard syscalls, no custom/generic crash lines, no A03 USER.
 Continuation300s85699 active boot0065-usb-continuing.log. CI43765717894

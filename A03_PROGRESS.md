@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: user reports logo-only and excessive HOST logging;0130 cap
+
+User still sees only the Apple logo and reports slowness amid repeated
+A03 HOST MIG messages.0065 initial capture contains1694 HOST lines,
+78772bytes of554042 total. These are successful recurring host-info IPC,
+not crash evidence; synchronous printf costs may contribute, but runtime
+speedup is not established. No home-screen success claimed.
+
+Prepared0130 caps each of four normal HOST logging sites at8reports and
+reserves independent16failure reports. No host/Mach IPC decisions, arguments,
+reply contents or syscall results change. Actual-source budget/saturation
+host tests, three real kernel syntax/object compiles and plain git apply
+complete-file equality PASS.0129 thread sampler and0130 not yet deployed.
+0127/0128 CI43765717894 now SUCCESS;0066 package63560 is downloading/checking.
+
 ## 2026-11-15:0065 diagnostic initial capture complete
 
 360s capture completed554042bytes SHA256
