@@ -3222,3 +3222,16 @@ patch apply/reverse PASS, both affected C files arm64 kernel syntax using
 actual CI flags plus -mgeneral-regs-only PASS. Existing0108 profile/workflow
 WIP now validated for this diagnostic build; full CI/runtime still pending.
 Next0053 uses0052 loader/ADT/root/args plus a03crash_log=1. No root rewrite.
+
+Full diagnostic build CI43739909683 dispatched fromc3d3c98. Working USB0109
+retained; runtime crash reasons pending. No0053 flash yet.
+
+Added read-only tools/a03-symbolicate-cache.py for the next USB crash PCs:
+validates matching cache/subcache/symbol UUIDs, tests actual executable
+Mach-O segment membership, reports image/base/offset and nearest preceding
+local symbol. Explicitly labels local-symbol proximity, not a proven function
+boundary (exports may intervene). Reproduces independently established0045
+pthread assertion:1e6f71f5c-slide19274000=1cdcfdf5c, libsystem_pthread,
+___pthread_init.cold.3+24. Apple assets stay ignored. Actual watchdogd ReVa
+fatal helper10000b2f4 independently resolves missing IOWatchdog lookup to
+os_crash message and BRK; current runtime cause still awaiting0053 evidence.
