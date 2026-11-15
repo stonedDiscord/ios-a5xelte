@@ -3602,3 +3602,18 @@ Exact backboardd embedded XML includes com.apple.security.system-container=true.
 Original host root contains containers/Data/System and Shared/SystemGroup;
 current phone state can differ. Need container lookup failure details, not
 invented paths or blind root rewrite. Media null dictionary still persists.
+
+## 2026-11-15: bounded startup failure evidence prepared (0120)
+
+Previous goal turn made progress: BOOT0059 captured exact nil-path exception.
+Current root cause remains unproven: original parent directories and embedded
+backboardd system-container entitlement are present, but live container query
+can fail for IPC/permissions/entitlement or another prerequisite. Do not invent
+paths, bypass constructor failures or mutate Apple user code.
+0120 logs read-only syscall return evidence for backboardd/containermanagerd/
+mediaserverd/notifyd under existing a03crash_log=1.192 reports/name per boot;
+only errors plus successful csops/MAC queries. Captures errno/result/PC/4args,
+bounded sanitized path for known pathname syscalls; entitlement query first
+8 output bytes only when buffer length permits. No errno/user-state changes.
+Actual-source host selection/gating/path/header/cap test PASS; systemcalls.c
+kernel general-register compile PASS. Full CI/hardware pending;0059 retained.

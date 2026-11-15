@@ -1,0 +1,93 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -27,6 +27,8 @@
+ #include <sys/kdebug.h>
+ #include <sys/sysent.h>
+ #include <sys/sysproto.h>
++#include <sys/codesign.h>
++#include <string.h>
+ #include <sys/kauth.h>
+ #include <sys/bitstring.h>
+ 
+@@ -79,6 +81,60 @@
+ extern int mach_trap_count;
+ #endif
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++/* Bounded evidence for real container/notify initialization failures. Never
++ * alter errno, syscall arguments or user memory. Existing diagnostic opt-in. */
++static void
++a03_startup_syscall_log(struct proc *p, unsigned code, int error,
++    const uint64_t *args, int result, uint64_t pc)
++{
++    unsigned slot;
++    static unsigned reports[4];
++    if (!strcmp(p->p_comm, "backboardd")) slot = 0;
++    else if (!strncmp(p->p_comm, "containermanager", 15)) slot = 1;
++    else if (!strcmp(p->p_comm, "mediaserverd")) slot = 2;
++    else if (!strcmp(p->p_comm, "notifyd")) slot = 3;
++    else return;
++    if (!error && code != SYS_csops && code != SYS_csops_audittoken &&
++        code != SYS___mac_syscall) return;
++    uint32_t enabled = 0;
++    PE_parse_boot_argn("a03crash_log", &enabled, sizeof(enabled));
++    if (enabled != 1) return;
++    unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
++    do {
++        if (old >= 192) return;
++    } while (!__atomic_compare_exchange_n(&reports[slot], &old, old + 1,
++        false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++    printf("A03 START %s[%d] syscall %u err %d rv %d pc %llx args %llx/%llx/%llx/%llx\n",
++        p->p_comm, proc_pid(p), code, error, result, pc, args[0], args[1], args[2], args[3]);
++    user_addr_t path = 0;
++    switch (code) {
++    case SYS_open: case SYS_open_nocancel: case SYS_access:
++    case SYS_mkdir: case SYS_mkdir_extended: case SYS_stat64: case SYS_lstat64:
++    case SYS_getattrlist: case SYS_getxattr: case SYS___mac_syscall:
++        path = args[0]; break;
++    case SYS_openat: case SYS_openat_nocancel: case SYS_openat_dprotected_np:
++    case SYS_faccessat: case SYS_mkdirat: case SYS_getattrlistat:
++        path = args[1]; break;
++    default: break;
++    }
++    char text[192];
++    size_t copied = 0;
++    if (path && copyinstr(path, text, sizeof(text), &copied) == 0 && copied > 1) {
++        for (size_t i = 0; i + 1 < copied; i++)
++            if ((unsigned char)text[i] < 32 || (unsigned char)text[i] > 126) text[i] = ' ';
++        printf("A03 START %s syscall %u path: %s\n", p->p_comm, code, text);
++    }
++    if ((code == SYS_csops || code == SYS_csops_audittoken) &&
++        (args[1] == CS_OPS_ENTITLEMENTS_BLOB || args[1] == CS_OPS_DER_ENTITLEMENTS_BLOB) &&
++        args[2] && args[3] >= 8) {
++        uint32_t header[2];
++        if (copyin((user_addr_t)args[2], header, sizeof(header)) == 0)
++            printf("A03 START %s csops header %08x/%08x\n", p->p_comm, header[0], header[1]);
++    }
++}
++#endif
++
+ /*
+  * Function:	unix_syscall
+  *
+@@ -180,6 +236,10 @@
+ 	AUDIT_SYSCALL_ENTER(code, proc, uthread);
+ 	error = (*(callp->sy_call))(proc, &uthread->uu_arg[0], &(uthread->uu_rval[0]));
+ 	AUDIT_SYSCALL_EXIT(code, proc, uthread, error);
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++	if (is_saved_state64(state)) a03_startup_syscall_log(proc, code, error,
++	    (const uint64_t *)&uthread->uu_arg[0], uthread->uu_rval[0], get_saved_state_pc(state));
++#endif
+ 
+ #if CONFIG_MACF
+ skip_syscall:
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -185,6 +185,7 @@
+ subr_log.o_CWARNFLAGS_ADD += -Wno-cast-align
+ sys_generic.o_CWARNFLAGS_ADD += -Wno-cast-align
+ sys_pipe.o_CWARNFLAGS_ADD += -Wno-cast-align
++systemcalls.o_CFLAGS_ADD += -mgeneral-regs-only
+ systemcalls.o_CWARNFLAGS_ADD += -Wno-cast-align
+ systrace.o_CWARNFLAGS_ADD += -Wno-cast-align
+ tty.o_CWARNFLAGS_ADD += -Wno-cast-align

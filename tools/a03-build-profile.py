@@ -122,7 +122,8 @@ def main():
                      '0116-a03-deeper-bounded-crash-stack.patch',
                      '0117-a03-advertise-cdc-break.patch',
                      '0118-a03-bounded-crash-annotations.patch',
-                     '0119-a03-framework-crash-annotations.patch'):
+                     '0119-a03-framework-crash-annotations.patch',
+                     '0120-a03-bounded-startup-syscall-evidence.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

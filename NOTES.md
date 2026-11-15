@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0120 bounded startup syscall evidence locally tested/compiled. Next CI
+then0060 preserving0059 loader/ADT/args/root;0059 USB currently running.
+Target actual system-container lookup failure errno/IPC/entitlement evidence.
+No repair claim. Use newgrp uucp capture/control, no ACL request required.
+
 ACTIVE0059 exact backboardd reason: NSURL initFileURLWithPath nil string,
 NSInvalidArgumentException. Startup first resolves system-container caches;
 BaseBoard defaultPath converts BSSystemSharedDirectoryForCurrentProcess to URL,
