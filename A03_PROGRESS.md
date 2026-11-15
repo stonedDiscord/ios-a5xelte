@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: BOOT0063 five-minute continuation complete;0124 CI active
+
+Continuation300s completed136106bytes SHA256
+9cc3959853e7f7698f46860079c84422aa1771cdd50af9e64ce8b7e06ab96b51,
+zero CRASH, no repeated SpringBoard/backboardd spawn authorization, three
+successful full-screen swaps. Physical Apple-logo report remains the visible
+milestone, not a home screen. Extended600s capture79994 now running in
+boot0063-usb-extended.log;0063 is left running during the build.
+
+0124 committed640a2a1; full CI43762755721 running exact commit. Real
+sweet_amfi.c syntax and object generation PASS, actual-source privilege
+tests PASS, plain git apply complete-file equality PASS. Package0064
+session54915 waits CI success then checks12 exact source files, identical
+loader(except image_size)/ADT/root and sole argument a03_work_interval=1.
+No0064 flash yet. Selector29 decoded as GetDisplayArea with8-byte structure
+output; existing Unsupported did not prevent later logo/frame submission.
+Do not assume all unsupported selectors or the Caches denial are fatal.
+
 ## 2026-11-15: physical Apple logo and actual framebuffer swaps
 
 User reports the phone now shows an Apple logo. Continuation0063 USB log

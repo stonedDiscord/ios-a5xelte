@@ -1,3 +1,10 @@
+ACTIVE0124 CI43762755721 exact640a2a1 running; package0064 session54915
+waits success and12 source/loader/ADT/sole a03_work_interval checks.
+0063 continuation300s complete136106bytes SHA9cc39598...96b51, zero CRASH,
+three full-screen swaps. User sees Apple logo. Extended600s79994 captures;
+leave0063 running while building. No new flash/home screen proof. Selector29
+is GetDisplayArea; its Unsupported did not prevent later swaps.
+
 ACTIVE0063 user physically sees Apple logo; continuation confirms three
 full-screen720x1600 BGRA swaps by backboardd, zero CRASH at latest read.
 Leave running while collecting. Home screen unverified.0124 candidate
