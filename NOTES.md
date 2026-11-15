@@ -1,3 +1,8 @@
+ACTIVE0067 late180s complete30411bytes SHA34011d2f76b428bef7fc9a1d7901806dd144cbfb9623064e187a4fa22390613b.
+7more swaps4..10; analyticsd231 generic crash. No GUI content proof.
+0132 CI43768648670 Build passed/artifacts uploading; package59465 +
+deploy65357 pending exact20sources/loader/ADT/args. No current capture.
+
 ACTIVE user dmd crash confirmed: dmd153 SIGABRT, Foundation exception
 Failed to enable data vault: Operation not supported (45). Missing API
 support evidence, not CPU overload proof; no dependency/GUI conclusion.

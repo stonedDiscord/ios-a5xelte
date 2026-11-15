@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0067 late180s continues rendering;0132 Build passed
+
+Late capture completed30411bytes SHA256
+34011d2f76b428bef7fc9a1d7901806dd144cbfb9623064e187a4fa22390613b. Seven additional full-screen swaps4..10;
+generic analyticsd231 corpse crash. Rendering progress alone does not prove
+home-screen content. No GUI thread samples after bounded final pass540s.
+CI43768648670 Build passed and artifacts uploading;0068 package59465 and
+BOOT-only deployment65357 remain pending exact checks. No current capture.
+
 ## 2026-11-15: user-reported dmd crash has explicit data-vault failure
 
 0067 full capture confirms dmd153 SIGABRT. Foundation annotation records
