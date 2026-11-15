@@ -2648,3 +2648,9 @@ has FBCON_SCALE2 while local donor patch already has1; A03 pulls pinned donor,
 so local patch was not used. A03 profile now transforms pinned2 to1, yielding
 8x16 cells /90columns x100rows at720x1600 instead of16x32 /45x50. USB untouched.
 New font is source-only until next kernel build and BOOT test.
+
+XNU font build CI43711774561 started from a92aa205a02b28f38a03e8247eba22c1a87faa99,
+A03 iOS userspace profile / DEVELOPMENT / SWEET / macos-15-intel. Staged0003
+verified FBCON_SCALE1. At720x1600 this is90columns x100rows (four times old
+character capacity). Current device stays in RO USB status0015 until build
+passes and user returns Download. No new XNU flash yet.

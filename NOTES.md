@@ -6,7 +6,8 @@ Trust-cache warning falls back to root ownership; do not assume causal.
 /cores/core.1 ABSENT in live read-only HFS catalog; /cores empty. USB reader
 working, host ACL available. New tools/a03-read-usb-hfs.py reads guarded LUN1.
 User wants XNU font half size, NOT USB: fixed A03 pinned0003 profile scale2->1.
-Needs new kernel CI/BOOT test; actual launchd main execution still unproven.
+CI43711774561 running from a92aa20; next package BOOT0045 with0044 args,
+then Download/BOOT-only test. Actual launchd main execution still unproven.
 
 CURRENT 2026-11-15 11:53UTC = BOOT0044 flashed BOOT-only100%/success/reboot.
 SHA2f2dc75f...7f3131; same CI43708471929 kernel plus DEVELOPMENT iOS exec
