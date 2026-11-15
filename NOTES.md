@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE corrected CI43722354348 at8d25855: exact-source USB context fixed,
+all USB/monitor/reply strings now required in CI.43720286686 artifact
+contains0102 only (0103/0104 skipped), rejected/no flash. Device Download.
+
+
 IMPORTANT:43720286686 green but USB0103+monitor0104 SKIPPED; DO NOT FLASH.
 Artifact marker gate caught it; no phone write. Fixed context against exact
 CI tree, sequential git apply PASS. CI now requires USB+hold marker strings.

@@ -2832,3 +2832,5 @@ packaging attempt made only private files; discarded both never-flashed
 0103/0104 now pass git apply --check and application in sequence. Added CI
 required string checks for reply diagnostics, USB console and hold monitor,
 so skipped requested features cause failure. Next corrected full build.
+
+Corrected CI43722354348 started at8d25855, includes required feature gates.
