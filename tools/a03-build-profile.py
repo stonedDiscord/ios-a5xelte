@@ -139,7 +139,7 @@ def main():
         'Pinned libpthread and mockfs/HFS RAM-root.',
         'Experimental XML entitlements/platform CS_SIGNED support (0035/0036).' if a.ios_userspace else 'Minimal AMFI interface for static test init.',
         'Opt-in A03 SDMA; BOOT reads confirmed0024; USERDATA writes hardware-unverified.', '']))
-    print('A03 profile staged:', len(patches)+8+18*int(a.ios_userspace), 'patches; MACHINE_CONFIG=SWEET')
+    print('A03 profile staged:', len(list(a.destination.glob('*.patch'))), 'patches; MACHINE_CONFIG=SWEET')
 
 
 if __name__=='__main__':
