@@ -1,3 +1,11 @@
+ACTIVE0065 BOOT-only100percent/success/reboot~21:49UTC. CI43764128179
+SUCCESS736d3b3;14 sources/loader/ADT/sole a03_userlogs=1 verified.
+BOOTbba5c86c...5151e. Deploy56741 waits CDC then360s boot0065-usb-initial.log;
+inspect A03 USER SpringBoard/backboard and A03 START SpringBoard.
+Follow-up0127/0128 CI43765717894 exact2a79856 building; package0066 session
+63560 waits15 sources frozen expected0128 and identical args/ADT/loader.
+No0066 flash/root rewrite. Expanded crash names not yet on device.
+
 ACTIVE0064 fresh180s completed24497bytes SHA9d836d9d...96d05, generic
 analyticsd165/tccd172 crash lines; swaps4..9 continue.0128 now covers tccd
 as well,14 bounded slots; host/kernel syntax PASS. CI43764128179 Build

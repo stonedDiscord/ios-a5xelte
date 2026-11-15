@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0065 GUI diagnostic boot uploaded;0127/0128 CI active
+
+CI43764128179 SUCCESS exact736d3b3. Fourteen downloaded source checks PASS
+against frozen0126 snapshot.0065 loader unchanged except image_size,
+ADT/root identical, sole added arg a03_userlogs=1. Kernel SHA256
+4581ff40e48b05d059455576e3ec7d547619dc76c0123be69b2859ae357dfae6;
+BOOTbba5c86c43c1a096f8b54d590102d8cf2ca80b2e4d47727e97a62523fcd5151e.
+CDC Download reset from0064 worked; BOOT-only upload100percent/success/
+reboot~21:49UTC. Deployment56741 waits USB then360s initial log.
+
+Follow-up0127 surface dimensions +0128 analyticsd/dmd/tccd crash evidence
+CI43765717894 started exact2a79856. Frozen15-source snapshot at
+/tmp/a03-expected0128/xnu; package0066 session63560 waits successful CI,
+exact sources and identical loader/ADT/arguments. No0066 flash. Root and
+protected partitions unchanged; physical SpringBoard GUI still unverified.
+
 ## 2026-11-15: further analyticsd/tccd crash evidence
 
 Fresh180s0064 capture completed24497bytes SHA256
