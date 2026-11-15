@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0059 BOOT-only flash SUCCESS19:42UTC; CI43752732761 PASS.
+Exact0058 loader/ADT/args/root retained. Capture2930 waits900s then100s,
+private boot0059-usb-initial.log. CoreFoundation reason annotation pending.
+USB-triggered Download worked again from0058. No physical mode ask needed.
+
 ACTIVE0119 CI43752732761 from4e22af5.0059 packaging18939 waits success,
 then exact source/loader/ADT/args.0058 running, USB tty accessible. Capture
 77592 complete; initial log private. Use control Download when image ready.

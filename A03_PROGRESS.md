@@ -3569,3 +3569,14 @@ listener dictionary pointer is NULL, not an absent key or on-disk plist.
 Constructor returns NULL for absent predictor/object or notification name;
 which input is missing remains runtime-unproven (allocation failure also
 not excluded). Do not silently replace dictionary or fake notify success.
+
+## 2026-11-15: BOOT0059 framework annotations deployed
+
+CI43752732761 SUCCESS from4e22af5. Exact downloaded exception/USB sources
+match local validated source;0058 loader (except image_size), ADT and args
+preserved. Kernel17418f77ff7b185b31fd6cb1783a0a0246ef2685dd726c0ec3c1112bc22a98a8.
+Imagec03d24d795070925e8a18ba2a972124ce2faca53a82e46ac5434f87eaa61bd87.
+0058 --download-control returned0 and Heimdall detected Download again.
+0059 BOOT-only upload100percent/success/reboot19:42UTC; capture2930 waits
+900s then100s, private boot0059-usb-initial.log. No root/other partition write.
+Need CoreFoundation annotation runtime reason, not just libc++abi type.
