@@ -1,3 +1,10 @@
+ACTIVE0064 continuation300s completed8093bytes SHAeb640a7a...d3004,
+zero CRASH/new FB/SURF/SB/backboard spawn. No capture currently running;
+USB CDC remains. CI43764128179 exact736d3b3 still Build; package34897
+live waits then14 source/loader/ADT/only a03_userlogs=1 checks. Deploy0065
+script prepared /tmp/a03-deploy0065.sh, not executed. No GUI proof.
+0127 default-surface correction c15b532 stays isolated from0065 diagnostics.
+
 ACTIVE0064 initial360 complete504774bytes SHAdec6bfa0...dc352: zero CRASH,
 4 WI grants/3 full-screen swaps, single SB/backboard spawn authorization.
 Continuation300s18693 active boot0064-usb-continuing.log. CI43764128179

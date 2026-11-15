@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0064 continuation complete; diagnostic build still active
+
+Additional300s capture completed8093bytes SHA256
+eb640a7a1ce2933a97069f10a38b6dc38b39c297837d43a5937ba01978dd3004.
+Zero CRASH, zero new framebuffer/surface calls or SpringBoard/backboardd
+spawn authorization.0064 remains USB CDC. Combined bounded captures do not
+establish a rendered home screen. CI43764128179 exact736d3b3 is still
+in Build; package34897 remains waiting. Next verified0065 BOOT-only adds
+only bounded userspace logs and SpringBoard startup syscall evidence.
+0127 remains a separately committed/tested default-surface correction,
+not included in this diagnostic build. Current regression suite passes.
+
 ## 2026-11-15:0064 initial360s capture complete
 
 Completed504774bytes SHA256
