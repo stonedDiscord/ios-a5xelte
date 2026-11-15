@@ -1,5 +1,9 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+ACTIVE0118 CI43751227542 from7e5ecb7; supersedes43751096298.
+Shared-cache nonzero __TEXT fileoff handled/tested; kernel compile PASS.
+Next BOOT0058; phone Download already. Preserve0057 loader/ADT/args/root.
+
 ACTIVE0118: bounded read-only Mach-O __crash_info reader prepared/tested;
 local exception.c compile PASS. Need full CI then BOOT0058 preserving0057
 loader/ADT/args/root. Host already detects Download; do not ask user again.

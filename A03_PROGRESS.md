@@ -3515,3 +3515,10 @@ no underlying backboardd/media repair claimed. Actual-source synthetic parser
 layout/slide/message2/sanitization/truncation/malformed/fault/overflow tests,
 existing crash/USB-download/watchdog tests and exception.c general-register
 kernel compile PASS. Full CI and hardware capture pending.
+
+Full0118 CI43751227542 from7e5ecb7 supersedes43751096298 (cancel requested).
+Read-only exact-cache check found shared-cache __TEXT fileoff is nonzero;
+parser corrected before deployment and regression explicitly exercises this.
+No BOOT0058 flash yet; phone remains in Download. Earlier0057 UMD notify8
+is NOT proof of mediaserverd notification failure: it can originate in a
+process that intentionally disables notifications; media candidate unproven.
