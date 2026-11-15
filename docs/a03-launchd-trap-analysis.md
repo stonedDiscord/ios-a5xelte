@@ -121,3 +121,24 @@ rejected; receive-right checks, dispositions, regular reply semantics,
 MIG dispatch and host_info implementation remain unchanged. This preserves
 the real host_info operation rather than returning synthetic success.
 Host predicate matrix and cross-compile pass; runtime fix remains unproven.
+
+## BOOT0048: libpthread blocker passed; mount boot-task failure
+
+Physical screen now reports launchd userspace panic: mount-phase-1 exited74,
+failed to mount /usr/standalone/firmware, Operation not supported by device19.
+This demonstrates launchd reached boot-task orchestration after0105, not
+successful sustained boot. Kernel0048 has nullfs_vfsops but no bindfs_vfsops.
+The A03 profile excluded portable donor0037-sweet-config-bindfs.patch.
+
+ReVa /mount imported from the verified local root, no private Apple bytes
+tracked. Function0x100006544 calls mount("bindfs", target,0x100019,source).
+Failure is tolerated only for errno2/ENOENT when not required. Otherwise
+0x1000068b4 calls errx with strerror(errno) and the reported diagnostic;
+0x100006694 ->0x100004c60 maps errno through sysexit_np. This directly
+connects missing VFS type ENODEV19 to the fatal mount boot task.
+The actual mount signature has com.apple.private.bindfs-allow=true.
+
+Enable the real bindfs implementation by staging0037, retaining entitlement
+and VFS error checks. Exact config application passes; CI43727113402 builds
+fromfb777a0, with an explicit linked bindfs_vfsops gate. Next BOOT0049 retains
+0048 arguments/root; no filesystem reinstall or binary patch required.

@@ -2920,3 +2920,8 @@ ENODEV/exit74 failure. Enable actual bindfs VFS, not suppress mount failure.
 Root stays installed; only new kernel BOOT needed. USB remains unproven.
 
 CI43727113402 started fromfb777a0; portable bindfs profile staging PASS.
+
+ReVa confirms exact mounted-root /sbin/mount0x100006544 calls bindfs; errno19
+is not the tolerated optional ENOENT case and reaches errx via sysexit_np.
+Code signature contains bindfs-allow entitlement=true; retain that check.
+Private mount binary remains ignored. This narrows fix to config, not root.
