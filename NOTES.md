@@ -4,8 +4,10 @@ ACTIVE0056 installed BOOT-only100percent/success/reboot18:39UTC.
 CI43746383199 PASS; exact tested USB/watchdog source,0055 loader/ADT retained;
 args only +a03_watchdog_disabled=1. Image SHA256
 9ec37ad159f9d16f0b1ba2deafdba09021e9aea3c877c89978d1d751ad09b880.
-CDC enumerated; capture21837 waits for tty ACL (user asked once).
+CDC enumerated; capture21837 expired EACCES. Replacement92355 waits900s
+for tty ACL (user already asked once); private boot0056-usb-access.log.
 Need capture watchdog selector0/software stage and test --download-control.
+0116 bounded24-frame crash walker locally tested/compiled; not deployed.
 Control reset unproven; bulk RX remains broken. Root/protected parts retained.
 
 CURRENT0055: USB IN works, PIO takeover did NOT fix RX (0800/count1 zero).

@@ -1,0 +1,15 @@
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -981,9 +981,10 @@
+ 	    get_saved_state_pc(ss), get_saved_state_lr(ss), get_saved_state_sp(ss), fp,
+ 	    (uint64_t)saved_state64(ss)->far);
+ 
+-	char line[200];
++	/* Bound reads to24 frames; six stopped inside the terminate wrappers. */
++	char line[544];
+ 	int n = snprintf(line, sizeof(line), "CRASH %s bt", name);
+-	for (int i = 0; i < 6 && fp != 0 && (fp & 7) == 0 && n < (int)sizeof(line) - 20; i++) {
++	for (int i = 0; i < 24 && fp != 0 && (fp & 7) == 0 && n < (int)sizeof(line) - 20; i++) {
+ 		uint64_t frame[2];
+ 		if (copyin((user_addr_t)fp, frame, sizeof(frame)) != 0) {
+ 			break;

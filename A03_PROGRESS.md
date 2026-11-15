@@ -3419,3 +3419,16 @@ All USB/watchdog host suites and crash/symbolication suites PASS. Extended
 actual-source control test rejects wrong type/request/value/interface/length;
 only exact indefinite SEND_BREAK requests reset. Matching local Linux CDC
 break callback maps nonzero state to0xffff, clear to0.
+
+## 2026-11-15: bounded deeper exception trace prepared
+
+BOOT0056 initial capture21837 expired on verified EACCES; USB remains present,
+no watchdog/reset runtime conclusion. Replacement capture92355 waits900s for
+access, then100s, writing private boot0056-usb-access.log. No repeat ACL request.
+
+Backboardd0054/0055 traces stop at six frames inside Objective-C/C++ terminate;
+0116 extends only the existing read-only frame walker to24frames/544bytes.
+Existing bootarg/name selection/two-report cap, checked copyin/alignment and
+strictly increasing frame pointers retained. Actual patched walker host tests
+cover24-frame cap, null/unaligned FP, failed copy and nonincreasing chain PASS;
+exact kernel exception.c general-register syntax compile PASS. Not deployed.

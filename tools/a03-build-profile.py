@@ -118,7 +118,8 @@ def main():
                      '0112-a03-disabled-watchdog-capability.patch',
                      '0113-a03-usb-pio-takeover.patch',
                      '0114-a03-watchdog-software-boot-stage.patch',
-                     '0115-a03-download-control-escape.patch'):
+                     '0115-a03-download-control-escape.patch',
+                     '0116-a03-deeper-bounded-crash-stack.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
