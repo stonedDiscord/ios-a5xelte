@@ -130,7 +130,8 @@ def main():
                      '0124-a03-entitled-work-interval.patch',
                      '0125-a03-bounded-userspace-log.patch',
                      '0126-a03-springboard-startup-evidence.patch',
-                     '0127-a03-default-surface-dimensions.patch'):
+                     '0127-a03-default-surface-dimensions.patch',
+                     '0128-a03-analytics-crash-evidence.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

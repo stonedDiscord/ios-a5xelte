@@ -1,0 +1,16 @@
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1852,5 +1852,5 @@
+         return false;
+     }
+-    static _Atomic uint32_t counts[11];
++    static _Atomic uint32_t counts[13];
+     unsigned slot;
+     if (!strcmp(name, "watchdogd")) slot = 0;
+@@ -1865,4 +1865,6 @@
+     else if (!strcmp(name, "configd")) slot = 9;
+     else if (!strcmp(name, "lockdownd")) slot = 10;
++    else if (!strcmp(name, "analyticsd")) slot = 11;
++    else if (!strcmp(name, "dmd")) slot = 12;
+     else return false;
+     /* Saturate: never wrap and resume flooding after a long crash loop. */

@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: user-reported analyticsd crash confirmed; correct crash scope
+
+User reports analyticsd crashed. Review finds existing completed0064
+continuation has Process[126] crashed: dmd and Process[157] crashed:
+analyticsd (Too many corpses being created), despite zero custom CRASH
+records. Earlier statements implying zero crashes globally were too broad:
+0108 monitors only11 selected names and excluded these daemons. Relauch
+records also show analyticsd repeated. Keep distinction explicit.
+
+New180s capture75436 boot0064-usb-analytics-report.log records further
+analyticsd165 crash plus swaps4..6. USB remains live; no evidence yet these
+analytics crashes directly kill SpringBoard/backboardd. Prepared0128 to add
+independent two-report slots for analyticsd/dmd to existing crash diagnostics.
+Actual-source host name/gate/saturation tests, real kernel syntax compile
+and plain git apply complete-file equality PASS. No daemon disabled or
+return code changed. Not in active0125/0126 CI43764128179, still Build.
+
 ## 2026-11-15:0064 continuation complete; diagnostic build still active
 
 Additional300s capture completed8093bytes SHA256

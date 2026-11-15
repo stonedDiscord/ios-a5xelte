@@ -1,3 +1,10 @@
+CORRECTION:0064 continuation contains generic corpse crash lines for dmd126
+and analyticsd157 despite zero custom CRASH. User confirms analytics crash;
+new180s75436 captures analyticsd165 crash plus swaps4..6. USB live. Do not
+say no crashes globally: old01108 name filter omitted analyticsd/dmd.
+0128 adds bounded independent slots, host/kernel/plain-apply tests PASS;
+not in CI43764128179/0065. SpringBoard dependency impact unproven.
+
 ACTIVE0064 continuation300s completed8093bytes SHAeb640a7a...d3004,
 zero CRASH/new FB/SURF/SB/backboard spawn. No capture currently running;
 USB CDC remains. CI43764128179 exact736d3b3 still Build; package34897
