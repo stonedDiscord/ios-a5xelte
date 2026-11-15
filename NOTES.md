@@ -3,7 +3,8 @@
 CURRENT: BOOT0043 screen panic launchd CS_KILLED namespace9/code0xe.
 Exact XNU source identifies EXEC WRONG_PLATFORM, not invalid code page. Root
 mount now passes; actual launchd userspace execution remains unproven. Prepare
-BOOT0044 with same CI43708471929 kernel + unentitled_ios_sim_launch=1 and
+BOOT0044 ready UNFLASHED SHA2f2dc75f...7f3131; same CI43708471929 kernel
++ unentitled_ios_sim_launch=1 and
 launchdsuffix=release. Await Download; only BOOT update needed. No root reflash.
 
 CURRENT 2026-11-15 11:48UTC = XNU0043 flashed BOOT-only/upload100%/reboot.

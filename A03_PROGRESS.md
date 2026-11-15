@@ -2604,3 +2604,13 @@ name does not prove launchd instructions ran. Root mount/auth override advanced.
 Existing DEVELOPMENT tunable unentitled_ios_sim_launch=1 permits this path;
 package same verified kernel with that flag and launchdsuffix=release. Packer
 adds these only with --userdata-root. No filesystem reinstall/rebuild needed.
+
+BOOT0044 packaged, UNFLASHED:
+shim/a03/out/a03-xnu-0044.img SHA256
+2f2dc75f240c7f0729e02d9d6eb79087050ff600fdefe4855cddde229b7f3131.
+Compared entire0044 vs0043 payload: identical outside608-byte cmdline field.
+Compiled kernel contains unentitled_ios_sim_launch tunable and allowing-spawn
+path; source confirms DEVELOPMENT enables it. Flags select /sbin/launchd and
+existing validated USERDATA. Await user Download transition; no USB visible
+at final host check, no new device write since0043. Actual launchd instruction
+execution remains unproven until next boot output.
