@@ -2527,3 +2527,9 @@ Current BOOT remains installer0011; no Apple launchd result yet. Next user
 returns Download for BOOT-only RO status0015 display test, then XNU0042 boot
 with repaired root. Never rerun installer just because physical output is
 missing; image is fully verified. Status0015 on-screen behavior unproven.
+
+
+11:14UTC: user returned Download after completed/verified install. RO
+status0015 flashed BOOT-only/upload100%/success/reboot. USB1d6b:0104
+re-enumerated. Await physical status-heading/counter confirmation; full root
+remains verified. No HFS root mount/launchd retest yet.

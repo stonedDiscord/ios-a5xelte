@@ -1,5 +1,10 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT11:14UTC = RO USB status0015, BOOT upload100%/reboot/USB enumerated.
+Full16GiB USERDATA root readback passed earlier. Await user's screen result
+for new status/counters; then Download and XNU0042 BOOT-only launchd trial.
+
+
 VERIFIED ROOT 2026-11-15 11:13UTC: session63894 exited0 FULL DEVICE READBACK
 PASS eb72c14a9cf4aab30a8b49afda745a1b342dc877263d3b6a39901d95c89da108.
 Entire16GiB root now matches source via O_DIRECT; catalog header/root correct.
