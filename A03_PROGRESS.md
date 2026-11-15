@@ -3720,3 +3720,23 @@ addition a03_sandbox_disabled=1.0122 HFS fallback is NOT in this kernel.
 Host already detected Download; BOOT-only upload100percent/success/reboot
 confirmed20:21UTC. Capture190652 waits900s then100s through newgrp uucp.
 Runtime result pending. No host USERDATA/protected-partition write.
+
+## 2026-11-15: 0122 CI failure diagnosed; paused after correction
+
+CI43757697658 from1d37d6c FAILED. Zero-context patch conversion038d3f1
+was wrong for CI's git apply: the fallback call landed at file scope near
+kpi_vfs.c6429, producing implicit-int and undefined flags/fvpp/tvpp/ctx.
+Earlier local GNU patch equality did not exercise CI's application tool.
+Restored three context lines in every hunk. Applied with plain git apply
+in a fresh temporary repository: exact full-file equality against the
+compiled candidate PASS. Actual-source scope tests and real kernel compile
+rechecked. Added regression rejecting context-free hunks. No retry CI or
+flash while user goal is paused. BOOT0062 was never packaged/flashed.
+
+BOOT0061 initial100s capture completed372141bytes/5038LF lines SHA256
+944d7ea11bc437d62f3f680760d17d136ae2fe93bc2f4f9e3e0a7eb5861d1d1f.
+All four target processes show Sandbox op2 errno0; no CRASH records in this
+window and one media/one backboard exec, versus two bounded crashes each
+and three execs each in0060. This is bounded progress, not stable GUI proof.
+UMD atomic-swap ENOTSUP45 persists twice. Unknown Sandbox op4 remains45.
+Continuation capture45257 was started before pause; no reset requested.

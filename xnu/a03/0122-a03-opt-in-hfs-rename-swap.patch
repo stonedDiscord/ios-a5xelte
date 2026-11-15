@@ -1,8 +1,17 @@
 --- a/bsd/vfs/kpi_vfs.c
 +++ b/bsd/vfs/kpi_vfs.c
-@@ -107,0 +108 @@
+@@ -105,6 +105,7 @@
+ #include <sys/lockf.h>
+ #include <sys/xattr.h>
+ #include <sys/kdebug.h>
 +#include <pexpert/pexpert.h>
-@@ -4345,0 +4347,34 @@
+ 
+ #include <kern/assert.h>
+ #include <kern/zalloc.h>
+@@ -4343,6 +4344,40 @@
+ 	return _err;
+ }
+ 
 +/* A03 lab root only: HFS implements atomic file exchange, not RENAMEX. */
 +static int
 +a03_hfs_rename_swap(int error, vfs_rename_flags_t flags, vnode_t from,
@@ -37,5 +46,14 @@
 +	return error;
 +}
 +
-@@ -4454,0 +4490 @@
+ errno_t
+ vn_rename(struct vnode *fdvp, struct vnode **fvpp, struct componentname *fcnp, struct vnode_attr *fvap,
+     struct vnode *tdvp, struct vnode **tvpp, struct componentname *tcnp, struct vnode_attr *tvap,
+@@ -4452,6 +4487,7 @@
+ 	} else {
+ 		if (flags) {
+ 			_err = VNOP_RENAMEX(fdvp, *fvpp, fcnp, tdvp, *tvpp, tcnp, flags, ctx);
 +			_err = a03_hfs_rename_swap(_err, flags, *fvpp, *tvpp, ctx);
+ 			if (_err == ENOTSUP && flags == VFS_RENAME_SECLUDE) {
+ 				// Legacy...
+ 				if ((*fvpp)->v_mount->mnt_vtable->vfc_vfsflags & VFC_VFSVNOP_SECLUDE_RENAME) {

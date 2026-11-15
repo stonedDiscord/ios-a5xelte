@@ -1,3 +1,12 @@
+PAUSED at user request. CI43757697658 FAILED: zero-context0122 patch
+misplaced call at file scope under git apply. Restored contextual hunks;
+fresh plain git apply full-source equality, host scope checks and kernel
+compile PASS. Regression rejects zero-context hunks. No retry CI/flash.
+0061 running: Sandbox op2 succeeds; initial100s no CRASH records, single
+media/backboard exec each; UMD swap ENOTSUP persists.0062 never flashed.
+Old package0062 session91355 exited on failure. Continuation45257 may end
+normally; retain private logs. Next when resumed: CI corrected0122 once.
+
 ACTIVE0061 flashed BOOT-only100percent/success/reboot20:21UTC. CI43756243470
 SUCCESSd640287; exact source/loader/ADT/arg checks PASS. Capture190652
 waits USB then100s; deploy session10796. Need observe0121 Sandbox scalar

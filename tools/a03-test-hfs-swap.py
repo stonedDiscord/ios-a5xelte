@@ -5,6 +5,11 @@ import tempfile
 
 root = Path(__file__).resolve().parent.parent
 patch = (root / 'xnu/a03/0122-a03-opt-in-hfs-rename-swap.patch').read_text()
+# CI uses git apply without --unidiff-zero. Every hunk must carry context;
+# otherwise insertions can be relocated silently (failed run43757697658).
+hunks = patch.split('@@')[2::2]
+assert hunks and all(any(line.startswith(' ') for line in hunk.splitlines())
+                     for hunk in hunks), 'git apply requires context in every hunk'
 added = '\n'.join(line[1:] for line in patch.splitlines()
                   if line.startswith('+') and not line.startswith('+++'))
 start = added.index('/* A03 lab root only:')
