@@ -1,3 +1,9 @@
+ACTIVE0064 fresh180s completed24497bytes SHA9d836d9d...96d05, generic
+analyticsd165/tccd172 crash lines; swaps4..9 continue.0128 now covers tccd
+as well,14 bounded slots; host/kernel syntax PASS. CI43764128179 Build
+passed, artifacts uploading; package0065 session34897 waiting success.
+No capture running now; USB CDC remains. No SpringBoard home-screen proof.
+
 CORRECTION:0064 continuation contains generic corpse crash lines for dmd126
 and analyticsd157 despite zero custom CRASH. User confirms analytics crash;
 new180s75436 captures analyticsd165 crash plus swaps4..6. USB live. Do not

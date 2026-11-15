@@ -8,12 +8,13 @@ part=patch.split('+++ b/bsd/kern/kern_exit.c',1)[1].split('--- a/osfmk',1)[0]
 added='\n'.join(l[1:] for l in part.splitlines() if l.startswith('+'))
 a=added.index('static bool\na03_should_log_daemon_crash');b=added.index('\n#endif',a)
 source=added[a:b]
-# Apply the follow-up name selection to the actual extracted0108 helper.
-follow=(root/'xnu/a03/0128-a03-analytics-crash-evidence.patch').read_text()
-assert '+    static _Atomic uint32_t counts[13];' in follow
-for line in ['else if (!strcmp(name, "analyticsd")) slot = 11;', 'else if (!strcmp(name, "dmd")) slot = 12;']:
- assert '+    '+line in follow
-source=source.replace('counts[11]','counts[13]',1).replace('else if (!strcmp(name, "lockdownd")) slot = 10;','else if (!strcmp(name, "lockdownd")) slot = 10;\n    else if (!strcmp(name, "analyticsd")) slot = 11;\n    else if (!strcmp(name, "dmd")) slot = 12;',1)
+# Apply the contextual follow-up before extracting the tested helper.
+with tempfile.TemporaryDirectory() as d:
+ q=Path(d)/'bsd/kern/kern_exit.c';q.parent.mkdir(parents=True)
+ # Preserve original line offsets using the real helper's0108 source layout.
+ q.write_text('\n'*1843+source+'\n')
+ subprocess.run(['git','apply',str(root/'xnu/a03/0128-a03-analytics-crash-evidence.patch')],cwd=d,check=True)
+ source=q.read_text()
 header=r'''
 #include <assert.h>
 #include <stdint.h>
@@ -31,7 +32,7 @@ static void PE_parse_boot_argn(const char *arg,void *value,unsigned size) {
 tests=r'''
 int main(void) {
  const char *names[]={"watchdogd","backboardd","SpringBoard","launchd","xpcproxy",
- "bluetoothd","identityservices","fairplayd.H2","mediaserverd","configd","lockdownd","analyticsd","dmd"};
+ "bluetoothd","identityservices","fairplayd.H2","mediaserverd","configd","lockdownd","analyticsd","dmd","tccd"};
  assert(!a03_should_log_daemon_crash("mediaserverd",SIGABRT));
  enabled=2;assert(!a03_should_log_daemon_crash("mediaserverd",SIGABRT));enabled=1;
  assert(!a03_should_log_daemon_crash("unknown",SIGABRT));

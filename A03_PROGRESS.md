@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: further analyticsd/tccd crash evidence
+
+Fresh180s0064 capture completed24497bytes SHA256
+9d836d9dfa4f4353d02965174cab08f501e06536655e26cc7b1d25ff9f796d05.
+Generic corpse lines confirm analyticsd165 and tccd172 crashes; six further
+full-screen swaps4..9 occur in this capture. Thus the system continues
+rendering despite these crashes, without proving dependency independence
+or SpringBoard success.0128 extended to tccd too (14 independent bounded
+slots total); actual-source selection/saturation host test and real kernel
+syntax compile PASS. No daemon suppression.0125/0126 CI43764128179 now
+uploading artifacts after successful Build;0065 package34897 still waits.
+
 ## 2026-11-15: user-reported analyticsd crash confirmed; correct crash scope
 
 User reports analyticsd crashed. Review finds existing completed0064
