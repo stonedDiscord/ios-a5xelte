@@ -1,3 +1,9 @@
+ACTIVE user dmd crash confirmed: dmd153 SIGABRT, Foundation exception
+Failed to enable data vault: Operation not supported (45). Missing API
+support evidence, not CPU overload proof; no dependency/GUI conclusion.
+Second analyticsd PID221 (prior197 was transcription error).0068 CI
+43768648670 still Build; package59465/deploy65357 waiters live.
+
 ACTIVE0067 complete660s493437bytes SHA133fe88ab43b53d08c42020bbd453c0d30736b6da183939585f67fdbf4c7efb3.
 Four passes show slow SpringBoard initializers, one thread state9, no home
 screen.32HOST reports/3swaps. analyticsd195/197 and tccd189 crashes traced.

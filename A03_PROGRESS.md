@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15: user-reported dmd crash has explicit data-vault failure
+
+0067 full capture confirms dmd153 SIGABRT. Foundation annotation records
+NSInternalInconsistencyException: Failed to enable data vault: Operation
+not supported (45). This is an explicit missing/unsupported data-vault
+operation, not evidence of CPU overload. No successful implementation or
+SpringBoard dependency impact established; do not silently return success.
+Correction: second traced analyticsd PID is221, not197 in prior entries.
+CI43768648670 remains Build;0068 kernel wait/CPU-time package/deploy waiters
+remain active. Goal still SpringBoard visible, not daemon crash suppression.
+
 ## 2026-11-15:0067 complete660s; four samples, no GUI completion proof
 
 Capture completed493437bytes SHA256
