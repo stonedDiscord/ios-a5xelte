@@ -1,16 +1,18 @@
 # Galaxy A03 SM-A035G bring-up
 
-As of 2026-11-15, BOOT0059 boots validated USERDATA p55 HFSX and transfers
-kernel logs over USB CDC. Watchdogd reaches its disabled-monitoring path;
-this does not implement an active hardware watchdog. Stable GUI is unproven.
+As of 2026-11-15, BOOT0063 boots validated USERDATA p55 HFSX and transfers
+kernel logs over USB CDC. The opted-in software IOSurface/framebuffer
+providers register, MobileGestalt reads the display dimensions, and
+backboardd successfully submits full-screen720x1600 BGRA frames. The user
+physically reports an Apple logo. These observations do not establish a
+rendered SpringBoard home screen or working input.
 
-BOOT0059 captures the exact backboardd exception: NSInvalidArgumentException,
-NSURL initFileURLWithPath receives a nil string. Startup system-container
-path resolution is the current lead; it is not fixed. Mediaserverd still
-passes a null notification-listener dictionary to CFDictionaryGetValue
-while waiting for AirPlay route predictions. Its missing constructor input
-is not yet runtime-proven. Bounded crash annotations now expose framework
-termination messages as well as PCs/backtraces.
+Earlier Sandbox scalar-check and HFS atomic-save failures are repaired in
+this checkpoint. Bounded captures show no new crash records. Backboardd
+still records a Caches mkdir EACCES and work-interval CREATE2 EPERM;
+neither is yet proven to block the GUI. An opted-in entitlement-based
+work-interval grant is under isolated CI/runtime evaluation. See the newest
+A03_PROGRESS.md entry and top NOTES.md handoff for exact current test state.
 
 BOOT0057 control Download reset is hardware-confirmed: run
 python3 tools/a03-usb-console.py --download-control --wait 30 --duration 10
