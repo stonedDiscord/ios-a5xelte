@@ -2936,3 +2936,15 @@ User confirms Download mode ready for0049; host detection agrees. Candidate
 retains0048 cmdline exactly. Apple's own arm64/iPhoneOS config includes
 bindfs, and vfs_conf.c registers the real filesystem when BINDFS is enabled.
 CI43727113402 remains in Build; no0049 flash yet.
+
+## 2026-11-15: BOOT0049 bindfs trial deployed
+
+CI43727113402 SUCCESS fromfb777a08b1fa2a95de423a5682e4a6964f319359.
+Kernel SHA7cc96acf62d08ed10177a4f78fd1cce6a0a681f5f37600575d343066890651cb.
+Independent nm confirms bindfs_mount and bindfs_vfsops. Retained reply/USB/
+monitor strings and bindfs entitlement-check string verified. Cmdline is
+byte-identical0048. BOOT0049 SHAd93f2325738e1a971bb12d2f4e6d592665967e8898b3f2e194981b2e0aad1c18.
+Capture63535 started before Heimdall BOOT-only upload100%/success/reboot.
+No root reinstall or host USERDATA/GPT/protected-partition write. Await
+physical mount-phase progression or next boot-task failure; no sustained
+launchd/bootstrap completion claim yet. USB remains hardware-unproven.

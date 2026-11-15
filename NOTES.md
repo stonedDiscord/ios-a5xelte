@@ -1,5 +1,11 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
+CURRENT BOOT0049 flashed BOOT-only100%/success/reboot. CI43727113402 PASS;
+kernel7cc96acf...651cb, image d93f2325...d1c18. Real bindfs_mount/vfsops
+independently verified. Same0048 cmdline/root. Await final screen/mount-phase
+progression; async question pending. Capture63535 to /tmp/a03-boot0049-usb-capture.log;
+private console log only created if tty enumerates. No sustained boot proof.
+
 CURRENT0048 physical: launchd runs boot task mount-phase-1, exits74 after
 firmware bind mount ENODEV19. Old pthread trap passed; sustained boot not yet.
 Kernel lacks bindfs_vfsops; A03 omitted portable donor0037. Profile now stages
