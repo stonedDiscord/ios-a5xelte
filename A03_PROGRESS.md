@@ -3455,3 +3455,11 @@ No evidence PMIC reset worker was reached. Full build/hardware retry required.
 Combined0116+0117 CI43748823542 dispatched from1ab9e92; cancellation of
 0116-only43748416531 requested. Physical Download requested once for0057.
 BOOT0056 remains installed; no new partition write after that test.
+
+Read-only backboardd startup trace: entry10000a684 dispatches windowserver
+block10000b758 -> once block10001c4d8. This initializes CAWindowServer with
+kCAWindowServerDisableUpdatesOnMainDisplay, queries CADisplay.mainDisplay,
+and explicitly logs a headless path if either display/server display is nil.
+Thus absent main CADisplay is not by itself proof of the backboardd SIGABRT.
+Need0116 deeper runtime stack to identify actual thrown-exception origin.
+Host now detects Download again18:49UTC; do not request another transition.
