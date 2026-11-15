@@ -1,0 +1,120 @@
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -1109,4 +1109,57 @@
+ 	printf("%s\n", line);
+ }
++/* Snapshot references/registers while holding task_lock, then drop it before
++ * printing or reading user memory. This is a racy diagnostic, not a debugger. */
++void a03_sample_task(const char *name, int pid, task_t task);
++void
++a03_sample_task(const char *name, int pid, task_t task)
++{
++    struct snapshot { thread_t thread; uint64_t pc, lr, sp, fp; int state; } snap[24];
++    unsigned count = 0;
++    vm_map_t map = get_task_map_reference(task);
++    if (map == VM_MAP_NULL) return;
++    uint64_t slide = 0;
++    vm_shared_region_t sr = vm_shared_region_get(task);
++    if (sr != NULL) {
++        slide = sr->sr_slide;
++        vm_shared_region_deallocate(sr);
++    }
++    uint64_t mh;
++    task_lock(task);
++    mh = task->mach_header_vm_address;
++    thread_t thread;
++    queue_iterate(&task->threads, thread, thread_t, task_threads) {
++        if (count == 24) break;
++        arm_saved_state_t *ss = find_user_regs(thread);
++        if (ss == NULL || !is_saved_state64(ss)) continue;
++        thread_reference(thread);
++        snap[count].thread = thread;
++        snap[count].pc = get_saved_state_pc(ss);
++        snap[count].lr = get_saved_state_lr(ss);
++        snap[count].sp = get_saved_state_sp(ss);
++        snap[count].fp = get_saved_state_fp(ss);
++        snap[count].state = thread->state;
++        count++;
++    }
++    task_unlock(task);
++    printf("A03 SAMPLE %s[%d] slide %llx mh %llx threads %u\n", name, pid, slide, mh, count);
++    for (unsigned t = 0; t < count; t++) {
++        char line[360];
++        int n = snprintf(line, sizeof(line), "A03 SAMPLE %s t%u state %x pc %llx lr %llx sp %llx bt",
++            name, t, snap[t].state, snap[t].pc, snap[t].lr, snap[t].sp);
++        uint64_t fp = snap[t].fp;
++        for (unsigned i = 0; i < 12 && fp != 0 && !(fp & 7) && n < (int)sizeof(line) - 20; i++) {
++            uint64_t frame[2];
++            if (vm_map_read_user(map, fp, frame, sizeof(frame)) != KERN_SUCCESS) break;
++            n += snprintf(line + n, sizeof(line) - n, " %llx", frame[1]);
++            if (frame[0] <= fp) break;
++            fp = frame[0];
++        }
++        printf("%s\n", line);
++        thread_deallocate(snap[t].thread);
++    }
++    vm_map_deallocate(map);
++}
++
+ #endif /* ARM64_BOARD_CONFIG_SWEET */
+ 
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -31,4 +31,7 @@
+ #include <sys/mount.h>
+ #include <sys/proc.h>
++#include <sys/proc_internal.h>
++#include <kern/thread.h>
++#include <pexpert/pexpert.h>
+ #include <sys/priv.h>
+ #include <sys/kauth.h>
+@@ -364,3 +367,40 @@
+     }
+ }
++extern void a03_sample_task(const char *, int, task_t);
++static int
++a03_sample_proc(proc_t p, __unused void *arg)
++{
++    char name[32];
++    proc_name(proc_pid(p), name, sizeof(name));
++    if (strcmp(name, "SpringBoard") && strcmp(name, "backboardd")) return PROC_RETURNED;
++    task_t task = proc_task(p);
++    if (task != TASK_NULL) a03_sample_task(name, proc_pid(p), task);
++    return PROC_RETURNED;
++}
++
++static void
++a03_sample_worker(__unused void *arg, __unused wait_result_t wr)
++{
++    extern int hz;
++    static int channel;
++    tsleep(&channel, PZERO, "a03sample", 180 * hz);
++    for (unsigned i = 0; i < 4; i++) {
++        printf("A03 SAMPLE begin %u\n", i);
++        proc_iterate(PROC_ALLPROCLIST, a03_sample_proc, NULL, NULL, NULL);
++        tsleep(&channel, PZERO, "a03sample", 120 * hz);
++    }
++}
++
++void a03_gui_sample_start(void);
++void
++a03_gui_sample_start(void)
++{
++    uint32_t enabled = 0;
++    PE_parse_boot_argn("a03_sample", &enabled, sizeof(enabled));
++    if (enabled != 1) return;
++    thread_t thread;
++    kern_return_t kr = kernel_thread_start(a03_sample_worker, NULL, &thread);
++    if (kr == KERN_SUCCESS) thread_deallocate(thread);
++    printf("A03 SAMPLE start %d\n", kr);
++}
+ #endif /* ARM64_BOARD_CONFIG_SWEET */
+--- a/bsd/kern/bsd_init.c
++++ b/bsd/kern/bsd_init.c
+@@ -705,4 +705,6 @@
+ 	extern void sweet_amfi_policy_register(void);
+ 	sweet_amfi_policy_register();
++	extern void a03_gui_sample_start(void);
++	a03_gui_sample_start();
+ #endif
+ 

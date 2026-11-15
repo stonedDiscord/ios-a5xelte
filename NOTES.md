@@ -1,3 +1,10 @@
+ACTIVE0065 live: actual SpringBoard25 startup syscalls now visible; Sandbox
+op2 succeeds, AMFI5a103, mkdir/dev22, libdispatch query2; no proven blocker.
+No A03 USER lines yet. Capture56741 ongoing360s. CI43765717894 builds0066.
+0129 prepared bounded read-only thread sampler (24threads/12frames,4passes,
+180s then120s), no lock-held user reads, host/kernel objects/plain apply PASS.
+Not in0065/0066; preserve frozen snapshots. Home screen unverified.
+
 ACTIVE0065 BOOT-only100percent/success/reboot~21:49UTC. CI43764128179
 SUCCESS736d3b3;14 sources/loader/ADT/sole a03_userlogs=1 verified.
 BOOTbba5c86c...5151e. Deploy56741 waits CDC then360s boot0065-usb-initial.log;

@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-15:0065 confirms SpringBoard execution;0129 thread evidence prepared
+
+Live0065 logs actual SpringBoard25 syscalls: Sandbox scalar check succeeds,
+AMFI op0x5a ENOPOLICY103, mkdir /dev EINVAL22 and missing libdispatch path
+query ENOENT2. These are evidence of execution, not established fatal causes.
+No A03 USER lines emitted so far; /dev/null observer may have no input.
+No home-screen proof. Capture56741 still ongoing;0127/0128 CI43765717894
+builds independently.
+
+Prepared opt-in0129 bounded thread snapshots for SpringBoard/backboardd:
+first at180s, four passes120s apart; max24threads and12frames/thread. Holds
+thread refs/register snapshots under task_lock, drops lock before printf or
+vm_map_read_user; retains/releases map/thread refs, no suspend/user writes.
+Read is racy diagnostic evidence, not debugger-consistent. Worker/process
+selection and timing host harness PASS; three real kernel syntax/object
+compiles and plain git apply complete three-file equality PASS. No new
+thread sampler in running0065 or active0066 CI. Full runtime pending.
+
 ## 2026-11-15:0065 GUI diagnostic boot uploaded;0127/0128 CI active
 
 CI43764128179 SUCCESS exact736d3b3. Fourteen downloaded source checks PASS
