@@ -2953,3 +2953,27 @@ BOOT0049 host capture ended100s timeout without enumeration; host journal
 only records Download disconnect. Await user screen report; USB startup
 cannot yet replace physical transcription. No further trial justified until
 mount task outcome is observed.
+
+## 2026-11-15: BOOT0049 reaches keybag initialization
+
+User reports FATAL KEYBAG ERROR: failed to load system bag, plus missing
+options device-tree entry. This advances past mount-phase firmware failure;
+not sustained bootstrap success. Exact0049 nm has no AppleKeyStore class.
+ReVa on pinned iOS16.0 keybagd: connector1aac8 matches AppleKeyStore and
+opens type0, calls selector0. get_system1b7d0 sends selector14 with0/1 input
+and1 output scalar. Entry calls this twice; failure reaches fatal system-bag
+message. NVRAM/options diagnostic occurs in recovery/error handling, not
+proof that adding an empty options node fixes loading. Existing root has
+systembag.kb mode0600,227bytes; no reinstall indicated.
+
+Candidate0107 adapts donor software AKS, opt-in a03_software_keystore=1,
+explicit lab/no-SEP marker, only system bag0 supported; nonzero bags return
+NotFound. No key wrapping implemented, unknown selectors Unsupported.
+Adds independent IOKit provider/personality/source and general-register
+codegen. Build/runtime validation pending. Private binaries ignored.
+
+0107 exact CI-source patch application PASS; SweetKeyStore and config tables
+cross-compile with general regs PASS. Host test compiles the actual provider
+with stub IOKit: opt-in registration, selector14 argument bounds/system0,
+lock state, Unsupported key-wrapping/unknown, DER output bounds/descriptors
+PASS. Profile stages54patches including0107. Full CI and hardware pending.

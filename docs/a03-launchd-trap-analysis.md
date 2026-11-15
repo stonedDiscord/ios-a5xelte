@@ -142,3 +142,26 @@ Enable the real bindfs implementation by staging0037, retaining entitlement
 and VFS error checks. Exact config application passes; CI43727113402 builds
 fromfb777a0, with an explicit linked bindfs_vfsops gate. Next BOOT0049 retains
 0048 arguments/root; no filesystem reinstall or binary patch required.
+
+## BOOT0049: keybag stage and software AKS candidate
+
+Physical report: FATAL KEYBAG ERROR failed to load system bag; missing
+options entry. Kernel has no AppleKeyStore provider. Actual iOS16.0 keybagd
+was extracted read-only from pinned root and imported in ReVa /keybagd.
+Connector0x10001aac8 opens AppleKeyStore type0 then selector0. Function
+0x10001b7d0 calls selector14, optional input system ID and one scalar output.
+Entry0x100012704 invokes this at0x100012bac and0x100012c44; a non-success
+result reaches failed-to-load-system-bag fatality. Function0x100012090
+queries IODeviceTree:/options for NVRAM writes; fatal handler calls it to
+record keybagd and auto-boot=false, explaining the warning after failure.
+Do not mistake this warning for proof that an empty options node fixes AKS.
+
+Candidate0107 adapts the existing donor software provider, opt-in via
+ a03_software_keystore=1. This is a disposable-data lab service, not SEP,
+passcode protection or key wrapping. Only system bag0 is represented;
+unknown selectors/wrap/unwrap Unsupported; nonzero bag IDs NotFound.
+The caller ABI for open/get-system matches actual16.0. Existing root has
+systembag.kb mode0600,227bytes and inherited no-effaceable-storage ADT.
+No root reinstall or NVRAM storage change is required for this trial.
+Exact CI-source patch application, both IOKit cross-compiles and host
+request-dispatch/DER bounds/opt-in tests PASS; runtime is not yet proven.
