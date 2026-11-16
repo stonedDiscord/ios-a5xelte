@@ -1,6 +1,6 @@
 # A03 iOS16 service crash investigation
 
-Evidence below comes from BOOT0075–0077 on the Galaxy A03. Private logs and
+Evidence below comes from BOOT0075–0078 on the Galaxy A03. Private logs and
 Apple artifacts remain outside git. These are separate failures; neither
 successful kernel builds nor the physical Apple logo prove a home screen.
 
@@ -23,7 +23,8 @@ Patch 0142 adds opt-in translation of the exact local UID/GID UUID format
 already implemented by matching Libinfo and XNU's resolver-disabled branch.
 It preserves membership and rights checks. Tests with the actual ACL evaluator
 grant the captured rights only when supplied group 299 membership is present.
-Actual runtime supplementary groups and service survival still need validation.
+Live supplementary-group inspection remains pending; BOOT0078 service survival
+is recorded below.
 MobileActivation's backup-exclusion setxattr EACCES has the same ACL identity
 dependency. CI 43963988043 builds this patch; BOOT0078 enables its boot argument.
 
@@ -73,8 +74,14 @@ are in CF runloops. Earlier fatal access failures have not recurred in this
 capture so far, while the original ACL metadata is unchanged. SpringBoard
 progresses past its earlier activation wait, reaches UI layout, and the user
 reports an iOS clock screen. This is not yet unlocked home-screen proof.
-ScreenTimeAgent PID 121 is still loading its CoreData model at that sample;
-dmd has already repeated its unsupported-vault assertion.
+ScreenTimeAgent PID 121 was loading its CoreData model at that first sample,
+but subsequently reached the same unsupported-vault assertion around 22:14 UTC
+and restarted repeatedly. Its failure is not repaired by the identity change.
+At 22:29 UTC a fresh capture still finds analyticsd 91, backboardd 56 and
+SpringBoard 26. SpringBoard's main thread resolves to the UIApplication event
+loop again. MobileActivation had changed from PID 134 to 467 earlier, without
+a captured crash record, so unchanged PID or continuous survival is not claimed.
+Generic PosterBoard crashes also appear; their cause is not yet established.
 
 Patch 0144 prepares an explicitly labelled lab metadata compatibility path
 for ScreenTime's exact owner/path, with entitlement, uid, root and normal
