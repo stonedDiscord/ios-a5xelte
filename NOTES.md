@@ -1,3 +1,10 @@
+ACTIVE0071 19:44UTC fresh probes19..23 confirm SB25 main exact same CPU/
+stack since19:30 (MC migration wait ->profiled109 ->TCC XPC). SB8threads,
+no tccd in fresh ps. Host storage ready1/poisoned0. Private status1944 log.
+CI43940554508 for0136 remains in progress; retained package/deploy/probe
+watchers, no0072 flash. Short status capture finished, tty reader released.
+Apple logo reported; no home screen. See newest A03_PROGRESS evidence.
+
 ACTIVE0136 CI43940554508 still Build19:41UTC, watch/package/deploy handles
 retained. Added read-only probe scheduler1741 /tmp/a03-0072/probe.py waits
 for actual0072 worker then current ps/vm/io/SB/profiled/tccd/lsd at60/180/

@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 19:44 UTC fresh live status confirms same migration/TCC wait
+
+Read-only0071 EP0 probes19..23 captured privately in
+shim/a03/out/boot0071-usb-status1944.log. SpringBoard25 now8threads but main
+CPU remains exactly user0.345264/system13.641375/runnable88.511870 and
+same full stack as19:30UTC. Exact cache slide24614000 symbolication confirms
+MCProfileConnection waitForMigrationIncludingPostRestoreMigration ->
+activationRecordIndicatesCloudConfigurationIsAvailableAndKeyExists ->
+shouldShowCloudConfigurationUI, synchronous XPC wait. Profiled109 worker
+still _tccd_send_message -> TCCAccessSetOverride; no tccd in fresh process
+list. Initial0071 log records tccd abort namespace25/profile not found.
+System activity continues, but main SpringBoard startup has not advanced
+for at least14minutes. Apple logo is physical observation, not home menu.
+Storage ready1/poisoned0; VM compressor2347pages (~36.7MiB), no swap.
+CI43940554508 exact0136 still in progress. Existing package/deploy/probe
+watchers retained, no0072 flash yet. Capture ended; no tty reader retained.
+
 ## 2026-11-16: 0136 scoped tccd named-profile candidate locally validated
 
 Current0071 runtime chain SB -> profiled -> TCC motivated decoded API repair.
