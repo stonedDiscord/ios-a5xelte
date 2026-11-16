@@ -143,7 +143,8 @@ def main():
                      '0137-a03-mobileactivation-crash-evidence.patch',
                      '0138-a03-screentime-analytics-evidence.patch',
                      '0139-a03-filesystem-startup-evidence.patch',
-                     '0140-a03-readonly-filesystem-probe.patch'):
+                     '0140-a03-readonly-filesystem-probe.patch',
+                     '0141-a03-readonly-filesystem-acl-probe.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

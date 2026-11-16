@@ -1,5 +1,31 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: prepared0141 ACL inspection; fresh SB activation wait
+
+21:26UTC0075 ps/sample25 completes with12threads. Matching cache symbolication
+confirms main synchronous XPC through MadGate getActivationState:, exported
+MAEGetActivationStateWithError. Thus this boot has now moved past the earlier
+MC checkIn wait and reaches the MobileActivation permission blocker too.
+Storage ready1/poisoned0; no home-screen evidence. Initial660s capture ended
+normally, releasing tty;0076 watcher remains gated on existing0140 CI.
+
+Offline matching passwd/group identify analyticsd uid/gid263, mobile501;
+_analyticsusers250 and systemusers299 include both. These are staged account
+facts, not live supplementary-group evidence. MCM contains explicit ACL and
+ownership setup code, so mode alone may not explain EACCES. No guessed chmod.
+
+Prepared0141 adds optional read-only acl /private/var/PATH alongside stat,
+with existing bounded/path/no-follow-final/worker gates. Requests va_acl,
+prints count/flags and at most16 ACE GUID/rights/flags, frees returned ACL on
+success/error and releases vnode. Invalid counts>128 never indexed. Regular
+stat does not request ACL. No access-policy or disk mutation. This patch is
+NOT in ongoing0140 CI43959202597/BOOT0076; it is staged for next build only.
+Actual helper ASan/UBSan tests PASS for none/entries/cap/invalid/error cleanup/
+unsupported/ordinary stat. Full sweet_amfi.c exact CI-command local Clang PASS;
+plain git apply reverse/reapply full source equality PASS. Rechecked0140,
+startup diagnostics and crash-annotation sanitizer suites PASS. No new CI
+started for0141 yet; use0076 stat evidence first. Private logs stay ignored.
+
 ## 2026-11-16: BOOT0075 ScreenTime exact assertion confirmed;0076 deployment queued
 
 The initial capture now includes ScreenTimeAgent122 and268 SIGABRT with

@@ -1,3 +1,12 @@
+ACTIVE0141 ACL probe prepared for NEXT build, NOT0076. Actual helper
+ASan/UBSan + full sweet_amfi.c exact Clang + plain apply equality PASS.
+Regular stat unaffected; acl prints bounded16 ACEs and frees allocation.
+0075 fresh sample25 21:26UTC confirms MadGate getActivationState wait;
+activation EACCES blocker again. Initial capture ended normally.
+Existing0140 CI43959202597 exact65cc580 still building21:31UTC, package57048,
+deploy84806 and stat scheduler51114 retained. No0076 flash yet. No duplicate
+CI/readers; inspect0076 uid/gid/mode/flags before repair. Home unproven.
+
 ACTIVE0075 ScreenTime terminating assertion now captured twice: Failed to
  enable data vault: Operation not supported (45), Sandbox0x104 fd3 owner
 remotemanagementd. Analytics actual Library/CoreAnalytics stat/open EACCES13

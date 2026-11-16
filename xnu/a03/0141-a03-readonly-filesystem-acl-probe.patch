@@ -1,0 +1,60 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -475,7 +475,7 @@
+ /* Read-only filesystem metadata in the dedicated worker, never USB polling.
+  * Only the already-mounted data tree is accepted; no mutation or xattr reads. */
+ static void
+-a03_probe_stat(const char *path)
++a03_probe_stat(const char *path, bool with_acl)
+ {
+     if (strncmp(path, "/private/var/", 13) || strlen(path) > 100) {
+         printf("A03 PROBE stat requires /private/var/ path <=100 bytes\n");
+@@ -503,6 +503,7 @@
+     VATTR_WANTED(&va, va_mode);
+     VATTR_WANTED(&va, va_flags);
+     VATTR_WANTED(&va, va_fileid);
++    if (with_acl) VATTR_WANTED(&va, va_acl);
+     error = vnode_getattr(vp, &va, context);
+     if (error) printf("A03 PROBE stat getattr err %d path %s\n", error, path);
+     else {
+@@ -515,6 +516,28 @@
+                 (unsigned long long)va.va_fileid, (unsigned long long)vfs_flags(vnode_mount(vp)));
+         else printf("A03 PROBE stat incomplete supported %llx\n", (unsigned long long)va.va_supported);
+     }
++    /* vnode_getattr owns any returned ACL allocation even on error. */
++    if (with_acl && VATTR_IS_SUPPORTED(&va, va_acl)) {
++        kauth_acl_t acl = va.va_acl;
++        if (!error) {
++            if (acl == NULL) printf("A03 PROBE acl none\n");
++            else if (acl->acl_entrycount > KAUTH_ACL_MAX_ENTRIES)
++                printf("A03 PROBE acl invalid count %u\n", acl->acl_entrycount);
++            else {
++                printf("A03 PROBE acl count %u flags %x\n", acl->acl_entrycount, acl->acl_flags);
++                unsigned limit = acl->acl_entrycount < 16 ? acl->acl_entrycount : 16;
++                for (unsigned i = 0; i < limit; i++) {
++                    struct kauth_ace *ace = &acl->acl_ace[i];
++                    const unsigned char *g = (const unsigned char *)&ace->ace_applicable;
++                    printf("A03 PROBE acl %u flags %x rights %x guid %02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x\n",
++                        i, ace->ace_flags, ace->ace_rights, g[0], g[1], g[2], g[3],
++                        g[4], g[5], g[6], g[7], g[8], g[9], g[10], g[11], g[12], g[13], g[14], g[15]);
++                }
++                if (acl->acl_entrycount > limit) printf("A03 PROBE acl truncated\n");
++            }
++        }
++        if (acl != NULL) kauth_acl_free(acl);
++    } else if (with_acl && !error) printf("A03 PROBE acl unsupported\n");
+     vnode_put(vp);
+ }
+ 
+@@ -523,8 +546,9 @@
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat /private/var/PATH\n");
+- else if(!strncmp(command,"stat ",5))a03_probe_stat(command+5);
++  printf("A03 PROBE help: ping ps vm io threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH\n");
++ else if(!strncmp(command,"stat ",5))a03_probe_stat(command+5, false);
++ else if(!strncmp(command,"acl ",4))a03_probe_stat(command+4, true);
+  else if(!strcmp(command,"ps")) {
+   struct a03_probe_list list={0};
+   proc_iterate(PROC_ALLPROCLIST|PROC_NOWAITTRANS,a03_probe_list_proc,&list,NULL,NULL);
