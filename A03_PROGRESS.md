@@ -10,7 +10,7 @@ NSURLIsExcludedFromBackupKey, then setResourceValue(true); false returns to
 fatal helper. Actual failing path/POSIX errno still unknown: current256-byte
 annotation is itself truncated by console record length before its tail.
 
-Read-only EP0 ps/sample26 at21:03UTC used existing capture, no second tty
+Read-only EP0 ps/sample26 at21:00UTC used existing capture, no second tty
 reader/reset. SB26 still12threads, main MadGate getActivationState sync XPC;
 ScreenTimeAgent362/371 and analyticsd359 still crash. No home-screen evidence.
 ScreenTime data-vault candidate and analytics NULL path diagnosis above remain
