@@ -7,6 +7,8 @@ are redirected into unused low RAM, NOT the unverified physical display.
 The profile is for kernel bring-up, not iOS 12/A8 userland compatibility.
 """
 import argparse
+import hashlib
+import json
 from pathlib import Path
 import shutil
 
@@ -24,5 +26,14 @@ for source in patches:
     shutil.copy2(source,a.destination/source.name)
 for source in (root/'xnu/patches').glob('*.sh'):
     shutil.copy2(source,a.destination/source.name)
-shutil.copy2(root/'xnu/dreamlte/0204-dreamlte-early-board.patch',a.destination/'0204-dreamlte-early-board.patch')
-print(len(patches)+1,'patches staged; MACHINE_CONFIG=HEROLTE; single-core S8 bring-up')
+overlays=sorted((root/'xnu/dreamlte').glob('*.patch'))
+for source in overlays:
+    shutil.copy2(source,a.destination/source.name)
+(a.destination/'DREAMLTE-PROFILE.json').write_text(json.dumps({
+    'board': 'dreamlte', 'machine_config': 'HEROLTE', 'page_size': 4096,
+    'donor': 'ff2c55e19f1a66fb811ed85bd17a21de9fc727bf through 0203',
+    'a03_reference': 'f1e16010e5a1b7d94657a867158a81bad0788682',
+    'files': {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
+              for p in sorted(a.destination.iterdir())},
+}, indent=2)+'\n')
+print(len(patches)+len(overlays),'patches staged; MACHINE_CONFIG=HEROLTE; single-core S8 bring-up')

@@ -12,6 +12,8 @@ Edit the sources under BUILDTREE/xnu, re-run, and turn the result into
 patches with `git diff` there. Uses the local Apple-fork clang (swiftlang).
 
 Env: XNU_CC_EXTRA   extra flags (e.g. "-DKPERF -DKPC" for config changes)
+     XNU_CC         local clang path (default ~/swift/usr/bin/clang)
+     XNU_CI_DXB     checkout path in the CI log (default ios-sweet/dxb)
      XNU_CC_POST    flags appended after the original ones (like a per-object
                     _CFLAGS_ADD in the xnu Makefiles: -U/-include after -D)
      XNU_CC_OBJDIR  emit real objects there instead of a syntax-only check
@@ -20,9 +22,9 @@ Env: XNU_CC_EXTRA   extra flags (e.g. "-DKPERF -DKPC" for config changes)
 import concurrent.futures as cf, os, re, shlex, subprocess, sys
 from collections import Counter
 
-CI_DXB = '/Users/runner/work/ios-sweet/ios-sweet/dxb'
+CI_DXB = os.environ.get('XNU_CI_DXB', '/Users/runner/work/ios-sweet/ios-sweet/dxb')
 CI_SDK_PLATFORM = re.compile(r'/Applications/Xcode[^ ]*?\.sdk/+System/Library/Frameworks/Kernel\.framework/Versions/A/PrivateHeaders/platform')
-CLANG = os.path.expanduser('~/swift/usr/bin/clang')
+CLANG = os.path.expanduser(os.environ.get('XNU_CC', '~/swift/usr/bin/clang'))
 DROP = {'-c', '-g', '-MD', '-MMD'}
 DROP_WITH_ARG = {'-MF', '-MT', '-o', '-arch'}
 COMPONENTS = ('osfmk', 'bsd', 'iokit', 'libkern', 'pexpert', 'security', 'san', 'libsa')
@@ -40,6 +42,10 @@ def commands(log):
         try:
             args = shlex.split(m.group(3), posix=True)
         except ValueError:	# shell fragments with unbalanced quotes: not a plain compile
+            continue
+        if any(a in ('|', '||', '&&', ';') for a in args):
+            # Parallel make can splice another command into a logged line.
+            # Reconstruct this source from a clean component command instead.
             continue
         srcs = [a for a in args if re.search(r'\.(c|cpp|s|S)$', a) and a.startswith(CI_DXB)]
         if len(srcs) == 1 and '/xnu/' in srcs[0]:

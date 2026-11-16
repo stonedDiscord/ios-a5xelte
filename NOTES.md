@@ -1,18 +1,24 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
-## Active S8 handoff — 2026-11-13
+## Active S8 handoff — 2026-11-16
 
-Current work is on dreamlte-bringup, based on origin/herolte from
-wardevsa/ios-a5xelte (ff2c55e). Read DREAMLTE_PROGRESS.md and
- docs/dreamlte-bringup.md for the S8, including verified CPU probes,
-backups, new loader, build profile and outstanding CI/boot checks.
-Original local main retains d857f24 and the earlier S8 handoff.
+Work remains on dreamlte-bringup. Reviewed A03 f1e1601 and ported its
+applicable portable diagnostics/compatibility fixes into S8 overlay0205;
+profile stages128 patches, still HEROLTE config/4K/A53/GICv2. Read
+DREAMLTE_PROGRESS.md, docs/dreamlte-bringup.md and docs/dreamlte-a03-port.md.
+The latter maps all A03 work to applied, already inherited or S8-dependent
+features. Do not copy UNISOC MMIO, eMMC/USB/reset or USERDATA instructions.
 
-2026-11-13 diagnostic milestone: optional S8 probe 0003 wrote a marker into
-the Exynos snapshot log before Linux and root ADB recovered it from
-`/proc/last_kmsg` after reboot. Stock BOOT was restored; readback hash matches
-`71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
-The SWEET/Redmi history below is donor reference, not S8 evidence.
+Previous S8 CI43434858911 SUCCESS confirmed. New portable host suites and
+17 arm64 object compiles passed; full updated CI is the next validation.
+No S8 XNU boot, rootfs or GUI result is established. No phone writes in
+this adaptation. Next hardware prerequisite is XNU console recovery via
+the verified snapshot path, then scanout/UFS; USERDATA remains untouched.
+
+The 2026-11-13 returning probe0003 marker was recovered from last_kmsg;
+stock BOOT was restored with verified hash in DREAMLTE_PROGRESS.md.
+SWEET/Redmi and Samsung donor history below remains historical evidence
+for those devices, not S8 observations.
 
 
 ## a5xelte fork handoff (2026-10-20)

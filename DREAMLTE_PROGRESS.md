@@ -98,3 +98,32 @@ compile results, hardware observations and restore results below.
   recovery; it is not an XNU boot result.
 - Restored the verified stock BOOT; readback SHA256 is
   `71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
+
+## 2026-11-16: A03 progress reviewed and portable work adapted
+
+- Reviewed build/a03-bringup at f1e16010e5a1b7d94657a867158a81bad0788682.
+  A03 BOOT0069 deployment and0068 page-in mutex/CPU-time evidence are donor
+  observations, not S8 results. No verified A03 home screen/input was recorded.
+- Added S8 overlay0205 with bounded daemon/annotation/startup/IPC diagnostics,
+  task snapshots including kernel waits/CPU times, opt-in iOS16 provisional
+  replies, scoped scalar Sandbox API and entitlement-gated work intervals.
+  All optional boot modes default off. Existing donor software providers are
+  retained without registering A03 duplicates. Full scope/dependency map:
+  docs/dreamlte-a03-port.md.
+- Kept measured S8 4K/A53/EL1/GICv2 and upper512MiB RAM profile. No UNISOC
+  MMIO, eMMC/GPT/root paths, USB download/reset sequences or A03 write
+  authorization imported. USERDATA/protected partitions untouched.
+- Staging produces128 patches and a hash/provenance manifest. CI now checks
+  ARM64 and linked S8 diagnostics. Root tweaks use actual staged OS version;
+  local compile helper supports fork-specific CI paths and clang override.
+- Previous S8 CI43434858911 is now confirmed SUCCESS (not pending). Downloaded
+  its exact build tree/log privately for validation; no new S8 boot evidence.
+- Host regression suites PASS: actual-code Sandbox unsupported ops/user-copy
+  errors, entitlement grant gates, bounded crash selection/annotations,
+  HOST budgets and sampler process selection/four-pass timing.
+- Local arm64 objects:13 initial translation units plus4 IPC/IOKit units
+  compiled, zero failures, with -mgeneral-regs-only. Expected DREAMLTE trap,
+  crash and sampler symbols present in the exception object. Plain git apply
+  and whole-file comparison against pristine CI sources verified separately.
+- Loader build and minimal ADT generation PASS. No phone flash/root write
+  performed. Full updated kernel CI result will be recorded below.

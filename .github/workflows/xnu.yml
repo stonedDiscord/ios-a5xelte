@@ -38,6 +38,7 @@ env:
   DXB_SHA: 663906528d1cd5ea8fde7de6f16de73db9511549
   MACOS_VERSION: ${{ inputs.macos_version || '13.5' }}
   KERNEL_CONFIG: ${{ inputs.kernel_config || 'DEVELOPMENT' }}
+  ARCH_CONFIG: ARM64
   MACHINE_CONFIG: ${{ inputs.machine_config || 'HEROLTE' }}
   BOARD_PROFILE: ${{ inputs.board_profile || 'herolte' }}
 
@@ -114,6 +115,20 @@ jobs:
           set -o pipefail
           bash build.sh 2>&1 | tee ../build.log
 
+      - name: Verify DREAMLTE portable bring-up profile
+        if: success() && env.BOARD_PROFILE == 'dreamlte'
+        run: |
+          kernel="dxb/fakeroot/System/Library/Kernels/kernel.$(echo "$KERNEL_CONFIG" | tr A-Z a-z).herolte"
+          test "$(lipo -archs "$kernel")" = arm64
+          nm "$kernel" > dreamlte-symbols.txt
+          for symbol in _dreamlte_init_trap_log _dreamlte_daemon_crash_log _dreamlte_sample_task _dreamlte_gui_sample_start _dreamlte_host_log_allowed; do
+            grep -F "$symbol" dreamlte-symbols.txt >/dev/null || exit 1
+          done
+          strings "$kernel" > dreamlte-strings.txt
+          for marker in 'DREAMLTE WAIT' 'DREAMLTE START' 'dreamlte_ios16_provisional_reply' 'dreamlte_sandbox_disabled'; do
+            grep -F "$marker" dreamlte-strings.txt >/dev/null || exit 1
+          done
+
       # Logs need a GitHub sign-in to read; check-run annotations are public.
       # Publish the first errors and the log tail so failures can be read
       # through the API (repos/.../check-runs/<job>/annotations).
@@ -186,6 +201,9 @@ jobs:
         if: always()
         run: |
           mkdir -p out
+          if [ "$BOARD_PROFILE" = dreamlte ]; then
+            cp dreamlte-patches/DREAMLTE-PROFILE.json out/
+          fi
           cp -R dxb/fakeroot/System/Library/Kernels/. out/ 2>/dev/null || true
           ls -la out
           (cd out && shasum -a 256 kernel.* > SHA256SUMS) || true

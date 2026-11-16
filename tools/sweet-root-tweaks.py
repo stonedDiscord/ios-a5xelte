@@ -29,7 +29,6 @@ screen (image versions v8-v14 in NOTES.md):
 """
 import glob, os, plistlib, shutil, sys
 
-BUILD, VERSION = '20H392', '16.7.16'
 MOBILE = 501
 
 
@@ -123,9 +122,15 @@ def audio(root):
 
 
 def main():
+    global BUILD, VERSION
     if len(sys.argv) != 2 or not os.path.isdir(os.path.join(sys.argv[1], 'System/Library/xpc')):
         sys.exit(__doc__)
     root = sys.argv[1]
+    version = load(os.path.join(root, 'System/Library/CoreServices/SystemVersion.plist'))
+    BUILD = version['ProductBuildVersion']
+    VERSION = version['ProductVersion']
+    if any(not isinstance(v, str) or not v for v in (BUILD, VERSION)):
+        sys.exit('missing root build/version')
     launchd(root)
     containers(root)
     activation(root)

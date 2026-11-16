@@ -31,3 +31,11 @@ For the first kernel, leave all roots and MMIO probes disabled. A wait for
 root is expected; no USERDATA writes or iOS GUI is part of that checkpoint.
 Later work: S8 DECON/DSIM scanout, bounded UFS reads, rootfs compatibility,
 then touch/keys/PMIC. S7 clock, GPU and Wi-Fi routines must not run on S8.
+
+## Portable A03 updates (2026-11-16)
+
+See [dreamlte-a03-port.md](dreamlte-a03-port.md) for the pinned A03 review,
+complete feature/dependency map, host verification and optional boot modes.
+The profile now stages128 patches including S8 overlay0205. This adds
+portable diagnostics and scoped compatibility; S8 storage/display/USB still
+require their own device bring-up. The original CI43434858911 succeeded.
