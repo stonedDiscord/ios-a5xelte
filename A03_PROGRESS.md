@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: prepared0143 read-only task credentials, not staged in0142 CI
+
+Prepared creds PID worker command to inspect live uid/gid/supplementary groups,
+actual credential UUID lookup errno/value and systemusers299 membership.
+References released on all paths; group count clampedNGROUPS; no credential,
+policy or filesystem mutation. This answers remaining live-group assumption
+if0142 translation alone does not resolve access. NOT staged in0142 CI or
+next0078; no added build/reset. Exact full sweet_amfi.c local kernel Clang,
+actual helper ASan/UBSan reference/error/bounds tests, full plain-apply source
+equality PASS. Current0077 reader/0142CI/0078watchers unchanged.
+
+ScreenTime matching signed XML includes boolean com.apple.rootless.storage.
+remotemanagementd; static libsystem_sandbox success path sets UF_DATAVAULT
+on descendants after successful0x104. Merely returning0 would leave required
+filesystem state absent; no pretend-success implementation made.
+
 ## 2026-11-16: captured ACL regression verifies authorization remains scoped
 
 Added tools/a03-test-identity-acl.py: extracts actual XNU kauth_acl_evaluate,
