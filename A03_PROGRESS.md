@@ -1,5 +1,30 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 19:30 UTC SpringBoard passes LS; now profile migration/TCC wait
+
+User physically reports Apple logo with continuing output (not home screen).
+Fresh live0071 probes8..15 show same SpringBoard25 now7threads and main CPU
+advanced to user0.345264/system13.641375/runnable88.511870s. It has LEFT the
+previous ControlCenter/LSContextInitCommon wait. Exact slide24614000 resolves
+main stack to MCProfileConnection waitForMigrationIncludingPostRestoreMigration:
+waitUntilCompleted:completion: -> activationRecordIndicatesCloudConfiguration
+IsAvailableAndKeyExists: -> shouldShowCloudConfigurationUI. Main waits sync
+NSXPC reply; repeated8/14 stack/CPU unchanged over~30s. Do not continue to
+report LS seeding as current SpringBoard blocker. lsd100 is now5threads,
+old seeding worker absent; separate MobileActivation request wait remains.
+MobileActivation old133 gone; current multiple PIDs crash/respawn in log.
+
+Profiled109 sampled3threads. Worker sync XPC stack resolves TCC framework
+_tccd_send_message -> TCCAccessSetOverride path; main in runloop. This gives
+current chain SpringBoard managed-configuration migration -> profiled -> TCC
+request, concurrent with hardware-observed tccd profile-not-found crash loop
+previously decoded to unsupported Sandbox named-profile query22. It is now
+a concrete dependency to investigate, not proof that fixing tccd alone yields
+home screen. Fresh VM compressor1220pages/~19MiB, storage ready1 poisoned0.
+Current65s capture75768 boot0071-usb-current.log. No new phone writes/reset.
+Need implement correctly bounded lab-mode named-profile API semantics after
+checking exact profile install ABI; do not blanket-success unknown operations.
+
 ## 2026-11-16: EP0 access restored; persistent host rule prepared
 
 User applied USB005/010 ACL. Actual0071 ps/vm/io/sample25/sample100/

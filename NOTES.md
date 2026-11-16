@@ -1,3 +1,11 @@
+ACTIVE0071 19:30UTC SB25 PASSED LS wait, now7threads/main sync MCProfile
+migration while shouldShowCloudConfigurationUI. profiled109 worker waits TCC
+_tccd_send_message/TCCAccessSetOverride. Existing tccd profile-not-found
+crash loop now concrete downstream candidate. Unsupported Sandbox query22
+was decoded; verify install ABI before scoped lab-mode support, no blanket
+success. Capture75768 current65s ends normally. No home menu/user saw logo.
+No reboot/phone writes; next fix evidence-backed TCC startup compatibility.
+
 ACTIVE0071 ACL restored: ps/vm/io/sample25+100+129 complete. lsd100 now9
 threads incl semaphore wait to symbolicate; activation133,icons129. SB main
 still LS wait. vm compressor0, active26190/inactive27710/wired8503/free3119.
