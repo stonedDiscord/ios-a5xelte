@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: captured ACL regression verifies authorization remains scoped
+
+Added tools/a03-test-identity-acl.py: extracts actual XNU kauth_acl_evaluate,
+uses committed0142 UUID helper and the exact0077 captured ACEs. Clang ASan/
+UBSan PASS: analytics263 with supplied group299 membership gains Library
+list access; mobile501 with supplied299 gains root-container write-xattr;
+unrelated user without299 and unrelated rights still DEFER, explicit deny
+still DENY. Default-off fails closed as observed. These supplied credential
+groups are test inputs, not proof of phone supplementary groups or survival.
+Also compiled actual TUNABLE plus helper/four wrappers with exact kernel
+flags successfully. Full0142 CI43963988043 still building; no0078 flash.
+
 ## 2026-11-16: 21:50 UTC0142 CI and isolated BOOT0078 watchers
 
 CI43963988043 exact1e206d5f8695d0a393de9b0d1e45cc1c57d17759 underway.
