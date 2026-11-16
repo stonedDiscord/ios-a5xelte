@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: prepared0142 local identity UUID candidate, not staged/enabled
+
+Prepared0142 source candidate for explicit a03_compat_uuid=1 (default0),
+SWEET-only local UID/GID compatibility UUID conversion matching both staged
+Libinfo and existing CONFIG_EXT_RESOLVER=0 kernel algorithm. Four conversion
+wrappers handle only recognized local UUID prefixes and UID/GID encoding;
+unknown UUIDs retain resolver behavior, wrong-type local UUID returnsENOENT.
+No membership grants, hardcoded account allowlist, ACL skips, Apple patches,
+disk writes, or activation fabrication. Not added to build profile or current
+0141 CI; enable only after actual ACLs confirm relevant UUIDs.
+
+Actual helper Clang ASan/UBSan PASS default/exact opt-in, UID501/GID299 known
+vectors, type mismatch, unknown UUID and0/UINT32_MAX round trips. Full source
+plain git apply reverse/reapply equality PASS. Full kern_credential.c local
+compile is NOT PASS: baseline and candidate both produce identical73 normalized
+errors from Apple's unsupported __builtin_xnu_type_* allocation builtins;
+no new candidate diagnostics. Full Xcode CI still required before deployment.
+BOOT0076 capture ended normally~21:45UTC. Existing0141 CI43961834933 and0077
+package53238/deploy47410/ACL scheduler43860 retained. No0077 flash yet.
+
 ## 2026-11-16: matching Libinfo uses compatibility UUIDs, membership APIs limited
 
 Read-only matching cache analysis identifies exported mbr_uid_to_uuid /

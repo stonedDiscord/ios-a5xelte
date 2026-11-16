@@ -1,3 +1,10 @@
+ACTIVE0142 identity UUID candidate prepared+committed, NOT staged/enabled.
+Helper Clang ASan/UBSan/apply equality PASS; full credential compile blocked
+by unchanged73 Apple builtins errors (baseline=candidate). Needs actual0141
+ACL evidence first.0141 CI43961834933 exactbd84c3b still Build21:45UTC;
+0077 package53238/deploy47410/ACL43860 retained.0076 capture ended normally.
+Do not duplicate watchers. No home screen; SB26 last activation XPC wait.
+
 ACTIVE0076~21:39 SB26 NOW activation wait (MadGate), past MC checkIn;
 tccd37/profiled100 alive. Library -2:-2/000 repeated. CONFIG_EXT_RESOLVER
 actually enabled but staged launchd no memberd/opendirectoryd; fail-closed

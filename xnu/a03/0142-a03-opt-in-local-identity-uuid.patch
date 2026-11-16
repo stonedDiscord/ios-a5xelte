@@ -1,0 +1,102 @@
+--- a/bsd/kern/kern_credential.c
++++ b/bsd/kern/kern_credential.c
+@@ -61,6 +61,9 @@
+ #include <libkern/OSByteOrder.h>
+ 
+ #include <kern/task.h>
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <kern/startup.h>
++#endif
+ #include <kern/locks.h>
+ #ifdef MACH_ASSERT
+ # undef MACH_ASSERT
+@@ -2035,6 +2038,41 @@
+ 
+ static int      kauth_cred_cache_lookup(int from, int to, void *src, void *dst);
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++/* Opt-in compatibility UUID translation for the local-only iOS account DB.
++ * Same wire format as Libinfo and CONFIG_EXT_RESOLVER=0. This does not grant
++ * membership, skip ACL evaluation, or interpret arbitrary directory UUIDs. */
++static TUNABLE(uint32_t, a03_compat_uuid, "a03_compat_uuid", 0);
++static int
++a03_compat_id_uuid(bool group, bool encode, id_t *id, guid_t *guid, bool *handled)
++{
++    static const uint8_t user_prefix[12] =
++        {0xff,0xff,0xee,0xee,0xdd,0xdd,0xcc,0xcc,0xbb,0xbb,0xaa,0xaa};
++    static const uint8_t group_prefix[12] =
++        {0xab,0xcd,0xef,0xab,0xcd,0xef,0xab,0xcd,0xef,0xab,0xcd,0xef};
++    *handled = false;
++    if (a03_compat_uuid != 1) return 0;
++    uint8_t *bytes = (uint8_t *)guid;
++    if (encode) {
++        id_t wire = htonl(*id);
++        memcpy(bytes, group ? group_prefix : user_prefix, 12);
++        memcpy(bytes + 12, &wire, sizeof(wire));
++        *handled = true;
++        return 0;
++    }
++    bool is_user = memcmp(bytes, user_prefix, 12) == 0;
++    bool is_group = memcmp(bytes, group_prefix, 12) == 0;
++    if (!is_user && !is_group) return 0; /* normal resolver remains authoritative */
++    *handled = true;
++    if (group != is_group) return ENOENT;
++    id_t wire;
++    memcpy(&wire, bytes + 12, sizeof(wire));
++    *id = ntohl(wire);
++    return 0;
++}
++#endif
++
++
+ #if CONFIG_EXT_RESOLVER == 0
+ /*
+  * If there's no resolver, only support a subset of the kauth_cred_x2y() lookups.
+@@ -2253,6 +2291,11 @@
+ int
+ kauth_cred_guid2uid(guid_t *guidp, uid_t *uidp)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    bool handled;
++    int error = a03_compat_id_uuid(false, false, uidp, guidp, &handled);
++    if (handled) return error;
++#endif
+ 	return kauth_cred_cache_lookup(KI_VALID_GUID, KI_VALID_UID, guidp, uidp);
+ }
+ 
+@@ -2274,6 +2317,11 @@
+ int
+ kauth_cred_guid2gid(guid_t *guidp, gid_t *gidp)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    bool handled;
++    int error = a03_compat_id_uuid(true, false, gidp, guidp, &handled);
++    if (handled) return error;
++#endif
+ 	return kauth_cred_cache_lookup(KI_VALID_GUID, KI_VALID_GID, guidp, gidp);
+ }
+ 
+@@ -2397,6 +2445,11 @@
+ int
+ kauth_cred_uid2guid(uid_t uid, guid_t *guidp)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    bool handled;
++    int error = a03_compat_id_uuid(false, true, &uid, guidp, &handled);
++    if (handled) return error;
++#endif
+ 	return kauth_cred_cache_lookup(KI_VALID_UID, KI_VALID_GUID, &uid, guidp);
+ }
+ 
+@@ -2440,6 +2493,11 @@
+ int
+ kauth_cred_gid2guid(gid_t gid, guid_t *guidp)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++    bool handled;
++    int error = a03_compat_id_uuid(true, true, &gid, guidp, &handled);
++    if (handled) return error;
++#endif
+ 	return kauth_cred_cache_lookup(KI_VALID_GID, KI_VALID_GUID, &gid, guidp);
+ }
+ 
