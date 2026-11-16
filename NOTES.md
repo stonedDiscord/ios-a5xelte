@@ -1,3 +1,10 @@
+ACTIVE0075 CI43955738619 exact2f78691 SUCCESS. Verified same0074 config,
+BOOT-only flash/reboot21:17UTC. Image SHA890b3491...460a31/kernel26b09528...
+Boot0075 reader/deploy64839/PID169581 waitsUSB180 then captures660s.
+Need0138/0139 live ScreenTime/analytics/activation xattr evidence and SB
+progress.0140 prepared/read-only stat NOT included. No second tty reader.
+No root/protected writes; home-screen goal unproven.
+
 ACTIVE0140 prepared for NEXT build only: read-only worker stat /private/var/
 PATH actual uid/gid/mode/flags/fileid/mountflags, local exact Clang+ASan/UBSan
 PASS. Current0139 CI43955738619/deploy64839/package62827 retained unchanged;

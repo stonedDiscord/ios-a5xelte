@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:17 UTC BOOT0075 diagnostic deployed after successful0139 CI
+
+CI43955738619 exact2f78691552a541b5c9ee56c06ee6a4c08e308096 SUCCESS.
+Package checksum/Mach-O/diagnostic markers and unchanged0074 ADT/1GiB/args/
+loader(except image_size)/ramdisk/stockDT verified. Kernel SHA256
+26b09528fc564a84b5a97b721b48d0db8a9cb0a72efe29fc98da8b5fb7b02fc8;
+BOOT0075 SHA256890b3491f6ea7b1fa229e75568d97376dc83279ec70ebad58103d05983460a31.
+Synced CDC Download succeeded, then Heimdall BOOT-only upload100%/successful,
+reboot confirmed21:17UTC. Deployment64839/PID169581 now waitsUSB180s then
+captures660s boot0075-usb-initial.log. Do not open another tty reader.
+0138/0139 included; prepared0140 read-only stat NOT in this kernel. Need
+runtime ScreenTime annotation, analytics error path, activation backup xattr
+actual path/errno and SB progress. No root/protected partition changes.
+Home screen remains unproven.
+
 ## 2026-11-16: 21:11 UTC container query sample and prepared0140 read-only stat
 
 Fresh0074 sample63 completes: containermanager63 alive3threads, main event
