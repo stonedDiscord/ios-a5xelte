@@ -7,7 +7,6 @@ root=Path(__file__).resolve().parents[1]
 s= (root/'tools/a03-test-filesystem-probe.py').read_text()
 ns={};exec(s[s.index("header=r'''"):s.index("tests=r'''")],ns)
 header=ns['header'].replace('uint64_t va_fileid,va_supported;','uint64_t va_fileid,va_supported;struct kauth_acl *va_acl;')
-header=header.replace('#define VATTR_IS_SUPPORTED(p,a) ((p)->va_supported==31)', '#define VATTR_IS_SUPPORTED(p,a) ((p)->va_supported==31)')
 header=header.replace('if(get_error)return get_error;', 'a->va_supported=31;a->va_acl=acl_return;if(get_error)return get_error;')
 prefix=r'''
 #include <stdint.h>
@@ -26,8 +25,7 @@ source=source[:source.index('\n  printf("A03 PROBE help:')]
 newpatch=(root/'xnu/a03/0141-a03-readonly-filesystem-acl-probe.patch').read_text()
 # Only production function diffs; command-dispatch diff is checked separately.
 with tempfile.TemporaryDirectory(prefix='a03-acl-') as d:
- d=Path(d);p=d/'bsd/kern/sweet_amfi.c';p.parent.mkdir(parents=True)
- # Patch against the whole local source reconstructed from git's staged baseline.
+ d=Path(d)
  # Production helper additions + tiny signature/attribute changes come directly from patch.
  source=source.replace('a03_probe_stat(const char *path)','a03_probe_stat(const char *path, bool with_acl)')
  source=source.replace('    VATTR_WANTED(&va, va_fileid);','    VATTR_WANTED(&va, va_fileid);\n    if (with_acl) VATTR_WANTED(&va, va_acl);')

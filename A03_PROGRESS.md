@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:32 UTC0140 CI succeeds and BOOT0076 package verified
+
+CI43959202597 exact65cc5807244657e6ff1014894734a7106b2eee54 SUCCESS.
+Kernel SHA256bb342c79786b5f605c54544a4350021e9a2138177530a7818b80773e156bc78a;
+BOOT0076 SHA2565b24a68639cc0df952e3b8cc51c6aed5069d9a396a22b4a17f831b2b4b9ff353.
+Exact checksum/MachO/stat marker and unchanged0075 ADT/1GiB/args/loader
+(except image_size)/ramdisk/stockDT verified. No0141 in this build.
+Deployment84806 waits final60s0075 status reader82251 then authorized
+synced CDC Download/BOOT-only flash and660s capture. Stat scheduler51114
+retained. No0076 upload yet at this checkpoint.
+Fresh0075 sample25 retains same MadGate synchronous activation wait;
+VM free2616/compressor2474pages, storage ready1 poisoned0. No home screen.
+
 ## 2026-11-16: prepared0141 ACL inspection; fresh SB activation wait
 
 21:26UTC0075 ps/sample25 completes with12threads. Matching cache symbolication

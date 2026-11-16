@@ -1,3 +1,12 @@
+ACTIVE0076 CI43959202597 exact65cc580 SUCCESS21:32UTC; package verified,
+BOOT SHA5b24a68639cc0df952e3b8cc51c6aed5069d9a396a22b4a17f831b2b4b9ff353,
+kernelbb342c79786b5f605c54544a4350021e9a2138177530a7818b80773e156bc78a.
+Deploy84806 waiting short0075 status reader82251 (60s ends~21:33), then synced
+Download/BOOT-only upload. Stat scheduler51114 retained. No0076 flash yet.
+0075~21:32 sample25 still activation XPC, VM free2616/compressor2474pages,
+storage ready1 poisoned0.0141 ACL inspection prepared/tested NOT0076.
+Home menu remains unproven. Do not duplicate readers/watchers.
+
 ACTIVE0141 ACL probe prepared for NEXT build, NOT0076. Actual helper
 ASan/UBSan + full sweet_amfi.c exact Clang + plain apply equality PASS.
 Regular stat unaffected; acl prints bounded16 ACEs and frees allocation.
