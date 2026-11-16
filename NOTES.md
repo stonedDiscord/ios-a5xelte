@@ -1,3 +1,12 @@
+ACTIVE0139 tested filesystem/crash diagnostics prepared.0074 SB26 still
+MadGate getActivationState sync XPC; mobileactivation crashes setting backup
+exclusion, Cocoa513 permission, actual path/POSIX errno truncated/unproven.
+ScreenTime/analytics still crashing;0138 live detail not in0074.0139 adds
+setxattr/attrlist/datavault fd-owner evidence and short annotation chunks.
+Actual helpers ASan/UBSan PASS; full systemcalls+exception exact Clang PASS;
+plain reverse/reapply hash equality PASS. No reset/flash during investigation.
+Need full CI then same-config0075 and verify actual failures. Home unproven.
+
 ACTIVE0074 CI43951369485 exacta4d660c SUCCESS, verified BOOT-only flash/
 reboot20:52UTC. Watcher14214/PID154025 now waitsUSB/captures660s initial log.
 BOOT SHA95d093c1...84814e. Same0073 1GiB/args/ADT/loader/root. Need0137

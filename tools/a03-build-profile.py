@@ -141,7 +141,8 @@ def main():
                      '0135-a03-live-usb-probes.patch',
                      '0136-a03-tccd-lab-named-profile.patch',
                      '0137-a03-mobileactivation-crash-evidence.patch',
-                     '0138-a03-screentime-analytics-evidence.patch'):
+                     '0138-a03-screentime-analytics-evidence.patch',
+                     '0139-a03-filesystem-startup-evidence.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

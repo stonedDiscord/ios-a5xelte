@@ -1,0 +1,111 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -89,13 +89,16 @@
+     const uint64_t *args, int result, uint64_t pc)
+ {
+     unsigned slot;
+-    static unsigned reports[6];
++    static unsigned reports[9];
+     if (!strcmp(p->p_comm, "backboardd")) slot = 0;
+     else if (!strncmp(p->p_comm, "containermanager", 15)) slot = 1;
+     else if (!strcmp(p->p_comm, "mediaserverd")) slot = 2;
+     else if (!strcmp(p->p_comm, "notifyd")) slot = 3;
+     else if (!strcmp(p->p_comm, "SpringBoard")) slot = 4;
+     else if (!strcmp(p->p_comm, "analyticsd")) slot = 5;
++    else if (!strcmp(p->p_comm, "mobileactivation")) slot = 6;
++    else if (!strcmp(p->p_comm, "ScreenTimeAgent")) slot = 7;
++    else if (!strcmp(p->p_comm, "dmd")) slot = 8;
+     else return;
+     if (!error && code != SYS_csops && code != SYS_csops_audittoken &&
+         code != SYS___mac_syscall) return;
+@@ -113,10 +116,12 @@
+     switch (code) {
+     case SYS_open: case SYS_open_nocancel: case SYS_access:
+     case SYS_mkdir: case SYS_mkdir_extended: case SYS_stat64: case SYS_lstat64:
+-    case SYS_getattrlist: case SYS_getxattr: case SYS___mac_syscall:
++    case SYS_getattrlist: case SYS_setattrlist: case SYS_getxattr:
++    case SYS_setxattr: case SYS___mac_syscall:
+         path = args[0]; break;
+     case SYS_openat: case SYS_openat_nocancel: case SYS_openat_dprotected_np:
+     case SYS_faccessat: case SYS_mkdirat: case SYS_getattrlistat:
++    case SYS_setattrlistat:
+         path = args[1]; break;
+     default: break;
+     }
+@@ -126,6 +131,37 @@
+         for (size_t i = 0; i + 1 < copied; i++)
+             if ((unsigned char)text[i] < 32 || (unsigned char)text[i] > 126) text[i] = ' ';
+         printf("A03 START %s syscall %u path: %s\n", p->p_comm, code, text);
++    }
++    /* Read only bounded metadata after the real syscall has returned. The
++     * first argument is an fd for fsetxattr/fsetattrlist, never a user path. */
++    if ((code == SYS_setxattr || code == SYS_fsetxattr) && args[1] &&
++        copyinstr((user_addr_t)args[1], text, sizeof(text), &copied) == 0 && copied > 1) {
++        for (size_t i = 0; i + 1 < copied; i++)
++            if ((unsigned char)text[i] < 32 || (unsigned char)text[i] > 126) text[i] = ' ';
++        printf("A03 START %s syscall %u xattr: %s\n", p->p_comm, code, text);
++    }
++    user_addr_t attrlist = 0;
++    if (code == SYS_setattrlist || code == SYS_fsetattrlist) attrlist = args[1];
++    else if (code == SYS_setattrlistat) attrlist = args[2];
++    if (attrlist) {
++        /* ABI: uint16 bitmapcount/reserved, then five uint32 attribute sets. */
++        uint32_t attrs[6];
++        if (copyin(attrlist, attrs, sizeof(attrs)) == 0)
++            printf("A03 START %s attrlist %08x/%08x/%08x/%08x/%08x/%08x\n",
++                p->p_comm, attrs[0], attrs[1], attrs[2], attrs[3], attrs[4], attrs[5]);
++    }
++    if (code == SYS___mac_syscall && args[1] == 0x104 && args[2]) {
++        /* rootless_convert_to_datavault passes {int64 fd, user owner string}. */
++        uint64_t vault[2];
++        if (copyin((user_addr_t)args[2], vault, sizeof(vault)) == 0) {
++            printf("A03 START %s datavault fd %lld owner_ptr %llx\n",
++                p->p_comm, (int64_t)vault[0], vault[1]);
++            if (vault[1] && copyinstr((user_addr_t)vault[1], text, sizeof(text), &copied) == 0 && copied > 1) {
++                for (size_t i = 0; i + 1 < copied; i++)
++                    if ((unsigned char)text[i] < 32 || (unsigned char)text[i] > 126) text[i] = ' ';
++                printf("A03 START %s datavault owner: %s\n", p->p_comm, text);
++            }
++        }
+     }
+     if ((code == SYS_csops || code == SYS_csops_audittoken) &&
+         (args[1] == CS_OPS_ENTITLEMENTS_BLOB || args[1] == CS_OPS_DER_ENTITLEMENTS_BLOB) &&
+--- a/osfmk/kern/exception.c
++++ b/osfmk/kern/exception.c
+@@ -961,18 +961,27 @@
+ static void
+ a03_crash_message(const char *name, unsigned slot, uint64_t address)
+ {
+-    char text[256];
+-    unsigned n;
++    /* Console records truncate long printf calls. Keep each line short while
++     * retaining nested NSError/path/errno text within a fixed 1024-byte cap. */
++    char text[161];
++    unsigned n = 0;
+     if (address == 0) return;
+-    for (n = 0; n < sizeof(text) - 1; n++) {
++    for (unsigned offset = 0; offset < 1024; offset++) {
+         unsigned char c;
+-        if (address + n < address || a03_crash_read(address + n, &c, 1)) return;
+-        if (c == 0) break;
+-        text[n] = c >= 32 && c <= 126 ? (char)c : ' ';
++        if (address + offset < address || a03_crash_read(address + offset, &c, 1)) return;
++        if (c == 0) {
++            text[n] = 0;
++            if (n) printf("CRASH %s annotation%u: %s\n", name, slot, text);
++            return;
++        }
++        text[n++] = c >= 32 && c <= 126 ? (char)c : ' ';
++        if (n == sizeof(text) - 1 || offset == 1023) {
++            text[n] = 0;
++            printf("CRASH %s annotation%u: %s%s\n", name, slot, text,
++                offset == 1023 ? " [bounded]" : " [continued]");
++            n = 0;
++        }
+     }
+-    text[n] = 0;
+-    if (n) printf("CRASH %s annotation%u: %s%s\n", name, slot, text,
+-        n == sizeof(text) - 1 ? " [bounded]" : "");
+ }
+ 
+ static void

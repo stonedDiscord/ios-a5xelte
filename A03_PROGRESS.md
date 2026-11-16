@@ -1,5 +1,37 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0074 activation backup-exclusion failure; tested0139 evidence
+
+Live0074 detailed crashes mobileactivation138/147 both SIGTRAP at standalone
+0x1001c6804 (explicit brk), caller0x10004bd00. Annotation: Failed to set
+backup exclusion on container path; underlying NSCocoaErrorDomain513
+permission failure. Exact binary main loops four container paths, reads
+NSURLIsExcludedFromBackupKey, then setResourceValue(true); false returns to
+fatal helper. Actual failing path/POSIX errno still unknown: current256-byte
+annotation is itself truncated by console record length before its tail.
+
+Read-only EP0 ps/sample26 at21:03UTC used existing capture, no second tty
+reader/reset. SB26 still12threads, main MadGate getActivationState sync XPC;
+ScreenTimeAgent362/371 and analyticsd359 still crash. No home-screen evidence.
+ScreenTime data-vault candidate and analytics NULL path diagnosis above remain
+accurately scoped; no new runtime proof of their underlying filesystem error.
+
+Prepared0139 includes existing0138 in next staged profile and adds independent
+192-report startup slots for mobileactivation/ScreenTimeAgent/dmd, failed
+setxattr/fsetxattr attr names, setattrlist/fsetattrlist/at bitmaps, and Sandbox
+0x104 fd/owner ABI. All reads bounded with non-NULL copyinstr length pointers;
+no errno, policy, activation state, Apple binary or filesystem behavior edits.
+Crash annotations emit160-byte chunks up to1024 bytes to retain nested errors
+without console record truncation; existing two-reports-per-name gate retained.
+
+Actual-source helper tests ASan/UBSan PASS, including invalid pointer handling,
+independent caps, fd-vs-path selection, long NSError through256-byte record cap.
+Fixed pre-existing test-harness pointer arithmetic UB exposed by sanitizer.
+Exact CI-command full-file local Clang PASS for systemcalls.c and exception.c.
+Plain git apply reverse/reapply exact source hash equality PASS. Full CI still
+required; kern_exit selector0138 prior helper PASS, Apple builtin limitation
+for its local full compile remains. No0139 flash yet;0074 remains running.
+
 ## 2026-11-16: 20:52 UTC BOOT0074 diagnostic deployed after full CI success
 
 CI43951369485 exacta4d660cbf786f5a5d66e4036f94a124b04518d97 completed

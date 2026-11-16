@@ -16,8 +16,9 @@ with tempfile.TemporaryDirectory() as d:
  q=Path(d)/'bsd/dev/arm/systemcalls.c';q.parent.mkdir(parents=True)
  q.write_text(source)
  subprocess.run(['git','apply','--include=bsd/dev/arm/systemcalls.c',str(root/'xnu/a03/0138-a03-screentime-analytics-evidence.patch')],cwd=d,check=True)
+ subprocess.run(['git','apply','--include=bsd/dev/arm/systemcalls.c',str(root/'xnu/a03/0139-a03-filesystem-startup-evidence.patch')],cwd=d,check=True)
  source=q.read_text()
-names=['open','open_nocancel','access','mkdir','mkdir_extended','stat64','lstat64','getattrlist','getxattr','__mac_syscall','openat','openat_nocancel','openat_dprotected_np','faccessat','mkdirat','getattrlistat','csops','csops_audittoken']
+names=['open','open_nocancel','access','mkdir','mkdir_extended','stat64','lstat64','getattrlist','getxattr','__mac_syscall','openat','openat_nocancel','openat_dprotected_np','faccessat','mkdirat','getattrlistat','csops','csops_audittoken','setattrlist','fsetattrlist','setattrlistat','setxattr','fsetxattr']
 header=r'''
 #include <assert.h>
 #include <stdint.h>
@@ -33,8 +34,8 @@ struct proc {char p_comm[17];};
 static unsigned enabled,logs,strings,headers;static uintptr_t last;
 static int proc_pid(struct proc *p){(void)p;return 42;}
 static void PE_parse_boot_argn(const char *a,void *p,size_t n){assert(!strcmp(a,"a03crash_log")&&n==4);memcpy(p,&enabled,n);}
-static int copyinstr(user_addr_t a,char *b,size_t n,size_t *c){last=a;strings++;if(a!=0x1000)return 1;assert(n==192);strcpy(b,"path\nvalue");*c=11;return 0;}
-static int copyin(user_addr_t a,void *p,size_t n){last=a;headers++;assert(n==8);memset(p,0,n);return 0;}
+static int copyinstr(user_addr_t a,char *b,size_t n,size_t *c){assert(c);last=a;strings++;if(a!=0x1000)return 1;assert(n==192);strcpy(b,"path\nvalue");*c=11;return 0;}
+static int copyin(user_addr_t a,void *p,size_t n){last=a;headers++;assert(n==8||n==16||n==24);if(a==0xdead)return 1;memset(p,0,n);if(n==16)((uint64_t *)p)[1]=0x1000;return 0;}
 static int logline(const char *f,...){(void)f;logs++;return 0;}
 #define printf logline
 '''
@@ -57,7 +58,28 @@ int main(void){
  const char *others[]={"containermanager","mediaserverd","notifyd","SpringBoard","analyticsd"};
  for(unsigned k=0;k<5;k++){strcpy(p.p_comm,others[k]);logs=0;
  for(unsigned i=0;i<1000;i++){a03_startup_syscall_log(&p,99,2,a,0,1);}assert(logs==192);}
- puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/independent SpringBoard 192-report cap PASS");
+ /* Fresh slots check actual pointer positions and do not treat fds as paths. */
+ strcpy(p.p_comm,"mobileactivation");a[0]=0x1000;a[1]=0x1000;a[2]=0x3000;a[3]=16;
+ logs=strings=headers=0;
+ a03_startup_syscall_log(&p,SYS_setxattr,13,a,0,1);assert(logs==3&&strings==2&&last==0x1000);
+ a[0]=7;a03_startup_syscall_log(&p,SYS_fsetxattr,13,a,0,1);assert(logs==5&&strings==3);
+ a[0]=0x1000;a[1]=0x3000;
+ a03_startup_syscall_log(&p,SYS_setattrlist,13,a,0,1);assert(headers==1&&last==0x3000);
+ unsigned before=strings;a[0]=7;
+ a03_startup_syscall_log(&p,SYS_fsetattrlist,13,a,0,1);assert(headers==2&&strings==before);
+ a[1]=0x1000;a[2]=0x4000;
+ a03_startup_syscall_log(&p,SYS_setattrlistat,13,a,0,1);assert(headers==3&&last==0x4000);
+ a[0]=0x1000;a[1]=0x104;a[2]=0x5000;
+ a03_startup_syscall_log(&p,SYS___mac_syscall,45,a,0,1);assert(headers==4&&last==0x1000);
+ before=strings;a[2]=0xdead;
+ a03_startup_syscall_log(&p,SYS___mac_syscall,45,a,0,1);assert(headers==5&&strings==before+1);
+ a[0]=0;a[1]=0;a[2]=0;a[3]=0;logs=0;
+ for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);
+ assert(logs==185);
+ const char *extra[]={"ScreenTimeAgent","dmd"};
+ for(unsigned k=0;k<2;k++){strcpy(p.p_comm,extra[k]);logs=0;
+ for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);assert(logs==192);}
+ puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/xattr/attrlist/datavault/independent 192-report caps PASS");
 }
 '''
 with tempfile.TemporaryDirectory(prefix='a03-startup-') as d:
