@@ -134,3 +134,8 @@ compile results, hardware observations and restore results below.
   https://github.com/stonedDiscord/ios-a5xelte/actions/runs/43879179527
 - Whole-overlay validation: plain git apply on pristine CI files produced
   all16 complete files byte-identical to the locally compiled source inputs.
+
+- Also ported read-only root prerequisite inspection, matching-cache UUID/
+  dependency verification and local/exported cache symbolication under
+  tools/dreamlte-* names. Synthetic exported-symbol/redacted/bounds tests
+  PASS without Apple data; no root image or installer deployed.

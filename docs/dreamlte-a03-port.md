@@ -94,3 +94,21 @@ S8 scanout and bounded UFS reads before preparing a compatible root. The
 existing snapshot probe proves a marker survives into Linux last_kmsg; it
 does not yet transport XNU console output. BOOT-only trials are authorized;
 USERDATA, RECOVERY, EFS/CPEFS and bootloaders remain preserved.
+
+## Read-only userspace tooling
+
+The portable A03 root/cache inspection and symbolication tools are also
+available under DREAMLTE names. These inspect supplied host files; they
+never install a root or write the phone:
+
+```sh
+python3 tools/dreamlte-inspect-ios-root.py EXTRACTED_ROOT
+python3 tools/dreamlte-verify-ios-cache.py EXTRACTED_ROOT
+python3 tools/dreamlte-symbolicate-cache.py EXTRACTED_ROOT 0xADDRESS --slide 0xSLIDE
+python3 tools/dreamlte-test-symbolicate-cache.py
+```
+
+Cache tools additionally accept `--hfs-image` for a host HFS image. Use the
+matching cache/subcache/symbol UUIDs and captured user cache slide. Their
+file/architecture/UUID checks do not prove S8 kernel or runtime compatibility.
+No Apple assets are included in the repository.
