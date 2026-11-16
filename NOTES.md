@@ -1,3 +1,12 @@
+ACTIVE0136 CI43940554508 Build still live19:38UTC. Existing package watcher
+73118/PID81847 retained; deploy watcher46231/PID82365 now waiting for its
+verified package. /tmp/a03-0072/deploy.py gates exact successful CI+SHA,
+manifest/image/loader/ADT/args then synced CDC Download and BOOT-only flash;
+waits for no other tty reader, captures660s. No phone reset/flash yet.
+Frozen0134+git apply0135/0136 exactly matches compiled full source; tests PASS.
+Do not duplicate/restart watchers on observation timeout. Logs watch.log,
+deploy.log,flash.log,capture.stderr under/tmp/a03-0072. Home menu unproven.
+
 ACTIVE0136 CI43940554508 Build confirmed in progress; package watcher
 session73118 /tmp/a03-0072/watch.py alive, log/tmp/a03-0072/watch.log.
 Watcher only packages after exact successful SHA; NEVER flashes. When CI
