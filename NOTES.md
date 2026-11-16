@@ -1,3 +1,12 @@
+ACTIVE22:01UTC0142 CI43963988043 exact1e206d5 still Build. Existing0078
+package32985/deploy43872/probes89317 retained;0077 capture ended normally.
+No0078 flash yet. Need actual analytics/activation survival and SB sample.
+ScreenTime live vault directory501:501/0755/flags0/noACL; matching library
+requires0x104 plus UF_DATAVAULT and com.apple.rootless owner xattr. Added
+read-only ABI regression+docs/a03-service-crashes.md; all checks PASS.
+No fake success/vault implementation.0143 creds diagnostic prepared/tested,
+not staged/currentCI. No home screen; goal remains active.
+
 ACTIVE0142 CI43963988043 exact1e206d5f8695d0a393de9b0d1e45cc1c57d17759
 building21:50UTC.0078 package32985/deploy43872/ACL scheduler89317 retained:
 /tmp/a03-0078/{watch-package,deploy,schedule-probes}.py. Gates exact success,

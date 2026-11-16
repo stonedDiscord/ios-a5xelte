@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: ScreenTime vault owner ABI and live directory state verified
+
+BOOT0077 read-only ACL probe confirms ScreenTime directory at /private/var/
+mobile/Library/Application Support/com.apple.remotemanagementd is501:501,
+0755, flags0, no ACL. Guessed com.apple.dmd sibling ENOENT is not proof of
+actual dmd directory. No filesystem mutation. Matching cache check helper
+now pins Sandbox0x104, UF_DATAVAULT0x80, recursive flag OR, and owner check's
+com.apple.rootless xattr string/instructions. Actual rootless check compares
+xattr length/bytes with requested owner; success requires coherent owner
+metadata as well as flags. HFS persists flags and VFS inherits them, but no
+vault entitlement enforcement exists in this port. No success-only bypass.
+
+Added docs/a03-service-crashes.md and read-only
+ tools/a03-check-datavault-abi.py. Matching HFS root check, Python syntax,
+git diff check and existing actual UUID/ACL sanitizer regressions PASS.
+Analytics failure remains Library EACCES then NULL strlen; exact0142 CI
+43963988043 still Build at22:01UTC. Existing0078 package/deploy/probe watchers
+retained;0077 capture ended normally, no0078 flash yet.0143 credentials probe
+prepared but unstaged. Home-screen goal remains active/unverified.
+
 ## 2026-11-16: prepared0143 read-only task credentials, not staged in0142 CI
 
 Prepared creds PID worker command to inspect live uid/gid/supplementary groups,
