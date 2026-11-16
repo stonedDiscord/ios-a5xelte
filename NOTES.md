@@ -1,3 +1,13 @@
+ACTIVE2026-11-16 live0135 monitor implemented/tested, not deployed yet.
+EP0 vendor0xa3 ->4slots/separate kernel probe worker; separate host sender
+retains tty drain. a03_probe=1. ping/ps/vm/io/threads PID (no user reads),
+sample PID/mem PID ADDR COUNT (may sleep). No task stop/memory writes.
+Host sanitizer tests/4real arm64 objects PASS; full CI/runtime pending.
+0069 incomplete: only pass0, eMMC mutex during dyld page-in; old io_ticks
+include yield intervals, not exclusive service. Device Download; cause unknown.
+Need0135 BOOT test then live threads/vm/io. No SpringBoard home screen.
+Preserve protected partitions/root.
+
 ACTIVE0069 BOOT-only100percent/success/reboot22:49UTC. CI43770218935
 SUCCESSf1b31e1,20sources/loader/ADT/args match. BOOTbb20a474...3850ee.
 Capture245564660s boot0069-usb-initial.log waits CDC. Test0133 read16KiB

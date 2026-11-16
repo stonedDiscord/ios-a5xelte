@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: live USB probes implemented; SpringBoard page-in wait confirmed
+
+Exact0069 capture has only sampler pass0 (438539bytes, last update Nov15
+22:54UTC), SpringBoard26 one thread state9 in same a03_emmc_lock+8 via
+cluster_pagein. User PC stays dyld TLS initializer. Not a complete660s test
+or fairness success. Device currently Samsung Download, not CDC; transition
+cause unknown.0068 four samples remain stronger repeated-wait evidence.
+256MiB memory pressure is a hypothesis pending counters.0133 causes old
+io_ticks to include yield intervals;5288062222ticks is not exclusive controller
+hold time and cannot be compared that way with0068. No home-screen proof.
+
+User requests simpler probing that leaves console usable.0135 adds private
+EP0 commands,4slot queue/dedicated kernel worker and separate host sender;
+USB polling/log drain independent. Opt-in a03_probe=1. ping/help/ps/vm/io/
+threads PID/sample PID/mem PID HEX HEXCOUNT. threads skips faulting user
+backtraces; sample/mem may sleep in probe worker. No memory/register writes,
+task stop/resume or new partition operations. BEGIN/END sequence records,
+strict request/length/ASCII checks, overflow discard and full-queue rejection.
+Actual host ASan/UBSan transport/dispatcher PASS; existing CDC/PID1 monitor/
+Download/sampler PASS. Four actual arm64 objects compile using exact0069
+headers. Full CI/device validation pending. Private artifacts stay ignored.
+
 ## 2026-11-15:0069 read-lock fairness and A03 identity deployed
 
 CI43770218935 SUCCESS exactf1b31e1;20frozen sources expected0134 match.

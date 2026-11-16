@@ -165,3 +165,47 @@ command success yet. Existing capture proved only device-to-host logs.
 of bulk OUT: python3 tools/a03-usb-console.py --download-control --duration 10
 This sends CDC SEND_BREAK(0xffff); only use with0115 kernel. No automatic
 fallback or break is sent by ordinary captures. Hardware reset pending.
+
+## Live probes (0135, opt-in a03_probe=1)
+
+A dedicated kernel probe thread and four-command queue keep USB polling and
+log draining on the original worker. A slow target-memory read can occupy the
+probe worker without making it own USB or stopping the target. Responses use
+A03 PROBE N BEGIN / END records. Transfer ACK means queued, not completed.
+
+Private EP0 OUT request 0x40/0xa3, value/index zero, accepts1..127 printable
+ASCII bytes. This bypasses unverified CDC bulk OUT. libusb opens the exact
+VID/PID/serial without claiming or detaching CDC interfaces. A separate host
+sender keeps two-second control-transfer timeouts off the tty reader. USB-device
+permission is required as well as tty access. No automatic reset fallback.
+
+    python3 tools/a03-usb-console.py --probe-shell --duration 1800
+
+Enter commands directly:
+
+| Command | Result |
+| --- | --- |
+| ping / help | Responsiveness / command list |
+| ps | Up to256 process names and decimal PIDs |
+| vm | Free/wired/file-backed/compressor pages; faults/pageins/reactivations/swap |
+| io | Non-locking eMMC request/sector counters and existing elapsed ticks |
+| threads 26 | Up to24 saved PCs, waits, kernel stacks and CPU times; no user-stack reads |
+| sample 26 | Same snapshot plus bounded user-stack reads, which may fault/sleep |
+| mem 26 180000000 40 | Read up to0x100 bytes from a process map |
+
+PIDs decimal; addresses/counts hexadecimal. Obtain the current SpringBoard PID
+with ps. Prefer threads/vm/io before faulting reads. Snapshots are racy live
+observations. Commands do not change memory/registers, stop/resume tasks,
+change partitions or expose arbitrary MMIO. Existing eMMC elapsed ticks include
+mutex-yield intervals after0133; they are not exclusive controller service time.
+
+    python3 tools/a03-usb-console.py --probe vm --probe io --probe 'threads 26'
+    python3 tools/a03-test-live-probe.py
+
+Legacy PID1-hold commands retain their separate slot. Bulk OUT may also carry
+probe COMMAND when that path works. Overflowed lines are discarded entirely;
+full queues and malformed/short control messages reject commands. The existing
+256KiB log spool can still overwrite old bytes under excess output.
+
+Host sanitizer transport/dispatcher tests and four real arm64 kernel-object
+compiles pass. Hardware replies require0135 plus a03_probe=1 and remain pending.
