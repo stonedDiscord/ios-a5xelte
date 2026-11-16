@@ -1,3 +1,14 @@
+ACTIVE0076 live stat: activation container0:0/0755 flags0; OSAnalytics
+SystemGroup0:0/0755 flags0, Library -2:-2/000 flags0. Mount1480d000 excludes
+NOUSERXATTR. ACL dependence possible; MCM uses systemusers299 inclmobile/
+analyticsd. No chmod/bypass. ScreenTime exact vault45 repeats; analytics
+EACCES/NULL repeats. SB26 currently MC checkIn; no home-screen proof.
+0141 CI43961834933 exactbd84c3b building.0077 package53238/deploy47410/
+ACL scheduler43860 retained. Deployment waits exact success+package+0076
+reader end then BOOT-only flash. NO0077 flash yet.0076 reader84806 live.
+0076 stat scheduler86888 corrected101byte CoreAnalytics path to parent-only.
+Need actual ACL/GUID access repair. Private logs ignored; no root mutation.
+
 ACTIVE0076 BOOT-only upload successful/reboot confirmed21:33UTC after
 exact0140 CI43959202597 success+unchanged config verification. Reader84806
 now waitsUSB180s then660s capture boot0076-usb-initial.log; stat scheduler51114

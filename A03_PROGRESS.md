@@ -1,5 +1,39 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0076 live ownership/modes;0141 ACL CI queued
+
+USB returned~21:34UTC, cache slide13614000, SpringBoard26 this boot. First
+stat probes complete through dedicated worker, no second console reader.
+Actual activation container51E6AD4E-3CED-47F7-B6EC-51E7034B24DA uid0/gid0,
+mode040755 flags0 fileid308200. OSAnalytics SystemGroup15C54419-7736-4C62-
+B119-1C994A4F8444 root uid0/gid0 mode040755 flags0 fileid308235; its Library
+uid/gid4294967294(-2), mode040000(no POSIX permissions), flags0 fileid308237.
+Repeated probes retain same values. Both parent container classes uid0/gid0
+0755; var/mobile/Library uid/gid501 mode0711. Mountflags1480d000 does NOT
+contain MNT_NOUSERXATTR01000000. Immutable flags absent on measured targets.
+
+This establishes actual access metadata, not that chmod is the right repair:
+MCM _CreateSystemUserACEInACL uses literal systemusers; staged group299
+includes mobile and _analyticsd. Mode000 may intentionally rely on ACLs.
+Need actual ACEs and kernel GUID/group resolution rather than broad bypass.
+Analyticsd92/152/173 again stat/open EACCES13 then NULL strlen. ScreenTime
+actual data-vault ENOTSUP assertion repeats. No permission changes performed.
+
+Fixed private scheduler issue: CoreAnalytics full path is101bytes, exceeds
+0140's100byte guard. First scheduler logged AssertionError after the three
+useful probes. Removed that path (parent Library is inspectable), restarted
+as86888; subsequent stages continue, no kernel/console failure implicated.
+Fresh0076 SB26~21:37 main MCProfileConnection checkIn; container63 sample
+completes with worker checking item existence. Not proof of deadlock/home.
+
+Started0141 full CI43961834933 exactbd84c3ba60d72de9cd3742a5b8221c5827c533c3
+at21:36UTC after local exact Clang/sanitizers/plain-apply verification.
+Package-only53238 /tmp/a03-0077/watch-package.py retained; deployment47410
+/tmp/a03-0077/deploy.py waits exact success+verified same0076 config+reader
+end, then synced Download and authorized BOOT-only0077,660s capture.
+ACL scheduler43860 waits worker and probes five failing/parent paths plusSB.
+No0077 flash yet. Current0076 reader84806 retained; no protected/root writes.
+
 ## 2026-11-16: 21:33 UTC BOOT0076 read-only filesystem diagnostics deployed
 
 Prior status reader ended; synced CDC Download succeeded. Heimdall BOOT-only
