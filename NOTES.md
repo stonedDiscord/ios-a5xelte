@@ -1,3 +1,11 @@
+ACTIVE0073 live tccd37 survives, ops22/1 accepted! SB25 moved past MC
+migration, now13threads/main MobileActivation getActivationState sync XPC.
+mobileactivation crash loop not covered detailed selector. Prepared0137
+bounded2 crash reports for exact truncated mobileactivation name; helper
+ASan/UBSan PASS, full-file local Clang blocked unchanged Apple kalloc builtins.
+Need full CI then0074 diagnostics. Capture90578/88152 still live0073,
+cache slide13424000. No physical home-menu evidence. No reset yet.
+
 ACTIVECOPYINSTR corrected0136 commitc9a358b pushed, CI43946625323 exact
 c9a358b7c068a5fca9a628e6ae2a03ecf879f7c4 in progress(Deps). Existing
 Download detected. Watch/deploy session88152/PID90578 /tmp/a03-0073/

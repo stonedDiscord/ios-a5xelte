@@ -14,6 +14,7 @@ with tempfile.TemporaryDirectory() as d:
  # Preserve original line offsets using the real helper's0108 source layout.
  q.write_text('\n'*1843+source+'\n')
  subprocess.run(['git','apply',str(root/'xnu/a03/0128-a03-analytics-crash-evidence.patch')],cwd=d,check=True)
+ subprocess.run(['git','apply',str(root/'xnu/a03/0137-a03-mobileactivation-crash-evidence.patch')],cwd=d,check=True)
  source=q.read_text()
 header=r'''
 #include <assert.h>
@@ -32,7 +33,7 @@ static void PE_parse_boot_argn(const char *arg,void *value,unsigned size) {
 tests=r'''
 int main(void) {
  const char *names[]={"watchdogd","backboardd","SpringBoard","launchd","xpcproxy",
- "bluetoothd","identityservices","fairplayd.H2","mediaserverd","configd","lockdownd","analyticsd","dmd","tccd"};
+ "bluetoothd","identityservices","fairplayd.H2","mediaserverd","configd","lockdownd","analyticsd","dmd","tccd","mobileactivation"};
  assert(!a03_should_log_daemon_crash("mediaserverd",SIGABRT));
  enabled=2;assert(!a03_should_log_daemon_crash("mediaserverd",SIGABRT));enabled=1;
  assert(!a03_should_log_daemon_crash("unknown",SIGABRT));
@@ -49,5 +50,5 @@ int main(void) {
 '''
 with tempfile.TemporaryDirectory(prefix='a03-crash-test-') as d:
  p=Path(d)/'test.c';p.write_text(header+source+tests)
- subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror',str(p),'-o',d+'/test'],check=True)
+ subprocess.run(['clang','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',str(p),'-o',d+'/test'],check=True)
  subprocess.run([d+'/test'],check=True)

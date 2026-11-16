@@ -139,7 +139,8 @@ def main():
                      '0133-a03-yield-emmc-read-lock.patch',
                      '0134-a03-platform-product-name.patch',
                      '0135-a03-live-usb-probes.patch',
-                     '0136-a03-tccd-lab-named-profile.patch'):
+                     '0136-a03-tccd-lab-named-profile.patch',
+                     '0137-a03-mobileactivation-crash-evidence.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

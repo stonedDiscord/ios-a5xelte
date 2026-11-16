@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0073 fixes tccd startup; current SpringBoard activation wait
+
+CI43946625323 exactc9a358b succeeded. Existing watcher verified kernel/image,
+BOOT-only upload/reboot21:27:09local. Image SHA256
+be94b6edff5af25fb5563151b5f31d7cb9ac3d79a1d6d314b08dc157ce481f21;
+kernel ead441439b3b5da4881aa859b1777ee7d11b9e6ca0b8dbd794fe757542c4e32a.
+Live0073 confirms tccd37 named profile op22 and op1 accepted; process stays
+alive7threads and no reported tccd crash. New cache slide13424000. Earlier
+SB25 MCProfileConnection checkIn stack advanced; latest main13threads is now
+MobileActivation MadGate getActivationState -> getActivationState ->
+MAEGetActivationStateWithError, synchronous XPC. Do not call old migration/
+TCC wait current blocker. Profiled108 now7threads and no old TCC worker wait;
+other waits include lockdown_set_value and CFPreferences flushManagedSources.
+Mobileactivation generic corpse reports repeatedly crash PIDs150..295.
+Existing detailed crash selector omits this truncated16char process name.
+VM compressor0; storage ready1 poisoned0. No physical home-screen evidence.
+
+Prepared0137 selects mobileactivation for existing bounded2 crash reports;
+no service behavior or activation-state changes. Actual-source helper test
+with cumulative0128/0137 ASan/UBSan PASS. Full-file replay Clang attempted
+but unavailable Apple-specific __builtin_xnu_type_summary/signature/compatible
+in unchanged allocator macros; do not claim full local compile PASS.
+Full CI required. Existing0073 capture remains single reader, no reset yet.
+
 ## 2026-11-16: corrected copyinstr fix building for BOOT0073
 
 Pushedc9a358b7c068a5fca9a628e6ae2a03ecf879f7c4; CI43946625323 in
