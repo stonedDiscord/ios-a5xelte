@@ -144,3 +144,11 @@ compile results, hardware observations and restore results below.
   exercise the actual patched predicate. Kernel-wait symbolication resolved
   an exact Mach-O object symbol for both continuation/frame and retained
   valid frames before a truncated log tail. No runtime claim from these tests.
+
+### Full CI43879179527 failure and correction
+
+- Run failed in ipc_kmsg.c4336: expected expression. The new bounded-log
+  extern declaration preceded the existing empty statement after the
+  invalid_reply label. Apple Clang16 rejects that placement; local Clang23
+  accepted it as a language extension. Moved the extern after the statement.
+- This was a compile failure, not a kernel/phone result. Retry required.

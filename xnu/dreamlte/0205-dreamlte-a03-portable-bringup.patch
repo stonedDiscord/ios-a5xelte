@@ -951,9 +951,9 @@
  
  invalid_reply:
 +#if defined(DREAMLTE)
-+    extern boolean_t dreamlte_host_log_allowed(unsigned, boolean_t);
 +    /* Snapshot under the existing space lock; print only after unlocking. */
 +    ;
++    extern boolean_t dreamlte_host_log_allowed(unsigned, boolean_t);
 +    bool dreamlte_host_request = msg->msgh_id == 200;
 +    ipc_entry_bits_t dreamlte_reply_bits = reply_entry != IE_NULL ? reply_entry->ie_bits : 0;
 +    unsigned dreamlte_reply_semantics = 0, dreamlte_dest_semantics = 0;
