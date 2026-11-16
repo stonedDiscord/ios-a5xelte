@@ -1,3 +1,10 @@
+ACTIVEWAIT0137 CI43951369485 Build live20:47UTC; watcher154025/14214
+retained. Extra static evidence: rootless_convert_to_datavault opens dir,
+Sandbox0x104 args{int64fd,owner}; policy ENOTSUP explains dmd live error,
+ScreenTime same call ownerremotemanagementd still candidate pending0138.
+No blanket-success/no state changes. Offline image empty SystemGroup is
+NOT current-phone filesystem evidence. Home-menu unproven.
+
 ACTIVE0138 investigation prepared, NOT in running0137 CI43951369485.
 analyticsd exact crashes strlen(NULL) from OSASystemConfiguration pathCATasking
 fileSystemRepresentation; OSAnalytics root systemgroup.com.apple.osanalytics

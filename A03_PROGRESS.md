@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: data-vault API decoded while retaining running0137 CI
+
+Matching cache export libsystem_sandbox rootless_convert_to_datavault at
+1cdc4ec74 opens the directory, builds16byte {sign-extended fd, owner string}
+and invokes mac_syscall("Sandbox",0x104,&args). Current lab Sandbox handler
+supports op2 and scoped tccd ops1/22;0x104 remains ENOTSUP. Thus dmd's live
+"Failed to enable data vault: Operation not supported" has an API-level
+explanation; ScreenTime exact binary calls this same API with owner
+remotemanagementd, but its live crash still requires0138 report. Do not
+blanket-success0x104 or imply real data-vault enforcement exists.
+
+Offline rebuilt root SystemGroup/DataSystem container directories are empty;
+this is pre-runtime image state, NOT proof about actual USERDATA after boots.
+No root modifications made. Existing CI43951369485 still Build observed;
+watcher154025 retained, no extra build or phone reset. Private decoded API
+under/tmp/a03-0074/rootless-exports.txt. Actual home screen unverified.
+
 ## 2026-11-16: analyticsd NULL tasking path decoded; ScreenTime candidate
 
 User requests investigation of ScreenTimeAgent and analyticsd while0137 CI
