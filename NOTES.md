@@ -12,7 +12,8 @@ features. Do not copy UNISOC MMIO, eMMC/USB/reset or USERDATA instructions.
 Previous S8 CI43434858911 SUCCESS confirmed. New portable host suites and
 17 arm64 object compiles passed. Port5368653 is pushed; full updated CI
 43879179527 failed: Apple Clang rejects an extern directly after a C
-label in ipc_kmsg.c. Placement corrected; retry pending. Profile remains
+label in ipc_kmsg.c. Placement corrected in527db60; retry43890925469 queued. All15 local C
+checks pass explicit GNU C11; two IOKit C++ objects also compiled. Profile remains
 DEVELOPMENT/HEROLTE, dreamlte.
 No S8 XNU boot, rootfs or GUI result is established. No phone writes in
 this adaptation. Next hardware prerequisite is XNU console recovery via

@@ -152,3 +152,10 @@ compile results, hardware observations and restore results below.
   invalid_reply label. Apple Clang16 rejects that placement; local Clang23
   accepted it as a language extension. Moved the extern after the statement.
 - This was a compile failure, not a kernel/phone result. Retry required.
+
+- Corrective commit527db60 pushed. CI retry43890925469 queued with the same
+  S8 DEVELOPMENT/HEROLTE profile; result pending.
+  https://github.com/stonedDiscord/ios-a5xelte/actions/runs/43890925469
+- Corrected overlay plain-apply/full16-file equality PASS. All15 local C
+  translation-unit checks PASS with explicit -std=gnu11 and
+  -mgeneral-regs-only; two IOKit C++ objects passed the earlier check.
