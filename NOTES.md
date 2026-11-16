@@ -1,3 +1,9 @@
+ACTIVE0070 CDC logs live/worker start0 enabled1; SpringBoard PID25.
+Capture71796660s boot0070-usb-initial.log active >350KiB. EP0 libusb open
+fails-3: root:root0664 /dev/bus/usb/005/008; sudo -n needs password.
+User asked for sudo setfacl -m u:stoned:rw on that exact node. Await actual
+ping/threads25/vm/io responses. No console-probe runtime/home-screen claim.
+
 ACTIVE0070 BOOT-only upload100percent/success/reboot. CI43918800523 SUCCESS
 exact520d2a7,4source/checksum/probe symbols verified. BOOT846a19e9...e0d77.
 Loader0069 identical except image_size, ADT identical, only add a03_probe=1.

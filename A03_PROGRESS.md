@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0070 CDC logs/worker live; EP0 host permission blocked
+
+Exact A03 diagnostic CDC enumerated; normal660s capture71796 active at
+boot0070-usb-initial.log (>350KiB). Runtime A03 PROBE worker start0 enabled1
+confirmed; SpringBoard PID25 starts. This proves worker creation and normal
+log streaming, not command execution. libusb open rejects host access -3:
+/dev/bus/usb/005/008 is root:root0664. sudo -n requires a password. Asked
+user for narrow current-device ACL: sudo setfacl -m u:stoned:rw followed by
+that exact node path. No broader permission changes or sudo workaround.
+Need ACK plus actual ping/threads25/vm/io BEGIN/END. Capture can continue
+without EP0 permission. Protected partitions/root unchanged; no GUI proof.
+
 ## 2026-11-16: BOOT0070 live-probe build passed and BOOT-only deployed
 
 CI43918800523 SUCCESS exact520d2a7 on macos-26-intel. All4changed source
