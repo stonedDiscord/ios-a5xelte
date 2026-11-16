@@ -1,3 +1,11 @@
+ACTIVE0078 BOOT-only upload successful/reboot22:03UTC after exact0142
+CI43963988043 success. Kernel90d84532d5acc3b5731bf568106e91c1ba7de95863efcecea2b659f3a3913ef9;
+BOOT5e84e96c22d10a195ebcd593df9a5a21434fe62ac0e8fe36739a9c7d0894761b.
+Only+a03_compat_uuid=1; unchanged1GiB/root/ADT. Existing43872 readerPID206943
+waitsUSB180 then660s; scheduler89317 retained. No USB return at22:04UTC.
+Need fresh ps repeated analytics/activation survival and SB stack.0143 creds
+probe prepared NOT included. Vault remains separate. Home goal unverified.
+
 ACTIVE22:01UTC0142 CI43963988043 exact1e206d5 still Build. Existing0078
 package32985/deploy43872/probes89317 retained;0077 capture ended normally.
 No0078 flash yet. Need actual analytics/activation survival and SB sample.

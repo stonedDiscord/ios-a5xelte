@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 22:03 UTC0142 CI succeeds; BOOT0078 uploaded
+
+CI43963988043 exact1e206d5f8695d0a393de9b0d1e45cc1c57d17759 SUCCESS.
+Verified kernel90d84532d5acc3b5731bf568106e91c1ba7de95863efcecea2b659f3a3913ef9,
+BOOT5e84e96c22d10a195ebcd593df9a5a21434fe62ac0e8fe36739a9c7d0894761b.
+Same0077 ADT/1GiB/ramdisk/root/stockDT/loader(except image_size), adds only
+ a03_compat_uuid=1. Existing deploy43872 performed synced CDC Download,
+BOOT-only upload successful100%, reboot confirmed. Single readerPID206943
+waitsUSB180s then660s capture boot0078-usb-initial.log. Scheduler89317 waits
+worker then ACL/SB/vm/io probes. No USB return yet at22:04UTC; do not infer
+service survival from missing log.0143 not included. No home screen verified.
+
 ## 2026-11-16: ScreenTime vault owner ABI and live directory state verified
 
 BOOT0077 read-only ACL probe confirms ScreenTime directory at /private/var/
