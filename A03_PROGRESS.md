@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:49 UTC BOOT0077 ACLs confirm local group299 grants
+
+USB returned~21:48UTC, dedicated-worker ACL probes complete five paths.
+Both activation and OSAnalytics container roots have2 permit ACEs for
+abcdefabcdefabcdefabcdef0000012b (compatibility GID299 systemusers):
+ACE0 flags0x161 rights0x3ffe, ACE1 flags0x1 rights0x624. OSAnalytics Library
+(-2:-2/mode000) has1 inherited permit ACE for SAME GID299, flags0x71,
+rights0x3ffe. Parent Data/System and Shared/SystemGroup have no ACL.
+Thus the mode000 Library is intentional ACL-backed access, not evidence
+it should be world-readable or chowned. No metadata mutation performed.
+
+Matching UUIDs confirm0142 translation candidate is relevant: kernel external
+resolver otherwise cannot decode those local account UUIDs, failing closed.
+Staged0142 in next build profile, default disabled; next BOOT0078 should add
+only a03_compat_uuid=1 after exact successful full CI. Group membership/ACL
+rights remain the authorization mechanism; this repairs identity format only.
+Need verify runtime analytics/activation survival and actual SB progress.
+ScreenTime data-vault API is a separate unresolved missing implementation.
+
 ## 2026-11-16: 21:47 UTC BOOT0077 ACL diagnostics deployed
 
 Synced CDC Download succeeded. Heimdall BOOT-only upload100%/successful and

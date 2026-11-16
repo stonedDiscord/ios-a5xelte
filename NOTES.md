@@ -1,3 +1,11 @@
+ACTIVE0077 actual ACL confirmed21:49UTC: activation+OSAnalytics roots
+2 permits group compatUUID...012b(systemusers299), Library inherited permit
+same299 rights3ffe flags71. Library mode000 intentional ACL; NO chmod.
+0142 now staged/defaultoff for NEXT CI; helper ASan+kernel-functions compile
+PASS; full file Apple builtins baseline limitation. Need exact fullCI then
+0078 same config plusa03_compat_uuid=1; actual runtime group grants still test.
+0077 reader47410/ACL43860 live. ScreenTime vault ENOTSUP separate; home unproven.
+
 ACTIVE0077 BOOT-only upload successful/reboot confirmed21:47UTC after
 verified0141 CI43961834933. Existing reader47410 waitsUSB180s then660s
 boot0077-usb-initial.log; ACL scheduler43860 retained. No new USB evidence yet.
