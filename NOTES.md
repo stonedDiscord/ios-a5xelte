@@ -1,3 +1,10 @@
+ACTIVE0140 prepared for NEXT build only: read-only worker stat /private/var/
+PATH actual uid/gid/mode/flags/fileid/mountflags, local exact Clang+ASan/UBSan
+PASS. Current0139 CI43955738619/deploy64839/package62827 retained unchanged;
+NO0075 flash yet.0074 container63 query sample completes; not proof deadlock.
+VM compressor2911/free2922pages; storage ready1/poisoned0. Need0139 boot
+runtime xattr errno/path, ScreenTime assertion, analytics failure. Home unproven.
+
 ACTIVE0075 CI43955738619 Build21:08UTC exact2f78691. Package62827/PID167795
 and deploy64839/PID169581 live. Deploy waits verified exact success+same0074
 config+reader end, then synced CDC Download, authorized BOOT-only upload and

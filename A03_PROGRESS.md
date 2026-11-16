@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:11 UTC container query sample and prepared0140 read-only stat
+
+Fresh0074 sample63 completes: containermanager63 alive3threads, main event
+loop, worker handling MCMContainerClassCache cacheEntryForIdentifier via
+MCMContainerFactory/MCMCommandQuery. Sample alone does not establish service
+deadlock. VM compressor2911pages, free2922pages; storage ready1,poisoned0.
+Analytics/ScreenTime/activation continue crash loops. No reboot made for probes.
+
+Prepared0140 (NOT included current0139 CI43955738619) adds dedicated-worker
+stat /private/var/PATH <=100bytes, rejects dot traversal, performs vnode_lookup
+no-follow-final, vnode_getattr, vnode_put. Prints actual uid/gid/mode/flags/
+fileid/mountflags only if supported; retains errors and no writes/xattr values.
+This is diagnostic path-prefix validation, not a security boundary against
+intermediate symlinks. Actual helper ASan/UBSan PASS incl lookup/getattr errors
+and vnode cleanup, invalid paths, unsupported fields; full sweet_amfi.c exact
+CI-command local Clang PASS. Prior0135 transport/task tests and0136 profile
+tests PASS. Source patch prepared separately for next evidence-driven build;
+current0139 compilation/deployment remains unchanged, no duplicate CI.
+
 ## 2026-11-16: 21:08 UTC0139 CI compiling; same-config0075 deployment gated
 
 CI43955738619 exact2f78691552a541b5c9ee56c06ee6a4c08e308096 observed Build

@@ -1,0 +1,58 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -472,12 +472,54 @@
+  printf("A03 PROBE ps %d %s\n",proc_pid(p),name);
+  return ++list->count==256?PROC_RETURNED_DONE:PROC_RETURNED;
+ }
++/* Read-only filesystem metadata in the dedicated worker, never USB polling.
++ * Only the already-mounted data tree is accepted; no mutation or xattr reads. */
++static void
++a03_probe_stat(const char *path)
++{
++    if (strncmp(path, "/private/var/", 13) || strlen(path) > 100 ||
++        strstr(path, "/../") || strstr(path, "/./") ||
++        !strcmp(path + strlen(path) - 3, "/..") ||
++        !strcmp(path + strlen(path) - 2, "/.")) {
++        printf("A03 PROBE stat requires /private/var/ path <=100 bytes\n");
++        return;
++    }
++    vnode_t vp = NULL;
++    vfs_context_t context = vfs_context_kernel();
++    int error = vnode_lookup(path, 0, &vp, context); /* no-follow final symlink */
++    if (error) {
++        printf("A03 PROBE stat lookup err %d path %s\n", error, path);
++        return;
++    }
++    struct vnode_attr va;
++    VATTR_INIT(&va);
++    VATTR_WANTED(&va, va_uid);
++    VATTR_WANTED(&va, va_gid);
++    VATTR_WANTED(&va, va_mode);
++    VATTR_WANTED(&va, va_flags);
++    VATTR_WANTED(&va, va_fileid);
++    error = vnode_getattr(vp, &va, context);
++    if (error) printf("A03 PROBE stat getattr err %d path %s\n", error, path);
++    else {
++        printf("A03 PROBE stat path %s\n", path);
++        if (VATTR_IS_SUPPORTED(&va, va_uid) && VATTR_IS_SUPPORTED(&va, va_gid) &&
++            VATTR_IS_SUPPORTED(&va, va_mode) && VATTR_IS_SUPPORTED(&va, va_flags) &&
++            VATTR_IS_SUPPORTED(&va, va_fileid))
++            printf("A03 PROBE stat uid %u gid %u mode %o flags %x fileid %llu mountflags %llx\n",
++                va.va_uid, va.va_gid, (unsigned)va.va_mode, va.va_flags,
++                (unsigned long long)va.va_fileid, (unsigned long long)vfs_flags(vnode_mount(vp)));
++        else printf("A03 PROBE stat incomplete supported %llx\n", (unsigned long long)va.va_supported);
++    }
++    vnode_put(vp);
++}
++
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io threads PID sample PID mem PID HEXADDR HEXCOUNT<=100\n");
++  printf("A03 PROBE help: ping ps vm io threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat /private/var/PATH\n");
++ else if(!strncmp(command,"stat ",5))a03_probe_stat(command+5);
+  else if(!strcmp(command,"ps")) {
+   struct a03_probe_list list={0};
+   proc_iterate(PROC_ALLPROCLIST|PROC_NOWAITTRANS,a03_probe_list_proc,&list,NULL,NULL);
