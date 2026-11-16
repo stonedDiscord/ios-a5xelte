@@ -1,3 +1,10 @@
+ACTIVE0136 CI43940554508 exact1f0d037 running macos-26-intel, runner
+acquired/checkout/profile step passed. Full build pending. Local helper
+ASan/UBSan + exact sweet_amfi compile + existing op2/live-probe tests PASS.
+Prepared /tmp/a03-0072/package.py requires exact successful SHA/checksums,
+marker/arch, identical0071 loader/ADT/root/args except new profile bootarg.
+0071 remains running; no reset until verified package. Home menu unproven.
+
 ACTIVE0136 scoped tccd named-profile query22/install1 candidate locally
 ASan/UBSan + full-file exact CI-command Clang + plain git apply PASS.
 Explicit lab NO enforcement, a03_sandbox_profiles=1(default0) plus existing

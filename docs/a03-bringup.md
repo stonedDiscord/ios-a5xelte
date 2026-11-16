@@ -227,3 +227,22 @@ USB status image revision0014 fixes bounded DRM resource/connector output
 arrays and prefers DRM/KMS. It draws mode, UDC state, partition read/written
 MiB and uptime. Status counters are Linux block-sector counters, not host-side
 hash verification or iOS progress. On-screen display requires runtime testing.
+
+## Scoped TCC startup experiment (0136, not hardware-validated yet)
+
+BOOT0071 live samples at 19:30 UTC on 2026-11-16 show SpringBoard past
+LaunchServices initialization, waiting in ManagedConfiguration migration.
+The profiled worker waits for a TCC reply, while tccd aborts during its own
+sandbox initialization. Matching iOS16 disassembly identifies named-profile
+query 22 and named apply 1 as the missing API path.
+
+Patch0136 adds only tccd/com.apple.tccd named-profile query/apply in the
+existing explicitly sandbox-disabled lab mode, with an additional bootarg
+a03_sandbox_profiles=1 (default off). This accepts the named profile with
+**no sandbox enforcement**. It is not a real sandbox engine or production
+privacy boundary. Bytecode, other processes/names and unknown operations
+remain unsupported. Bounded copyin/copyinstr and fault propagation prevent
+accepting arbitrary pointers as successful requests. Host tests exercise the
+actual helper under ASan/UBSan; the full source also compiles with the
+per-file CI command. Full linking and runtime behavior remain separate gates.
+No TCC policy database, activation record or Apple binary is patched.
