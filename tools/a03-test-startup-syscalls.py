@@ -12,6 +12,11 @@ follow=(root/'xnu/a03/0126-a03-springboard-startup-evidence.patch').read_text()
 assert '+    static unsigned reports[5];' in follow
 assert '+    else if (!strcmp(p->p_comm, "SpringBoard")) slot = 4;' in follow
 source=source.replace('static unsigned reports[4];','static unsigned reports[5];',1).replace('else if (!strcmp(p->p_comm, "notifyd")) slot = 3;','else if (!strcmp(p->p_comm, "notifyd")) slot = 3;\n    else if (!strcmp(p->p_comm, "SpringBoard")) slot = 4;',1)
+with tempfile.TemporaryDirectory() as d:
+ q=Path(d)/'bsd/dev/arm/systemcalls.c';q.parent.mkdir(parents=True)
+ q.write_text(source)
+ subprocess.run(['git','apply','--include=bsd/dev/arm/systemcalls.c',str(root/'xnu/a03/0138-a03-screentime-analytics-evidence.patch')],cwd=d,check=True)
+ source=q.read_text()
 names=['open','open_nocancel','access','mkdir','mkdir_extended','stat64','lstat64','getattrlist','getxattr','__mac_syscall','openat','openat_nocancel','openat_dprotected_np','faccessat','mkdirat','getattrlistat','csops','csops_audittoken']
 header=r'''
 #include <assert.h>
@@ -49,13 +54,13 @@ int main(void){
  a[0]=a[1]=a[2]=a[3]=0;logs=0;
  for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);
  assert(logs==188);
- const char *others[]={"containermanager","mediaserverd","notifyd","SpringBoard"};
- for(unsigned k=0;k<4;k++){strcpy(p.p_comm,others[k]);logs=0;
+ const char *others[]={"containermanager","mediaserverd","notifyd","SpringBoard","analyticsd"};
+ for(unsigned k=0;k<5;k++){strcpy(p.p_comm,others[k]);logs=0;
  for(unsigned i=0;i<1000;i++){a03_startup_syscall_log(&p,99,2,a,0,1);}assert(logs==192);}
  puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/independent SpringBoard 192-report cap PASS");
 }
 '''
 with tempfile.TemporaryDirectory(prefix='a03-startup-') as d:
  p=Path(d);(p/'test.c').write_text(header+source+tests)
- subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror',str(p/'test.c'),'-o',str(p/'test')],check=True)
+ subprocess.run(['clang','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',str(p/'test.c'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test')],check=True)

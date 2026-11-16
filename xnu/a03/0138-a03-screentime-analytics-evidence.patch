@@ -1,0 +1,36 @@
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1851,7 +1851,7 @@
+         sig != SIGBUS && sig != SIGILL && sig != SIGKILL)) {
+         return false;
+     }
+-    static _Atomic uint32_t counts[15];
++    static _Atomic uint32_t counts[16];
+     unsigned slot;
+     if (!strcmp(name, "watchdogd")) slot = 0;
+     else if (!strcmp(name, "backboardd")) slot = 1;
+@@ -1868,6 +1868,7 @@
+     else if (!strcmp(name, "dmd")) slot = 12;
+     else if (!strcmp(name, "tccd")) slot = 13;
+     else if (!strcmp(name, "mobileactivation")) slot = 14;
++    else if (!strcmp(name, "ScreenTimeAgent")) slot = 15;
+     else return false;
+     /* Saturate: never wrap and resume flooding after a long crash loop. */
+     uint32_t count = atomic_load_explicit(&counts[slot], memory_order_relaxed);
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -89,12 +89,13 @@
+     const uint64_t *args, int result, uint64_t pc)
+ {
+     unsigned slot;
+-    static unsigned reports[5];
++    static unsigned reports[6];
+     if (!strcmp(p->p_comm, "backboardd")) slot = 0;
+     else if (!strncmp(p->p_comm, "containermanager", 15)) slot = 1;
+     else if (!strcmp(p->p_comm, "mediaserverd")) slot = 2;
+     else if (!strcmp(p->p_comm, "notifyd")) slot = 3;
+     else if (!strcmp(p->p_comm, "SpringBoard")) slot = 4;
++    else if (!strcmp(p->p_comm, "analyticsd")) slot = 5;
+     else return;
+     if (!error && code != SYS_csops && code != SYS_csops_audittoken &&
+         code != SYS___mac_syscall) return;

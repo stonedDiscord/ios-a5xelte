@@ -1,5 +1,37 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: analyticsd NULL tasking path decoded; ScreenTime candidate
+
+User requests investigation of ScreenTimeAgent and analyticsd while0137 CI
+runs. Exact0073 analyticsd91/167 both SIGSEGV, FAR0, PC1e107ede4 resolves
+__platform_strlen+4. Matching extracted binary LR offsets57ac/49d28 decode
+C++ string construction from [OSASystemConfiguration.sharedInstance
+pathCATasking].fileSystemRepresentation without NULL check. Caller uses
+file:tasking. Chained import523 resolves class OSASystemConfiguration;
+selector refs resolve sharedInstance/pathCATasking/fileSystemRepresentation.
+Matching OSAnalytics cache pathCATasking calls pathContainerRoot then
+ensureUsablePath with component /Library/CoreAnalytics. Container root calls
+container_system_group_path_for_identifier(NULL,
+"systemgroup.com.apple.osanalytics",&error). Nil return can originate container
+lookup or directory setup; exact runtime errno is not yet established. No
+claim this is CPU instruction incompatibility or same cause as ScreenTime.
+
+ScreenTimeAgent generic crash repeats, detailed selector omitted it. Exact
+binary includes data-vault setup: rootless_convert_to_datavault(path,
+"remotemanagementd") at100021de8; nonzero branches to assertion reporting
+"Failed to enable data vault: %@ (%d)" at100021ea8. This is a concrete static
+candidate consistent with separate dmd observed data-vault failures, NOT a
+proven ScreenTimeAgent live crash reason. Need actual crash annotations.
+
+Prepared0138 adds ScreenTimeAgent independent2-report crash slot and
+analyticsd independent192-report existing startup syscall diagnostics. No
+behavior/errno/activation changes. Actual cumulative helpers ASan/UBSan PASS;
+full systemcalls.c exact CI-command Clang PASS; patch reverse-check PASS.
+Kern_exit.c full local compile retains known Apple builtin limitation.
+0138 not in currently running0137 CI43951369485, watcher14214/PID154025
+retained; no extra CI/reset/flash triggered. Private extracted/disassembly
+artifacts under/tmp/a03-0074. Home-screen goal remains unproven.
+
 ## 2026-11-16: MobileActivation diagnostic CI queued with gated BOOT0074
 
 Pusheda4d660cbf786f5a5d66e4036f94a124b04518d97; CI43951369485 observed

@@ -1,3 +1,13 @@
+ACTIVE0138 investigation prepared, NOT in running0137 CI43951369485.
+analyticsd exact crashes strlen(NULL) from OSASystemConfiguration pathCATasking
+fileSystemRepresentation; OSAnalytics root systemgroup.com.apple.osanalytics
++ /Library/CoreAnalytics lookup/setup, actual failure errno unknown.
+ScreenTime binary data-vault assertion candidate, live reason unproven.
+0138 adds ScreenTime2crash slot +analyticsd192startup errors. ASan/UBSan
+helpers +exact systemcalls Clang PASS; kern_exit Apple builtin limitation.
+Keep existing0074 watcher14214/PID154025 and CI unchanged;0138 next build
+can include actual0074 activation diagnosis. No new flash yet/home unproven.
+
 ACTIVE0137 CI43951369485 exacta4d660cbf786f5a5d66e4036f94a124b04518d97
 running. Watch-deploy14214 /tmp/a03-0074/watch-deploy.py waits exact success,
 packages same0073 loader/ADT/args/root, waits prior reader finish, synced
