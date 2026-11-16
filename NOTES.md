@@ -1,3 +1,12 @@
+ACTIVE0141 CI43961834933 exactbd84c3b SUCCESS21:46UTC. Verified0077
+BOOT2db3ebac42ac32bc2c0d941368dc921ae432218c7449aab76505b14757118826,
+kerneld6c024750fff02fab0060e100d0ad07a5cfa4198447e152b8604639fd341d015.
+Deploy47410 started synced Download after0076 reader ended; flash pending
+at21:46:53UTC. ACL scheduler43860 retained, package53238 finished.
+0142 identity candidate helper+4wrappers exact kernel flags compile PASS;
+full credential file baseline/candidate same73 Apple builtins errors. NOT
+staged/enabled; needs0077 ACL evidence. Home screen still unproven.
+
 ACTIVE0142 identity UUID candidate prepared+committed, NOT staged/enabled.
 Helper Clang ASan/UBSan/apply equality PASS; full credential compile blocked
 by unchanged73 Apple builtins errors (baseline=candidate). Needs actual0141

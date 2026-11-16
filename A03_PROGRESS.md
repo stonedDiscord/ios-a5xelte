@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:46 UTC0141 CI succeeds and BOOT0077 packaged
+
+CI43961834933 exactbd84c3ba60d72de9cd3742a5b8221c5827c533c3 SUCCESS.
+BOOT SHA2562db3ebac42ac32bc2c0d941368dc921ae432218c7449aab76505b14757118826;
+kernel SHA256d6c024750fff02fab0060e100d0ad07a5cfa4198447e152b8604639fd341d015.
+Package verified exact checksum/MachO/ACL marker and unchanged0076 config:
+ADT/1GiB/args/loader(except image_size)/ramdisk/stockDT.0142 NOT included.
+Existing47410 began synced Download after0076 capture end; upload pending
+at21:46:53UTC. ACL scheduler43860 retained. Need actual ACEs; no home screen.
+
 ## 2026-11-16: prepared0142 local identity UUID candidate, not staged/enabled
 
 Prepared0142 source candidate for explicit a03_compat_uuid=1 (default0),
