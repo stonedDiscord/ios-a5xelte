@@ -1,5 +1,39 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0071 controlled 1 GiB RAM test uploaded
+
+BOOT0070 dependency probes34..42: IconServices438 directory enumeration
+advanced to idle; lsd101 registration thread subsequently leaves IconServices
+XPC wait and enters LSDatabaseRebuildContext registerItems / installed-content
+app scanning, sampled in eMMC page-in mutex. Thus not a proven permanent
+IconServices deadlock. MobileActivation413 main synchronously requests LS
+store while lsd has a synchronous MobileActivation request: possible cycle,
+not proof the active seeding thread cannot finish. SpringBoard main still waits.
+
+Live DTB RAM reg is0x80000000+0xfffff000 (runtime-corrected stock template
+advertises more and must not be used as actual installed RAM). Checked all23
+reserved-memory children plus empty header reserve map: highest reservation
+ends0x100001000. New1GiB window0x102000000..0x142000000 is inside live RAM
+and avoids all reservations. Retain fixed base, singleCPU, exact0070 kernel,
+root, command line, RAMDisk and ADT seed. Payload differs by only2bytes:
+header mem_size and chosen dram-size. Loader now accepts only256/1024MiB;
+host packer requires private live DTB validation for expanded size and checks
+ADT/header agreement. Real loader predicate compiled/tested, synthetic bank/
+reserved-child/header-reservation rejection tests PASS; loader full Clang
+warnings-as-errors cross-compile/link PASS. No full XNU CI needed (unchanged).
+
+BOOT0071 SHA2563c7482072d5bc03c6e6d96a61f90233e8749fe0f9ad2ee2d7531a1eab32835e3.
+Verified exact packaged payload and unchanged ramdisk/DT/AVB tail.0070 CDC
+Download reset synced filesystems; Heimdall detected, PIT read succeeded,
+BOOT-only upload100percent/success/reboot. Capture32671 waits120s for CDC,
+then180s boot0071-usb-initial.log. Runtime pending, no1GiB kernel/home-menu
+success yet. No protected partitions or host USERDATA writes.
+
+User asks3GB: does not fit fixed upper window; actual bank ends0x17ffff000,
+leaving~2016MiB above current base.3GiB requires additional lower-bank RAM
+with explicit secure/modem/framebuffer reservation holes and kernel VM/loader
+support; cannot safely set memSize=3GiB at existing base. Check0071 first.
+
 ## 2026-11-16: 18:59 UTC repeat confirms persistent SpringBoard service stall
 
 Fresh read-only EP0 ps/sample25/sample101/vm/io completed (seq29..33),

@@ -5,16 +5,16 @@ from pathlib import Path
 import os
 import adt
 import mkadt as sweet
+from a03_memory import PHYS_BASE, MEMORY_MIB, memory_size, validate_live_fdt
 
-PHYS_BASE=0x102000000  # 32 MiB aligned for XNU's bootstrap L2 block mappings.
-MEM_SIZE=0x10000000
 
-def build(emmc=False, display=False):
+def build(emmc=False, display=False, memory_mib=256):
+    mem_size=memory_size(memory_mib)
     root=sweet.build(seed=os.urandom(64),qemu=True)
     def prop(n,k,v):
         n.props=[(a,f,v if a==k else b) for a,f,b in n.props]
     by={n.name:n for n in root.children}
-    chosen=by['chosen'];prop(chosen,'dram-base',sweet.u64(PHYS_BASE));prop(chosen,'dram-size',sweet.u64(MEM_SIZE))
+    chosen=by['chosen'];prop(chosen,'dram-base',sweet.u64(PHYS_BASE));prop(chosen,'dram-size',sweet.u64(mem_size))
     prop(chosen,'firmware-version',sweet.cstr('a03-shim'))
     cp=by['cpus'].children[0]
     prop(cp,'compatible',sweet.cstr('arm,cortex-a55')+sweet.cstr('ARM,v8'))
@@ -36,8 +36,10 @@ def build(emmc=False, display=False):
     return root
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('output',type=Path);p.add_argument('--emmc-readonly',action='store_true');p.add_argument('--display',action='store_true',help='opt-in A03 iOS16 framebuffer nub (0123 required)');a=p.parse_args()
-    blob=adt.serialize(build(a.emmc_readonly,a.display));root,end=adt.parse(blob);assert end==len(blob)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('output',type=Path);p.add_argument('--emmc-readonly',action='store_true');p.add_argument('--display',action='store_true',help='opt-in A03 iOS16 framebuffer nub (0123 required)');p.add_argument('--memory-mib',type=int,choices=MEMORY_MIB,default=256);p.add_argument('--memory-dtb',type=Path);a=p.parse_args()
+    if a.memory_mib!=256 and a.memory_dtb is None:p.error('expanded RAM requires --memory-dtb')
+    if a.memory_dtb:print(validate_live_fdt(a.memory_dtb,memory_size(a.memory_mib)))
+    blob=adt.serialize(build(a.emmc_readonly,a.display,a.memory_mib));root,end=adt.parse(blob);assert end==len(blob)
     assert not any(n.name=='sweet-ufs' for n in root.children)
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_bytes(blob)
-    print('A03 ADT',len(blob),'bytes; 256 MiB upper-bank window; single A55')
+    print('A03 ADT',len(blob),'bytes;',a.memory_mib,'MiB upper-bank window; single A55')

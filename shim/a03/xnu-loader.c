@@ -1,5 +1,6 @@
 /* Minimal bounded SWEETXNU loader for A03. Storage/peripheral drivers absent. */
 #include <stdint.h>
+#include "memory-profile.h"
 #include "../font.h"
 struct segment { uint64_t va,size,off,filesize; };
 struct payload { char magic[8]; uint32_t version,count; uint64_t base,entry,adtoff,adtlen,end,phys,mem; char cmdline[608]; struct segment seg[]; };
@@ -417,7 +418,7 @@ struct handoff a03_load_xnu(uintptr_t fdt) {
     const char *magic="SWEETXNU";for(unsigned i=0;i<8;i++)if(p->magic[i]!=magic[i])return fail;
     uint64_t len=limit-src;
     if(p->version!=1||!p->count||p->count>32||0x2a8+p->count*32>len||p->adtoff>len||p->adtlen>len-p->adtoff)return fail;
-    if(p->phys!=0x102000000UL||p->mem!=0x10000000UL||p->entry<p->base||p->end<p->base||p->end-p->base>=p->mem||p->entry>=p->end||p->adtlen>0x100000||!p->adtlen||p->cmdline[607])return fail;
+    if(!a03_memory_profile_valid(p->phys,p->mem)||p->entry<p->base||p->end<p->base||p->end-p->base>=p->mem||p->entry>=p->end||p->adtlen>0x100000||!p->adtlen||p->cmdline[607])return fail;
     unsigned entry_found=0;
     for(unsigned i=0;i<p->count;i++) {
         const struct segment *s=&p->seg[i];

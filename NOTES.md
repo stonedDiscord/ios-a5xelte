@@ -1,3 +1,12 @@
+ACTIVE0071 1GiB BOOT-only uploaded100percent/success/reboot, runtime pending.
+Capture32671 waits120s CDC then180s boot0071-usb-initial.log. SHA3c748207...835e3.
+Exact0070 kernel/root/args/seed,2payload bytes change RAM256->1024MiB.
+LiveDT bank/reservation validation + predicate tests/loader Clang PASS.
+No3GiB at fixed base: bank end17ffff000; max~2016MiB, holes need VM work.
+0070 lsd DID leave IconServices wait to app scan after last stall check;
+MobileActivation waits LS while lsd requests activation (possible cycle).
+Need0071 runtime before further changes. No home menu/protected writes.
+
 ACTIVE0070 18:59UTC confirms persistent SB stall: main+XPC thread CPU/
 stacks exactly unchanged versus18:49..18:50 (~9min), not ongoing startup.
 lsd101 IconServices+activation request stacks/CPU unchanged too. Fresh ps

@@ -6,6 +6,8 @@ from pathlib import Path
 import struct
 import subprocess
 import importlib.util
+import adt
+from a03_memory import PHYS_BASE, memory_size, validate_live_fdt
 
 ROOT = Path(__file__).resolve().parent.parent
 spec = importlib.util.spec_from_file_location('probe', ROOT/'tools/a03-probe-image.py')
@@ -18,6 +20,7 @@ def main():
     ap.add_argument('base', type=Path)
     ap.add_argument('payload', type=Path)
     ap.add_argument('output', type=Path)
+    ap.add_argument('--memory-dtb', type=Path, help='live A03 DTB, required for expanded RAM')
     a = ap.parse_args()
     b = a.base.read_bytes()
     assert hashlib.sha256(b).hexdigest() == probe.BASE_SHA256, 'wrong base BOOT'
@@ -29,10 +32,19 @@ def main():
     version, count = struct.unpack_from('<II', payload, 8)
     base, entry, ao, al, end, phys, mem = struct.unpack_from('<7Q', payload, 16)
     assert version == 1 and 0 < count <= 32
-    assert phys == 0x102000000 and mem == 0x10000000 and phys % 0x2000000 == 0
+    assert phys == PHYS_BASE and mem in (memory_size(256), memory_size(1024))
+    if mem != memory_size(256) and a.memory_dtb is None:
+        ap.error('expanded RAM requires --memory-dtb live A03 DTB')
+    if a.memory_dtb:
+        print('Live RAM validation', validate_live_fdt(a.memory_dtb, mem))
     assert base <= entry < end and end-base < mem
     assert ao <= len(payload) and al <= len(payload)-ao and al <= 0x100000
     assert (end-base+al+16383)//16384*16384+16384 <= mem
+    tree, parsed = adt.parse(payload[ao:ao+al])
+    assert parsed == al
+    chosen = next(n for n in tree.children if n.name == 'chosen')
+    assert chosen.prop('dram-base') == struct.pack('<Q', phys)
+    assert chosen.prop('dram-size') == struct.pack('<Q', mem)
     assert payload[0x48+607] == 0
     ranges = []
     entry_found = False
