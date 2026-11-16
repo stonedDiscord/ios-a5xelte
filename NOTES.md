@@ -1,3 +1,9 @@
+ACTIVE0135 exact0751d9c pushed; CI43910152567 in progress. Four real
+kernel objects PASS plus actual PTY host test: logs drain while probe send
+blocks. Old-sha accidental43910063052 cancelled, no deployment. Device is
+Download. Need CI success/frozen4source checks, BOOT0070 with only extra
+arg a03_probe=1 versus0069, then ping/threads/vm/io replies. No home menu.
+
 ACTIVE2026-11-16 live0135 monitor implemented/tested, not deployed yet.
 EP0 vendor0xa3 ->4slots/separate kernel probe worker; separate host sender
 retains tty drain. a03_probe=1. ping/ps/vm/io/threads PID (no user reads),

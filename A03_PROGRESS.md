@@ -22,6 +22,12 @@ Actual host ASan/UBSan transport/dispatcher PASS; existing CDC/PID1 monitor/
 Download/sampler PASS. Four actual arm64 objects compile using exact0069
 headers. Full CI/device validation pending. Private artifacts stay ignored.
 
+Commit0751d9c pushed. Exact CI43910152567 building0135. Accidental dispatch
+43910063052 targeted old f1e1601 because initial git commit was blocked by
+read-only .git; cancelled without deployment. Required commit/push retried
+with elevated filesystem access and succeeded. Real host PTY test proves
+log delivery while a simulated control transfer is blocked. No device proof.
+
 ## 2026-11-15:0069 read-lock fairness and A03 identity deployed
 
 CI43770218935 SUCCESS exactf1b31e1;20frozen sources expected0134 match.

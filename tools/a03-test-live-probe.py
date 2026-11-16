@@ -166,3 +166,46 @@ int main(void){
 '''
 with tempfile.TemporaryDirectory(prefix='a03-dispatch-test-') as d:
     run(source,header,tests,Path(d),'dispatcher')
+
+# Exercise the real capture loop with a PTY and a deliberately blocked sender.
+# Log delivery must occur before the control transfer is allowed to complete.
+import importlib.util
+import io
+import os
+import threading
+spec=importlib.util.spec_from_file_location('a03_console',ROOT/'tools/a03-usb-console.py')
+console=importlib.util.module_from_spec(spec);spec.loader.exec_module(console)
+entered=threading.Event();delivered=threading.Event();sent=[]
+class FakeProbe:
+    def send(self,command):
+        entered.set()
+        assert delivered.wait(2),'host sender blocked tty log capture'
+        sent.append(command)
+    def close(self):pass
+class Output:
+    def __init__(self):self.buffer=self
+    def write(self,data):
+        if b'LIVE_LOG_DURING_PROBE' in data:delivered.set()
+    def flush(self):pass
+master,slave=os.openpty()
+original_argv,original_stdout=sys.argv,sys.stdout
+with tempfile.TemporaryDirectory(prefix='a03-capture-test-') as d:
+    output=Path(d)/'capture.log'
+    console.find=lambda:os.ttyname(slave)
+    console.Probe=FakeProbe
+    def producer():
+        assert entered.wait(2)
+        # The capture loop configures raw mode after starting the sender.
+        threading.Event().wait(.03)
+        os.write(master,b'LIVE_LOG_DURING_PROBE\n')
+    thread=threading.Thread(target=producer);thread.start()
+    try:
+        sys.argv=['a03-usb-console.py','--probe','vm','--duration','.15','--output',str(output)]
+        sys.stdout=Output()
+        console.main()
+    finally:
+        sys.argv,sys.stdout=original_argv,original_stdout
+        thread.join();os.close(master);os.close(slave)
+    assert delivered.is_set() and sent==['vm']
+    assert b'LIVE_LOG_DURING_PROBE' in output.read_bytes()
+print('PASS real host capture drains PTY while control-transfer sender is blocked')
