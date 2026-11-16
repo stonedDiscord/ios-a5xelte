@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0075 ScreenTime exact assertion confirmed;0076 deployment queued
+
+The initial capture now includes ScreenTimeAgent122 and268 SIGABRT with
+actual NSInternalInconsistencyException: "Failed to enable data vault:
+Operation not supported (45)". This confirms the previously static candidate:
+Sandbox0x104 fd3 ownerremotemanagementd fails before the terminating assertion.
+Dmd independently has the same missing API. The earlier rootless_log socket
+wait was temporary, not evidence that ScreenTime remained alive indefinitely.
+
+Analyticsd91/146/167 repeats stat64 EACCES13 on CoreAnalytics then open EACCES13
+on Library before its NULL strlen crash. This is a separate filesystem access
+failure. Actual directory ownership/mode/flags remain pending0140; no broad
+chmod, errno suppression or data-vault pretend-success implemented.
+
+Corrected handoff:0076 deployment IS now scheduled via84806/PID182276,
+/tmp/a03-0076/deploy.py. It checks exact successful CI43959202597 SHA65cc580,
+verified unchanged-config package, waits prior reader completion, then synced
+CDC Download and authorized BOOT-only flash, followed by660s capture.
+At21:25UTC CI remains in Build; no0076 flash yet. Package57048 retained.
+Started read-only stat scheduler51114 /tmp/a03-0076/schedule-probes.py,1800s
+worker wait then30/180/300/540s stages inspecting six failing/parent paths and
+SB sample/vm/io through EP0. Existing0075 single reader remains untouched.
+No USERDATA/protected partition mutation; home-screen goal remains unverified.
+
 ## 2026-11-16: BOOT0075 confirms analytics+activation EACCES, ScreenTime vault ENOTSUP
 
 USB reenumerated005/022, ordinary access/capture resumed21:18UTC. New cache

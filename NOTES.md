@@ -1,3 +1,14 @@
+ACTIVE0075 ScreenTime terminating assertion now captured twice: Failed to
+ enable data vault: Operation not supported (45), Sandbox0x104 fd3 owner
+remotemanagementd. Analytics actual Library/CoreAnalytics stat/open EACCES13
+precedes NULL strlen. Need0076 stat ownership before permission repair.
+0140 CI43959202597 exact65cc580 still building21:25UTC. Deployment84806/
+PID182276 now scheduled and gated on exact success+verified package+old reader
+end; will reset to Download and BOOT-only0076 flash. Stat scheduler51114
+waits up to1800s for0076 worker; six paths then SB/vm/io. Package57048 retained.
+0075 still running/no0076 flash at this checkpoint. Single reader64839.
+No broad Sandbox success/permissions changes; home screen still unproven.
+
 ACTIVE0075 runtime: analytics stat/open EACCES13 at osanalytics group
 15C54419-7736-4C62-B119-1C994A4F8444/Library[/CoreAnalytics] then strlenNULL;
 activation setxattr EACCES13 on Data/System/51E6AD4E-3CED-47F7-B6EC-
