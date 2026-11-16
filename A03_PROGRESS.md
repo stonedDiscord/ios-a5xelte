@@ -1,5 +1,34 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0078 physical iOS clock; analytics/activation survive
+
+At~22:09UTC user reports "i see the iOS clock onscreen". This is the first
+physical UI report beyond Apple logo, consistent with a clock/lock screen;
+not yet proof of unlocked home screen or touch. Preserve this BOOT0078,
+no further reboot scheduled. USB returned005/028~22:04UTC, reader206943.
+
+Repeated fresh ps retain analyticsd91 and mobileactivation134 through22:09;
+actual samples show both main threads in CF runloops, rather than earlier
+fatal startup paths. No analytics/activation crash observed in current
+capture so far. ACL modes/owners/ACE data unchanged inclLibrary000/-2 and
+systemusers299 permits.0142 repair therefore removes the previous observed
+startup failure without chmod. Continue checking survival over capture.
+
+SB26 samples progress from dyld to BiomeStorage temporary-file XPC, then
+IconServices initialization/image requests, UIKit UILabel layout and later
+MobileGestalt/HMFoundation. Framebuffer swaps6–19 at720x1600 appear. Thus
+samples show active startup progression, not same activation wait. ScreenTime
+121 still loading CoreData model at22:08; dmd117 already vaultENOTSUP crash.
+No claim ScreenTime vault issue repaired by0142. Storage ready1/poisoned0,
+VM22:09 free4991pages, compressor0; goal still unlocked home screen.
+
+Prepared optional0144 lab ScreenTime metadata helper, NOT staged/CI/enabled:
+exact owner/entitlement/mobileUID/root/path gates; real com.apple.rootless
+xattr+UF_DATAVAULT writes through normal authorization; preserves flags and
+rejects relabel. Explicit lab NO vault enforcement, not Apple vault support.
+Actual helper fault injection ASan/UBSan+full sweet_amfi.c local exact Clang
+PASS. Kept off phone to preserve new UI checkpoint and isolate0142 result.
+
 ## 2026-11-16: 22:03 UTC0142 CI succeeds; BOOT0078 uploaded
 
 CI43963988043 exact1e206d5f8695d0a393de9b0d1e45cc1c57d17759 SUCCESS.

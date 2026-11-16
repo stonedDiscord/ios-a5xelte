@@ -1,0 +1,119 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -42,6 +42,10 @@
+ #include <sys/systm.h>
+ #include <sys/ubc_internal.h>
+ #include <sys/vnode.h>
++#include <sys/vnode_internal.h>
++#include <sys/uio_internal.h>
++#include <sys/xattr.h>
++#include <sys/stat.h>
+ #include <security/mac_policy.h>
+ 
+ /* iokit/Kernel/arm/SweetEntitlements.cpp */
+@@ -314,11 +318,105 @@
+     return 0;
+ }
+ 
++/* Explicit lab metadata compatibility, NOT Apple data-vault enforcement.
++ * The surrounding Sandbox policy already runs without enforcement. Only the
++ * observed ScreenTime path/owner pair is supported; never arbitrary success.
++ * This writes persistent owner/flag state on the mounted USERDATA root. */
++static TUNABLE(uint32_t, a03_lab_vault, "a03_lab_vault", 0);
++static int
++a03_sandbox_lab_vault(struct proc *p, user_addr_t arg)
++{
++    if (a03_lab_vault != 1) return ENOTSUP;
++    struct { int64_t fd; user_addr_t owner; } request;
++    int error = copyin(arg, &request, sizeof(request));
++    if (error) return error;
++    if (request.fd < 0 || request.fd > INT_MAX) return EBADF;
++    char owner[64];
++    size_t copied = 0;
++    error = copyinstr(request.owner, owner, sizeof(owner), &copied);
++    if (error) return error;
++    if (strcmp(owner, "remotemanagementd")) return ENOTSUP;
++    if (!sweet_entitlements_bool(sweet_proc_entitlements(p),
++        "com.apple.rootless.storage.remotemanagementd")) return EPERM;
++    vfs_context_t ctx = vfs_context_current();
++    if (kauth_cred_getuid(vfs_context_ucred(ctx)) != 501) return EPERM;
++    vnode_t vp = NULL;
++    error = vnode_getfromfd(ctx, (int)request.fd, &vp);
++    if (error) return error;
++    char path[256];
++    int length = sizeof(path);
++    mount_t mp = vnode_mount(vp);
++    char root_device[32] = {0};
++    if (!vnode_isdir(vp) || mp == NULL || !(vfs_flags(mp) & MNT_ROOTFS) ||
++        !PE_parse_boot_argn("rd", root_device, sizeof(root_device)) ||
++        strcmp(root_device, "a03userdata0")) {
++        error = EPERM;
++        goto out;
++    }
++    error = vn_getpath(vp, path, &length);
++    if (error) goto out;
++    if (strcmp(path, "/private/var/mobile/Library/Application Support/com.apple.remotemanagementd")) {
++        error = EPERM;
++        goto out;
++    }
++    struct vnode_attr va;
++    VATTR_INIT(&va);
++    VATTR_WANTED(&va, va_uid);
++    VATTR_WANTED(&va, va_flags);
++    error = vnode_getattr(vp, &va, ctx);
++    if (error) goto out;
++    if (!VATTR_IS_SUPPORTED(&va, va_uid) || !VATTR_IS_SUPPORTED(&va, va_flags)) {
++        error = ENOTSUP;
++        goto out;
++    }
++    if (va.va_uid != 501) { error = EPERM; goto out; }
++    uint32_t flags = va.va_flags;
++    VATTR_INIT(&va);
++    VATTR_SET(&va, va_flags, flags | UF_DATAVAULT);
++    kauth_action_t action = 0;
++    error = vnode_authattr(vp, &va, &action, ctx);
++    if (!error) error = vnode_authorize(vp, NULL,
++        action | KAUTH_VNODE_WRITE_EXTATTRIBUTES, ctx);
++    if (error) goto out;
++    /* Existing owner is authoritative: refuse relabelling. XATTR_CREATE
++     * resolves concurrent first writers; a racing caller retries normally. */
++    char existing[64];
++    UIO_STACKBUF(buffer, 1);
++    uio_t uio = uio_createwithbuffer(1, 0, UIO_SYSSPACE, UIO_READ,
++        buffer, sizeof(buffer));
++    if (uio == NULL) { error = ENOMEM; goto out; }
++    error = uio_addiov(uio, (user_addr_t)(uintptr_t)existing, sizeof(existing));
++    if (error) goto out;
++    size_t size = 0;
++    error = vn_getxattr(vp, "com.apple.rootless", uio, &size, 0, ctx);
++    if (error == ENOATTR) {
++        uio = uio_createwithbuffer(1, 0, UIO_SYSSPACE, UIO_WRITE,
++            buffer, sizeof(buffer));
++        if (uio == NULL) { error = ENOMEM; goto out; }
++        error = uio_addiov(uio, (user_addr_t)(uintptr_t)owner, copied - 1);
++        if (!error) error = vn_setxattr(vp, "com.apple.rootless", uio,
++            XATTR_CREATE, ctx);
++    } else if (!error && (size != copied - 1 ||
++        memcmp(existing, owner, copied - 1))) {
++        error = EPERM;
++    }
++    if (error) goto out;
++    /* Retain owner metadata if setting flags fails. A retry is idempotent;
++     * never erase an existing/concurrent label as a guessed rollback. */
++    error = vnode_setattr(vp, &va, ctx);
++    if (!error && !VATTR_IS_SUPPORTED(&va, va_flags)) error = ENOTSUP;
++    if (!error) printf("A03 Sandbox: ScreenTime vault metadata set (lab NO vault enforcement)\n");
++out:
++    vnode_put(vp);
++    return error;
++}
++
+ /* Lab no-sandbox mode: implement only the decoded scalar check protocol.
+  * Profile installation, extensions and container paths remain unsupported. */
+ static int
+ a03_sandbox_check_syscall(struct proc *p, int call, user_addr_t arg)
+ {
++    if (call == 0x104) return a03_sandbox_lab_vault(p, arg);
+     if (call == 1 || call == 22) return a03_sandbox_named_profile(p, call, arg);
+     if (call != 2) return ENOTSUP;
+     user_addr_t result_address = 0;

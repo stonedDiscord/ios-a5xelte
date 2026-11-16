@@ -1,3 +1,13 @@
+ACTIVE0078~22:09UTC USER SEES iOS CLOCK (first UI beyond logo). Preserve
+running phone; no new reboot scheduled. Home/unlock/touch not yet verified;
+async swipe question pending. SB26 progresses Biome→IconServices→UILabel→
+Gestalt/HMF;720x1600 swaps6–19. Fresh ps analytics91/mobileactivation134
+survive, actual runloop samples, prior fatal access failures absent so far.
+Same ACL metadata includingLibrary000;0142 enabled. ScreenTime121 CoreData
+loading; dmd vault45 persists. Reader206943/43872 and probes89317 retained.
+Optional0144 lab vault metadata helper locally tested NOT staged or enabled;
+0143 likewise. Goal remains actual unlocked home screen.
+
 ACTIVE0078 BOOT-only upload successful/reboot22:03UTC after exact0142
 CI43963988043 success. Kernel90d84532d5acc3b5731bf568106e91c1ba7de95863efcecea2b659f3a3913ef9;
 BOOT5e84e96c22d10a195ebcd593df9a5a21434fe62ac0e8fe36739a9c7d0894761b.

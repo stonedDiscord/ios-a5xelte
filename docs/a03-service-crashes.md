@@ -64,3 +64,22 @@ Reproduce the static ABI checks (read-only):
 
 This script intentionally rejects a different instruction layout. It does
 not execute Apple code or establish live protection behavior.
+
+## BOOT0078 runtime follow-up
+
+On 2026-11-16 at approximately 22:09 UTC, repeated ps observations retain
+analyticsd PID 91 and MobileActivation PID 134; their sampled main threads
+are in CF runloops. Earlier fatal access failures have not recurred in this
+capture so far, while the original ACL metadata is unchanged. SpringBoard
+progresses past its earlier activation wait, reaches UI layout, and the user
+reports an iOS clock screen. This is not yet unlocked home-screen proof.
+ScreenTimeAgent PID 121 is still loading its CoreData model at that sample;
+dmd has already repeated its unsupported-vault assertion.
+
+Patch 0144 prepares an explicitly labelled lab metadata compatibility path
+for ScreenTime's exact owner/path, with entitlement, uid, root and normal
+filesystem authorization checks. It writes real owner metadata/flags and
+rejects relabels. It provides NO Apple vault access enforcement. It is not
+staged, enabled or running on the phone. Preserve BOOT0078 while validating
+the new UI checkpoint. Host fault-injection tests and local full-file Clang
+checks cover this candidate only; they do not prove runtime behavior.

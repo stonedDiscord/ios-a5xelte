@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G bring-up
 
+As of 2026-11-16 BOOT0078, the user physically reports an iOS clock screen
+beyond the Apple logo. SpringBoard samples progress through UI layout and
+framebuffer submissions continue. Analyticsd and MobileActivation survive
+initial startup after the opt-in local UUID identity repair. An unlocked home
+screen and working touch are not yet verified. Preserve this checkpoint;
+see newest A03_PROGRESS.md and NOTES.md for exact live evidence.
+
 As of 2026-11-15, BOOT0063 boots validated USERDATA p55 HFSX and transfers
 kernel logs over USB CDC. The opted-in software IOSurface/framebuffer
 providers register, MobileGestalt reads the display dimensions, and
