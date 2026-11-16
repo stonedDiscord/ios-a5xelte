@@ -1,3 +1,10 @@
+ACTIVE0076~21:39 SB26 NOW activation wait (MadGate), past MC checkIn;
+tccd37/profiled100 alive. Library -2:-2/000 repeated. CONFIG_EXT_RESOLVER
+actually enabled but staged launchd no memberd/opendirectoryd; fail-closed
+GUID ACL evaluation plausible, pending actual0141 ACLs. No permission bypass.
+Existing0141 CI43961834933/package53238/deploy47410/probe43860 retained;
+no0077 flash.0076 reader84806/stat86888 remain. Home unproven.
+
 ACTIVE0076 live stat: activation container0:0/0755 flags0; OSAnalytics
 SystemGroup0:0/0755 flags0, Library -2:-2/000 flags0. Mount1480d000 excludes
 NOUSERXATTR. ACL dependence possible; MCM uses systemusers299 inclmobile/

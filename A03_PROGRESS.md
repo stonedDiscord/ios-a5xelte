@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:39 UTC BOOT0076 again reaches activation wait
+
+Fresh SB26 samples after MC checkIn now resolve MadGate getActivationState: /
+MAEGetActivationStateWithError using captured slide13614000. Tccd37 and
+profiled100 remain in ps. Activation backup-xattr EACCES13 continues and
+ScreenTime exact vault45 exception repeats. Root storage remains usable;
+these are runtime service blockers, not evidence of still doing generic boot.
+0141 ACL CI43961834933 remains in progress; package/deploy/probe watchers
+unchanged, no0077 upload.0076 read-only stat repeats Library -2:-2/mode000.
+
+Source investigation: CONFIG_EXT_RESOLVER is actually enabled. Its GUID
+lookups call an external resolver on cache miss; staged launchd has no
+opendirectoryd/memberd job. ACL evaluator fails closed when it cannot resolve
+caller/ACE membership. MCM explicitly constructs a systemusers ACE. This is
+an ACL-resolution hypothesis pending actual ACL records; it is not proven
+by mode000 alone. Existing no-resolver kernel branch provides compatibility
+UID/GID UUID translation, but no configuration or permission change made.
+
 ## 2026-11-16: BOOT0076 live ownership/modes;0141 ACL CI queued
 
 USB returned~21:34UTC, cache slide13614000, SpringBoard26 this boot. First
