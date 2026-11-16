@@ -1,3 +1,11 @@
+ACTIVE0071 19:17UTC access audit: libusb Probe still fails-3 on current
+USB005/010 root:root0664. Same requested ACL missing over3goal turns.
+All4automatic SpringBoard samples already captured; no further automatic
+lsd snapshots exist. Capture30397/process74624 confirmed alive and logging;
+leave it and phone running. Need user apply narrow setfacl then resume ps,
+vm/io and current lsd/dependency samples. No home-menu proof; goal blocked
+on live-probe permission rather than repeated blind flashes/API bypasses.
+
 ACTIVE0071 all4passes180/300/420/540s main+LS XPC CPU/stacks identical.
 Need EP0 ACL USB005/010 (pending user), ps/current lsd sample next.
 Capture30397 still live660s. No home menu. tccd disassembly confirms named
