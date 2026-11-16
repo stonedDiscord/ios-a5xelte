@@ -227,3 +227,14 @@ private API visibility. In particular, adding MACH_KERNEL_PRIVATE or disabling
 all warnings can conceal a real CI failure. This catches source compilation
 errors quickly; the full CI build still checks Xcode-specific behavior and
 kernel linkage. Keep generated trees, logs and objects outside git.
+
+
+### BOOT0070 live monitor hardware evidence (2026-11-16)
+
+Exact0135 kernel from CI43918800523 boots with a03_probe=1. After a narrow
+host USB-node ACL, EP0 ping/vm/io/ps/threads commands complete BEGIN/END and
+normal logs continue. SpringBoard PID25 is observed in this boot only; use ps
+on each boot. The separate initial660s capture contains all four sampler
+passes. Live memory/storage snapshots expose sustained page-in/compressor
+activity; see A03_PROGRESS.md for measured deltas and interpretation limits.
+The device-node ACL is separate from tty permission and is lost on reconnect.

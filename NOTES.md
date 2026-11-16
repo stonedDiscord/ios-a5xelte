@@ -1,3 +1,13 @@
+ACTIVE0070 live EP0 hardware SUCCESS after ACL: ping/vm/io/ps/threads25/
+threads56 BEGIN/END with CDC output ongoing. Initial660s501877bytes/all4
+samples complete; live240s capture8740 boot0070-usb-live-probes.log active.
+SB25 one thread still objc initializers: eMMC page-in mutex waits, one
+runnable sample.20.6168s:7654pageins/4495reactivations/2368compressions/
+1750decompressions,108.07MiB reads; swap0,driver healthy.256MiB working-set
+churn is supported; larger RAM benefit not tested. Need validate stock DT
+RAM/reservations then controlled bigger-window test (loader/ADT/packer all
+hardcode256MiB). No SMP/root/protected partition changes/no home-screen proof.
+
 ACTIVE0070 CDC logs live/worker start0 enabled1; SpringBoard PID25.
 Capture71796660s boot0070-usb-initial.log active >350KiB. EP0 libusb open
 fails-3: root:root0664 /dev/bus/usb/005/008; sudo -n needs password.

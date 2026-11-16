@@ -1,5 +1,33 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: EP0 live probes hardware-confirmed; sustained paging churn
+
+User granted current-device USB ACL. ping/vm/io/ps/threads25/threads56 all
+ACK and execute BEGIN/END on BOOT0070 while normal CDC output continues.
+Thus dedicated live monitor and host transport work on hardware. New capture
+8740: boot0070-usb-live-probes.log (240s); initial660s capture completed
+501877bytes with all4sampler passes. SpringBoard25 remains one thread;
+first3initial samples wait eMMC mutex/page-in, last waits vm_fault_page.
+Live samples repeatedly wait eMMC mutex, with one runnable state4 snapshot.
+Exact kernel symbolication confirms emmc_strategy -> cluster_pagein. Cache
+slide2c5b0000 resolves user PC1ac676d48 to objc header_info::getHeaderInfoRW
++2c and1ac6739d4 to map_images_nolock+1b0. Slow initializer progress, not a
+proven fixed deadlock or SpringBoard IPC/service wait. No home-screen proof.
+
+Live host-monotonic7168.409660..7189.026487 (~20.6168s):7654pageins,
+4495reactivations,2368compressions,1750decompressions;221318read sectors
+(~108.07MiB,~5.24MiB/s),2027requests,2524write sectors. Snapshot initial
+~95MiB wired,~61MiB compressor,~65MiB external/file-backed; free~20MiB.
+Swapins/swapouts0 throughout; driver ready1 poisoned0. This establishes
+heavy paging/compression/reactivation activity in256MiB profile concurrent
+with SpringBoard page-in waits. Suggests working-set churn; does not isolate
+physical media saturation, quantify refaults of identical pages or prove
+more RAM alone completes GUI. Counter elapsed ticks include yields and must
+not be used as exclusive media time. Next compare a validated larger RAM
+window after checking stock DT usable/reserved ranges; current loader/ADT/
+packer each explicitly require256MiB, so bootarg alone cannot increase RAM.
+No root/partition/memory topology change made during these read-only probes.
+
 ## 2026-11-16: BOOT0070 CDC logs/worker live; EP0 host permission blocked
 
 Exact A03 diagnostic CDC enumerated; normal660s capture71796 active at
