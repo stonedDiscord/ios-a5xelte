@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 18:59 UTC repeat confirms persistent SpringBoard service stall
+
+Fresh read-only EP0 ps/sample25/sample101/vm/io completed (seq29..33),
+recorded privately in boot0070-usb-stall-check.log. Compared with18:49..18:50
+UTC samples, SpringBoard25 main and synchronous-XPC thread have exactly
+unchanged CPU times, PCs, stacks and waits after roughly9minutes. All4
+SpringBoard thread CPU counters remain unchanged. lsd101 IconServices
+registration and MobileActivation request threads also retain identical
+CPU counters/stacks. This supports a persistent launch dependency stall,
+not continuing SpringBoard initialization; system itself remains responsive.
+Fresh ps now lists iconservicesagen438 and mobileactivation413, correcting
+the earlier bounded absence observation: service presence alone does not
+establish initialization or successful XPC replies. tccd436/analyticsd441
+crashes and respawns observed; no new root-cause attribution. Storage
+ready1/poisoned0, pageins1490175, compressor5871pages. No home-menu success.
+No reset/flash/root writes. Next inspect438/413 and their dependencies.
+
 ## 2026-11-16: late0070 SpringBoard advances to LaunchServices database wait
 
 Fresh EP0 samples at18:49..18:50UTC show same SpringBoard PID25 now4threads,

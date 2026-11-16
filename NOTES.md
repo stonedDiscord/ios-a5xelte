@@ -1,3 +1,10 @@
+ACTIVE0070 18:59UTC confirms persistent SB stall: main+XPC thread CPU/
+stacks exactly unchanged versus18:49..18:50 (~9min), not ongoing startup.
+lsd101 IconServices+activation request stacks/CPU unchanged too. Fresh ps
+now sees iconservicesagen438/mobileactivation413; sample these next.
+Kernel/EP0 responsive; tccd436+analyticsd441 crash/respawn. Storage healthy.
+Read-only boot0070-usb-stall-check.log seq29..33; no reboot/flash/root writes.
+
 ACTIVE0070 late18:49..18:50UTC: SB25 now4threads, past objc initializers.
 Main waits unfair lock in LSContextInitCommon/LSApplicationRecord while
 ControlCenter module metadata loads; thread1 sync XPC _LSCopyServerStore.
