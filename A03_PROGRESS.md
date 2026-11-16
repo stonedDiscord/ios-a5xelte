@@ -15,7 +15,9 @@ fileid/mountflags only if supported; retains errors and no writes/xattr values.
 This is diagnostic path-prefix validation, not a security boundary against
 intermediate symlinks. Actual helper ASan/UBSan PASS incl lookup/getattr errors
 and vnode cleanup, invalid paths, unsupported fields; full sweet_amfi.c exact
-CI-command local Clang PASS. Prior0135 transport/task tests and0136 profile
+CI-command local Clang PASS after replacing unavailable kernel strstr with
+explicit dot-component parsing (first follow-up compile caught it). Plain
+reverse/reapply exact source equality PASS. Prior0135 transport/task tests and0136 profile
 tests PASS. Source patch prepared separately for next evidence-driven build;
 current0139 compilation/deployment remains unchanged, no duplicate CI.
 

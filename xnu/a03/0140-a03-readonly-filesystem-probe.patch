@@ -1,6 +1,6 @@
 --- a/bsd/kern/sweet_amfi.c
 +++ b/bsd/kern/sweet_amfi.c
-@@ -472,12 +472,54 @@
+@@ -472,12 +472,59 @@
   printf("A03 PROBE ps %d %s\n",proc_pid(p),name);
   return ++list->count==256?PROC_RETURNED_DONE:PROC_RETURNED;
  }
@@ -9,12 +9,17 @@
 +static void
 +a03_probe_stat(const char *path)
 +{
-+    if (strncmp(path, "/private/var/", 13) || strlen(path) > 100 ||
-+        strstr(path, "/../") || strstr(path, "/./") ||
-+        !strcmp(path + strlen(path) - 3, "/..") ||
-+        !strcmp(path + strlen(path) - 2, "/.")) {
++    if (strncmp(path, "/private/var/", 13) || strlen(path) > 100) {
 +        printf("A03 PROBE stat requires /private/var/ path <=100 bytes\n");
 +        return;
++    }
++    for (const char *part = path + 13; *part; part++) {
++        if (part != path + 13 && part[-1] != '/') continue;
++        if (part[0] == '.' && (part[1] == '/' || part[1] == 0 ||
++            (part[1] == '.' && (part[2] == '/' || part[2] == 0)))) {
++            printf("A03 PROBE stat dot components rejected\n");
++            return;
++        }
 +    }
 +    vnode_t vp = NULL;
 +    vfs_context_t context = vfs_context_kernel();
