@@ -1,3 +1,9 @@
+ACTIVE0136 CI43940554508 Build confirmed in progress; package watcher
+session73118 /tmp/a03-0072/watch.py alive, log/tmp/a03-0072/watch.log.
+Watcher only packages after exact successful SHA; NEVER flashes. When CI
+finishes inspect manifest/image before CDC Download reset+BOOT-only flash.
+0071 latest16/17 still SB MC migration ->profiled TCC XPC wait. No new flash.
+
 ACTIVE0136 CI43940554508 exact1f0d037 running macos-26-intel, runner
 acquired/checkout/profile step passed. Full build pending. Local helper
 ASan/UBSan + exact sweet_amfi compile + existing op2/live-probe tests PASS.
