@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: corrected0135 CI failed runner allocation before compilation
+
+CI43914475835 workflow reports failure, but job133464838955 is cancelled
+with zero steps, empty runner_name and no logs. Check-run annotation explicitly:
+"The job was not acquired by Runner of type hosted even after multiple attempts".
+17:04:42..17:19:42UTC allocation window; no compile/link result from this run.
+Re-ran all four exact-command local Clang object checks: PASS. No source fix
+justified by this infrastructure failure. Retry uses supported macos-26-intel
+pool rather than the unavailable macos-15-intel pool. No phone writes.
+
 ## 2026-11-16: fix0135 BSD/Mach API visibility; exact-command local compile gate
 
 CI43910152567 failed in sweet_amfi.c:478: vm_map_read_user undeclared.

@@ -1,3 +1,9 @@
+ACTIVE43914475835 was runner allocation failure, not compiler failure:
+job133464838955 zero steps/no logs/no runner; annotation "The job was not
+acquired by Runner of type hosted even after multiple attempts". All4local
+Clang checks PASS again. Retry corrected0135 on macos-26-intel pool; no new
+source fix/no phone writes. Need full CI then validated BOOT/live probes.
+
 ACTIVE corrected0135 commit1b3fdc1 pushed; CI43914475835 dispatched only
 after exact per-file local Clang checks passed. Full CI/runtime pending.
 
