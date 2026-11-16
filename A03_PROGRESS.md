@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0071 runtime reached userspace; new EP0 ACL needed
+
+CDC enumerated as1d6b:0104 at USB005/010; initial capture32671 is live.
+Actual0071 kernel starts probe worker, surface/display providers and
+SpringBoard25, backboardd56, mediaserverd28 and other iOS services. Ongoing
+log output at19:08UTC; no kernel panic or home-menu proof. Cannot yet confirm
+runtime RAM page count or sample current SpringBoard: libusb open error-3,
+new usbfs node root:root0664 without prior device's ACL. Requested only
+sudo setfacl -m u:stoned:rw /dev/bus/usb/005/010. Normal tty capture remains
+functional and built-in timed samples are independent of this permission.
+No reboot/reflash while awaiting observation. Code0c8cc37 pushed.
+
 ## 2026-11-16: BOOT0071 controlled 1 GiB RAM test uploaded
 
 BOOT0070 dependency probes34..42: IconServices438 directory enumeration

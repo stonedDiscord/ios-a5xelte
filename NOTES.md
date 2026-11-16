@@ -1,3 +1,8 @@
+ACTIVE0071 CDC live, actual iOS services/SpringBoard25 start, no panic.
+Capture32671 initial180s ongoing. New USB005/010 EP0 denied-3; narrow ACL
+requested async; tty logs unaffected. Need page-count + SB/lsd live samples;
+built-in180s sample should arrive independently. No home-screen evidence.
+
 ACTIVE0071 1GiB BOOT-only uploaded100percent/success/reboot, runtime pending.
 Capture32671 waits120s CDC then180s boot0071-usb-initial.log. SHA3c748207...835e3.
 Exact0070 kernel/root/args/seed,2payload bytes change RAM256->1024MiB.
