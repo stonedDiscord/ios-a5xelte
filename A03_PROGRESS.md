@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: matching Libinfo uses compatibility UUIDs, membership APIs limited
+
+Read-only matching cache analysis identifies exported mbr_uid_to_uuid /
+mbr_gid_to_uuid. Their backend constructs UID prefixffffeeeeddddccccbbbbaaaa
+and GID prefixabcdefabcdefabcdefabcdef, appending big-endian32-bit ID. This
+matches XNU's existing CONFIG_EXT_RESOLVER=0 compatibility branch exactly.
+The supplied iOS Libinfo mbr_check_membership variants directly return5;
+no Apple binary modified. Enabled kernel external GUID lookup is therefore
+a strong mismatch candidate; actual0141 ACEs still needed to select repair.
+Keep source-level group semantics/credentials, not a blanket allow policy.
+
 ## 2026-11-16: 21:39 UTC BOOT0076 again reaches activation wait
 
 Fresh SB26 samples after MC checkIn now resolve MadGate getActivationState: /
