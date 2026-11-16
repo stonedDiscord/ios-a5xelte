@@ -10,7 +10,8 @@ The latter maps all A03 work to applied, already inherited or S8-dependent
 features. Do not copy UNISOC MMIO, eMMC/USB/reset or USERDATA instructions.
 
 Previous S8 CI43434858911 SUCCESS confirmed. New portable host suites and
-17 arm64 object compiles passed; full updated CI is the next validation.
+17 arm64 object compiles passed. Port5368653 is pushed; full updated CI
+43879179527 is running (DEVELOPMENT/HEROLTE, profile dreamlte).
 No S8 XNU boot, rootfs or GUI result is established. No phone writes in
 this adaptation. Next hardware prerequisite is XNU console recovery via
 the verified snapshot path, then scanout/UFS; USERDATA remains untouched.

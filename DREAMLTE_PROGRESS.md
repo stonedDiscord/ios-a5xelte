@@ -127,3 +127,10 @@ compile results, hardware observations and restore results below.
   and whole-file comparison against pristine CI sources verified separately.
 - Loader build and minimal ADT generation PASS. No phone flash/root write
   performed. Full updated kernel CI result will be recorded below.
+
+- Port commit53686534f052c8bdf28764edff3ac4e259536e2e pushed to build fork.
+  Full S8 CI run43879179527 (macos-15-intel, DEVELOPMENT/HEROLTE,
+  board_profile=dreamlte) started; outcome pending.
+  https://github.com/stonedDiscord/ios-a5xelte/actions/runs/43879179527
+- Whole-overlay validation: plain git apply on pristine CI files produced
+  all16 complete files byte-identical to the locally compiled source inputs.
