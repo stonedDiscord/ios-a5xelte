@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: HID client entitlement verified in matching backboardd
+
+Read-only extraction of matching backboardd signed XML confirms boolean
+com.apple.hid.system.user-access-service=true, exactly the portable HID
+user client's retained access requirement. This removes an untested entitlement
+assumption; service registration, connection and event delivery still require
+new kernel runtime.0145 CI43969089570 retained, no duplicate or new flash.
+0079 package-only48074/PID216636 retained. No input command on current0078.
+
 ## 2026-11-16: 22:20 UTC0145 CI43969089570; package-only watcher
 
 Exact2d4ffd7a44eab34178a13295b0ad3a337044e453 full Xcode CI43969089570
