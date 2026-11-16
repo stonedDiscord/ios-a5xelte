@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:50 UTC0142 CI and isolated BOOT0078 watchers
+
+CI43963988043 exact1e206d5f8695d0a393de9b0d1e45cc1c57d17759 underway.
+Package32985 /tmp/a03-0078/watch-package.py verifies exact successful CI,
+checksums, kernel identity marker, unchanged0077 loader/ADT/1GiB/root/DT;
+adds only a03_compat_uuid=1 (total588bootarg bytes<608). Deployment43872
+/tmp/a03-0078/deploy.py independently verifies manifest+CI+only expected arg,
+waits0077 reader then synced Download and authorized BOOT-only flash/capture.
+Read-only scheduler89317 /tmp/a03-0078/schedule-probes.py waits worker and
+samples ACL metadata/SB/vm/io at four stages. No0078 upload yet. Current0077
+reader47410 and ACL scheduler43860 retained, no duplicate readers/builds.
+Need verify actual analyticsd and MobileActivation survival plus SB progress;
+ScreenTime requires separate real data-vault support. No home screen proven.
+
 ## 2026-11-16: 21:49 UTC BOOT0077 ACLs confirm local group299 grants
 
 USB returned~21:48UTC, dedicated-worker ACL probes complete five paths.

@@ -1,3 +1,12 @@
+ACTIVE0142 CI43963988043 exact1e206d5f8695d0a393de9b0d1e45cc1c57d17759
+building21:50UTC.0078 package32985/deploy43872/ACL scheduler89317 retained:
+/tmp/a03-0078/{watch-package,deploy,schedule-probes}.py. Gates exact success,
+checksum/same0077 config, only+a03_compat_uuid=1(588bytes), old reader end;
+then synced Download, BOOT-only0078 flash/capture660s. NO0078 flash yet.
+0077 reader47410 and ACL43860 remain. Live actual group299 permit ACEs
+confirmed; candidate fixes translation only, preserve groups/rights.
+ScreenTime missing data-vault API remains separate. No home screen verified.
+
 ACTIVE0077 actual ACL confirmed21:49UTC: activation+OSAnalytics roots
 2 permits group compatUUID...012b(systemusers299), Library inherited permit
 same299 rights3ffe flags71. Library mode000 intentional ACL; NO chmod.
