@@ -209,3 +209,21 @@ full queues and malformed/short control messages reject commands. The existing
 
 Host sanitizer transport/dispatcher tests and four real arm64 kernel-object
 compiles pass. Hardware replies require0135 plus a03_probe=1 and remain pending.
+
+### Fast compile gate before another full CI run
+
+Use the CI buildtree artifact and full job log to compile each changed C file
+locally with its own recorded command. Extract buildtree.tgz first; apply the
+candidate patches to that tree. The checker remaps runner paths and compiler,
+preserves definitions/include order/warning policy, and writes command JSON,
+diagnostics and Apple-arm64 object files to the selected output directory:
+
+    python3 tools/a03-check-kernel-objects.py EXTRACTED_TREE CI_LOG \
+      bsd/kern/sweet_amfi.c bsd/dev/a03_usb_console.c \
+      bsd/dev/a03_emmc.c osfmk/kern/exception.c --output /tmp/a03-objects
+
+Do not reuse a different source file's command: BSD and Mach have different
+private API visibility. In particular, adding MACH_KERNEL_PRIVATE or disabling
+all warnings can conceal a real CI failure. This catches source compilation
+errors quickly; the full CI build still checks Xcode-specific behavior and
+kernel linkage. Keep generated trees, logs and objects outside git.

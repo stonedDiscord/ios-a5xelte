@@ -143,7 +143,7 @@ static int proc_rele(proc_t p){assert(p==&process&&references);references--;retu
 static task_t proc_task(proc_t p){assert(p==&process);return task_missing?NULL:(void*)1;}
 static vm_map_t get_task_map_reference(task_t t){assert(t==(void*)1);maps++;return (void*)2;}
 static void vm_map_deallocate(vm_map_t m){assert(m==(void*)2&&maps);maps--;}
-static int vm_map_read_user(vm_map_t m,uint64_t addr,void *buf,size_t n){assert(m==(void*)2&&n<=256&&addr+n>=addr);reads++;memset(buf,0x42,n);return read_error?5:0;}
+kern_return_t a03_probe_read_user(vm_map_t m,uint64_t addr,void *buf,size_t n){assert(m==(void*)2&&n<=256&&addr+n>=addr);reads++;memset(buf,0x42,n);return read_error?5:0;}
 void a03_sample_task(const char *name,int pid,task_t t){assert(!strcmp(name,"SpringBoard")&&pid==26&&t==(void*)1);samples++;}
 void a03_probe_task(const char *name,int pid,task_t t,bool user){(void)user;a03_sample_task(name,pid,t);}
 void a03_emmc_probe_stats(void){io_calls++;}

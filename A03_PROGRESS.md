@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: fix0135 BSD/Mach API visibility; exact-command local compile gate
+
+CI43910152567 failed in sweet_amfi.c:478: vm_map_read_user undeclared.
+The function is MACH_KERNEL_PRIVATE; previous local object checks reused a
+different file command and did not faithfully reproduce BSD include visibility.
+Corrected by bounded a03_probe_read_user wrapper in Mach exception.c; BSD calls
+that declared bridge rather than private vm_map API. No extra Mach defines.
+
+Added tools/a03-check-kernel-objects.py replaying each file's own CI Clang
+command with path/compiler remapping, original definitions/header order and
+warning policy. Extracted failed-run generated headers/source; local Clang
+reproduced the exact original error before editing. Corrected sweet_amfi.c,
+a03_usb_console.c,a03_emmc.c,exception.c all compile to Apple arm64 objects
+in~2s, retaining general-register flags and correct BSD/Mach visibility.
+Actual transport/dispatcher ASan/UBSan and PTY nonblocking-log tests PASS;
+existing CDC/sampler PASS; plain patch apply/four compiled-source matches PASS.
+Full CI link/runtime still required; no device flash or home-screen claim.
+
 ## 2026-11-16: live USB probes implemented; SpringBoard page-in wait confirmed
 
 Exact0069 capture has only sampler pass0 (438539bytes, last update Nov15

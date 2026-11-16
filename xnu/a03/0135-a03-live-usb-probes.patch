@@ -137,7 +137,7 @@
  #include <pexpert/pexpert.h>
  #include <sys/priv.h>
  #include <sys/kauth.h>
-@@ -403,4 +407,88 @@
+@@ -403,4 +407,89 @@
      if (kr == KERN_SUCCESS) thread_deallocate(thread);
      printf("A03 SAMPLE start %d\n", kr);
  }
@@ -146,6 +146,7 @@
 +extern void a03_sample_task(const char *, int, task_t);
 +extern void a03_emmc_probe_stats(void);
 +extern void a03_probe_task(const char *, int, task_t, bool);
++extern kern_return_t a03_probe_read_user(vm_map_t, uint64_t, void *, vm_size_t);
 +void a03_live_probe(const char *command);
 +static int a03_probe_number(const char **input, uint64_t *value, unsigned base) {
 + const char *s=*input;uint64_t v=0;unsigned digits=0;
@@ -209,7 +210,7 @@
 +   vm_map_t map=get_task_map_reference(task);
 +   if(map==VM_MAP_NULL)printf("A03 PROBE no map\n");
 +   else {
-+    unsigned char bytes[256];kern_return_t kr=vm_map_read_user(map,addr,bytes,(vm_size_t)n);
++    unsigned char bytes[256];kern_return_t kr=a03_probe_read_user(map,addr,bytes,(vm_size_t)n);
 +    if(kr!=KERN_SUCCESS)printf("A03 PROBE mem error %d\n",kr);
 +    else for(unsigned i=0;i<n;i+=16) {
 +     char line[96];int used=snprintf(line,sizeof(line),"A03 PROBE mem %llx:",(unsigned long long)(addr+i));
@@ -256,9 +257,19 @@
      PE_parse_boot_argn("a03emmc",&opt,sizeof(opt));
 --- a/osfmk/kern/exception.c
 +++ b/osfmk/kern/exception.c
-@@ -1112,10 +1112,16 @@
+@@ -1111,11 +1111,26 @@
+ }
  /* Snapshot references/registers while holding task_lock, then drop it before
   * printing or reading user memory. This is a racy diagnostic, not a debugger. */
++/* BSD callers must not depend on MACH_KERNEL_PRIVATE vm_map declarations. */
++kern_return_t a03_probe_read_user(vm_map_t map, uint64_t address, void *bytes, vm_size_t size);
++kern_return_t
++a03_probe_read_user(vm_map_t map, uint64_t address, void *bytes, vm_size_t size)
++{
++    if (map == VM_MAP_NULL || size == 0 || size > 256 || address + size < address)
++        return KERN_INVALID_ARGUMENT;
++    return vm_map_read_user(map, address, bytes, size);
++}
  void a03_sample_task(const char *name, int pid, task_t task);
 +void a03_probe_task(const char *name, int pid, task_t task, bool user_stack);
  void
@@ -274,7 +285,7 @@
      unsigned count = 0;
      vm_map_t map = get_task_map_reference(task);
      if (map == VM_MAP_NULL) return;
-@@ -1139,6 +1145,8 @@
+@@ -1139,6 +1154,8 @@
          snap[count].lr = get_saved_state_lr(ss);
          snap[count].sp = get_saved_state_sp(ss);
          snap[count].fp = get_saved_state_fp(ss);
@@ -283,7 +294,7 @@
          spl_t old_spl = splsched();
          thread_lock(thread);
          snap[count].state = thread->state;
-@@ -1174,6 +1182,7 @@
+@@ -1174,6 +1191,7 @@
              name, t, snap[t].user.seconds, snap[t].user.microseconds,
              snap[t].system.seconds, snap[t].system.microseconds,
              snap[t].runnable.seconds, snap[t].runnable.microseconds);
@@ -291,7 +302,7 @@
          char line[360];
          int kn = snprintf(line, sizeof(line), "A03 WAIT %s t%u event %llx continuation %llx kbt",
              name, t, snap[t].wait, snap[t].cont);
-@@ -1182,7 +1191,7 @@
+@@ -1182,7 +1200,7 @@
          printf("%s\n", line);
          int n = snprintf(line, sizeof(line), "A03 SAMPLE %s t%u state %x pc %llx lr %llx sp %llx bt",
              name, t, snap[t].state, snap[t].pc, snap[t].lr, snap[t].sp);

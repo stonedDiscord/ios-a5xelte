@@ -1,3 +1,10 @@
+ACTIVE0135 fix:43910152567 failed undeclared vm_map_read_user in BSD.
+Moved bounded read into Mach exception.c bridge; exact per-file CI command
+replay reproduces old failure and all4corrected objects PASS (~2s). New tool
+tools/a03-check-kernel-objects.py preserves defs/includes/warnings and rejects
+no errors silently. Sanitizer/PTY/CDC/sampler and patch equality PASS.
+Need corrected full CI link before BOOT0070/probing. No flash/home screen.
+
 ACTIVE0135 exact0751d9c pushed; CI43910152567 in progress. Four real
 kernel objects PASS plus actual PTY host test: logs drain while probe send
 blocks. Old-sha accidental43910063052 cancelled, no deployment. Device is
