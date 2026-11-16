@@ -1,0 +1,47 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -281,11 +281,44 @@
+ 	return 0;
+ }
+ 
++/* Decoded iOS16 named-profile query/install ABI. This explicitly opted-in
++ * lab profile has no enforcement, like a03_sandbox_disabled itself. Only
++ * tccd's own named profile is supported; bytecode and other ops still fail. */
++static TUNABLE(uint32_t, a03_sandbox_profiles, "a03_sandbox_profiles", 0);
++static int
++a03_sandbox_named_profile(struct proc *p, int call, user_addr_t arg)
++{
++    if (a03_sandbox_profiles != 1) return ENOTSUP;
++    struct { user_addr_t name, message; uint64_t message_length; } request = {0};
++    size_t size = call == 22 ? sizeof(request.name) : sizeof(request);
++    int error = copyin(arg, &request, size);
++    if (error) return error;
++    if (!request.name) return EFAULT;
++    if (request.message || request.message_length) return ENOTSUP;
++    char name[64];
++    error = copyinstr(request.name, name, sizeof(name), NULL);
++    if (error) return error;
++    char process[32];
++    proc_name(proc_pid(p), process, sizeof(process));
++    if (strcmp(process, "tccd") || strcmp(name, "com.apple.tccd"))
++        return ENOTSUP;
++    static unsigned reports;
++    unsigned old = __atomic_load_n(&reports, __ATOMIC_RELAXED);
++    do {
++        if (old >= 16) return 0;
++    } while (!__atomic_compare_exchange_n(&reports, &old, old + 1,
++        false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++    printf("A03 Sandbox: tccd[%d] named profile op%d accepted (lab NO enforcement)\n",
++        proc_pid(p), call);
++    return 0;
++}
++
+ /* Lab no-sandbox mode: implement only the decoded scalar check protocol.
+  * Profile installation, extensions and container paths remain unsupported. */
+ static int
+ a03_sandbox_check_syscall(struct proc *p, int call, user_addr_t arg)
+ {
++    if (call == 1 || call == 22) return a03_sandbox_named_profile(p, call, arg);
+     if (call != 2) return ENOTSUP;
+     user_addr_t result_address = 0;
+     int error = copyin(arg, &result_address, sizeof(result_address));

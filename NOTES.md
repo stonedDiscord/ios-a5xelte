@@ -1,3 +1,10 @@
+ACTIVE0136 scoped tccd named-profile query22/install1 candidate locally
+ASan/UBSan + full-file exact CI-command Clang + plain git apply PASS.
+Explicit lab NO enforcement, a03_sandbox_profiles=1(default0) plus existing
+sandbox-disabled policy; tccd/com.apple.tccd only, unknown ops stay ENOTSUP.
+Need full CI then0072 exact0071 1GiB loader/ADT/root plus new kernel+arg.
+0071 running SB->profiled109->TCC wait; no home screen/phone changes.
+
 ACTIVE0071 19:30UTC SB25 PASSED LS wait, now7threads/main sync MCProfile
 migration while shouldShowCloudConfigurationUI. profiled109 worker waits TCC
 _tccd_send_message/TCCAccessSetOverride. Existing tccd profile-not-found

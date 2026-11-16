@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 0136 scoped tccd named-profile candidate locally validated
+
+Current0071 runtime chain SB -> profiled -> TCC motivated decoded API repair.
+Matching libsandbox query22 copies one pointer; successful query constructs
+named profile {name,0,0}, sandbox_apply issues op1 with those3words. Added
+0136 scoped to exact process name tccd and profile com.apple.tccd, existing
+a03_sandbox_disabled=1 policy plus new a03_sandbox_profiles=1(default0).
+Both ops copy in bounded arguments; names use64byte copyinstr; pointer/fault/
+long-name errors propagate. Binary profile op0, non-null message/length,
+other names/callers/operations remain unsupported. This explicitly lab-only
+profile implements NO sandbox enforcement; not production privacy isolation.
+16 bounded reports. No Apple binaries/TCC replies/activation state modified.
+
+Actual helper ASan/UBSan tests opt-in1-only, faults/null/long name, exact
+8/24byte ABI, caller/name restriction, bytecode rejection,16log cap PASS.
+Existing0121 op2 tests PASS. Exact per-file CI-command Clang compile of full
+sweet_amfi.c PASS. Plain git apply/reverse/reapply exact source equality PASS.
+Full CI/link/runtime still required; no new BOOT/reset/root writes yet.
+
 ## 2026-11-16: 19:30 UTC SpringBoard passes LS; now profile migration/TCC wait
 
 User physically reports Apple logo with continuing output (not home screen).
