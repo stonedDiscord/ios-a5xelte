@@ -1,3 +1,10 @@
+ACTIVE0136 CI43940554508 still Build19:41UTC, watch/package/deploy handles
+retained. Added read-only probe scheduler1741 /tmp/a03-0072/probe.py waits
+for actual0072 worker then current ps/vm/io/SB/profiled/tccd/lsd at60/180/
+300/540s. Own output probe.log; never opens tty or resets phone. Existing
+udev rule installed matches repo; new-enumeration permissions need runtime
+check. No0072 flash yet. Home screen pending all runtime gates.
+
 ACTIVE0136 CI43940554508 Build still live19:38UTC. Existing package watcher
 73118/PID81847 retained; deploy watcher46231/PID82365 now waiting for its
 verified package. /tmp/a03-0072/deploy.py gates exact successful CI+SHA,
