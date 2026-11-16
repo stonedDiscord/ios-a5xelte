@@ -1,3 +1,10 @@
+ACTIVE0076 BOOT-only upload successful/reboot confirmed21:33UTC after
+exact0140 CI43959202597 success+unchanged config verification. Reader84806
+now waitsUSB180s then660s capture boot0076-usb-initial.log; stat scheduler51114
+retained. No USB runtime evidence yet. Need live modes/owners of analytics
+and activation paths, then root-cause repair.0141 tested ACL next-build only.
+Home screen unproven; no root/protected partition writes.
+
 ACTIVE0076 CI43959202597 exact65cc580 SUCCESS21:32UTC; package verified,
 BOOT SHA5b24a68639cc0df952e3b8cc51c6aed5069d9a396a22b4a17f831b2b4b9ff353,
 kernelbb342c79786b5f605c54544a4350021e9a2138177530a7818b80773e156bc78a.

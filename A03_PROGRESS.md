@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:33 UTC BOOT0076 read-only filesystem diagnostics deployed
+
+Prior status reader ended; synced CDC Download succeeded. Heimdall BOOT-only
+upload reached100%, reported successful and reboot. Verified image/build
+hashes and same1GiB/ADT/arguments/root/loader configuration above. Deployment
+84806 now waitsUSB180s then660s initial capture; scheduler51114 retained for
+six actual failing/parent path stat probes. Runtime USB/metadata pending at
+this checkpoint. No root/protected partition writes; home screen unproven.
+
 ## 2026-11-16: 21:32 UTC0140 CI succeeds and BOOT0076 package verified
 
 CI43959202597 exact65cc5807244657e6ff1014894734a7106b2eee54 SUCCESS.
