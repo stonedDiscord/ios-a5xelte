@@ -139,3 +139,8 @@ compile results, hardware observations and restore results below.
   dependency verification and local/exported cache symbolication under
   tools/dreamlte-* names. Synthetic exported-symbol/redacted/bounds tests
   PASS without Apple data; no root image or installer deployed.
+
+- Additional regression PASS:192 strict/provisional reply combinations
+  exercise the actual patched predicate. Kernel-wait symbolication resolved
+  an exact Mach-O object symbol for both continuation/frame and retained
+  valid frames before a truncated log tail. No runtime claim from these tests.

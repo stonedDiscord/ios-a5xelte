@@ -19,14 +19,18 @@ if a.destination.exists():
     p.error('destination exists; refusing to mix patch profiles')
 root=Path(__file__).resolve().parent.parent
 patches=sorted(p for p in (root/'xnu/patches').glob('*.patch') if int(p.name[:4])<=203)
-if not patches or not patches[-1].name.startswith('0203-'):
+if len(patches) != 126 or not patches[-1].name.startswith('0203-'):
     p.error('HEROLTE baseline must end at 0203')
+overlays=sorted((root/'xnu/dreamlte').glob('*.patch'))
+if [p.name for p in overlays[:2]] != [
+        '0204-dreamlte-early-board.patch',
+        '0205-dreamlte-a03-portable-bringup.patch']:
+    p.error('required DREAMLTE board and portable overlays are missing')
 a.destination.mkdir(parents=True)
 for source in patches:
     shutil.copy2(source,a.destination/source.name)
 for source in (root/'xnu/patches').glob('*.sh'):
     shutil.copy2(source,a.destination/source.name)
-overlays=sorted((root/'xnu/dreamlte').glob('*.patch'))
 for source in overlays:
     shutil.copy2(source,a.destination/source.name)
 (a.destination/'DREAMLTE-PROFILE.json').write_text(json.dumps({

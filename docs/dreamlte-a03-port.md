@@ -51,6 +51,7 @@ Other board profiles do not stage these overlays.
 
 ```sh
 python3 tools/dreamlte-test-portable.py
+python3 tools/dreamlte-test-reply-compat.py
 python3 tools/dreamlte-build-profile.py /tmp/dreamlte-patches-NEW
 sh shim/dreamlte/build.sh
 python3 tools/mkadt_dreamlte.py /tmp/dreamlte-NEW.adt
