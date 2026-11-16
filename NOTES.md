@@ -1,3 +1,12 @@
+ACTIVE0070 late18:49..18:50UTC: SB25 now4threads, past objc initializers.
+Main waits unfair lock in LSContextInitCommon/LSApplicationRecord while
+ControlCenter module metadata loads; thread1 sync XPC _LSCopyServerStore.
+lsd1016threads: bundle registration waits IconServices invalidation; another
+explicit database-finish-seeding wait; separate sync MobileActivation request.
+Current blocker is LS database/service readiness; underlying failing dependency
+not isolated. Late90s capture60737 boot0070-usb-late-probes.log. Swap10 does
+not prove home menu. No new writes/topology changes. See A03_PROGRESS.md.
+
 ACTIVE0070 live EP0 hardware SUCCESS after ACL: ping/vm/io/ps/threads25/
 threads56 BEGIN/END with CDC output ongoing. Initial660s501877bytes/all4
 samples complete; live240s capture8740 boot0070-usb-live-probes.log active.

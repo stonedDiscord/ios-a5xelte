@@ -1,5 +1,31 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: late0070 SpringBoard advances to LaunchServices database wait
+
+Fresh EP0 samples at18:49..18:50UTC show same SpringBoard PID25 now4threads,
+not the earlier single-thread objc initializer. Main thread user0.306551s/
+system197.242155s/runnable1441.332378s, blocked __ulock_wait via
+_os_unfair_lock_lock_slow. Exact cache slide2c5b0000 symbolication shows
+_LSContextInitCommon -> LSApplicationRecord initialization -> ControlCenter
+CCSModuleRepository module metadata/filtering. Thread1 waits synchronous
+NSXPC reply from _LSCopyServerStore. Repeated sample23/26 main+thread1
+stacks and CPU times unchanged over this short interval. This is current
+service-wait evidence, distinct from earlier sustained page-in stalls.
+
+lsd PID101 sampled6threads. One waits synchronous IconServices bundle-cache
+invalidation during LSBundleRecordBuilder registerBundleRecord and
+_LSServerBundleRegistration. Another explicitly symbolicates to
+_LAUNCH_SERVICES_CLIENTS_ARE_WAITING_FOR_THE_DATABASE_TO_FINISH_SEEDING.
+A separate thread synchronously calls MobileActivation copyActivationRecord.
+These identify database seeding/service dependencies; do not establish which
+is permanently broken or justify bypassing activation/service replies.
+Other lsd main path in install-progress journal recovery. No lsd crash proof.
+Late console includes full-screen swap10, not evidence of home-menu content.
+VM compressor5755pages (~89.9MiB), pageins1302628 cumulative; storage healthy.
+Read-only late90s capture60737 boot0070-usb-late-probes.log. No new BOOT,
+root/partition/memory changes. Need follow lsd dependencies rather than assume
+SpringBoard still stuck before its own initialization or RAM alone fixes all.
+
 ## 2026-11-16: EP0 live probes hardware-confirmed; sustained paging churn
 
 User granted current-device USB ACL. ping/vm/io/ps/threads25/threads56 all
