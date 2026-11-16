@@ -1,5 +1,31 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:08 UTC0139 CI compiling; same-config0075 deployment gated
+
+CI43955738619 exact2f78691552a541b5c9ee56c06ee6a4c08e308096 observed Build
+in progress. Package watcher62827/PID167795 remains live and separately
+prepares0075 only after exact successful CI and checksum verification.
+Deployment64839/PID169581 now waits manifest+same exact successful CI,
+validates boot checksum/size and unchanged0074 ADT/1GiB/args/loader/ramdisk/DT,
+waits existing tty capture end, then synced CDC Download and authorized
+BOOT-only upload0075, followed by660s capture. No0075 reset/flash yet.
+Prior0074 initial reader ended normally; short status67339 captures60s
+without reader competition. Fresh ps shows SB26,tccd37,containermanager63,
+profiled103 alive; detailed crash loops remain. Home menu unproven.
+
+Exact cache CoreServicesInternal pathURLPropertyProviderSetValues at
+180fb3f0c..3f30 sets com.apple.metadata:com_apple_backup_excludeItem to
+22-byte com.apple.MobileBackup using setxattr, options1(no-follow), then
+removes legacy com.apple.MobileBackup attribute. Stub186e17174 resolves
+libsystem_kernel setxattr1bf131c6c. Thus next activation trace should identify
+this xattr and actual path/errno rather than assume setattrlist failure.
+Four nonnil startup paths correspond com.apple.mobileactivationd,
+systemgroup.com.apple.regulatory_images,systemgroup.com.apple.pisco.suinfo,
+systemgroup.com.apple.mobileactivationd; missing paths have a separate fatal
+branch. Launchd runs MA/ScreenTime as mobile and analyticsd as _analyticsd.
+This static evidence does not prove current vnode ownership/errno or analytics
+container success. Private decoded artifacts/tmp/a03-0075, no Apple changes.
+
 ## 2026-11-16: BOOT0074 activation backup-exclusion failure; tested0139 evidence
 
 Live0074 detailed crashes mobileactivation138/147 both SIGTRAP at standalone

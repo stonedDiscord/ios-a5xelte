@@ -1,3 +1,13 @@
+ACTIVE0075 CI43955738619 Build21:08UTC exact2f78691. Package62827/PID167795
+and deploy64839/PID169581 live. Deploy waits verified exact success+same0074
+config+reader end, then synced CDC Download, authorized BOOT-only upload and
+660s capture. NO0075 flash yet.0074 initial reader ended normally; short
+status67339 currently60s. SB26/tccd37/containermanager63/profiled103 alive.
+Activation backup exclusion decoded setxattr com.apple.metadata:com_apple_
+backup_excludeItem ->22byte com.apple.MobileBackup; need actual path/errno.
+ScreenTime exact assertion and analytics container failure remain pending.
+Do not duplicate watchers/readers. Home-screen goal unverified.
+
 ACTIVE0139 CI43955738619 exact2f78691552a541b5c9ee56c06ee6a4c08e308096
 in progress21:01UTC. Package-only watcher /tmp/a03-0075/watch-package.py
 will verify exact CI success then prepare0075 using same0074 configuration;
