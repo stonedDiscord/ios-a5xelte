@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: EP0 access restored; persistent host rule prepared
+
+User applied USB005/010 ACL. Actual0071 ps/vm/io/sample25/sample100/
+sample129 responses confirm resumed live access. VM wired8503/free3119/
+active26190/inactive27710 pages, compressor0/compressions0/decompressions0;
+page-size16384. Expanded RAM is used without earlier compressor churn.
+SpringBoard main remains at same LS initialization wait; lsd now PID100,
+mobileactivation133, iconservicesagen129. Current lsd sample has9threads,
+including a semaphore wait requiring symbolication; keep following this
+rather than assume the old0070 service wait is identical. Live120s capture
+41818 boot0071-usb-live-probes.log. No home-menu success or phone writes.
+
+Added tools/udev/60-a03-xnu-console.rules for exact VID1d6b/PID0104/serial
+A03XNUConsole01, usb_device and tty rules, groupuucp/mode0660/uaccess.
+Host user already belongs to uucp; rule filename precedes seat-late ACL.
+udevadm262 verify PASS. Rule prepared in repository, NOT installed into/etc;
+installation/reload/targeted trigger commands in docs/a03-usb-console.md.
+No broad gadget/Download permissions added. Prior goal access blocker removed;
+full homescreen objective remains unfinished.
+
 ## 2026-11-16: all0071 timed passes confirm LS wait; tccd cause decoded
 
 Built-in samples180/300/420/540s complete across0071 initial/continuation

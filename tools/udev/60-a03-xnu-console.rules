@@ -1,0 +1,5 @@
+# Private A03 XNU diagnostic identity only; Arch Linux uses group uucp.
+# USB device node: libusb EP0 probes. Must precede 73-seat-late.rules.
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="1d6b", ATTR{idProduct}=="0104", ATTR{serial}=="A03XNUConsole01", GROUP="uucp", MODE="0660", TAG+="uaccess"
+# CDC console node: match the same USB parent rather than ttyACM numbering.
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1d6b", ATTRS{idProduct}=="0104", ATTRS{serial}=="A03XNUConsole01", GROUP="uucp", MODE="0660", TAG+="uaccess"

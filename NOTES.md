@@ -1,3 +1,10 @@
+ACTIVE0071 ACL restored: ps/vm/io/sample25+100+129 complete. lsd100 now9
+threads incl semaphore wait to symbolicate; activation133,icons129. SB main
+still LS wait. vm compressor0, active26190/inactive27710/wired8503/free3119.
+Capture41818 boot0071-usb-live-probes.log120s. Persistent exact-device udev
+rule prepared+udevadm verify PASS, user must install/reload/trigger per docs.
+No home-screen proof/no phone writes. Need follow lsd semaphore stack.
+
 ACTIVE0071 19:17UTC access audit: libusb Probe still fails-3 on current
 USB005/010 root:root0664. Same requested ACL missing over3goal turns.
 All4automatic SpringBoard samples already captured; no further automatic

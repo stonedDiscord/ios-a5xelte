@@ -40,6 +40,30 @@ interactive commands and panic service remain unproven.
 Startup waits up to10seconds for configuration, then1second for drain,
 before continuing toward initproc. This does not guarantee panic output.
 
+## Persistent Linux permissions
+
+On this Arch host, install the checked-in rule (the current user already
+belongs to uucp):
+
+    sudo install -m 0644 tools/udev/60-a03-xnu-console.rules /etc/udev/rules.d/60-a03-xnu-console.rules
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger --action=add --subsystem-match=usb --attr-match=idVendor=1d6b --attr-match=idProduct=0104 --attr-match=serial=A03XNUConsole01
+
+The rule grants group uucp read/write access to the usbfs device used by
+libusb probes and the CDC tty. It also tags both for active local-session
+access with uaccess. The filename precedes 73-seat-late.rules so the session
+ACL can be applied. Matching VID, PID and serial limits it to this private
+console identity, regardless of USB bus/device or ttyACM numbering. It does
+not grant access to Samsung Download mode or every Linux USB gadget.
+The existing tty already uses uucp on this host; its new rule also applies
+on the next normal enumeration. No phone reset or unplug is needed to reload
+and trigger the USB-device rule. Other distributions may use dialout instead;
+replace the group and ensure membership if adapting this file there.
+
+Check rule syntax without installing it:
+
+    udevadm verify tools/udev/60-a03-xnu-console.rules
+
 ## Post-trap monitor
 
 Opt-in a03debug_hold=1 (0104) pauses the current PID1 SIGTRAP fatal exit
