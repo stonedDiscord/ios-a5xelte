@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 22:27 UTC gated0079 deployment and input regression checks
+
+0145 CI43969089570 exact2d4ffd7 still building; retained package48074.
+Now scheduled deploy34846: independently gates exact CI success/checksum/
+unchanged configuration, only+a03_hid=1, waits old reader, synced Download,
+BOOT-only0079 then660s capture. No flash yet. Read-only/status scheduler54018
+waits actual0079 worker then status/ps/SB/backboard/vm/io; NO automatic Home
+or gesture. Runtime client registration/open must be inspected first.
+
+Added tools/a03-usb-input.py exact status/home/swipeup EP0 sender, opens no
+tty; help+Python syntax PASS. Added actual touch-builder ASan/UBSan regression:
+720x1600 scaling/clamps, duplicate suppression, down/move/up masks,
+multifinger release/state PASS. Existing action tests PASS. Documented
+requirements/limitations in docs/a03-usb-input.md. Input dispatch does not
+prove queue delivery or unlock; physical home screen still required.
+
+0078 followup capture ended normally; latest SB26 event loop, analytics91,
+activation467. No crash for those three across initial+followup capture;
+ScreenTime repeated unsupported-vault assertion. Preserve0078 image for
+restore; no root filesystem changes or non-BOOT writes in upcoming trial.
+
 ## 2026-11-16: HID client entitlement verified in matching backboardd
 
 Read-only extraction of matching backboardd signed XML confirms boolean

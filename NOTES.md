@@ -1,3 +1,11 @@
+ACTIVE0079 deployment34846 now scheduled behind exact0145CI43969089570
+success+package48074/checksum/same0078 config only+a03_hid=1. No flash yet.
+Status/read-only scheduler54018 waits worker, NO gesture automatically.
+Need HID service registration/backboard client open, then bounded Home/swipe
+and physical result. Current0078 capture ended normally, image preserved.
+Added actual touch ASan tests+sender/docs; no Home screen/input proof.
+CI exact2d4ffd7 in Build22:27. Keep watchers, no duplicate build/readers.
+
 ACTIVE0145 CI43969089570 exact2d4ffd7a44eab34178a13295b0ad3a337044e453
 building22:20UTC; package-only48074 /tmp/a03-0079/watch-package.py gates
 exact success/checksum/markers, adds only+a03_hid=1 (598bytes). No deployment
