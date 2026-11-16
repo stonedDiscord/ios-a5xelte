@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: corrected copyinstr fix building for BOOT0073
+
+Pushedc9a358b7c068a5fca9a628e6ae2a03ecf879f7c4; CI43946625323 in
+progress, Deps observed. Plain reverse/reapply0136 byte-for-byte source
+comparison PASS after full-file Clang validation. Watch/deploy88152/PID90578
+/tmp/a03-0073/watch-deploy.py waits exact successful CI; packages unchanged
+0072 ADT/1GiB/args/loader/stockDT, verifies artifact+image, requires existing
+Download+no reader, flashes BOOT only then captures660s. No0073 flash yet.
+No live-probe scheduler added; read passive startup evidence first. Actual
+profile ops22/1, tccd survival, SB migration and home screen remain gates.
+
 ## 2026-11-16: user reports BOOT0072 kernel panic; copyinstr caller fixed
 
 Physical report: panic kernel data abort PC0xfffffe000746e938. Verified exact

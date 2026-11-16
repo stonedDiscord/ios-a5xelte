@@ -1,3 +1,13 @@
+ACTIVECOPYINSTR corrected0136 commitc9a358b pushed, CI43946625323 exact
+c9a358b7c068a5fca9a628e6ae2a03ecf879f7c4 in progress(Deps). Existing
+Download detected. Watch/deploy session88152/PID90578 /tmp/a03-0073/
+watch-deploy.py waits same exact successful CI, packages with exact0072
+ADT/1GiB/args/loader/stockDT, verifies then BOOT-only flashes0073 and captures
+660s. Log watch-deploy.log/flash.log/capture.stderr. No new flash yet.
+Do not duplicate watcher. Plain reverse/reapply source equality+Clang and
+corrected RED/GREEN regression PASS. Need runtime ops22/1+tccd survival,
+SB migration progress+actual physical home screen (unproven).
+
 ACTIVE0072 user physical panic PCfffffe000746e938 resolves exact kernel
 copyinstr+18 str xzr,[x3];0136 passed NULL lencopied, concrete caller bug.
 Fixed to local copied output; corrected regression RED old/GREEN fixed,
