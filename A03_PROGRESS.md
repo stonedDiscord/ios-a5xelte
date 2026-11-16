@@ -1,5 +1,13 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 21:47 UTC BOOT0077 ACL diagnostics deployed
+
+Synced CDC Download succeeded. Heimdall BOOT-only upload100%/successful and
+reboot confirmed. Verified0141 kernel/unchanged configuration above.
+Existing47410 waitsUSB180s then660s capture; ACL scheduler43860 retained.
+Actual ACL records pending;0142 not included. No protected partition/root
+mutation, no rendered home screen established.
+
 ## 2026-11-16: 21:46 UTC0141 CI succeeds and BOOT0077 packaged
 
 CI43961834933 exactbd84c3ba60d72de9cd3742a5b8221c5827c533c3 SUCCESS.

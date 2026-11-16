@@ -1,3 +1,9 @@
+ACTIVE0077 BOOT-only upload successful/reboot confirmed21:47UTC after
+verified0141 CI43961834933. Existing reader47410 waitsUSB180s then660s
+boot0077-usb-initial.log; ACL scheduler43860 retained. No new USB evidence yet.
+Need actual activation/OSAnalytics ACLs;0142 local UUID candidate NOT staged.
+No root/protected partition changes. Home screen goal unverified.
+
 ACTIVE0141 CI43961834933 exactbd84c3b SUCCESS21:46UTC. Verified0077
 BOOT2db3ebac42ac32bc2c0d941368dc921ae432218c7449aab76505b14757118826,
 kerneld6c024750fff02fab0060e100d0ad07a5cfa4198447e152b8604639fd341d015.
