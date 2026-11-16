@@ -16,7 +16,10 @@ vectors, type mismatch, unknown UUID and0/UINT32_MAX round trips. Full source
 plain git apply reverse/reapply equality PASS. Full kern_credential.c local
 compile is NOT PASS: baseline and candidate both produce identical73 normalized
 errors from Apple's unsupported __builtin_xnu_type_* allocation builtins;
-no new candidate diagnostics. Full Xcode CI still required before deployment.
+no new candidate diagnostics. Extracted actual helper+four changed wrappers
+compile successfully with exact kernel CI flags/includes and arm64 target
+(outside unrelated allocation-builtin code). Full Xcode CI still required
+before deployment.
 BOOT0076 capture ended normally~21:45UTC. Existing0141 CI43961834933 and0077
 package53238/deploy47410/ACL scheduler43860 retained. No0077 flash yet.
 
