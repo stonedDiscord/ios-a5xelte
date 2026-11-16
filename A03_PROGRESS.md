@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0071 first timed sample progresses substantially sooner
+
+Completed initial180s CDC capture: SpringBoard25 has4threads at sampler
+pass0 (~180s from sampler start), already in ControlCenter module metadata
+and LSContextInitCommon. Its XPC worker explicitly symbolicates to
+LAUNCH_SERVICES_IS_RESEEDING_ITS_DATABASE_AND_MAY_BLOCK -> LSCopyServerStore.
+Backboardd also has a synchronous wait on that LS path. Cache slide24614000.
+By comparison0070 pass0/1/2/3 (180/300/420/540s) all retained1SpringBoard
+thread in initializers. This is earlier application-initialization progress
+with1GiB; not a controlled speed factor (persistent root caches also changed
+between boots) and not proof database seeding now completes.0071 main CPU
+user0.152033/system9.990684/runnable83.997187s at pass0.3BGRA swaps observed,
+not home-menu content. Need next samples / lsd dependency probe after ACL.
+Continuation capture30397 live660s boot0071-usb-continuation.log retains
+remaining timed passes. No repeat flash, topology or root changes.
+
 ## 2026-11-16: BOOT0071 runtime reached userspace; new EP0 ACL needed
 
 CDC enumerated as1d6b:0104 at USB005/010; initial capture32671 is live.

@@ -1,3 +1,9 @@
+ACTIVE0071 pass0(~180s) SB25 already4threads/ControlCenter+LS reseeding wait;
+0070 all4passes180..540s stayed1thread in initializers. Earlier progress,
+not causal speed-factor or home proof.3BGRA swaps. slide24614000.
+Initial capture32671 completed; continuation30397 live660s retains passes.
+Need new USB005/010 ACL (requested) to sample lsd/prove runtime pages.
+
 ACTIVE0071 CDC live, actual iOS services/SpringBoard25 start, no panic.
 Capture32671 initial180s ongoing. New USB005/010 EP0 denied-3; narrow ACL
 requested async; tty logs unaffected. Need page-count + SB/lsd live samples;
