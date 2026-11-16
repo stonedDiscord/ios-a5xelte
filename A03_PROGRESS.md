@@ -1,5 +1,32 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: prepared0145 explicit USB HID input for clock-screen checkpoint
+
+Confirmed current A03 profile contains no HID service/touch/button provider;
+physical swipe cannot be assumed supported. Ported portable donor0058 HID
+queue/event services only (no Qualcomm hardware). Opt-in a03_hid=1 gates
+registration;720x1600 normalization; no periodic Home timer. Existing USB
+worker accepts exact input status/home/swipeup, with bounded paired press/
+release or336ms swipe+release; USB polling remains separate. Dispatch return
+is not user-interface acknowledgement. Standard HID user-client entitlement
+check retained.0143 read-only credentials staged too;0144 vault NOT staged.
+
+Local arm64 exact flags expose unsupported Apple type builtins in common
+headers; NOT claiming clean unmodified full-file Clang. Host-only builtin
+substitutions (never in CI/kernel) then compile all four full C++ files.
+This caught real FP sensor API errors under general-register-only; unused
+floating-point methods removed, keyboard/digitizer integer/fixed fields
+retained with original wire layouts. C helper full exact compile PASS;
+actual actions ASan/UBSan bounds/releases and patch apply/reverse/full source
+equality PASS. Full Xcode CI required. No new build/flash yet at22:20UTC.
+
+0078 reader initial capture ended normally; followup28890 captures240s,
+no reboot. SB26 still UIApplication event loop. Analytics91 retains PID;
+MobileActivation now467 instead134 but no detailed/generic crash observed,
+so do not claim unchanged PID or indefinite survival. ScreenTime121 actual
+vaultENOTSUP assertion captured~22:14; earlier model-loading sample merely
+delayed reaching that known failure. Clock reported; home/input unverified.
+
 ## 2026-11-16: 22:10 UTC SpringBoard reaches application event loop
 
 BOOT0078 SB26 latest main sample resolves GSEventRunModal → UIApplication

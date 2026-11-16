@@ -1,3 +1,13 @@
+ACTIVE0145 USB HID input prepared+staged(defaultoff), no CI/flash yet.
+Portable donor queue/services only, no hardware touch. input status/home/
+swipeup exact bounded worker actions;720x1600.0143 creds staged too;0144 lab
+vault NOT staged. Host actual action ASan+full C helper compile+full C++
+syntax checks with HOST-ONLY Apple builtin shim PASS; no clean exact C++
+claim.0145 source equality/plain apply/reverse PASS. Need full Xcode CI.
+0078 remains clock UI/event loop, followup28890 single reader240s. Analytics91
+alive; activation now467(no crash evidence); ScreenTime vault45 confirmed.
+User swipe question pending. No home/unlock proof, no new reset scheduled.
+
 ACTIVE0078~22:10 SB26 main now GSEventRunModal/UIApplication _run/
 UIApplicationMain/SBSystemAppMain: application event loop, physical clock
 reported. Unlock/home/input still unverified; swipe question pending.
