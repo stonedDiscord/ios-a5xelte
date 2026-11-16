@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 22:10 UTC SpringBoard reaches application event loop
+
+BOOT0078 SB26 latest main sample resolves GSEventRunModal → UIApplication
+_run → UIApplicationMain/SBSystemAppMain. Together with user's physical
+clock report this establishes running SpringBoard UI beyond startup waits,
+but not an unlocked home screen or working input. Repeated ps keep analytics91,
+activation134, ScreenTime121; no detailed/generic crash for those services
+observed in current capture yet. ScreenTime may still reach vault later;
+no claim fixed. Existing single reader206943 remains live, no reset scheduled.
+
 ## 2026-11-16: BOOT0078 physical iOS clock; analytics/activation survive
 
 At~22:09UTC user reports "i see the iOS clock onscreen". This is the first

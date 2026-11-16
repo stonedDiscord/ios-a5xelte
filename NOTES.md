@@ -1,3 +1,9 @@
+ACTIVE0078~22:10 SB26 main now GSEventRunModal/UIApplication _run/
+UIApplicationMain/SBSystemAppMain: application event loop, physical clock
+reported. Unlock/home/input still unverified; swipe question pending.
+No new reset. Reader206943 live, analytics91/activation134/ScreenTime121
+retain PIDs.0144 lab vault candidate committed NOT staged/enabled.
+
 ACTIVE0078~22:09UTC USER SEES iOS CLOCK (first UI beyond logo). Preserve
 running phone; no new reboot scheduled. Home/unlock/touch not yet verified;
 async swipe question pending. SB26 progresses Biome→IconServices→UILabel→
