@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 20:05 UTC passive retry wait expires without device return
+
+Existing capture51868/PID88668 was verified live while waiting, then exited1
+with no console after180s. No retry log was created; neither XNU USB nor
+Samsung Download device present. No physical screen/restart report received.
+No replacement capture or build started; no live probe/capture remains.
+Runtime continuation requires physical recovery or actual screen observation.
+0136 runtime and actual home screen remain unverified.
+
 ## 2026-11-16: BOOT0072 first trial stops responding before profile test
 
 USB005/012 and ttyACM0 re-enumerated root:uucp0660+ with installed rule;

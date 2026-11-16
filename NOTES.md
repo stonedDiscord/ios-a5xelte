@@ -1,3 +1,9 @@
+ACTIVE0072 20:05:47UTC passive retry51868 TERMINAL: no console within180s.
+No retry file/USB or Samsung device; no button reboot/screen report received.
+Prior USB reset exhausted descriptor retries. No capture/probe left running.
+Need physical phone recovery or screen report to continue runtime testing;
+0136 profile runtime/home screen still unproven. Prior evidence below.
+
 ACTIVE0072 first trial USB/log ceased19:56:34UTC before tccd sandbox call.
 60s SB26 dyld page-in/emmc mutex; tccd37 dyld, both samples END. No0136
 op22/1 runtime proof/no GUI. EP0 serial timeout-7, not access; new udev
