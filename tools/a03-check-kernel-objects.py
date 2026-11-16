@@ -5,6 +5,8 @@ Preserves preprocessor definitions, include order, warning policy and generated
 headers. Remaps runner paths; uses local Clang with the same Apple arm64 target.
 The buildtree must already contain the candidate patched source. This checks C
 compilation, not Xcode-specific behavior, kernel linkage or hardware operation.
+C++ uses clang++; unsupported Apple allocation builtins are reported as errors,
+not silently replaced. This tool never adds host-only builtin substitutions.
 """
 import argparse
 import json
@@ -20,7 +22,7 @@ def command_for(log, source, tree, compiler, output):
     for line in log.splitlines():
         if '/xnu/'+source not in line:
             continue
-        if ' -c ' not in line or not re.search(r'/clang(?:\s|$)',line):
+        if ' -c ' not in line or not re.search(r'/clang(?:\+\+)?(?:\s|$)',line):
             continue
         start=line.find('ccache ')
         start=start+7 if start>=0 else line.find('/Applications/')
@@ -51,7 +53,9 @@ def command_for(log, source, tree, compiler, output):
     result+=['-o',str(output)]
     # BSD and Mach compilation use different visibility and include paths.
     # Never add MACH_KERNEL_PRIVATE or suppress language diagnostics here.
-    component='osfmk' if source.startswith('osfmk/') else 'bsd'
+    component=source.split('/',1)[0]
+    if component not in ('osfmk','bsd','iokit','libkern'):
+        raise ValueError('unsupported source component '+component)
     cwd=tree/'build/xnu.obj/DEVELOPMENT_ARM64_SWEET'/component/'DEVELOPMENT'
     return result,cwd
 
@@ -62,12 +66,14 @@ def main():
     p.add_argument('log',type=Path)
     p.add_argument('sources',nargs='+')
     p.add_argument('--clang',default='clang')
+    p.add_argument('--clangxx',default='clang++',help='C++ driver; Apple allocation builtins still require Xcode')
     p.add_argument('--output',type=Path,required=True)
     a=p.parse_args();tree=a.tree.resolve();a.output.mkdir(parents=True,exist_ok=True)
     log=a.log.read_text(errors='replace');failed=False
     for source in a.sources:
         output=(a.output/(source.replace('/','_')+'.o')).resolve()
-        cmd,cwd=command_for(log,source,tree,a.clang,output)
+        compiler=a.clangxx if source.endswith(('.cpp','.cc','.cxx')) else a.clang
+        cmd,cwd=command_for(log,source,tree,compiler,output)
         (output.with_suffix('.command.json')).write_text(json.dumps({'cwd':str(cwd),'argv':cmd},indent=2)+'\n')
         r=subprocess.run(cmd,cwd=cwd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
         output.with_suffix('.log').write_text(r.stdout)

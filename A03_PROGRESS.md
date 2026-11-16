@@ -1,6 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
-## 2026-11-16: 22:27 UTC gated0079 deployment and input regression checks
+## 2026-11-16: 22:29 UTC clock checkpoint rechecked; local C++ command replay
+
+Fresh BOOT0078 read-only capture boot0078-clock-check.log retains SpringBoard26,
+backboardd56 and analyticsd91. SB main again resolves mach_msg/CFRunLoopRun/
+GSEventRunModal/UIApplication _run/UIApplicationMain/SBSystemAppMain using
+matching cache slide44b14000: application event loop, not startup wait.
+Storage ready1/poisoned0; free2388/compressor5308 pages of16KiB. ScreenTime
+and PosterBoard generic crash records persist; do not infer every daemon
+works from SpringBoard rendering. Physical user clock report remains the
+UI evidence; no unlocked home or touch verification. No reset during check.
+
+Extended exact CI-command local compiler helper to C++ driver detection and
+IOKit/libkern working directories, keeping flags/includes and reporting
+unsupported Apple builtins honestly. Synthetic command-remapping regression
+and Python syntax PASS. Baseline exact SweetKeyStore compilation still fails
+on host Apple allocation builtins; host-only syntax stand-ins are never added
+by this helper. Existing0145CI43969089570 still Build at22:28; exact gated
+0079 package/deploy/status watchers retained, no duplicate CI or gesture.
+
+## 2026-11-16: 22:26 UTC gated0079 deployment and input regression checks
 
 0145 CI43969089570 exact2d4ffd7 still building; retained package48074.
 Now scheduled deploy34846: independently gates exact CI success/checksum/

@@ -1,3 +1,11 @@
+ACTIVE22:29UTC0078 fresh SB26 main remains application event loop;
+backboardd56/analytics91 alive, io ready1/poisoned0. Physical clock confirmed,
+no unlocked home/touch proof. Short45s capture59755 ends before gated0079.
+0145CI43969089570 exact2d4ffd7 Build22:28; existing0079package48074/deploy34846/
+scheduler54018 retained. No gesture automatically; inspect HID/client first.
+Local compiler helper now supports exact C++/IOKit/libkern command replay;
+regression PASS, Apple builtin baseline limitations explicitly reported.
+
 ACTIVE0079 deployment34846 now scheduled behind exact0145CI43969089570
 success+package48074/checksum/same0078 config only+a03_hid=1. No flash yet.
 Status/read-only scheduler54018 waits worker, NO gesture automatically.
