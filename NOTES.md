@@ -1,3 +1,6 @@
+ACTIVE corrected0135 commit1b3fdc1 pushed; CI43914475835 dispatched only
+after exact per-file local Clang checks passed. Full CI/runtime pending.
+
 ACTIVE0135 fix:43910152567 failed undeclared vm_map_read_user in BSD.
 Moved bounded read into Mach exception.c bridge; exact per-file CI command
 replay reproduces old failure and all4corrected objects PASS (~2s). New tool

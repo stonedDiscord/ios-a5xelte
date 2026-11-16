@@ -17,6 +17,7 @@ in~2s, retaining general-register flags and correct BSD/Mach visibility.
 Actual transport/dispatcher ASan/UBSan and PTY nonblocking-log tests PASS;
 existing CDC/sampler PASS; plain patch apply/four compiled-source matches PASS.
 Full CI link/runtime still required; no device flash or home-screen claim.
+Correction committed/pushed1b3fdc1; CI43914475835 dispatched after local gate.
 
 ## 2026-11-16: live USB probes implemented; SpringBoard page-in wait confirmed
 
