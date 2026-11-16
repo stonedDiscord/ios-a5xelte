@@ -1,3 +1,6 @@
+ACTIVE retry43918800523 exact520d2a7 acquired macos-26-intel runner;
+Set up job passed/checkout running. Full build pending. No phone writes.
+
 ACTIVE43914475835 was runner allocation failure, not compiler failure:
 job133464838955 zero steps/no logs/no runner; annotation "The job was not
 acquired by Runner of type hosted even after multiple attempts". All4local

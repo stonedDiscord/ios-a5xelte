@@ -9,6 +9,8 @@ with zero steps, empty runner_name and no logs. Check-run annotation explicitly:
 Re-ran all four exact-command local Clang object checks: PASS. No source fix
 justified by this infrastructure failure. Retry uses supported macos-26-intel
 pool rather than the unavailable macos-15-intel pool. No phone writes.
+Retry43918800523 exact520d2a7 acquired macos-26-intel: Set up job passed,
+checkout running. Full build result pending.
 
 ## 2026-11-16: fix0135 BSD/Mach API visibility; exact-command local compile gate
 
