@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 20:52 UTC BOOT0074 diagnostic deployed after full CI success
+
+CI43951369485 exacta4d660cbf786f5a5d66e4036f94a124b04518d97 completed
+successfully. Existing watcher14214/PID154025 verified artifact/checksum,
+identical0073 ADT/1GiB/args/loader/stockDT. BOOT SHA256
+95d093c1950d9e016eb5d3913aca057f2219e24805e5e2309cba41874884814e;
+kernel SHA25684ff3512223a5b78da530aba538d08d6900f46423f0cd875afc758d795608edb.
+Synced CDC Download succeeded; Heimdall BOOT-only upload successful and
+reboot confirmed20:52UTC. No protected-partition/root changes. Same watcher
+now waiting USB then captures660s boot0074-usb-initial.log. Need detailed
+mobileactivation crash;0138 ScreenTime/analytics diagnostics not in this boot.
+Actual home screen remains unverified.
+
 ## 2026-11-16: data-vault API decoded while retaining running0137 CI
 
 Matching cache export libsystem_sandbox rootless_convert_to_datavault at

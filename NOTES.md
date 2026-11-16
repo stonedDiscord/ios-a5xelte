@@ -1,3 +1,9 @@
+ACTIVE0074 CI43951369485 exacta4d660c SUCCESS, verified BOOT-only flash/
+reboot20:52UTC. Watcher14214/PID154025 now waitsUSB/captures660s initial log.
+BOOT SHA95d093c1...84814e. Same0073 1GiB/args/ADT/loader/root. Need0137
+mobileactivation detailed crash, actualSB wait/home screen.0138 diagnostics
+prepared in git but NOT in0074. Do not open second tty reader.
+
 ACTIVEWAIT0137 CI43951369485 Build live20:47UTC; watcher154025/14214
 retained. Extra static evidence: rootless_convert_to_datavault opens dir,
 Sandbox0x104 args{int64fd,owner}; policy ENOTSUP explains dmd live error,
