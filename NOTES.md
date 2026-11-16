@@ -1,3 +1,9 @@
+ACTIVE0071 pass1(~300s) main+LS XPC CPU/full stacks EXACTLY unchanged
+since180s. More memory advances early init but LS reseeding still blocks.
+Capture30397 alive660s for remaining passes. EP0 ACL005/010 pending user;
+next probe ps/vm/io then lsd (new PID). tccd profile-not-found crash loop.
+No home screen; preserve running state. Code0c8cc37/documentation committed.
+
 ACTIVE0071 pass0(~180s) SB25 already4threads/ControlCenter+LS reseeding wait;
 0070 all4passes180..540s stayed1thread in initializers. Earlier progress,
 not causal speed-factor or home proof.3BGRA swaps. slide24614000.

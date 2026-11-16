@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0071 pass1 still waits on LaunchServices
+
+Second built-in sampler pass at~300s captured in continuation30397.
+SpringBoard main and XPC-worker CPU counters and full saved user stacks
+exactly match pass0 at~180s. Thus expanded-memory boot reaches app startup
+earlier but the database reseeding dependency remains stalled for at least
+120s. Other services continue executing; tccd repeatedly aborts with known
+profile-not-found reason, dmd data-vault ENOTSUP and analyticsd crash also
+persist. No causal link from those crashes to LS stall established.
+EP0 node005/010 ACL still missing at19:11UTC; user request pending. Keep
+capture30397 running for remaining automatic passes; do not reset merely
+because live probe permission is missing. Next ps + sample lsd after ACL.
+
 ## 2026-11-16: BOOT0071 first timed sample progresses substantially sooner
 
 Completed initial180s CDC capture: SpringBoard25 has4threads at sampler
