@@ -1,6 +1,6 @@
 --- a/bsd/kern/sweet_amfi.c
 +++ b/bsd/kern/sweet_amfi.c
-@@ -281,11 +281,44 @@
+@@ -281,11 +281,45 @@
  	return 0;
  }
  
@@ -19,7 +19,8 @@
 +    if (!request.name) return EFAULT;
 +    if (request.message || request.message_length) return ENOTSUP;
 +    char name[64];
-+    error = copyinstr(request.name, name, sizeof(name), NULL);
++    size_t copied = 0;
++    error = copyinstr(request.name, name, sizeof(name), &copied);
 +    if (error) return error;
 +    char process[32];
 +    proc_name(proc_pid(p), process, sizeof(process));

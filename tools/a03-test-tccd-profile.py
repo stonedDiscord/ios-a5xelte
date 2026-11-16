@@ -23,7 +23,7 @@ static uint64_t request[3]={0x2000,0,0};
 static int input_error,string_error;static unsigned reads,strings,logs;
 static size_t read_size;static const char *profile="com.apple.tccd";
 static int copyin(user_addr_t addr,void *out,size_t n){assert(addr==0x1000);reads++;read_size=n;if(input_error)return input_error;memcpy(out,request,n);return 0;}
-static int copyinstr(user_addr_t addr,char *out,size_t n,void *len){assert(addr==0x2000&&n==64&&len==NULL);strings++;if(string_error)return string_error;snprintf(out,n,"%s",profile);return 0;}
+static int copyinstr(user_addr_t addr,char *out,size_t n,size_t *len){assert(addr==0x2000&&n==64&&len!=NULL);*len=0;strings++;if(string_error)return string_error;snprintf(out,n,"%s",profile);*len=strlen(out)+1;return 0;}
 static int proc_pid(struct proc *p){(void)p;return 42;}
 static void proc_name(int pid,char *out,size_t n){assert(pid==42);extern const char *procname;snprintf(out,n,"%s",procname);}
 const char *procname="tccd";

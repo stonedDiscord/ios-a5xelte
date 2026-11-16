@@ -1,3 +1,10 @@
+ACTIVE0072 user physical panic PCfffffe000746e938 resolves exact kernel
+copyinstr+18 str xzr,[x3];0136 passed NULL lencopied, concrete caller bug.
+Fixed to local copied output; corrected regression RED old/GREEN fixed,
+ASan/UBSan + op2 + full exact Clang compile PASS. Phone in Download,
+heimdall detect PASS. Need commit/push/fullCI then0073; no flash yet.
+Home screen unproven. Detailed evidence newest A03_PROGRESS entry.
+
 ACTIVE0072 20:05:47UTC passive retry51868 TERMINAL: no console within180s.
 No retry file/USB or Samsung device; no button reboot/screen report received.
 Prior USB reset exhausted descriptor retries. No capture/probe left running.

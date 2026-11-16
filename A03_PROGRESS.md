@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: user reports BOOT0072 kernel panic; copyinstr caller fixed
+
+Physical report: panic kernel data abort PC0xfffffe000746e938. Verified exact
+0072 kernel against manifest SHAa7085e03...2090; llvm-nm/llvm-objdump resolve
+copyinstr+0x18, instruction str xzr,[x3]. Matching arm64/copyio.c immediately
+writes *lencopied=0 unconditionally. New0136 helper incorrectly supplied NULL
+for lencopied, a concrete defect consistent with reported panic. Full panic
+LR/FAR/registers unavailable, so caller attribution is inferred from defect
+and address rather than a captured backtrace. No prior USB sample established
+this panic; user's physical evidence changes diagnosis from unexplained stall.
+
+Fixed helper to pass address of local size_t copied. Original host test had
+incorrectly asserted NULL output; replaced with non-NULL assertion plus actual
+length-output stores. Corrected regression fails old helper SIGABRT and passes
+fixed helper ASan/UBSan; prior scalar Sandbox test PASS. Full sweet_amfi.c
+exact CI-command arm64 Clang PASS. Updated patch reverse-apply check PASS.
+Phone now Samsung Download USB005/017, heimdall detect PASS. No new flash yet.
+Next full CI and corrected BOOT0073 with same0072 payload settings.
+
 ## 2026-11-16: 20:05 UTC passive retry wait expires without device return
 
 Existing capture51868/PID88668 was verified live while waiting, then exited1
