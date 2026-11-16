@@ -1,3 +1,11 @@
+ACTIVE0137 CI43951369485 exacta4d660cbf786f5a5d66e4036f94a124b04518d97
+running. Watch-deploy14214 /tmp/a03-0074/watch-deploy.py waits exact success,
+packages same0073 loader/ADT/args/root, waits prior reader finish, synced
+CDC Download then BOOT-only0074/capture660s. No0074 flash yet. Keep watcher.
+0073 tccd fixed/survives; SB now MobileActivation getActivationState wait;
+mobileactivation crash loop needs0137 bounded details. Screen report asked.
+Home screen unproven; no activation-state or Apple binary changes.
+
 ACTIVE0073 live tccd37 survives, ops22/1 accepted! SB25 moved past MC
 migration, now13threads/main MobileActivation getActivationState sync XPC.
 mobileactivation crash loop not covered detailed selector. Prepared0137

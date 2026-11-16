@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: MobileActivation diagnostic CI queued with gated BOOT0074
+
+Pusheda4d660cbf786f5a5d66e4036f94a124b04518d97; CI43951369485 observed
+in progress. Watch/deploy14214 /tmp/a03-0074/watch-deploy.py waits exact
+successful build, packages identical0073 configuration with new diagnostic
+kernel, waits existing reader ends, uses synced CDC Download and BOOT-only
+flash0074, then660s capture. No new flash yet. Asked physical screen state.
+Existing0073 USB/runtime remains live; no activation state/binary edits.
+
 ## 2026-11-16: BOOT0073 fixes tccd startup; current SpringBoard activation wait
 
 CI43946625323 exactc9a358b succeeded. Existing watcher verified kernel/image,
