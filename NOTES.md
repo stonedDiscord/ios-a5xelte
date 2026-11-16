@@ -1,3 +1,14 @@
+ACTIVE0075 runtime: analytics stat/open EACCES13 at osanalytics group
+15C54419-7736-4C62-B119-1C994A4F8444/Library[/CoreAnalytics] then strlenNULL;
+activation setxattr EACCES13 on Data/System/51E6AD4E-3CED-47F7-B6EC-
+51E7034B24DA. Full chunked nested errno/path confirmed. ScreenTime122
+Sandbox0x104 ENOTSUP fd3 ownerremotemanagementd; sample in rootless_log
+socket connect before assertion. SB25 currently MC checkIn wait,tccd37 survives.
+0140 CI43959202597 exact65cc580 building; package-only57048 for0076.
+0075 reader64839 and read-only scheduler19502 retained. No0076 reset/flash.
+Need actual filesystem uid/gid/mode flags from0140 before permission repair;
+no broad bypass. Home screen unproven. See newest A03_PROGRESS evidence.
+
 ACTIVE0075 CI43955738619 exact2f78691 SUCCESS. Verified same0074 config,
 BOOT-only flash/reboot21:17UTC. Image SHA890b3491...460a31/kernel26b09528...
 Boot0075 reader/deploy64839/PID169581 waitsUSB180 then captures660s.

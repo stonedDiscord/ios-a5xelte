@@ -1,5 +1,42 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0075 confirms analytics+activation EACCES, ScreenTime vault ENOTSUP
+
+USB reenumerated005/022, ordinary access/capture resumed21:18UTC. New cache
+slide16a60000, SB25 (not26; one initial manual sample26 was runningboardd,
+subsequent ps resolves25). Existing capture/deploy64839 remains single reader.
+
+Analyticsd91 exact same NULL strlen crash, now preceded by stat64(338) EACCES13
+for /private/var/containers/Shared/SystemGroup/15C54419-7736-4C62-B119-1C994A4F8444/
+Library/CoreAnalytics, then open(5) EACCES13 on its Library parent. Container
+root lookup therefore produced an actual path; directory access/setup fails.
+Do not label container lookup NULL as the proven root cause. Need actual uid/
+gid/mode/flags on parent and path; no permission bypass implemented.
+
+Mobileactivation129/136 setxattr236 EACCES13 exactly at
+/private/var/containers/Data/System/51E6AD4E-3CED-47F7-B6EC-51E7034B24DA,
+attr com.apple.metadata:com_apple_backup_excludeItem,22byte MobileBackup value.
+Chunked annotation works: Cocoa513 contains nested NSPOSIXErrorDomain13,
+full path, SourceLine248/main. First container itself is failing; not inferred
+from Cocoa number anymore. Need ownership/permissions rather than guessed fix.
+
+ScreenTimeAgent122 creates/opens /var/mobile/Library/Application Support/
+com.apple.remotemanagementd, mac_syscall Sandbox0x104 returns45 ENOTSUP,
+fd3, owner remotemanagementd confirmed. Sample122 shows standalone+21dec
+(call rootless_convert_to_datavault) ->rootless_log, blocked connecting os_log
+Unix socket(_unp_connect mutex), so final assertion still not emitted at sample.
+API-level failure is live-confirmed; assertion candidate supported, not yet
+captured as actual terminating annotation. Dmd same0x104 ENOTSUP ownerdmd.
+Tccd37 profile ops22/1 succeed. SB25 sample~21:21 main MCProfileConnection
+checkIn wait, later activation wait not yet reestablished in this boot.
+
+Started0140 CI43959202597 exact65cc5807244657e6ff1014894734a7106b2eee54
+for tested read-only filesystem stat probe, to inspect actual permission state.
+It is in progress; package-only57048 /tmp/a03-0076/watch-package.py will verify
+success and package same0075 config. No0076 deployment/reset scheduled yet.
+Read-only EP0 scheduler19502 retains60/180/300/540s probes for0075. No root/
+protected-partition changes. Actual home-screen goal still unverified.
+
 ## 2026-11-16: 21:17 UTC BOOT0075 diagnostic deployed after successful0139 CI
 
 CI43955738619 exact2f78691552a541b5c9ee56c06ee6a4c08e308096 SUCCESS.
