@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0070 live-probe build passed and BOOT-only deployed
+
+CI43918800523 SUCCESS exact520d2a7 on macos-26-intel. All4changed source
+files match locally compiled0135; checksum manifest/linked probes verified.
+Kernel SHA256
+5d9f9bf33fce018cabb55deff6139f98eb44cb60fd05d054fdf238a2720ccc3c.
+BOOT0070 SHA256
+846a19e9f630e950edcb3fa35f24dac32b0f38cd74aaaf4732df32cce38e0d77.
+Same0069 loader except image_size; ADT identical; sole argument addition
+is a03_probe=1. USERDATA root unchanged. Fresh Heimdall PIT successful;
+only lowercase boot uploaded100percent, upload successful/reboot confirmed.
+Capture71796 waits CDC,660s boot0070-usb-initial.log. Need actual EP0
+ping/threads/vm/io before monitor or GUI success claims. No recovery/GPT/
+EFS/NV/root rewrite and no home screen established.
+
 ## 2026-11-16: corrected0135 CI failed runner allocation before compilation
 
 CI43914475835 workflow reports failure, but job133464838955 is cancelled

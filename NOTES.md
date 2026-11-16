@@ -1,3 +1,10 @@
+ACTIVE0070 BOOT-only upload100percent/success/reboot. CI43918800523 SUCCESS
+exact520d2a7,4source/checksum/probe symbols verified. BOOT846a19e9...e0d77.
+Loader0069 identical except image_size, ADT identical, only add a03_probe=1.
+Capture71796660s waits CDC boot0070-usb-initial.log. Need EP0 actual ping/
+threads/vm/io then SpringBoard root cause. Protected partitions/root unchanged.
+No home screen yet.
+
 ACTIVE retry43918800523 exact520d2a7 acquired macos-26-intel runner;
 Set up job passed/checkout running. Full build pending. No phone writes.
 
