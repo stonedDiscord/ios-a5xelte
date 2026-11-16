@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: all0071 timed passes confirm LS wait; tccd cause decoded
+
+Built-in samples180/300/420/540s complete across0071 initial/continuation
+logs. SpringBoard main and LS synchronous-XPC worker full user stacks and
+CPU counters match exactly across all4passes. FrontBoard process-registration
+workers also block behind initialization; this does not establish an
+independent FrontBoard failure. No home menu observed. Live probe EP0 still
+fails access until requested ACL on USB005/010 is applied; ordinary CDC
+capture30397 remains live, so preserve current boot for lsd sampling.
+
+Read-only disassembly of matching standalone tccd proves0x100015684 calls
+sandbox_init("com.apple.tccd",1,&error); nonzero return branches to
+abort_with_reason namespace25. Matching libsandbox sandbox_compile_named
+0x1cf4454d4 calls mac_syscall("Sandbox",22,&name); error falls back to
+sandbox_compile_file, which rejects non-absolute profile names. A03 currently
+supports only op2, so unsupported named-profile query explains tccd's
+profile-not-found rather than proving a missing on-disk profile file.
+Matching cache libsystem_sandbox init then uses sandbox_apply for successful
+compilation. No profile-query/install implementation or userspace bypass
+made; must not claim tccd crash is proven cause of LS seeding wait.
+Private extracted binaries/disassembly stay under/tmp/a03-0070, outside git.
+Next required observation remains current lsd and dependencies via live ps/
+sample after narrow USB ACL. RAM is not presumed sufficient to fix services.
+
 ## 2026-11-16: BOOT0071 pass1 still waits on LaunchServices
 
 Second built-in sampler pass at~300s captured in continuation30397.

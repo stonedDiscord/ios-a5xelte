@@ -1,3 +1,9 @@
+ACTIVE0071 all4passes180/300/420/540s main+LS XPC CPU/stacks identical.
+Need EP0 ACL USB005/010 (pending user), ps/current lsd sample next.
+Capture30397 still live660s. No home menu. tccd disassembly confirms named
+Sandbox query22 unsupported -> compile-file fallback -> profile-not-found;
+not established cause of LS wait; no bypass/functional change made.
+
 ACTIVE0071 pass1(~300s) main+LS XPC CPU/full stacks EXACTLY unchanged
 since180s. More memory advances early init but LS reseeding still blocks.
 Capture30397 alive660s for remaining passes. EP0 ACL005/010 pending user;
