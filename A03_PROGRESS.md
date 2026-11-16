@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 22:20 UTC0145 CI43969089570; package-only watcher
+
+Exact2d4ffd7a44eab34178a13295b0ad3a337044e453 full Xcode CI43969089570
+in_progress, Deps22:20. Existing new package-only watcher48074 at
+/tmp/a03-0079/watch-package.py gates exact successful CI/SHA/artifact checksum,
+HID+creds markers, no lab-vault marker; prepares0079 with only+a03_hid=1
+on same0078 ADT/1GiB/root/loader/ramdisk/DT (598bytes<608). No deployment
+or reboot scheduled; preserve running physical clock checkpoint. Need full
+CI success before input-provider runtime trial. Input host tests pass,
+all4full C++ syntax checks with documented host-only Apple builtin stand-ins
+pass, exact full C helper compile pass; original Apple builtins require CI.
+
+0078 followup28890 readerPID214760 still captures at22:21; latest SB26
+UIApplication event loop, analytics91, activation467 retain recent ps PIDs;
+ScreenTime known vault failure remains. No home-screen or touch proof.
+
 ## 2026-11-16: prepared0145 explicit USB HID input for clock-screen checkpoint
 
 Confirmed current A03 profile contains no HID service/touch/button provider;

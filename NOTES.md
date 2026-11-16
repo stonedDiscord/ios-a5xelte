@@ -1,3 +1,12 @@
+ACTIVE0145 CI43969089570 exact2d4ffd7a44eab34178a13295b0ad3a337044e453
+building22:20UTC; package-only48074 /tmp/a03-0079/watch-package.py gates
+exact success/checksum/markers, adds only+a03_hid=1 (598bytes). No deployment
+or reset scheduled: preserve0078 physical iOS clock checkpoint. New input
+status/home/swipeup available only after0145 build+flash; not current phone.
+0143 staged with0145;0144vault NOT staged. Current followup28890/PID214760.
+SB26 eventloop, analytics91/activation467 recent ps alive. ScreenTime vault45.
+Need CI then runtime HID registration/client open/input and physical home proof.
+
 ACTIVE0145 USB HID input prepared+staged(defaultoff), no CI/flash yet.
 Portable donor queue/services only, no hardware touch. input status/home/
 swipeup exact bounded worker actions;720x1600.0143 creds staged too;0144 lab
