@@ -1,3 +1,12 @@
+ACTIVE0072 first trial USB/log ceased19:56:34UTC before tccd sandbox call.
+60s SB26 dyld page-in/emmc mutex; tccd37 dyld, both samples END. No0136
+op22/1 runtime proof/no GUI. EP0 serial timeout-7, not access; new udev
+permissions verified. USB interface reset20:00 failed descriptor/address,
+ENODEV. Await user physical screen + conditional button reboot request.
+Old capture/deploy ended, old scheduler83348 stopped. Passive retry51868
+wait180s/capture600s boot0072-usb-retry-passive.log; DO NOT open second tty.
+No new build/fix; built-in180s sample still enabled. Home screen unproven.
+
 ACTIVE0072 CI43940554508 exact1f0d037 SUCCESS, package verified; BOOT-only
 upload successful/reboot19:53UTC. Image SHA84c84ae3...616d0a. Exact0071
 1GiB loader/ADT/root/args except0136 kernel +a03_sandbox_profiles=1.

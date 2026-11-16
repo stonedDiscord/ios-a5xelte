@@ -1,5 +1,33 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: BOOT0072 first trial stops responding before profile test
+
+USB005/012 and ttyACM0 re-enumerated root:uucp0660+ with installed rule;
+EP0 ps/vm/io worked without manual ACL, confirming persistent permissions.
+Initial0072 capture shows exact opt-in bootarg and SpringBoard26/cache slide
+4d0a4000. At60s worker sample main is still dyld forEachDOFSection/prepare;
+kernel wait emmc_strategy mutex during executable page-in. tccd37 has one
+thread still in dyld preparation, not reached sandbox_init. No named-profile
+op22/op1 marker, no tccd sandbox crash and no home-menu proof yet.
+
+Last log write19:56:34UTC,446417bytes. Both60s samples ended normally and
+subsequent services/logs continued, then output ceased. At180/300s scheduler
+failed identification; direct libusb serial request returns-7(timeout), not
+ACL denial. Host USB remains active with no disconnect before recovery;
+this does NOT establish whether kernel, USB worker or phone power stalled.
+No A03 SAMPLE begin from built-in180s sampler reached captured output.
+Read-only probe code inspected; no demonstrated deadlock/root cause found.
+
+At20:00:27UTC attempted exact-serial USBDEVFS_RESET (USB interface only,
+no phone reset/storage writes). Descriptor reads repeatedly timed out-110,
+address failed-62; reset returned ENODEV and host attempts re-enumeration.
+Capture ended normally on USB disconnect. Requested physical screen state
+and conditional Side+VolDown restart if stalled, leave any home/setup screen
+running. Awaiting user. Stopped obsolete probe scheduler83348 to avoid new
+commands on restart; passive retry capture session51868 waits180s then600s,
+boot0072-usb-retry-passive.log. Built-in sampler remains in flashed image.
+Need retry evidence before claiming0136 succeeds/fails or making new fix.
+
 ## 2026-11-16: 19:53 UTC BOOT0072 full CI and BOOT upload pass
 
 CI43940554508 exact1f0d037501c381d61debcb0a84a19d1bb4f8fcaa completed
