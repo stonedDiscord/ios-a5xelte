@@ -1,3 +1,11 @@
+ACTIVE0072 CI43940554508 exact1f0d037 SUCCESS, package verified; BOOT-only
+upload successful/reboot19:53UTC. Image SHA84c84ae3...616d0a. Exact0071
+1GiB loader/ADT/root/args except0136 kernel +a03_sandbox_profiles=1.
+Deploy46231/PID82365 now waits USB and captures660s boot0072-usb-initial.log;
+probe83348/1741 retained waits real worker, samples60/180/300/540s. Do not
+open second tty reader. Need verify new udev permissions, tccd ops22/1,
+tccd survival and SB/profiled migration progress; home screen unproven.
+
 ACTIVE0071 19:44UTC fresh probes19..23 confirm SB25 main exact same CPU/
 stack since19:30 (MC migration wait ->profiled109 ->TCC XPC). SB8threads,
 no tccd in fresh ps. Host storage ready1/poisoned0. Private status1944 log.

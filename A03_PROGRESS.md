@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-16: 19:53 UTC BOOT0072 full CI and BOOT upload pass
+
+CI43940554508 exact1f0d037501c381d61debcb0a84a19d1bb4f8fcaa completed
+successfully. Existing package watcher verified artifact SHA256SUMS,
+plain-arm64 header, linked0136 marker, identical0071 ADT/1GiB memory,
+loader except image_size and stock ramdisk/DT. New boot SHA256
+84c84ae35cafa8ba1467947ccf01d7c6bf8d7c0fad906fd4f323e3c8f6616d0a;
+kernel SHA256a7085e03d3acf022fa7ae524af1a3e2fd6e68fc0d86ddcab1d7889848a362090.
+Only new command-line argument a03_sandbox_profiles=1. Gated deployment
+used synced CDC Download then heimdall flash --boot only; log confirms
+boot upload successful and Rebooting device. No protected-partition writes.
+Session46231 now captures0072 for660s after USB enumeration (wait180s).
+Probe scheduler83348 awaits actual worker then60/180/300/540s snapshots.
+Runtime tccd survival, migration progress and physical home menu unproven.
+
 ## 2026-11-16: 19:44 UTC fresh live status confirms same migration/TCC wait
 
 Read-only0071 EP0 probes19..23 captured privately in
