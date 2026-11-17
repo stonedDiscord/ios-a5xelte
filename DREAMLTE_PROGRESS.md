@@ -362,3 +362,10 @@ compile results, hardware observations and restore results below.
   for both descriptors, cursor/buffer offsets and preserved neighbor slots.
   Loader rebuild passes. Full CI and device test remain required.
 - Phone remains in Android with verified stock BOOT; no new flash performed.
+- Fix commit660745e pushed to build fork. Full S8 CI44085718513 is queued,
+  job134047808756 (macos-15-intel), exact head
+  660745e28657cd55e51d69a37b8a22dd0e1e1951. Live watch session87525.
+  https://github.com/stonedDiscord/ios-a5xelte/actions/runs/44085718513
+  Superseded dispatch44085601704 used0210; do not use its kernel for0211.
+- Rechecked Android USB: UDC10c00000.dwc3 reports high-speed/configured.
+  This is Android's transport; bare XNU USB enumeration remains unverified.

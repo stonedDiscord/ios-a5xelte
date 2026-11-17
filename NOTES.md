@@ -13,8 +13,9 @@ calls phystokv on low RAM outside XNU's managed upper bank, invoking panic.
 New0211 adds explicit WB/XN kernel aliases for the two snapshot blocks and
 routes all DREAMLTE putc output (including panic) to RAM without framebuffer
 writes. Both modified ARM64 objects, patch dry-run, actual mapping-helper
-host check and132-patch staging pass. Full CI then BOOT test/log recovery are
-next. No working XNU USB gadget/stream has been verified. Protected
+host check and132-patch staging pass. Fix660745e is pushed; full CI
+44085718513/job134047808756 is queued (macos-15-intel), live watch87525.
+Poll this exact run; package/BOOT test/log recovery follow only on success. No working XNU USB gadget/stream has been verified. Protected
 partitions and USERDATA remain untouched.
 
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
