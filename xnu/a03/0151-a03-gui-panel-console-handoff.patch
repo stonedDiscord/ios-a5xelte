@@ -1,0 +1,40 @@
+--- a/pexpert/arm/pe_serial.c
++++ b/pexpert/arm/pe_serial.c
+@@ -722,6 +722,10 @@
+ #define A03_LOG_SIZE (256u * 1024u)
+ static unsigned char a03_log[A03_LOG_SIZE];
+ static unsigned a03_log_head, a03_log_tail;
++/* Keep the USB spool alive when GUI owns the shared panel framebuffer. */
++static volatile unsigned a03_fbcon_quiet;
++void a03_console_panel_quiet(void);
++void a03_console_panel_quiet(void) { a03_fbcon_quiet=1; }
+ unsigned a03_console_read(unsigned char *, unsigned);
+ unsigned
+ a03_console_read(unsigned char *dst, unsigned capacity)
+@@ -792,6 +796,7 @@
+ {
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+     a03_console_append(c);
++    if(a03_fbcon_quiet)return;
+ #endif
+ 	if (c == '\r') {
+ 		fbcon_col = 0;
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -221,6 +221,7 @@
+ 	return v;
+ }
+ 
++extern "C" void a03_console_panel_quiet(void);
+ static uint32_t sweet_fb_swaps_logged;
+ 
+ /* Copy each enabled layer's surface into the panel memory (no scaling). */
+@@ -293,6 +294,8 @@
+ 			src = 0;
+ 		}
+ 		if (src != 0 && bpe == 4 && s->pixelFormat == SWEET_FB_FORMAT_BGRA) {
++			/* A03: validated GUI pixels take ownership; logs remain on USB. */
++			a03_console_panel_quiet();
+ 			for (int32_t y = 0; y < h; y++) {
+ 				memcpy((void *)(fPixels + (uint64_t)(dy + y) * fRowBytes + (uint64_t)dx * 4),
+ 				    (const void *)(src + s->offset + (uint64_t)(sy + y) * s->bytesPerRow + (uint64_t)sx * 4),

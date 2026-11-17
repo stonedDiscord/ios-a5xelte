@@ -1,3 +1,9 @@
+ACTIVE20:03UTC0082 HOME ICONS visible afterHome2483, but user corrects:
+boot logs overwrite SpringBoard between refreshes.0151 prepared fbcon draw
+gate after USB append + validatedGUI ownership. Gate tests/C compile/apply
+PASS; framebufferCPP blocked known Apple builtins/fullXcode pending. NOT
+staged.0149+0150CI44162912240 still builds/package68041; no contact proof.
+
 ACTIVE20:00UTC0082 PHYSICAL CLOCK confirmed after touch firmware load0/
 A55A. Sample2482 main event loop proven. One USB Home sent, response pending.
 Physical contacts still untested:0149+0150CI44162912240 builds, package68041.

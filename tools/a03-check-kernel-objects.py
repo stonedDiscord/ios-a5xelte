@@ -54,7 +54,7 @@ def command_for(log, source, tree, compiler, output):
     # BSD and Mach compilation use different visibility and include paths.
     # Never add MACH_KERNEL_PRIVATE or suppress language diagnostics here.
     component=source.split('/',1)[0]
-    if component not in ('osfmk','bsd','iokit','libkern'):
+    if component not in ('osfmk','bsd','iokit','libkern','pexpert'):
         raise ValueError('unsupported source component '+component)
     cwd=tree/'build/xnu.obj/DEVELOPMENT_ARM64_SWEET'/component/'DEVELOPMENT'
     return result,cwd

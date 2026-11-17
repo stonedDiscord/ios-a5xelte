@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: user corrects display report; console overwrite identified
+
+User clarifies SpringBoard picture appears every few seconds, then boot logs
+overwrite it; subsequently app icons are visible again after explicit Home.
+This is intermittent panel ownership, not a steady clean lock/home display.
+0082 touch RAM firmware remains ready/config valid; physical touch untested.
+
+Source identifies framebuffer serial fallback fbcon_transmit_data both spools
+USB bytes and draws glyphs directly into shared panel RAM. GUI swaps overwrite
+those glyphs temporarily. Existing sweetfb_noconsole path switches to the same
+serial fallback and is not a proven fix.0151 prepares a separate drawing gate:
+append USB byte first, then return when quiet; call quiet only before copying
+validated GUI layer pixels. Early boot logs remain visible, subsequent USB
+logs remain captured. No display reset or syscall behavior change.
+
+Actual gate ASan/UBSan spool-only/idempotence tests and exact pe_serial C
+compile PASS. Patch reverse/plain equality PASS. Full framebuffer C++ local
+compile blocked by known unsupported Apple typed-allocation builtins in
+headers; no host substitution used. Full Xcode CI required.0151 NOT staged;
+ongoing44162912240 includes0149+0150 only, no console-handoff fix yet.
+
 ## 2026-11-17: BOOT0082 event loop and physical clock confirmed
 
 Sample2482/cache36D60000 resolves main thread CFRunLoopRunSpecific,
