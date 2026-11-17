@@ -305,3 +305,39 @@ compile results, hardware observations and restore results below.
   download mode, restore and hash-check stock BOOT, boot Android, and collect
   `/proc/last_kmsg` before deciding the next kernel change. Protected
   partitions and USERDATA remain untouched.
+
+## 2026-11-17: DWC3 logging probe 0210
+
+- Restored stock BOOT after 0209, verified its SHA256 as
+  `71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`,
+  booted rooted Android and captured its 47,578-byte `/proc/last_kmsg` over
+  ADB USB. The XNU trace still ends at `physmap ready; switching TTBR0`.
+- Android reports Exynos DWC3 at `0x10c00000`, Samsung PHY at `0x10e00000`,
+  and high-speed UDC mode. The donor A03 console uses a different MUSB PHY;
+  its PHY init/reset sequence is not portable. Existing SWEET DWC3 EP0 code
+  is a reference for a future S8 transport. A full DWC3 gadget/stream is not
+  implemented by this probe.
+- Added a guarded, read-only DWC3 register snapshot to the DREAMLTE loader
+  trace (`GSNPSID`, `GCTL`, `DCTL`, `DSTS`, `DCFG`) and an ADB USB helper for
+  retrieving `/proc/last_kmsg` after Android returns. The helper was tested
+  against the current phone. No DWC3/PHY writes were added.
+- Loader build passed. Candidate `shim/out/dreamlte-xnu-0210.img` is
+  18,427,920 bytes, SHA256
+  `f0cf2d324e00813bed697b9d4bf857fcc290c2de054a5f93eeec2f9166fc1cd1`.
+  It contains the existing 0209 kernel payload; stock ramdisk, empty second
+  stage, DTBH and Exynos8895 entry match byte-for-byte. It fits the 41,943,040
+  byte BOOT partition.
+- After verifying the stock BOOT hash, flashed candidate 0210 to BOOT only
+  with Heimdall 2.2.2; upload succeeded. The phone stopped enumerating after
+  reboot and remained absent from ADB and Heimdall for 45 seconds. Heimdall
+  then detected download mode; restored stock BOOT and confirmed
+  `/dev/block/sda7` SHA256
+  `71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
+  Android completed boot, and the 47,726-byte trace was captured with the
+  ADB helper to ignored `last-kmsg-0210.txt`.
+- 0210 trace reports `GSNPSID=0x5533280a`, `GCTL=0x30c12004`, `DCTL=0`,
+  `DSTS=0x00520004`, and `DCFG=0x00080804`, then the same XNU milestones as
+  0209, ending at `physmap ready; switching TTBR0`. These raw loader-time
+  DWC3 reads confirm access to the controller block, not USB enumeration or
+  stream operation. RECOVERY, bootloaders, EFS/CPEFS and USERDATA remain
+  untouched.

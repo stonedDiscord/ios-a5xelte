@@ -2,6 +2,28 @@
 
 ## Active S8 handoff — 2026-11-17
 
+### >>> LATEST UPDATE 2026-11-17: 0210 trace recovered; stock BOOT restored <<<
+
+The 0209 log was recovered over root ADB USB (47,578 bytes). XNU reaches
+`physmap ready; switching TTBR0`; no following marker is present. Stock BOOT
+was verified before the next trial. Candidate 0210 adds only a guarded,
+read-only Exynos DWC3 register snapshot to the loader trace plus a host ADB
+capture helper. The loader builds; candidate SHA256 is
+`f0cf2d324e00813bed697b9d4bf857fcc290c2de054a5f93eeec2f9166fc1cd1`.
+Ramdisk, empty second stage, DTBH and Exynos8895 entry are byte-identical to
+stock. Heimdall 2.2.2 successfully flashed BOOT only; the phone stopped
+enumerating after reboot. Heimdall later detected Download Mode, stock BOOT
+was restored, and `/dev/block/sda7` verified at SHA256
+`71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
+Android booted and `last-kmsg-0210.txt` was captured over ADB (47,726 bytes).
+It reports DWC3 `GSNPSID=0x5533280a`, `GCTL=0x30c12004`, `DCTL=0`,
+`DSTS=0x00520004`, `DCFG=0x00080804`, then reaches the same TTBR0 boundary
+as 0209. This confirms read access to the Exynos DWC3 block, not a working
+USB gadget. The helper is ADB recovery after Android returns. A03's live
+console uses different MUSB/PHY hardware; the S8 uses Exynos DWC3 at
+`0x10c00000` and PHY at `0x10e00000`. Only BOOT was written; protected
+partitions and USERDATA remain untouched.
+
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;
 profile stages128 patches, still HEROLTE config/4K/A53/GICv2. Read

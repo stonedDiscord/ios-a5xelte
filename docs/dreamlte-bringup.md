@@ -28,8 +28,15 @@ Package only after a successful S8-profile kernel build:
 
 A loader-only packaging smoke test exists in shim/out but has no XNU
 payload; never flash it. The loader currently halts on failure and logs in
-RAM. Before a real XNU trial, establish how to recover early RAM markers or
-add a verified serial/display path. No disk log writes are authorized.
+RAM. The loader now records a read-only DWC3 core snapshot alongside the
+existing RAM trace. After Android returns, capture that trace over the same
+USB cable with:
+
+    tools/dreamlte-capture-last-kmsg.sh backup/galaxy-s8-2026-11-13/last-kmsg-latest.txt
+
+This recovers logs after a trial; it is not a live USB gadget console. A live
+stream still requires an Exynos PHY bring-up and DWC3 endpoint implementation.
+No disk log writes are performed by the phone.
 
 For the first kernel, leave all roots and MMIO probes disabled. A wait for
 root is expected; no USERDATA writes or iOS GUI is part of that checkpoint.

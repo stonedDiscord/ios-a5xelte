@@ -21,6 +21,12 @@
 #define BOOT_LINE_LENGTH 608
 #define FAIL_DELAY_S 30U
 #define SNAPSHOT_READY 0x44524d4cU
+#define DWC3_BASE 0x10c00000UL
+#define DWC3_GSNPSID 0xc120UL
+#define DWC3_GCTL 0xc110UL
+#define DWC3_DCTL 0xc704UL
+#define DWC3_DSTS 0xc70cUL
+#define DWC3_DCFG 0xc700UL
 
 struct payload_seg {
     uint64_t vmaddr, vmsize, file_off, file_size;
@@ -118,6 +124,35 @@ static void snapshot_begin(void)
     snapshot_write("DREAMLTE loader entered\n");
 }
 
+static void snapshot_u32(const char *label, uint32_t value)
+{
+    static const char digits[] = "0123456789abcdef";
+    snapshot_write(label);
+    snapshot_write("=0x");
+    for (int shift = 28; shift >= 0; shift -= 4) {
+        char digit[2] = { digits[(value >> shift) & 0xf], 0 };
+        snapshot_write(digit);
+    }
+    snapshot_write("\n");
+}
+
+/* Read-only probe: never reset the controller or alter the PHY/link state. */
+static void snapshot_dwc3(void)
+{
+    volatile uint32_t *regs = (volatile uint32_t *)(uintptr_t)DWC3_BASE;
+    uint32_t id = regs[DWC3_GSNPSID / sizeof(uint32_t)];
+
+    snapshot_u32("DREAMLTE DWC3 GSNPSID", id);
+    if ((id & 0xffff0000U) != 0x55330000U) {
+        snapshot_write("DREAMLTE DWC3 core not identified; probe stopped\n");
+        return;
+    }
+    snapshot_u32("DREAMLTE DWC3 GCTL", regs[DWC3_GCTL / sizeof(uint32_t)]);
+    snapshot_u32("DREAMLTE DWC3 DCTL", regs[DWC3_DCTL / sizeof(uint32_t)]);
+    snapshot_u32("DREAMLTE DWC3 DSTS", regs[DWC3_DSTS / sizeof(uint32_t)]);
+    snapshot_u32("DREAMLTE DWC3 DCFG", regs[DWC3_DCFG / sizeof(uint32_t)]);
+}
+
 /* Record failure in the RAM log, delay briefly, then halt in assembly. */
 static uintptr_t fail(volatile uint64_t *log, int64_t step, const char *why)
 {
@@ -153,6 +188,7 @@ uintptr_t hero_prepare_xnu(uintptr_t fdt, volatile uint64_t *log, uint64_t el, u
         return fail(log, -11, "MMU ALREADY ON");
     snapshot_begin();
     log[76] = SNAPSHOT_READY;
+    snapshot_dwc3();
     /* Appended payload first: its length is bounded by the Image header. */
     extern char _start[], _image_end[];
     uint64_t image_size = *(volatile uint64_t *)(uintptr_t)(_start + 16);
