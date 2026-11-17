@@ -1,3 +1,9 @@
+ACTIVE20:49UTC0084 FIRST PHYSICAL COORD: aligned heldcenter -> slot0
+332,805,300samples/result0/finalcleanupup. Physical lift not proven; nextidle
+again tenzero slots. NO HID poll.0152CI44169153500 SUCCESS/exactddf4129,
+0085 packaged same0084/BOOT2fb6c42e...41a1c. CDC Download3389 requested.
+Next detect->BOOTflash->singlecapture->UTC/fwload->rawidle/finger->HID.
+
 ACTIVE20:27UTC0084 user PHYSICALLY CONFIRMS console overwrite FIXED:
 iOS picture stays visible; USB logging remains live. Finger test done but
 no convincing coordinates (capture overlap unmeasured); no HID poll sent.

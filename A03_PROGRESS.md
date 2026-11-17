@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: FIRST aligned physical finger coordinate confirmed
+
+On0084 user explicitly holds one finger near center and reports ready.
+Immediately triggered log-only contacts2483 at20:47UTC returns300samples,
+slot0 at332,805; no other contacts; final bounded release, result0/exit/restored.
+This is the first aligned physical contact-coordinate evidence. Session-end
+up is synthetic cleanup, not yet a measured physical lift transition.
+After asking release, contacts2484 again yields ten(0,0) slots; idle/empty
+report handling remains wrong in0149. No HID poll sent on0084.
+
+0152 fullCI44169153500 SUCCESS exactddf412948a9d8c4345c6c66abf4d62268c6f8ba2.
+Kernel8b82e60575b1f61350a9ba1ac5a39aa0a487127054e6ca25f7589d3896d87f47.
+BOOT2fb6c42ef823c0e6a0bd0923b7945f33a2b566e01d1c148060c682a0c1041a1c.
+Package same0084 config/checksums/rawpacket marker verified. SyncedDownload
+requested20:48UTC for BOOT-only0085 trial. Next restage/load and rawreport
+idle/finger comparison before HID.0084 stableGUI/UTC+physicalcoord kept.
+
 ## 2026-11-17: BOOT0084 console ownership physically FIXED
 
 User confirms iOS picture stays visible and boot logs no longer overwrite
