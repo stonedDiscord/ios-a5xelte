@@ -166,3 +166,19 @@ any future load:80KiB total, command0, bounded source/PRAM/DRAM targets,
 nonoverlapping targets, all section CRCs. It has no device access. Run
 its C/C++ regression with tools/a03-test-jd9365t-firmware.py and optionally
 pass a private candidate file; successful parsing does not prove compatibility.
+
+## Explicit temporary RAM trial (0148)
+
+BOOT0081's section read returned ready2317 rather than A55A, after a good
+ROM9383 read.0148 adds kernel-RAM upload staging and a separate explicit
+RAM-only loader, following stock HostWritePram. Firmware stays private:
+
+    python3 tools/a03-usb-touch-firmware.py PRIVATE.bin --log LIVE_CONSOLE.log
+
+The sender waits for acknowledgement+workerEND on every chunk and validates
+fwstatus. It never sends load. Only after a verified0148 kernel is booted,
+issue touch load explicitly; the kernel revalidates the entire image and ROM,
+checks hardware CRC per RAM section and starts MCU only after every section
+passes. No external-flash program/erase, GPIO/pinmux or phone filesystem
+write is implemented. A valid candidate still needs correct panel identity;
+revision8 stock extraction is not a match to the installed revision5 image.

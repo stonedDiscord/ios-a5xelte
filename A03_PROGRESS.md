@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: explicit RAM-only loader0148 prepared
+
+0081 ERAM not-ready motivates stock HostWritePram implementation.0148 stages
+private firmware in bounded80KiB kernel RAM via sequential32byte EP0 hex
+chunks; fwstatus validates all moves/CRCs. Separate touch load explicitly
+revalidates complete image+ROM9383, disables RTC/scan, clears ready/stops MCU,
+writes whitelisted PRAM/DRAM, runs RAM-only DMA command3 and checks each
+hardware CRC (little-endian), then resets/starts MCU only after all pass.
+No external-flash erase/program command or generic peripheral write allowed.
+Failure after stop attempts to keep MCU stopped; always attempts exit and
+SPI control/clock restoration. Not a display reset/pinmux operation.
+
+Actual loader C/C++ ASan/UBSan complete-image/ROM gates, sequence, HW CRC,
+RAM failure/no-start and50ms busy bound PASS. Actual upload-parser ASan/UBSan
+size/offset/hex/atomic-rejection tests PASS. Exact full kernel C compile PASS;
+reverse/plain patch application equality PASS. Host upload sender validates
+private file and waits worker ack/END per chunk; it never sends load itself.
+No firmware embedded/tracked or uploaded yet; rev8 candidate panel/rev5 match
+still unverified. Full Xcode CI and explicit temporary RAM trial pending.
+
 ## 2026-11-17: BOOT0081 ROM good; ERAM not firmware-ready
 
 Explicit touch sections1 on0081 returns ROM9383/result0, then160byte ERAM

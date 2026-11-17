@@ -1,3 +1,10 @@
+ACTIVE19:33UTC0148 explicit RAM-only loader prepared+staged, compile/tests/
+apply equality PASS. No CI yet. EP0 fwbegin/fwdata/fwstatus stages80KiB max;
+separate load requires all moves/CRC+ROM then stock RAM sequence+HW CRC,
+onlyDMA3/no externalflash. Source helpers and upload sender tracked, NO bin.
+0081 ROM9383+ERAM2317(notready); firmware not uploaded. Single84861 until
+~19:35UTC. Next full CI/package0082 then explicit staged RAM trial.
+
 ACTIVE19:28UTC0081 sections1: ROM9383 PASS, ERAM ready2317!=A55A,
 config refused, exit0/restored gate0A02DE00 clock0/END. No firmware loaded.
 Need source-guided bounded RAM-only firmware load+section/report path.

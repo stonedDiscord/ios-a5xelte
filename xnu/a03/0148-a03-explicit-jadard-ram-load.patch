@@ -1,0 +1,268 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -375,6 +375,7 @@
+  */
+ #include "a03_jd9365t_spi.h"
+ #include "a03_jd9365t_sections.h"
++#include "a03_jd9365t_loader.h"
+ static vm_offset_t a03_touch_spi, a03_touch_apb, a03_touch_clk;
+ static uint32_t a03_touch_r32(void *p,unsigned o) {
+  return *(volatile uint32_t *)((vm_offset_t)p+o);
+@@ -431,10 +432,60 @@
+  int exit_error=a03_jd_write(b,leave,sizeof(leave));
+  printf("A03 TOUCH sections exit=%d\n",exit_error);
+ }
++/* Host transfers a private candidate into kernel RAM, never the root image.
++ * Sequential bounded hex chunks; validate entire image before SPI writes.
++ */
++static uint8_t a03_touch_firmware[80*1024];
++static unsigned a03_touch_fw_size,a03_touch_fw_used;
++static int a03_touch_hex(char c) {
++ if(c>='0'&&c<='9')return c-'0';
++ if(c>='a'&&c<='f')return c-'a'+10;
++ return -1;
++}
++static int a03_touch_upload(const char *s) {
++ if(!strncmp(s,"fwbegin ",8)) {
++  unsigned n=0;const char *p=s+8;
++  if(!*p){printf("A03 TOUCH upload bad size\n");return 1;}
++  for(;*p;p++){if(*p<'0'||*p>'9'||n>8192){printf("A03 TOUCH upload bad size\n");return 1;}n=n*10+(unsigned)(*p-'0');}
++  if(n<256||n>sizeof(a03_touch_firmware)){printf("A03 TOUCH upload bad size\n");return 1;}
++  a03_touch_fw_size=n;a03_touch_fw_used=0;
++  printf("A03 TOUCH upload begin %u\n",n);return 1;
++ }
++ if(!strcmp(s,"fwstatus")) {
++  struct a03_jd_firmware f;
++  int valid=a03_touch_fw_size&&a03_touch_fw_used==a03_touch_fw_size?
++      a03_jd_firmware_validate(a03_touch_firmware,a03_touch_fw_size,&f):-1;
++  printf("A03 TOUCH upload %u/%u valid=%d\n",a03_touch_fw_used,a03_touch_fw_size,valid);return 1;
++ }
++ if(!strncmp(s,"fwdata ",7)) {
++  const char *p=s+7;unsigned offset=0,digits=0;
++  while(*p>='0'&&*p<='9'){if(offset>8192){printf("A03 TOUCH upload rejected\n");return 1;}offset=offset*10+(unsigned)(*p++-'0');digits++;}
++  if(!digits||*p++!=' '){printf("A03 TOUCH upload rejected\n");return 1;}
++  size_t n=strlen(p);uint8_t bytes[32];
++  if(!n||(n&1)||n>64||!a03_touch_fw_size||offset!=a03_touch_fw_used||
++      n/2>a03_touch_fw_size-a03_touch_fw_used){printf("A03 TOUCH upload rejected\n");return 1;}
++  for(size_t i=0;i<n/2;i++) {
++   int high=a03_touch_hex(p[i*2]),low=a03_touch_hex(p[i*2+1]);
++   if(high<0||low<0){printf("A03 TOUCH upload rejected\n");return 1;}
++   bytes[i]=(uint8_t)((high<<4)|low);
++  }
++  memcpy(a03_touch_firmware+a03_touch_fw_used,bytes,n/2);a03_touch_fw_used+=(unsigned)n/2;
++  printf("A03 TOUCH upload next %u\n",a03_touch_fw_used);return 1;
++ }
++ return 0;
++}
+ void a03_touch_probe(const char *command);
+ void a03_touch_probe(const char *command) {
+- if(strcmp(command,"status")&&strcmp(command,"rom")&&strcmp(command,"sections")) {
+-  printf("A03 TOUCH requires status|rom|sections; no reset/firmware operations\n");return;
++ if(a03_touch_upload(command))return;
++ if(strcmp(command,"status")&&strcmp(command,"rom")&&strcmp(command,"sections")&&strcmp(command,"load")) {
++  printf("A03 TOUCH requires status|rom|sections|load|fwbegin|fwdata|fwstatus; explicit RAM-only operations\n");return;
++ }
++ if(!strcmp(command,"load")) {
++  struct a03_jd_firmware f;
++  if(!a03_touch_fw_size||a03_touch_fw_used!=a03_touch_fw_size||
++      a03_jd_firmware_validate(a03_touch_firmware,a03_touch_fw_size,&f)) {
++   printf("A03 TOUCH load refused: upload incomplete/invalid\n");return;
++  }
+  }
+  if(!a03_touch_apb)a03_touch_apb=ml_io_map(0x20000000,0x3000);
+  if(!a03_touch_clk)a03_touch_clk=ml_io_map(0x20010000,0x1000);
+@@ -473,6 +524,12 @@
+  uint16_t id=0;int e=a03_jd_rom_id(&b,&id);
+  printf("A03 TOUCH ROM result=%d id=%04x expected=9383 raw=%08x sts2=%08x\n",
+      e,id,b.read32(b.context,0x28),b.read32(b.context,0x34));
++ if(!e&&!strcmp(command,"load")) {
++  printf("A03 TOUCH RAM load begin size=%u; no external flash\n",a03_touch_fw_size);
++  e=a03_jd_load_ram(&b,a03_touch_firmware,a03_touch_fw_size);
++  printf("A03 TOUCH RAM load result=%d\n",e);
++  if(!e)a03_touch_sections(&b);
++ }
+  if(!e&&!strcmp(command,"sections"))a03_touch_sections(&b);
+  a03_jd_cs(&b,0);
+  for(unsigned i=0;i<sizeof(saved)/sizeof(saved[0]);i++)b.write32(b.context,regs[i],saved[i]);
+--- /dev/null
++++ b/bsd/dev/a03_jd9365t_memory.h
+@@ -0,0 +1,45 @@
++/* JD9365T backdoor RAM transport. Caller owns an entered session and SPI bus.
++ * RAM writes accept only PRAM[0,10000) or DRAM[20000000,20010000).
++ * No peripheral registers, external flash commands or MCU controls here.
++ */
++#ifndef A03_JD9365T_MEMORY_H
++#define A03_JD9365T_MEMORY_H
++#include "a03_jd9365t_spi.h"
++static inline int a03_jd_ram_range(uint32_t address,size_t n,int write)
++{
++ uint32_t end;
++ if(!n||n>0x10000)return 0;
++ if(address<0x10000u)end=0x10000u;
++ else if(address>=0x20000000u&&address<0x20010000u)end=0x20010000u;
++ else if(!write&&address>=0x20011000u&&address<0x20012000u)end=0x20012000u;
++ else return 0;
++ return n<=end-address;
++}
++static inline int a03_jd_ram_read(struct a03_jd_bus *b,uint32_t address,
++    uint8_t *out,size_t n)
++{
++ if(!b||!out||!a03_jd_ram_range(address,n,0))return -1;
++ while(n) {
++  uint8_t c[]={0xf3,(uint8_t)(address>>24),(uint8_t)(address>>16),
++      (uint8_t)(address>>8),(uint8_t)address,1};
++  size_t chunk=n>240?240:n;
++  if(a03_jd_read(b,c,sizeof(c),out,chunk))return -1;
++  address+=(uint32_t)chunk;out+=chunk;n-=chunk;
++ }
++ return 0;
++}
++static inline int a03_jd_ram_write(struct a03_jd_bus *b,uint32_t address,
++    const uint8_t *data,size_t n)
++{
++ if(!b||!data||!a03_jd_ram_range(address,n,1))return -1;
++ while(n) {
++  uint8_t c[246]={0xf2,(uint8_t)(address>>24),(uint8_t)(address>>16),
++      (uint8_t)(address>>8),(uint8_t)address,1};
++  size_t chunk=n>240?240:n;
++  for(size_t i=0;i<chunk;i++)c[6+i]=data[i];
++  if(a03_jd_write(b,c,chunk+6))return -1;
++  address+=(uint32_t)chunk;data+=chunk;n-=chunk;
++ }
++ return 0;
++}
++#endif
+--- /dev/null
++++ b/bsd/dev/a03_jd9365t_firmware.h
+@@ -0,0 +1,51 @@
++/* Validate a complete private JD9365T RAM firmware before any device write.
++ * Format/CRC: Samsung GetMoveInfoNumber/GetHeaderInfo/GetDataCRC16.
++ * No bus access. This validates structure, not board/panel compatibility.
++ */
++#ifndef A03_JD9365T_FIRMWARE_H
++#define A03_JD9365T_FIRMWARE_H
++#include <stddef.h>
++#include <stdint.h>
++#define A03_JD_MOVES_MAX 20u
++struct a03_jd_move {uint32_t offset,address;uint32_t length;uint16_t crc;};
++struct a03_jd_firmware {unsigned count;struct a03_jd_move moves[A03_JD_MOVES_MAX];};
++static inline uint16_t a03_jd_crc16(const uint8_t *p,size_t n)
++{
++ uint16_t crc=0xffff;
++ for(size_t i=0;i<n;i++) {
++  crc^=(uint16_t)((unsigned)p[i]<<8);
++  for(unsigned bit=0;bit<8;bit++)crc=(uint16_t)(((unsigned)crc<<1)^((crc&0x8000)?0x8005u:0));
++ }
++ return crc;
++}
++static inline int a03_jd_firmware_validate(const uint8_t *p,size_t size,
++    struct a03_jd_firmware *out)
++{
++ struct a03_jd_firmware next={0};
++ if(!p||!out||size<5||size>80u*1024u||p[3]<14||p[3]==255)return -1;
++ next.count=(p[3]-2u)/12u;
++ size_t end=5+12*next.count;
++ if(!next.count||next.count>A03_JD_MOVES_MAX||end>size||end>256)return -1;
++ for(unsigned i=0;i<next.count;i++) {
++  const uint8_t *e=p+5+12*i;struct a03_jd_move *m=&next.moves[i];
++  /* Current stock RAM images use move command0. Unknown commands refused. */
++  if(e[0])return -1;
++  m->offset=((uint32_t)e[1]<<16)|((uint32_t)e[2]<<8)|e[3];
++  m->length=(((uint32_t)e[4]<<8)|e[5])+1;
++  m->address=((uint32_t)e[6]<<24)|((uint32_t)e[7]<<16)|((uint32_t)e[8]<<8)|e[9];
++  m->crc=(uint16_t)(((unsigned)e[10]<<8)|e[11]);
++  if(m->offset<end||m->offset>size||m->length>size-m->offset)return -1;
++  uint32_t limit;
++  if(m->address<0x10000u)limit=0x10000u;
++  else if(m->address>=0x20000000u&&m->address<0x20010000u)limit=0x20010000u;
++  else return -1;
++  if(m->length>limit-m->address)return -1;
++  for(unsigned j=0;j<i;j++) {
++   const struct a03_jd_move *a=&next.moves[j];
++   if(m->address<a->address+a->length && a->address<m->address+m->length)return -1;
++  }
++  if(a03_jd_crc16(p+m->offset,m->length)!=m->crc)return -1;
++ }
++ *out=next;return 0;
++}
++#endif
+--- /dev/null
++++ b/bsd/dev/a03_jd9365t_loader.h
+@@ -0,0 +1,77 @@
++/* Temporary RAM-only startup, following stock HostWritePram.
++ * No external-flash erase/program commands. Validate ALL moves before bus
++ * access. Caller identifies ROM9383, owns SPI and provides bounded delay.
++ * On failure after stop, keep touch MCU stopped rather than run partial RAM.
++ */
++#ifndef A03_JD9365T_LOADER_H
++#define A03_JD9365T_LOADER_H
++#include "a03_jd9365t_memory.h"
++#include "a03_jd9365t_firmware.h"
++static inline int a03_jd_control_write(struct a03_jd_bus *b,uint32_t a,
++    const uint8_t *p,size_t n)
++{
++ /* Only exact stock RAM-start/CRC controls. No generic peripheral writes. */
++ if(!b||!p)return -1;
++ int allowed=(n==1&&(a==0x40000042u||a==0x4000810du||a==0x4000020eu||
++     a==0x20011000u||a==0x40008014u||a==0x40008016u||a==0x40008012u||a==0x40000217u)) ||
++     (n==2&&a==0x40000218u)||(n==13&&a==0x40000200u&&p[12]==3);
++ if(!allowed)return -1;
++ uint8_t c[19]={0xf2,(uint8_t)(a>>24),(uint8_t)(a>>16),(uint8_t)(a>>8),(uint8_t)a,1};
++ for(size_t i=0;i<n;i++)c[6+i]=p[i];
++ return a03_jd_write(b,c,n+6);
++}
++static inline int a03_jd_control_byte(struct a03_jd_bus *b,uint32_t a,uint8_t v)
++{ return a03_jd_control_write(b,a,&v,1); }
++static inline int a03_jd_control_read(struct a03_jd_bus *b,uint32_t a,uint8_t *p,size_t n)
++{
++ if(!((a==0x4000021du&&n==1)||(a==0x4000021au&&n==2)))return -1;
++ uint8_t c[]={0xf3,(uint8_t)(a>>24),(uint8_t)(a>>16),(uint8_t)(a>>8),(uint8_t)a,1};
++ return a03_jd_read(b,c,sizeof(c),p,n);
++}
++static inline void a03_jd_put32(uint8_t *p,uint32_t n)
++{ for(unsigned i=0;i<4;i++)p[i]=(uint8_t)(n>>(i*8)); }
++static inline int a03_jd_load_ram(struct a03_jd_bus *b,const uint8_t *data,
++    size_t size)
++{
++ struct a03_jd_firmware f;
++ if(a03_jd_firmware_validate(data,size,&f))return -2;
++ uint16_t id=0;if(a03_jd_rom_id(b,&id))return -3;
++ const uint8_t enter[]={0xf2,0xaa,0x55,0x0f,0xf0,0x68};
++ const uint8_t leave[]={0xf2,0xaa,0x88,0,0,0};
++ int e=a03_jd_write(b,enter,sizeof(enter));
++ if(e)goto done;
++ if(a03_jd_control_byte(b,0x40000042,0)||a03_jd_control_byte(b,0x4000810d,0)||
++    a03_jd_control_byte(b,0x4000020e,0)||a03_jd_control_byte(b,0x20011000,0)||
++    a03_jd_control_byte(b,0x40008014,0)||a03_jd_control_byte(b,0x40008016,0x5a)) {e=-4;goto done;}
++ for(unsigned i=0;i<f.count;i++) {
++  struct a03_jd_move *m=&f.moves[i];uint8_t params[13],crcbytes[2];
++  if(a03_jd_ram_write(b,m->address,data+m->offset,m->length)){e=-5;goto done;}
++  const uint8_t initial[]={0xff,0xff};
++  if(a03_jd_control_write(b,0x40000218,initial,2)||a03_jd_control_byte(b,0x40000217,1)){e=-6;goto done;}
++  a03_jd_put32(params,m->address);a03_jd_put32(params+4,m->length);a03_jd_put32(params+8,m->address);params[12]=3;
++  if(a03_jd_control_write(b,0x40000200,params,13)){e=-7;goto done;}
++  unsigned attempt;
++  for(attempt=0;attempt<25;attempt++) {
++   uint8_t status;b->delay_us(b->context,2000);
++   if(a03_jd_control_read(b,0x4000021d,&status,1)){e=-8;goto done;}
++   if(!(status&1))break;
++  }
++  if(attempt==25){e=-9;goto done;}
++  if(a03_jd_control_read(b,0x4000021a,crcbytes,2)){e=-10;goto done;}
++  /* Stock CRC_CODE_POSITION: low byte0/high byte1. */
++  if(((unsigned)crcbytes[0]|((unsigned)crcbytes[1]<<8))!=m->crc){e=-11;goto done;}
++ }
++ if(a03_jd_control_byte(b,0x40008012,0xa5)||a03_jd_control_byte(b,0x40008016,0xa5)||
++    a03_jd_control_byte(b,0x40008014,0xf1)){e=-12;goto done;}
++ b->delay_us(b->context,50000);
++ e=0;
++done:
++ if(e) {
++  /* Best effort stop: never deliberately start a partially loaded image. */
++  (void)a03_jd_control_byte(b,0x40008014,0);
++  (void)a03_jd_control_byte(b,0x40008016,0x5a);
++ }
++ if(a03_jd_write(b,leave,sizeof(leave))&&!e)e=-13;
++ return e;
++}
++#endif
