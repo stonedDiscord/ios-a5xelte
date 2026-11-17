@@ -1,3 +1,11 @@
+ACTIVE22:09UTC0087 touch reachesUIKit eventFetcher/UIQOSProcessingBegin
+then explicitWIexception/SIGABRT6. No capturedOOMkill, but actualcreateerrno
+notyetknown; donotclaimRAMruledout. User's lag acceptable, spinner confirmed
+crash.0155CI44186495805 Build; package29898 /tmp/a03-0088/package.py waits.
+STREAMOFF. Oldcapture128605 finished; NEWsinglecapture32643 writes
+boot0087-usb-after-swipe-crash.log. NextfullCI->0088BOOTonly->UTC/fwload->
+alignedswipe, inspectWIflags/error/kr and userUIresponse.
+
 ACTIVE22:05UTC0155CI44186495805 exact47a92b3 dispatched/mac15intel.
 CandidateCcompilePASS(retargeted existingconsoleCIflags, not exactperfile),
 8192policycases/reversePASS. Package-only /tmp/a03-0088/package.py gates

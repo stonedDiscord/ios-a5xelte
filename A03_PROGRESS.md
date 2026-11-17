@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: swipe crash enters UIKit event processing; no OOM evidence
+
+User asks whether lag/RAM exhaustion caused the spinner. Captured failure
+is an uncaught NSInternalInconsistencyException, explicit Failed to create
+work interval, followed by SIGABRT6; no captured jetsam/memory-pressure kill
+or allocation failure accompanies it. This does not rule out general memory
+pressure or ENOMEM as an underlying create error; actual flags/errno await
+0155 diagnostics. Avoid equating this observed abort with an OOM kill.
+First-throw frame1C178F7BC resolves with cache slide38858000 to UIKitCore
+_UIQOSProcessingBegin+21C; caller1C17910DC resolves _eventFetcherSourceCallback
++A8. This supports physical HID events reaching UIKit processing, beyond
+kernel dispatch alone. No successful unlock/app launch is yet proven.
+
+Initial single capturePID128605 exited on its configured deadline; tty owner
+was absent before starting new single capture boot0087-usb-after-swipe-crash.log
+(hostsession32643). Forwarding remains off.0155CI44186495805 now Build;
+package-only hostsession29898 remains the next exact-success artifact gate.
+
 ## 2026-11-17: aligned physical HID swipe reaches SpringBoard crash
 
 User explicitly ready22:01UTC. HID120s window captures61events over205slices;
