@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0087 continuous log-only polling works on hardware
+
+BOOT-only flash completed100percent/success/reboot21:35UTC. Single capture
+PID128605 writes boot0087-usb-initial.log. UTC sync1794951400 confirms
+2026-11-17 21:36:40UTC. Private79104-byte firmware restaged/valid0; explicit
+load0 verifies all seven hardware CRCs; readyA55A/config20002AD4/1028,
+report20011580/60,720x1600,18/32; gate/source restored.
+
+Timed log-only continuous stream runs30seconds, reaches84slices while active
+then stops at85slices (1360frames), events0. No stream error logged. This
+proves continuous worker progress across former300frame windows and explicit
+stop on actual hardware, with no phantom idle contacts. Both HID clients
+open. Ten-second HID-enabled idle trial started next; no physical user input
+or UI response claimed. Current screen/readiness question pending.
+
 ## 2026-11-17: continuous touch full CI success, BOOT0087 trial
 
 CI44178262587 SUCCESS exact10b9f9bdff20e8db99f60e9db033f8b08304cfe9.

@@ -1,3 +1,10 @@
+ACTIVE21:40UTC0087 flashedBOOT-onlySUCCESS. CapturePID128605 live.
+UTC1794951400/privatefw79104valid0/load0/all7CRC/A55A/configPASS.
+CONTINUOUS logonly30s hardwarePASS:84slicesactive->85stop=1360frames,
+events0/noerror. BothHIDclientsopen.10sHIDidle session7908 running; inspect
+/tmp/a03-0087/stream-hid-idle.log next. Physical screen/readiness replypending.
+Need truephysicalup/HID/UI; no touch successclaim.0086restore preserved.
+
 ACTIVE21:35UTC0154CI44178262587 SUCCESS/exact10b9f9b.0087 packaged/
 checksum+markers+same0086config verified; BOOTb893cd32...85a25/kernel
 f1709990...a0df. SyncedCDC Download+Heimdall detectPASS. BOOT-onlyflash49418
