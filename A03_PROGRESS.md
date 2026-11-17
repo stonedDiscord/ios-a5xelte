@@ -34,6 +34,15 @@ consumption/visible UI reaction/unlock still require evidence. SpringBoard25
 last sample still1thread/startup, so gesture may precede UI readiness.
 Asked user for current screen and swipe response. No repeated gestures.
 
+User reports still booting/Apple logo after the early gesture: no visible
+input result established. Continued read-only samples show SpringBoard25
+progressing1to14threads through Siri/CoverSheet initialization, then by
+18:19UTC GSEventRunModal/UIApplication _run/UIApplicationMain/SBSystemAppMain
+(matching cache slide09450000). Framebuffer swaps reach19; storage ready1/
+poisoned0. This restores application-event-loop evidence for0079, not a
+physical clock claim. Asked user to confirm current screen before another
+gesture. No reset or further gesture.
+
 ## 2026-11-17: physical touch preparation; Jadard/CPT evidence recovered
 
 User prioritizes touch after SpringBoard clock milestone. Rechecked exact

@@ -1,3 +1,9 @@
+ACTIVE18:19UTC0079 SpringBoard25 main now GSEventRunModal/UIApplication
+_run/UIApplicationMain/SBSystemAppMain (cache slide09450000), framebuffer
+swaps19; io ready1/poisoned0. User earlier reported Apple logo during first
+swipe; no visible reaction proven. New screen confirmation pending BEFORE
+another gesture. No reset. Capture52487 remains live until~18:22UTC.
+
 ACTIVE18:16UTC0079: both HID services opened successfully by user clients;
 backboardd56 now8threads. ONE explicit swipeup down360,1560/up360,460
 result0/END after opens. Dispatch proof only; UI reaction/consumption/unlock
