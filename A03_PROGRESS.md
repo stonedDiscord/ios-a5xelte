@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0080 home icons confirmed after paired Home
+
+At19:14UTC user answers yes, app icons visible after explicit USB Home9.
+Worker logged Menu40 down/up with1client/result0. This repeats0079 button/UI
+result on0080 after the ROM9383 diagnostic. Confirms recovered visible home
+and positive Home input; physical digitizer/contact/HID touch still pending.
+
 ## 2026-11-17: BOOT0080 clock confirmed; contact failure policy prepared
 
 User confirms physical iOS clock/lock screen after0080 reboot and successful

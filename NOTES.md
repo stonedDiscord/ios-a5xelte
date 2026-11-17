@@ -1,3 +1,8 @@
+ACTIVE19:14UTC0080 PHYSICAL HOME ICONS confirmed after USB Home9.
+ROM9383/probe restoration and visible home both verified on current image.
+Physical touch still pending.0147CI44154963110 exact7972a72 building;
+package-only63480 waits. Reader26068 single followup. No new input pending.
+
 ACTIVE19:13UTC0080 user confirms physical clock. ONE USB Home sent; response
 pending. ROM9383 confirmed earlier. Contact-state failure policy prepared/
 unstaged+ASan tests PASS; not physical driver.0147CI44154963110 running,
