@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: poll/UTC/console full Xcode SUCCESS; BOOT0084 trial
+
+CI44165152625 SUCCESS exactd6800e414746e684fa67088a7e9d8f1baf4b3716,
+macos15intel, patches0149+0150+0151. Full framebuffer C++ now built with
+Xcode; local Apple allocation builtin limitation did not prevent CI.
+Kernel SHA256f92711eccf17d614b1bf9b41c990a9cbaf455b8252c55d16154397ae10a49e27.
+BOOT SHA25679ef85714da5699d9f69f8828d1edb11232d955bcf32ffe8c5f7d65ab2986fb4.
+Package gate verifies checksum/markers/same0082 ADT/1GiB/bootargs/root/
+loader(except image_size)/stockramdisk/DT. Earlier44162912240 still builds;
+0083 not deployed. Synced CDC Download+Samsung/Heimdall detected20:19UTC.
+BOOT-only flash49731 underway. Touch RAM firmware will need restaging after
+reboot. Next UTC sync/readback then firmware load/contacts log-only, then
+HID physical test. GUI console ownership fix needs physical validation.
+
 ## 2026-11-17: console handoff full CI dispatched separately
 
 0151 now staged. Full CI44165152625 exactd6800e414746e684fa67088a7e9d8f1baf4b3716
