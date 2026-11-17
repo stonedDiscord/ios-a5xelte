@@ -19,6 +19,27 @@ works per boot; local timezone and a persistent RTC remain unresolved.
 
 The sections below preserve the bring-up chronology.
 
+## Pending continuous-input trial (0154)
+
+Full Xcode run44178262587 builds exact10b9f9b. This source change is not yet
+on the phone. Once built/deployed and private firmware explicitly loaded:
+
+- touch startcontacts: continuous log-only reports, no HID dispatch.
+- touch start: continuous HID reports, requires the digitizer provider.
+- touch streamstatus: active flag, completed16frame slices, event total.
+- touch stop: stop polling and release all retained contacts once.
+
+All commands use the existing explicit USB probe transport. The serialized
+worker preserves finger state across slices; it restores SPI registers and
+gates between slices. Each slice revalidates ROM9383, firmware readiness,
+configuration and report pointers. A failed slice releases contacts and stops.
+Other touch operations, including firmware replacement, require stopping first.
+Log-only mode is the next long-window down/move/physical-lift check; HID mode
+still needs a separate visible UI response. Release logs survive the motion
+log cap so physical up is observable after many moves. No automatic boot-time
+firmware loading or touch enable is introduced by this trial.
+
+
 ## Evidence and current boundary (2026-11-17)
 
 BOOT0079 reaches the physically reported home menu after an explicit USB

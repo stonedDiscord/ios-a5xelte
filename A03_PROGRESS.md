@@ -21,6 +21,12 @@ on macos15intel/a03/SWEET/userspace true. Package-only watcher prepares0087
 from unchanged0086 ADT/bootargs/root/loader/stockramdisk/DT after exact-success
 and checksum/stream-marker checks. No automatic deployment scheduled.
 
+Follow-up clean forward patch applies with fuzz0 and reproduces both compiled
+files exactly; shared/kernel poll-header equality passes. Final console C
+cross-compile and decoder/contact/dispatch/upload ASan/UBSan regressions pass.
+A second0086 log-only session2481 again gives300valid/events0/hid0, with the
+same three count0/statusFF idle reports. No user-held alignment or HID claim.
+
 ## 2026-11-17: BOOT0086 hardware idle reports are clean
 
 BOOT-only flash completed successfully and rebooted; single console capture
