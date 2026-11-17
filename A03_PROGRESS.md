@@ -15,6 +15,18 @@ read requires that full build and a separately verified BOOT0081.
 Exact CI-command full usb_console kernel C compile PASS; reverse/plain patch
 application/full source+header equality PASS. Staged0147; full CI pending.
 
+## 2026-11-17: BOOT0080 startup after ROM probe
+
+User physically reports Apple logo/still booting at19:07UTC. Same
+SpringBoard25 progresses from objc/dyld mapping to CoreUI asset loading,
+then by19:09UTC main sample resolves GSEventRunModal/UIApplication _run/
+UIApplicationMain/SBSystemAppMain using captured shared-cache slide1F994000.
+Both HID user clients opened; earlier post-ROM io ready1/poisoned0. No
+software Home/swipe after reboot; physical current screen confirmation is
+pending separately. Event-loop sample alone is not rendered UI/touch proof.
+0147 CI44154963110 exact7972a72 running; package-only watcher63480 waits
+success/checksum/markers then same0080 config0081, no automatic deployment.
+
 ## 2026-11-17: BOOT0080 hardware Jadard ROM9383 confirmed
 
 At19:03UTC exact A03XNUConsole01 returned. Both HID providers registered,

@@ -1,3 +1,9 @@
+ACTIVE19:09UTC0080 SB25 now event loop GSEventRunModal/UIApplication/SBMain
+(cache slide1F994000). User last saw logo19:07; new screen question pending.
+No input after reboot.0147CI44154963110 exact7972a72 building; package-only
+watcher63480 /tmp/a03-0081/package.py gates success+same0080 config0081.
+NO automatic flash. Current capture2205 ends~19:11:42; extend only after ends.
+
 ACTIVE19:06UTC0147 full CI44154963110 exact7972a72ff7122185158e973762eeab7a76c237af
 queued macos-26-intel/SWEET/a03/userspace, upload_buildtree=false. Do NOT
 duplicate. No0081 packaged yet.0080 touch ROM9383 PASS; preserve checkpoint.
