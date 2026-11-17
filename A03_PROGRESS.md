@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: bounded contact poll preparation
+
+Standalone unstaged poll helper gates on ROM9383, ready A55A, validated
+section ranges, exact720x1600/18x32 config, then at most300frames/16ms each.
+No automatic thread/timer. Consecutive3bad reads stop session; final cleanup
+releases held contacts and exits. Actual C/C++ ASan/UBSan ROM/ready/config/
+frame-cap/failure/no-press/release/exit tests PASS. Firmware must be running
+first; no physical reports or HID dispatch wired yet. This does not enable
+polling on current0081, whose ERAM ready marker is absent.
+
 ## 2026-11-17: explicit RAM-only loader0148 prepared
 
 0081 ERAM not-ready motivates stock HostWritePram implementation.0148 stages

@@ -1,3 +1,9 @@
+ACTIVE19:35UTC bounded poll helper prepared+unstaged/tests PASS. Requires
+ROM+ready/config, max300frames,3failed read stop/final releases; no HID yet.
+0148CI44159557034 exactcdafbe1 running/package91490 waits.0081 ROM good/
+notready2317; no firmware upload. Capture84861 ends~19:35, check before
+new reader. Physical screen question pending.0080 home checkpoint kept.
+
 ACTIVE19:32UTC0148 full CI44159557034 exactcdafbe19909f1b4b99a1523d57c5dd48957dc24a
 queued/running. Package-only91490 /tmp/a03-0082/package.py waits exact success/
 checksum/markers/same0081 config0082; NO auto deployment.0081 fresh io ready1
