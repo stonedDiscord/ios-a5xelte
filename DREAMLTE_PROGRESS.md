@@ -211,4 +211,12 @@ compile results, hardware observations and restore results below.
   `7635350bc14ee2cbcb983f668e6f53d34d3c6ad5a7ce7ba01c23b054ca4efca8`;
   18,423,824 bytes, within the 41,943,040-byte S8 BOOT partition. S8 chip
   8895 DTBH, stock ramdisk, empty second stage and DTBH are preserved. This is
-  a kernel-only XNU entry test; no rootfs is assembled. BOOT test flash is next.
+  a kernel-only XNU entry test; no rootfs is assembled.
+- BOOT-only trial flash succeeded via Heimdall 2.2.2. The phone rebooted from
+  download mode, then stopped enumerating over USB (neither Android ADB nor
+  Heimdall download mode is currently visible). The screen is unobserved and
+  no XNU entry marker has yet been recovered; treat boot progress as unknown.
+  The next required hardware action is VolumeDown+Power forced restart, then
+  VolumeDown+Bixby+Power to re-enter download mode, restore the original BOOT,
+  boot Android, and read `/proc/last_kmsg`. Do not attempt another flash until
+  the verified original hash is restored.
