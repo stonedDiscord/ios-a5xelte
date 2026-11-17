@@ -5,17 +5,24 @@ import subprocess,tempfile
 ROOT=Path(__file__).resolve().parents[1]
 s=(ROOT/'xnu/a03/0149-a03-explicit-jadard-contact-poll.patch').read_text()
 s='\n'.join(l[1:] for l in s.splitlines() if l.startswith('+') and not l.startswith('+++'))
-s=s[s.index('extern void sweet_hid_touch'):s.index(' if(strcmp(command,')]
+callback=s[s.index('extern void sweet_hid_touch'):s.index(' if(strcmp(command,')]
+delay=s[s.index('static void a03_touch_delay'):].splitlines()[0]
+s=delay+'\n'+callback
 prefix=r'''
 #include <assert.h>
 #include <stdio.h>
 #include <stddef.h>
 #define __unused __attribute__((unused))
-static unsigned calls,slot_,x_,y_;static int down_;
+static unsigned calls,slot_,x_,y_,slept,spun;static int down_;
+static void IOSleep(unsigned n){slept+=n;}
+static void IODelay(unsigned n){spun+=n;}
 void sweet_hid_touch(int slot,int down,int x,int y){calls++;slot_=slot;down_=down;x_=x;y_=y;}
 '''
 test=r'''
 int main(void){
+ a03_touch_delay(NULL,16000);assert(slept==16&&!spun);
+ a03_touch_delay(NULL,10);assert(slept==16&&spun==10);
+ a03_touch_delay(NULL,1501);assert(slept==17&&spun==511);
  a03_touch_emit_hid=0;a03_touch_emit(NULL,9,1,720,1600);
  assert(!calls&&a03_touch_emit_count==1);
  a03_touch_emit_hid=1;a03_touch_emit(NULL,9,1,720,1600);

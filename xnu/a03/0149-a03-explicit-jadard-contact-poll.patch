@@ -8,6 +8,15 @@
  static vm_offset_t a03_touch_spi, a03_touch_apb, a03_touch_clk;
  static uint32_t a03_touch_r32(void *p,unsigned o) {
   return *(volatile uint32_t *)((vm_offset_t)p+o);
+@@ -391,7 +392,7 @@
+  *(volatile uint8_t *)((vm_offset_t)p+o)=v;
+  __asm__ volatile("dsb sy" ::: "memory");
+ }
+-static void a03_touch_delay(void *p __unused,unsigned us) { IODelay(us); }
++static void a03_touch_delay(void *p __unused,unsigned us) { if(us>=1000)IOSleep(us/1000);if(us%1000)IODelay(us%1000); }
+ /* Bounded read-only backdoor session. Called after ROM9383 is verified.
+  * Reads fixed ERAM only; validates discovered config before dereferencing it.
+  * No MCU/reset/firmware/control-register writes, except enter/exit protocol.
 @@ -432,6 +433,14 @@
   int exit_error=a03_jd_write(b,leave,sizeof(leave));
   printf("A03 TOUCH sections exit=%d\n",exit_error);

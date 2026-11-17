@@ -1,3 +1,9 @@
+ACTIVE19:43UTC0149 bounded polling now sleeps whole-ms delays; compile,
+actual callback delay/dispatch tests and reverse/plain equality PASS. Still
+NOT staged in profile. Candidate offlineconfig720x1600/18x32 confirmed.
+0148CI44159557034 still running/package91490 waits; no0082/no upload/load.
+0081 physical clock confirmed; freshio ready1/poisoned0, reader23025.
+
 ACTIVE19:38UTC0081 CLOCK physically confirmed. Single reader23025 until
 ~20:01UTC boot0081-touch-followup.log.0149 explicit contacts/log vs poll/HID
 prepared+tested+compile/apply equality PASS; NOT staged in build profile.

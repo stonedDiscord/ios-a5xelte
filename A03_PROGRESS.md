@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: bounded poll yields between samples
+
+0149's bus-delay callback now uses IOSleep for whole milliseconds and
+IODelay only for submillisecond remainder. This keeps300*16ms explicit poll
+waits off a continuous CPU busy loop; microsecond FIFO timeout behavior is
+preserved. Actual callback delay-split/dispatch ASan/UBSan tests, exact kernel
+C compile and reverse/plain application equality PASS. Private candidate's
+config move20002AD4 beginsD00240061220, confirming the offline720x1600/
+18x32 gate values; this is not runtime compatibility or running-firmware proof.
+0148CI44159557034 still building19:43UTC. Fresh0081 io ready1/poisoned0.
+
 ## 2026-11-17: BOOT0081 clock confirmed; bounded poll0149 prepared
 
 User physically confirms clock/lock screen after latest0081 reboot. No Home
