@@ -374,3 +374,7 @@ compile results, hardware observations and restore results below.
   measured core state, DMA upper-address evidence, Exynos VBUS override,
   PHY version-dependent register-base adjustment and next transport gates in
   docs/dreamlte-usb.md. No PHY or controller writes were performed.
+- CI44085718513 re-polled by GitHub API: job134047808756 is in progress,
+  Build active; dependency/setup steps succeeded. Watch33999 subsequently
+  hit a network timeout, not a terminal build result. Continue polling this
+  exact run rather than dispatching a replacement. No new BOOT flash yet.

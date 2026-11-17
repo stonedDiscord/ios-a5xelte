@@ -14,7 +14,9 @@ New0211 adds explicit WB/XN kernel aliases for the two snapshot blocks and
 routes all DREAMLTE putc output (including panic) to RAM without framebuffer
 writes. Both modified ARM64 objects, patch dry-run, actual mapping-helper
 host check and132-patch staging pass. Fix660745e is pushed; full CI
-44085718513/job134047808756 is queued (macos-15-intel), live watch87525.
+44085718513/job134047808756 is compiling (macos-15-intel). Latest API
+poll confirms Build in progress. Watch33999 ended on a network timeout;
+that is not a build failure.
 Poll this exact run; package/BOOT test/log recovery follow only on success. No working XNU USB gadget/stream has been verified. Protected
 partitions and USERDATA remain untouched. USB hardware/source evidence and
 next transport gates are recorded in docs/dreamlte-usb.md; the full Android
