@@ -1,3 +1,10 @@
+ACTIVE22:06UTC0087 physicalHID61events/fourswipes reached; user sees
+spinner, logsSpringBoard26abort Failedtocreateworkinterval. STREAMOFF.
+0155candidate documentedUNRESTRICTED default/coreaudio/CAclient privilege
+policy +boundedcreateflags/error/kr logs; nofake success. SB lacks entitlement.
+Tests8192casesPASS; kernelC compilecheck inprogress36298. NeedfullCI0088,
+thenBOOT-only/restagefw/retestgesture. Capture128605 near expiry~22:06UTC.
+
 ACTIVE21:55UTC0087 HID600s COMPLETE/CLEANSTOP1761slices/28176frames/
 0events; statusstreaming0. NoHIDphysicaleventarrived. STREAMOFF; do not
 restart/reflash to chase idle evidence. Needusergesture+visibleUIreply;

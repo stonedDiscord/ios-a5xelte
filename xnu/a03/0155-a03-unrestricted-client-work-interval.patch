@@ -1,0 +1,63 @@
+--- a/bsd/kern/sys_work_interval.c
++++ b/bsd/kern/sys_work_interval.c
+@@ -37,6 +37,36 @@
+ #include <kern/work_interval.h>
+ 
+ #include <libkern/libkern.h>
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <pexpert/pexpert.h>
++#include <sys/proc.h>
++static TUNABLE(uint32_t, a03_wi_client_compat, "a03_work_interval", 0);
++/* Match the unrestricted client types documented by sys/work_interval.h.
++ * All creation, app-type, port and lifecycle validation remains in the kernel.
++ */
++static bool
++a03_wi_unrestricted(uint32_t flags)
++{
++ if (!a03_wi_client_compat || !(flags & WORK_INTERVAL_FLAG_UNRESTRICTED)) return false;
++ switch (flags & WORK_INTERVAL_TYPE_MASK) {
++ case WORK_INTERVAL_TYPE_DEFAULT:
++ case WORK_INTERVAL_TYPE_COREAUDIO:
++ case WORK_INTERVAL_TYPE_CA_CLIENT: return true;
++ default: return false;
++ }
++}
++static void
++a03_wi_create_log(uint32_t flags, int error, kern_return_t kr)
++{
++ static unsigned reports;
++ if (!a03_wi_client_compat) return;
++ unsigned old=__atomic_fetch_add(&reports,1,__ATOMIC_RELAXED);
++ if(old>=64)return;
++ char name[32];proc_selfname(name,sizeof(name));
++ printf("A03 WI create %s flags=%08x error=%d kr=%d\n",name,flags,error,kr);
++}
++#endif
++
+ 
+ int
+ work_interval_ctl(__unused proc_t p, struct work_interval_ctl_args *uap,
+@@ -68,7 +98,13 @@
+ 			return error;
+ 		}
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++		if (!a03_wi_unrestricted(create_params.wicp_create_flags))
++#endif
+ 		if ((error = priv_check_cred(kauth_cred_get(), PRIV_WORK_INTERVAL, 0)) != 0) {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++			a03_wi_create_log(create_params.wicp_create_flags,error,KERN_NO_ACCESS);
++#endif
+ 			return error;
+ 		}
+ 
+@@ -79,6 +115,9 @@
+ 		};
+ 
+ 		kret = kern_work_interval_create(current_thread(), &create_args);
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++		a03_wi_create_log(create_params.wicp_create_flags,0,kret);
++#endif
+ 
+ 		/* thread already has a work interval */
+ 		if (kret == KERN_FAILURE) {

@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: aligned physical HID swipe reaches SpringBoard crash
+
+User explicitly ready22:01UTC. HID120s window captures61events over205slices;
+four physical swipe down/move/up sequences reach SweetHIDTouch, e.g.
+380,1566 ->454,393. User reports several swipes then loading spinner and
+suspects SpringBoard crash. Logs confirm SpringBoard26 SIGABRT with
+NSInternalInconsistencyException: Failed to create work interval. This is
+strong evidence input triggers UI processing, not successful navigation.
+Explicit stop22:03UTC; timed helper later confirmsstreaming0. No polling
+errors. Need repair runtime compatibility and repeat physical UI test.
+
+0155 candidate restores documented WORK_INTERVAL_FLAG_UNRESTRICTED policy:
+only DEFAULT/COREAUDIO/CA_CLIENT skip privilege with existing a03_work_interval
+opt-in; normal kernel create/app-type/lifecycle validation remains. Current
+sys_work_interval CREATE2 unconditionally checks privilege despite its header
+explicitly documenting this exemption. Supplied SpringBoard XML lacks work-
+interval entitlement; backboardd has it. Actual failing CREATE2 flags/errno
+were not captured (startup trace cap), so this is a concrete compatibility
+candidate, not yet a proven crash fix. Adds bounded create flags/error/kr
+logging. Actual policy C/C++ ASan/UBSan8192cases and reverseapplyPASS.
+
 ## 2026-11-17: ten-minute HID window ends cleanly; UI test still pending
 
 Host600second trial ends~21:55UTC, active1760slices/events0 then explicit
