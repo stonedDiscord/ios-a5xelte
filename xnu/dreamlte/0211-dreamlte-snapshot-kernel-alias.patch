@@ -1,0 +1,104 @@
+diff --git a/osfmk/arm64/arm_vm_init.c b/osfmk/arm64/arm_vm_init.c
+--- a/osfmk/arm64/arm_vm_init.c
++++ b/osfmk/arm64/arm_vm_init.c
+@@ -1851,6 +1851,31 @@
+ }
+ #endif
+ 
++#if defined(DREAMLTE)
++/* These two low-RAM snapshot blocks are outside XNU's managed RAM.
++ * phystokv() deliberately rejects them. Reserve explicit kernel aliases
++ * below gVirtBase, with the same WB attributes as the bootstrap aliases.
++ */
++#define DREAMLTE_SNAPSHOT_VA (VM_MIN_KERNEL_ADDRESS + ARM_TT_L2_SIZE)
++static void
++dreamlte_snapshot_map_final(void)
++{
++	const pmap_paddr_t blocks[] = { 0x91200000ULL, 0x91a00000ULL };
++	assert(DREAMLTE_SNAPSHOT_VA + 2 * ARM_TT_L2_SIZE <= gVirtBase);
++	for (unsigned int i = 0; i < 2; i++) {
++		vm_map_address_t va = DREAMLTE_SNAPSHOT_VA + i * ARM_TT_L2_SIZE;
++		tt_entry_t l1 = cpu_tte[(va & ARM_TT_L1_INDEX_MASK) >> ARM_TT_L1_SHIFT];
++		assert((l1 & (ARM_TTE_VALID | ARM_TTE_TYPE_MASK)) ==
++		    (ARM_TTE_VALID | ARM_TTE_TYPE_TABLE));
++		tt_entry_t *l2 = (tt_entry_t *)phystokv(l1 & ARM_TTE_TABLE_MASK);
++		tt_entry_t *slot = &l2[(va & ARM_TT_L2_INDEX_MASK) >> ARM_TT_L2_SHIFT];
++		assert(*slot == ARM_TTE_EMPTY);
++		*slot = blocks[i] | ARM_TTE_BOOT_BLOCK | ARM_TTE_BLOCK_PNX | ARM_TTE_BLOCK_NX;
++	}
++	__asm__ volatile("dsb ishst" ::: "memory");
++}
++#endif
++
+ void
+ arm_vm_init(uint64_t memory_size, boot_args * args)
+ {
+@@ -2185,6 +2210,9 @@
+ 	/* phystokv() must still refer to the bootstrap aperture here. */
+ 	sweet_early_map_final();
+ #endif
++#if defined(DREAMLTE)
++	dreamlte_snapshot_map_final();
++#endif
+ 	sweet_early_mark(9, "calling arm_vm_physmap_init");
+ 	arm_vm_physmap_init(args);
+ 	sweet_early_mark(9, "physmap ready; switching TTBR0");
+@@ -2203,7 +2231,7 @@
+ 
+ 	flush_mmu_tlb();
+ #if defined(DREAMLTE)
+-	sweet_early_relocate(phystokv(A5XELTE_FB_PA));
++	sweet_early_relocate(DREAMLTE_SNAPSHOT_VA);
+ #endif
+ 	sweet_early_mark(10, "TTBR0 off; TLB flushed");
+ 	kva_active = TRUE;
+diff --git a/osfmk/arm64/sweet_early.c b/osfmk/arm64/sweet_early.c
+--- a/osfmk/arm64/sweet_early.c
++++ b/osfmk/arm64/sweet_early.c
+@@ -48,6 +48,17 @@
+ 	if (!a5_active) {
+ 		return;
+ 	}
++#if defined(DREAMLTE)
++	uint32_t p = *dreamlte_log_cursor;
++	if (p >= DREAMLTE_LOG_BASE_PA && p < DREAMLTE_LOG_END_PA) {
++		dreamlte_log_base[p - DREAMLTE_LOG_BASE_PA] = (uint8_t)c;
++		*dreamlte_log_cursor = p + 1;
++		__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)&dreamlte_log_base[p - DREAMLTE_LOG_BASE_PA]) : "memory");
++		__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)dreamlte_log_cursor) : "memory");
++		__asm__ volatile("dsb sy" ::: "memory");
++	}
++	return;
++#endif
+ 	if (c == '\r') {
+ 		a5_col = 0;
+ 		return;
+@@ -81,16 +92,6 @@
+ a5_string(const char *s)
+ {
+ 	while (*s) {
+-#if defined(DREAMLTE)
+-		uint32_t p = *dreamlte_log_cursor;
+-		if (p >= DREAMLTE_LOG_BASE_PA && p < DREAMLTE_LOG_END_PA) {
+-			dreamlte_log_base[p - DREAMLTE_LOG_BASE_PA] = (uint8_t)*s;
+-			*dreamlte_log_cursor = p + 1;
+-			__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)&dreamlte_log_base[p - DREAMLTE_LOG_BASE_PA]) : "memory");
+-			__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)dreamlte_log_cursor) : "memory");
+-			__asm__ volatile("dsb sy" ::: "memory");
+-		}
+-#endif
+ 		sweet_early_putc(*s++);
+ 	}
+ }
+@@ -142,9 +143,8 @@
+ sweet_early_relocate(uint64_t base)
+ {
+ #if defined(DREAMLTE)
+-	a5_fb = (volatile uint32_t *)(uintptr_t)base;
+-	dreamlte_log_cursor = (volatile uint32_t *)(uintptr_t)phystokv(DREAMLTE_LOG_CURSOR_PA);
+-	dreamlte_log_base = (volatile uint8_t *)(uintptr_t)phystokv(DREAMLTE_LOG_BASE_PA);
++	dreamlte_log_cursor = (volatile uint32_t *)(uintptr_t)(base + 0x200u);
++	dreamlte_log_base = (volatile uint8_t *)(uintptr_t)(base + 0x200000u);
+ #else
+ 	(void)base;
+ #endif

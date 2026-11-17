@@ -341,3 +341,24 @@ compile results, hardware observations and restore results below.
   DWC3 reads confirm access to the controller block, not USB enumeration or
   stream operation. RECOVERY, bootloaders, EFS/CPEFS and USERDATA remain
   untouched.
+
+## 2026-11-17: correct snapshot mappings after TTBR0 (0211)
+
+- Revalidated rooted Android boot complete, stock BOOT hash and recovered
+  0210 trace (47,726 bytes). This continuation makes source progress; the
+  previous trial also yielded new DWC3 register evidence.
+- Found a concrete diagnostic bug in0209: `phystokv()` rejects the snapshot
+  cursor/buffer and RAM framebuffer sink, which are below `gPhysBase` and
+  outside the managed upper-bank RAM. Its illegal-PA path calls panic.
+  Thus the missing stage10 cannot establish a TTBR hardware failure.
+- Overlay0211 installs two explicit WB/XN kernel block aliases for the
+  already-used snapshot regions before physmap initialization. Relocation
+  uses these aliases, never phystokv on low RAM. DREAMLTE putc now appends
+  every character (stage numbers, newlines, panic formatting included) and
+  skips the unverified framebuffer sink. Donor behavior remains unchanged.
+- Validation: dry-run against exact0209 source passes; profile stages132
+  patches; both modified translation units compile to ARM64 objects with
+  gnu11/general-register-only flags. Actual mapping-helper host check passes
+  for both descriptors, cursor/buffer offsets and preserved neighbor slots.
+  Loader rebuild passes. Full CI and device test remain required.
+- Phone remains in Android with verified stock BOOT; no new flash performed.

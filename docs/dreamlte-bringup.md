@@ -47,6 +47,6 @@ then touch/keys/PMIC. S7 clock, GPU and Wi-Fi routines must not run on S8.
 
 See [dreamlte-a03-port.md](dreamlte-a03-port.md) for the pinned A03 review,
 complete feature/dependency map, host verification and optional boot modes.
-The profile now stages131 patches including S8 overlays0205-0209. This adds
+The profile now stages132 patches including S8 overlays0205-0211. This adds
 portable diagnostics and scoped compatibility; S8 storage/display/USB still
 require their own device bring-up. The original CI43434858911 succeeded.
