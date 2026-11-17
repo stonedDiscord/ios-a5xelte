@@ -1,3 +1,9 @@
+ACTIVE19:28UTC0081 sections1: ROM9383 PASS, ERAM ready2317!=A55A,
+config refused, exit0/restored gate0A02DE00 clock0/END. No firmware loaded.
+Need source-guided bounded RAM-only firmware load+section/report path.
+Private rev8 CPT candidate CRC7 valid but rev5 match unproven. Current
+single84861 capture until~19:35UTC.0080home+ROM restore kept.
+
 ACTIVE19:26UTC0081 flashed BOOT-only success/reboot.0147CI44154963110 exact
 7972a72 SUCCESS; kernel71d6e2ce...27e4 BOOT4e5fbb3a...3caa. Same0080 config.
 Single capture84861 waits180s/480s boot0081-usb-initial.log (/tmp/a03-0081).

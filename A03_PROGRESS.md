@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0081 ROM good; ERAM not firmware-ready
+
+Explicit touch sections1 on0081 returns ROM9383/result0, then160byte ERAM
+snapshot ready2317 (expected A55A). Section/config dereference refused,
+backdoor exit0, original gate0A02DE00/clock0 restored and workerEND. This
+shows a successful bounded read without the required firmware-ready marker,
+not proof every RAM byte is reliable or why firmware is absent. Stock
+JD_ZERO_FLASH path now relevant; no RAM firmware uploaded so far. Current
+boot still starting UI; no physical display observation yet for0081.
+
 ## 2026-11-17: BOOT0081 read-only section trial flashed
 
 0147 CI44154963110 SUCCESS exact7972a72ff7122185158e973762eeab7a76c237af.
