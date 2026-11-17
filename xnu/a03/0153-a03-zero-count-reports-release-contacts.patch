@@ -1,0 +1,18 @@
+--- a/bsd/dev/a03_jd9365t_report.h
++++ b/bsd/dev/a03_jd9365t_report.h
+@@ -42,6 +42,15 @@
+ 		return -1;
+ 	}
+ 	next.reported_count = packet[0];
++	/* Hardware idle packet: count0, status byte2=FF, zero slot payload.
++	 * Count remains metadata for positive sparse slots, but zero means no
++	 * contacts. Never turn the idle zero coordinates into ten corner presses.
++	 */
++	if (!next.reported_count) {
++		for (i = 0; i < 5u; i++) next.state[i] = packet[53u + i];
++		*out = next;
++		return 0;
++	}
+ 	for (i = 0; i < A03_JD9365T_CONTACTS; i++) {
+ 		const uint8_t *p = packet + 3u + 5u * i;
+ 		unsigned x = ((unsigned)p[0] << 8) | p[1];

@@ -1,3 +1,9 @@
+ACTIVE20:53UTC0085 current. UTC synced/fwload0/A55A. Raw idle exactly
+0000FF +57zero bytes/count0 -> phantom10corners in0152; NO HID poll sent.
+0153 staged count0=no contacts, sparse positive counts retained; tests/
+kernelC/applyPASS. Need fullCI0086 then physicalmotion/lift/HID/UI. Physical
+center332,805 on0084 proven. Single43981 capture until~21:20UTC.
+
 ACTIVE20:49UTC0084 FIRST PHYSICAL COORD: aligned heldcenter -> slot0
 332,805,300samples/result0/finalcleanupup. Physical lift not proven; nextidle
 again tenzero slots. NO HID poll.0152CI44169153500 SUCCESS/exactddf4129,

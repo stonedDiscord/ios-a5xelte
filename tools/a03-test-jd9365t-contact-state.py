@@ -20,9 +20,9 @@ int main(void){
  p[0]=11;assert(a03_jd_contact_update(&s,1,p,60,emit,&e)==-1&&e.count==3&&!e.down);
  for(unsigned i=0;i<10;i++)assert(a03_jd_contact_update(&s,0,NULL,0,emit,&e)==-1&&e.count==3);
  p[0]=1;assert(!a03_jd_contact_update(&s,1,p,60,emit,&e)&&e.count==4&&e.down&&!s.failures);
- memset(p+3,255,50);p[0]=0;assert(!a03_jd_contact_update(&s,1,p,60,emit,&e)&&e.count==5&&!e.down&&e.x==0&&e.y==0);
+ memset(p,0,60);p[2]=255;assert(!a03_jd_contact_update(&s,1,p,60,emit,&e)&&e.count==5&&!e.down&&e.x==0&&e.y==0);
  assert(!a03_jd_contact_update(&s,1,p,60,emit,&e)&&e.count==5);
- point(p,0,10,20);point(p,9,30,40);p[0]=2;assert(!a03_jd_contact_update(&s,1,p,60,emit,&e)&&e.count==7);
+ memset(p+3,255,50);point(p,0,10,20);point(p,9,30,40);p[0]=2;assert(!a03_jd_contact_update(&s,1,p,60,emit,&e)&&e.count==7);
  for(unsigned i=0;i<3;i++)a03_jd_contact_update(&s,0,NULL,0,emit,&e);
  assert(e.count==9&&!s.contacts[0].down&&!s.contacts[9].down);
  assert(a03_jd_contact_update(NULL,1,p,60,emit,&e)==-1);

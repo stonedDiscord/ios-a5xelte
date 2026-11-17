@@ -48,6 +48,12 @@ int main(void)
     memset(packet + 3, 0xff, 50); packet[0] = 0;
     assert(!a03_jd9365t_decode(packet, sizeof(packet), &r));
     for (unsigned i = 0; i < 10; i++) assert(!r.contacts[i].down);
+    memset(packet, 0, sizeof(packet)); packet[2] = 255;
+    assert(!a03_jd9365t_decode(packet, sizeof(packet), &r));
+    for (unsigned i = 0; i < 10; i++) assert(!r.contacts[i].down);
+    packet[0] = 1; memset(packet + 3, 255, 50); point(packet, 9, 0, 0);
+    assert(!a03_jd9365t_decode(packet, sizeof(packet), &r));
+    assert(r.contacts[9].down && !r.contacts[0].down);
     memcpy(&saved, &r, sizeof(r));
     for (size_t n = 0; n <= 61; n++) {
         if (n == 60) continue;

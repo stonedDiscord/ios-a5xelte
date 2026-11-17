@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0085 raw idle packet explains phantom corners
+
+0085 BOOT-only flash100percent/success/reboot20:49UTC; single43981 capture
+boot0085-usb-initial.log1800s. UTC sync1794948632=20:50:32UTC; privatefw
+restaged79104/79104 valid0; load0/readyA55A/config/report same as0084.
+Explicit log-only contacts2478 with per-sample enter/read/exit shows all three
+raw packets0000FF followed by57zero bytes. Whole-packet-zero rejection does
+not catch this status-bearing zero-count idle packet. Current0152 therefore
+still produces tenzero corners; no HID poll sent. This measures an actual
+idle packet, not transport failure or absent firmware. Physical center332,805
+previously proven on0084 remains valid evidence.
+
+0153 treats packet count0 as no contacts, copying state but ignoring zero
+slot payload. Positive counts still inspect all ten sparse slots, including
+valid0,0 points. Actual decoder/contact-state/poll C/C++ ASan/UBSan tests
+PASS with measured idle packet and held->idle release; exact kernel C compile
+PASS; reverse/plain patch+header equality PASS. Staged for next fullCI; no
+runtime fix yet. Need motion/lift/HID/UI validation before declaring touch.
+
 ## 2026-11-17: FIRST aligned physical finger coordinate confirmed
 
 On0084 user explicitly holds one finger near center and reports ready.
