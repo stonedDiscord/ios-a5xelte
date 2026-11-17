@@ -19,19 +19,23 @@ event loop; no unlocked home or touch result. HID candidate0145 passed
 CI43969089570 and host builder tests, but BOOT0079 runtime delivery remains
 pending in the latest A03 handoff. UNISOC USB transport, 1GiB RAM layout, A03
 account UUIDs and optional root vault metadata are device-specific.
-No S8 XNU boot, rootfs or GUI result is established. The connected phone is
-still rooted Android; BOOT p7 matches the preserved stock image. Overlay0206
-adds a bounded early trace to the previously verified Exynos snapshot buffer.
-Full CI44047499178 passed the S8 profile and A53 scan. Candidate
-`shim/out/dreamlte-xnu-0206.img` was flashed to BOOT only; after its reboot the
-phone stopped enumerating over USB, so runtime progress is unknown. A physical
-forced restart and download-mode key sequence is needed to restore original
-BOOT, then recover `/proc/last_kmsg`. The iPhone10,3
+No S8 XNU boot, rootfs or GUI result is established. Overlay0206 adds a bounded
+early trace to the previously verified Exynos snapshot buffer. Full
+CI44047499178 passed the S8 profile and A53 scan. After the 0206 BOOT-only
+trial, the phone returned to rooted Android and `/dev/block/sda7` matched the
+stock hash. Recovered `/proc/last_kmsg` reaches `arm_vm_init` after platform,
+CPU topology, CPU bootstrap, startup bootstrap and CPU init; no return marker
+exists. Candidate 0207 preserves the donor iPhone X `/product` identity and
+was then flashed to BOOT only. Heimdall reported upload successful, but the
+phone is currently absent from both ADB and Heimdall; 0207 progress is unknown.
+Force-restart (VolumeDown+Power), enter download mode (VolumeDown+Bixby+Power),
+restore and verify stock BOOT, then boot Android and retrieve 0207
+`/proc/last_kmsg` before another flash. The iPhone10,3
 16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
 open project for the Mach-O kernel. Its D22AP `/product` properties are now
 available in ignored `research/ipsw-x/d22ap.adt`; the DREAMLTE ADT builder now
-retains that product identity. Product-aware candidate 0207 is package-checked
-but not flashed. USERDATA and all protected partitions remain untouched.
+retains that product identity. USERDATA and all protected partitions remain
+untouched.
 
 The 2026-11-13 returning probe0003 marker was recovered from last_kmsg;
 stock BOOT was restored with verified hash in DREAMLTE_PROGRESS.md.
