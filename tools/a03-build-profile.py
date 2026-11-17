@@ -150,7 +150,9 @@ def main():
                      '0145-a03-opt-in-usb-hid-events.patch',
                      '0146-a03-explicit-jadard-rom-probe.patch',
                      '0147-a03-explicit-jadard-section-read.patch',
-                     '0148-a03-explicit-jadard-ram-load.patch'):
+                     '0148-a03-explicit-jadard-ram-load.patch',
+                     '0149-a03-explicit-jadard-contact-poll.patch',
+                     '0150-a03-explicit-volatile-utc-sync.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

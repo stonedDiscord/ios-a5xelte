@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: RAM-loader full CI success and0082 deployment
+
+CI44159557034 SUCCESS exactcdafbe19909f1b4b99a1523d57c5dd48957dc24a.
+Kernel48e9d057d4d1c1c7e1e9edf1dc059a66e859f045a861cf07db569bcfed3d95e7.
+BOOT1d03409238596e1c6f0de830365cfbe12fa02f70e0cba3e0112a7cd1732afce1.
+Package gate verifies exact0081 ADT/1GiB/bootargs/root/loader(except image
+size)/stockramdisk/DT. Synced CDC Download requested19:49UTC; enumeration
+required several seconds before Heimdall detect. BOOT-only flash in progress.
+No firmware uploaded yet.0080 home+ROM checkpoint remains available.
+
+0149 bounded contact poll and0150 volatile time sync now staged for the next
+full build.0082 itself contains0148 only; time/HID polling not present there.
+
 ## 2026-11-17: incorrect displayed date reported; UTC sync prepared
 
 User reports4:19 and December31, unlike actual2026-11-17. Source inspection:
