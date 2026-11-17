@@ -22,7 +22,7 @@ bit31 then hardware unmask+0x70 bits12/0, clear4/8. The framebuffer,
 snapshot low RAM and DECON have separate bootstrap L2 tables (seven of eight
 pages). Three affected ARM64 compile checks, loader build and all seven
 complete-source plain-apply/hash checks pass. Latest full CI44119574729 at
-9498204 is pending/in progress; poll this exact run. Supersedes44111718665
+9498204 is in progress with Build active; poll this exact run. Supersedes44111718665
 (missing snapshot L2) and44115872187 (missing frame requests). No0214 flash
 or physical scanout verification yet. Download exact artifacts and run
 tools/dreamlte-verify-ci.py before packaging/testing dreamlteusb=2.
@@ -48,7 +48,12 @@ Do not use --repartition/--skip-size-check. USERDATA measured58,556,678,144B.
 USB0212/0213 currently attempts guarded awake-PHY takeover, not cold start.
 No real S8 gadget enumeration/control/bidirectional transfer success yet.
 Source map now resolves CMU/FSYS0 clock gates, Q-channel, PMU isolation and
-reference selector in docs/dreamlte-usb.md. Framebuffer should expose the
+reference selector in docs/dreamlte-usb.md. Prepared follow-up0215 lives
+in xnu/dreamlte-next (excluded from active profile): USB2 sleep controls
+and post-reset66MHz GCTL timing from pinned Linux core.c. Actual wrapper
+host tests, ARM64 compile and plain apply/full-source equality pass. It is
+NOT in CI44119574729; first use0214 to locate runtime failure.
+ Framebuffer should expose the
 actual failure before implementing remaining cold PHY dependencies.
 
 Origin wardevsa/ios-a5xelte (read-only); CI remote build is

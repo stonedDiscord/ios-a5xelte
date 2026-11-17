@@ -582,3 +582,23 @@ compile results, hardware observations and restore results below.
   subcache UUIDs, mapping bounds, symbols UUID and required core dependency
   names; cache has2710 image entries. This supplements full content hashes
   without claiming signature/runtime verification.
+
+## 2026-11-17: source-derived USB2 wake/timing follow-up
+
+- Previous turn classified as progress (framebuffer fixes, validated root and
+  attempted USERDATA transport). Re-polled exact CI44119574729 at9498204: now
+  in_progress, Build active. No restart or replacement dispatched. Phone
+  still enumerates Download Mode; physical session reset response pending.
+- Further pinned Linux core.c review found existing takeover omits USB2
+  ENBLSLPM/SUSPHY clear and post-reset suspend-clock scale. Prepared0215
+  outside the active profile under xnu/dreamlte-next: guard core/USB2 PHY
+  reset, preserve board config while waking USB2 before reset, set GCTL
+  PWRDNSCALE=4125 for measured/live-DT66MHz after reset, clear vendor bits6/7.
+- Actual wrapper host checks PASS for both0214 and0215, including all32 GCTL
+  bit preservation cases and new reset refusals. 0x30c12004 becomes0x80e92004,
+  agreeing with prior working Android dump. Plain apply/full-source equality
+  PASS; modified USB translation unit ARM64 compile PASS (gnu11/general regs).
+  These are host/source results, not S8 enumeration. No new phone write.
+-0215 intentionally not part of CI44119574729 or current source-hash manifest.
+  First test0214 display, then promote0215/update hashes/build if warranted.
+  Next USB source SHA256df5d49b67402780ee2b3f347197b80c407a4c81598593cb8916082cda262770b.

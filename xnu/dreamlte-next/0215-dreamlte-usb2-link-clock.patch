@@ -1,0 +1,49 @@
+diff --git a/bsd/dev/sweet_usb.c b/bsd/dev/sweet_usb.c
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -100,12 +100,35 @@
+ 		printf("DREAMLTE USB: PHY reset/suspended; clock bring-up required\n");
+ 		return -1;
+ 	}
++	uint32_t usb2 = usb_rd(dwc, 0xc200);
++	if ((usb2 & (1u << 31)) || (usb_rd(dwc, 0xc110) & (1u << 11))) {
++		printf("DREAMLTE USB: DWC3 core/USB2 PHY held in reset\n");
++		return -1;
++	}
++	/* Samsung core.c dwc3_phy_setup unconditionally clears ENBLSLPM and
++	 * SUSPHY. Preserve PHYIF, turnaround and board tuning fields.
++	 */
++	*(volatile uint32_t *)(dwc + 0xc200) = usb2 & ~((1u << 8) | (1u << 6));
+ 	dreamlte_phy = phy;
+ 	/* Select device mode while stopped. */
+ 	uint32_t gctl = usb_rd(dwc, 0xc110);
+ 	*(volatile uint32_t *)(dwc + 0xc110) = (gctl & ~(3u << 12)) | (2u << 12);
+ 	__asm__ volatile("dsb sy" ::: "memory");
+ 	return 0;
++}
++
++/* Samsung core.c reset_check; live DT suspend_clk_freq=66000000.
++ * Call after DCTL reset because its timing fields can return to defaults.
++ */
++static void
++dreamlte_usb_core_timing(vm_offset_t dwc)
++{
++	uint32_t gctl = usb_rd(dwc, 0xc110);
++	gctl = (gctl & ~((0x1fffu << 19) | 0xc0u)) | ((66000000u / 16000u) << 19);
++	*(volatile uint32_t *)(dwc + 0xc110) = gctl;
++	__asm__ volatile("dsb sy" ::: "memory");
++	printf("DREAMLTE USB: USB2CFG %08x suspend66MHz GCTL %08x\n",
++	    usb_rd(dwc, 0xc200), usb_rd(dwc, 0xc110));
+ }
+ 
+ static void
+@@ -959,6 +982,9 @@
+ 		return;
+ 	}
+ 
++#if defined(DREAMLTE)
++	dreamlte_usb_core_timing(dwc);
++#endif
+ 	dwc_wr(GEVNTADRLO, (uint32_t)(ud.dma_pa + UD_EVT));
+ 	dwc_wr(GEVNTADRHI, (uint32_t)((ud.dma_pa + UD_EVT) >> 32));
+ 	dwc_wr(GEVNTSIZ, (1u << 31) | UD_EVT_SIZE);     /* interrupt masked: polled */

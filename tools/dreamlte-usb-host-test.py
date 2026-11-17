@@ -10,6 +10,7 @@ import sys
 import tempfile
 
 source = pathlib.Path(sys.argv[1]).read_text()
+has_core_timing = 'dreamlte_usb_core_timing' in source
 
 def function(name):
     match = re.search(r'\b' + name + r'\([^;{}]*\)\s*\{', source)
@@ -57,6 +58,9 @@ static void sweet_usb_gadget_start(vm_offset_t dwc) {
 }
 '''
 code += 'static int\n' + function('dreamlte_usb_prepare') + '\n'
+if has_core_timing:
+    code += '#define HAS_CORE_TIMING 1\n'
+    code += 'static void\n' + function('dreamlte_usb_core_timing') + '\n'
 code += 'static void\n' + function('dreamlte_usb_vbus') + '\n'
 code += 'static void\n' + function('sweet_usb_probe') + '\n'
 code += r'''
@@ -81,14 +85,39 @@ int main(void) {
     reset(); phy[0] = 0x010101; phy[0x0c/4] = 3; sweet_usb_probe();
     assert(!starts && core[0xc110/4] == 0x30c11004);
     reset(); phy[0] = 0xffffffff; sweet_usb_probe(); assert(!starts);
+#if defined(HAS_CORE_TIMING)
+    reset(); core[0xc200/4] = 1u << 31; sweet_usb_probe();
+    assert(!starts && !dreamlte_phy && core[0xc110/4] == 0x30c11004);
+    reset(); core[0xc110/4] |= 1u << 11; sweet_usb_probe();
+    assert(!starts && !dreamlte_phy);
+#endif
     for (unsigned shifted = 0; shifted < 2; shifted++) {
         reset(); unsigned off = shifted ? 4 : 0;
         phy[0] = shifted ? 0x010101 : 0;
         phy[(off+0x04)/4] = 0x51000000;
         phy[(off+0x08)/4] = 0xa000001c;
+#if defined(HAS_CORE_TIMING)
+        core[0xc200/4] = 0x40102540;
+#endif
         sweet_usb_probe(); assert(starts == 1 && maps == 2);
         assert(dreamlte_phy == (uintptr_t)phy + off);
         assert(core[0xc110/4] == 0x30c12004);
+#if defined(HAS_CORE_TIMING)
+        assert(core[0xc200/4] == 0x40102400);
+        core[0xc110/4] |= 0xc0;
+        dreamlte_usb_core_timing((uintptr_t)core);
+        assert(core[0xc110/4] == 0x80e92004);
+        for (unsigned bits = 0; bits < 32; ++bits) {
+            unsigned before = 1u << bits;
+            core[0xc110/4] = before;
+            dreamlte_usb_core_timing((uintptr_t)core);
+            unsigned after = core[0xc110/4];
+            assert((after & (0x1fffu << 19)) == (4125u << 19));
+            assert(!(after & 0xc0));
+            assert((after & ~((0x1fffu << 19) | 0xc0u)) ==
+                (before & ~((0x1fffu << 19) | 0xc0u)));
+        }
+#endif
         dreamlte_usb_vbus();
         assert(phy[(off+0x04)/4] == 0x51000180);
         assert(phy[(off+0x08)/4] == 0xa0000640);
