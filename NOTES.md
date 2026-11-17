@@ -26,11 +26,16 @@ trial, the phone returned to rooted Android and `/dev/block/sda7` matched the
 stock hash. Recovered `/proc/last_kmsg` reaches `arm_vm_init` after platform,
 CPU topology, CPU bootstrap, startup bootstrap and CPU init; no return marker
 exists. Candidate 0207 preserves the donor iPhone X `/product` identity and
-was then flashed to BOOT only. Heimdall reported upload successful, but the
-phone is currently absent from both ADB and Heimdall; 0207 progress is unknown.
-Force-restart (VolumeDown+Power), enter download mode (VolumeDown+Bixby+Power),
-restore and verify stock BOOT, then boot Android and retrieve 0207
-`/proc/last_kmsg` before another flash. The iPhone10,3
+was then flashed to BOOT only. Heimdall reported upload successful; after its
+reboot the phone was briefly absent from both ADB and Heimdall. Download mode
+returned; stock BOOT was restored and verified at SHA256
+`71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
+Android booted and 0207 `/proc/last_kmsg` was retrieved. It has the same final
+marker as 0206, `entering arm_vm_init`; the product identity change did not
+advance observed kernel progress. Draft overlay0208 adds bounded VM setup and
+physmap milestones, with logging disabled before the TTBR0 switch. Its patch
+dry-run passes on the exact 0206 CI build tree; profile stages130 patches.
+Run full S8 CI before packaging/flashing 0208. The iPhone10,3
 16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
 open project for the Mach-O kernel. Its D22AP `/product` properties are now
 available in ignored `research/ipsw-x/d22ap.adt`; the DREAMLTE ADT builder now

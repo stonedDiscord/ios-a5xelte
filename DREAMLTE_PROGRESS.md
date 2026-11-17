@@ -248,3 +248,16 @@ compile results, hardware observations and restore results below.
 - Next: force-restart with VolumeDown+Power, enter download mode with
   VolumeDown+Bixby+Power, restore the verified stock BOOT and verify its hash,
   then boot Android and capture 0207 `/proc/last_kmsg` before another trial.
+- Download mode returned. Restored stock BOOT with Heimdall 2.2.2, booted
+  Android, and verified `/dev/block/sda7` SHA256
+  `71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
+  Captured ignored `backup/galaxy-s8-2026-11-13/last-kmsg-0207.txt` (47,375
+  bytes). Its final XNU marker is also `entering arm_vm_init`; it has the same
+  platform/CPU milestones as 0206 and no VM-init return. Thus preserving the
+  donor `/product` identity did not advance the observed kernel boot.
+- Added draft overlay0208 to keep the S8 RAM logger active beyond stage7,
+  mark VM window/page-table setup and `arm_vm_physmap_init`, then disable it
+  immediately before the TTBR0 switch. This distinguishes a stall in physmap
+  setup from a failure during translation-table replacement. Patch dry-run
+  passes against the exact 0206 CI build tree; full profile CI and BOOT trial
+  remain pending. Profile now stages130 patches.
