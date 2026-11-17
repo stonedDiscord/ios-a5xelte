@@ -1,3 +1,9 @@
+ACTIVE20:25UTC0084 UTC sync/status advancing2026-11-17 works. fw reupload
+valid0/load0/A55A/configPASS. contacts2478/2479 log-only tenzero slots ->
+NOT physical touch; NO HID poll sent.0152 now staged rejectallzero + each-
+frame enter/read/exit+raw3packetlogs; tests/applyPASS, compile97018 result.
+User finger-test +screen/overlay questions pending. Single4287 capture.
+
 ACTIVE20:20UTC0084 (0149poll+0150UTC+0151console) CI44165152625 SUCCESS
 exactd6800e4, package verified BOOT79ef8571...6fb4/kernel f92711ec...9e27.
 SyncedDownload detected; BOOT flash49731 /tmp/a03-0084/flash.log underway.

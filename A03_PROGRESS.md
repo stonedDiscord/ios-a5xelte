@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0084 UTC works; first contact samples invalid
+
+BOOT0084 flash success/reboot20:20UTC; single4287 capture waits180/1800s,
+boot0084-usb-initial.log. UTC sync result1794946865=2026-11-17 20:21:05UTC;
+later status1794947086=20:24:46UTC confirms advancing calendar. Display local
+hour/timezone and GUI console-handoff physical result pending question.
+
+Private79104byte candidate reupload valid0; explicit load result0/readyA55A,
+config20002AD4/1028/report20011580/60/720x1600/18x32. Two explicit log-only
+contacts sessions2478/2479 each return300valid reads but produce ten slots
+at(0,0) followed by final releases, no movement. These are NOT accepted as
+physical contacts. No touch poll/HID delivery sent. User finger-test question
+pending; overlapping actual finger movement not yet confirmed.
+
+0152 rejects wholly zero packets before contact decoder (retains genuine0,0
+inside nonzero report), aborts after3bad samples, cycles diagnostic enter/
+read/exit each frame like stock ReadRegMulti, logs first3raw packets. Prior
+0149 held diagnostic mode across all samples. Actual C/C++ ASan/UBSan tests
+includingzero refusal PASS; reverse/plain equality PASS; exact kernel C compile PASS. No reset/scan-enable added without evidence.
+
 ## 2026-11-17: poll/UTC/console full Xcode SUCCESS; BOOT0084 trial
 
 CI44165152625 SUCCESS exactd6800e414746e684fa67088a7e9d8f1baf4b3716,

@@ -7,6 +7,9 @@
 #include "jd9365t-memory.h"
 #include "jd9365t-sections.h"
 #include "jd9365t-contact-state.h"
+#ifndef A03_JD_POLL_TRACE
+#define A03_JD_POLL_TRACE(i,p) ((void)0)
+#endif
 static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
     a03_jd_contact_emit emit,void *context,unsigned *valid_out)
 {
@@ -26,9 +29,22 @@ static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
  if(a03_jd_ram_read(b,sections.firmware_config.address,config,sizeof(config))||
     ((unsigned)config[0]|((unsigned)config[1]<<8))!=720||
     ((unsigned)config[2]|((unsigned)config[3]<<8))!=1600||config[4]!=18||config[5]!=32)goto done;
+ if(a03_jd_write(b,leave,sizeof(leave)))goto done;
  result=0;
  for(unsigned i=0;i<frames;i++) {
-  int ok=!a03_jd_ram_read(b,sections.coordinate_report.address,packet,sizeof(packet));
+  /* Match stock ReadRegMulti: enter/read/exit each sample, letting the
+   * firmware run outside diagnostic mode between frames. */
+  int ok=!a03_jd_write(b,enter,sizeof(enter));
+  if(ok)ok=!a03_jd_ram_read(b,sections.coordinate_report.address,packet,sizeof(packet));
+  if(a03_jd_write(b,leave,sizeof(leave)))ok=0;
+  if(ok) {
+   A03_JD_POLL_TRACE(i,packet);
+   unsigned nonzero=0;
+   for(unsigned j=0;j<sizeof(packet);j++)nonzero|=packet[j];
+   /* A wholly zero report cannot establish ten real corner contacts. A
+    * genuine (0,0) slot remains valid within a nonzero complete packet. */
+   if(!nonzero)ok=0;
+  }
   if(!a03_jd_contact_update(&state,ok,packet,sizeof(packet),emit,context))valid++;
   else if(state.failures>=3){result=-4;break;}
   b->delay_us(b->context,16000);

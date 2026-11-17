@@ -1,0 +1,49 @@
+--- a/bsd/dev/a03_jd9365t_poll.h
++++ b/bsd/dev/a03_jd9365t_poll.h
+@@ -7,6 +7,9 @@
+ #include "a03_jd9365t_memory.h"
+ #include "a03_jd9365t_sections.h"
+ #include "a03_jd9365t_contact_state.h"
++#ifndef A03_JD_POLL_TRACE
++#define A03_JD_POLL_TRACE(i,p) ((void)0)
++#endif
+ static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
+     a03_jd_contact_emit emit,void *context,unsigned *valid_out)
+ {
+@@ -26,9 +29,22 @@
+  if(a03_jd_ram_read(b,sections.firmware_config.address,config,sizeof(config))||
+     ((unsigned)config[0]|((unsigned)config[1]<<8))!=720||
+     ((unsigned)config[2]|((unsigned)config[3]<<8))!=1600||config[4]!=18||config[5]!=32)goto done;
++ if(a03_jd_write(b,leave,sizeof(leave)))goto done;
+  result=0;
+  for(unsigned i=0;i<frames;i++) {
+-  int ok=!a03_jd_ram_read(b,sections.coordinate_report.address,packet,sizeof(packet));
++  /* Match stock ReadRegMulti: enter/read/exit each sample, letting the
++   * firmware run outside diagnostic mode between frames. */
++  int ok=!a03_jd_write(b,enter,sizeof(enter));
++  if(ok)ok=!a03_jd_ram_read(b,sections.coordinate_report.address,packet,sizeof(packet));
++  if(a03_jd_write(b,leave,sizeof(leave)))ok=0;
++  if(ok) {
++   A03_JD_POLL_TRACE(i,packet);
++   unsigned nonzero=0;
++   for(unsigned j=0;j<sizeof(packet);j++)nonzero|=packet[j];
++   /* A wholly zero report cannot establish ten real corner contacts. A
++    * genuine (0,0) slot remains valid within a nonzero complete packet. */
++   if(!nonzero)ok=0;
++  }
+   if(!a03_jd_contact_update(&state,ok,packet,sizeof(packet),emit,context))valid++;
+   else if(state.failures>=3){result=-4;break;}
+   b->delay_us(b->context,16000);
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -376,6 +376,10 @@
+ #include "a03_jd9365t_spi.h"
+ #include "a03_jd9365t_sections.h"
+ #include "a03_jd9365t_loader.h"
++#define A03_JD_POLL_TRACE(i,p) do { if((i)<3) { \
++ printf("A03 TOUCH packet%u:",(i)); \
++ for(unsigned j=0;j<60;j++)printf("%02x",(p)[j]); \
++ printf("\n"); } } while(0)
+ #include "a03_jd9365t_poll.h"
+ static vm_offset_t a03_touch_spi, a03_touch_apb, a03_touch_clk;
+ static uint32_t a03_touch_r32(void *p,unsigned o) {
