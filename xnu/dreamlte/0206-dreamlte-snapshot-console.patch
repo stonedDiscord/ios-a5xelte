@@ -1,0 +1,72 @@
+diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
+--- a/osfmk/arm64/start.s
++++ b/osfmk/arm64/start.s
+@@ -518,5 +518,22 @@ LEXT(start_first_cpu)
+ 	str		x11, [x10]
+ 	dsb		sy
++	/* Persist an XNU-entry byte in the verified Exynos snapshot buffer. */
++	MOV64	x10, 0x91200200
++	ldr		w11, [x10]
++	MOV64	x13, 0x91a00000
++	cmp		w11, w13
++	b.lo	Ldreamlte_snapshot_entry_done
++	MOV64	x12, 0x91c00000
++	cmp		w11, w12
++	b.hs	Ldreamlte_snapshot_entry_done
++	mov		w12, #0x58
++	strb	w12, [x11]
++	dc		cvac, x11
++	add		w11, w11, #1
++	str		w11, [x10]
++	dc		cvac, x10
++	dsb		sy
++Ldreamlte_snapshot_entry_done:
+ 	/* XNU-owned green entry block on the Exynos DECON scanout buffer. */
+ 	MOV64	x10, (A5XELTE_FB_PA+88*A5XELTE_FB_STRIDE+960)
+ 	MOV64	x11, 0xff00ff00
+@@ -727,5 +727,24 @@ La5_fb_attr:
+ 	subs	x13, x13, #1
+ 	b.ne	La5_fb_attr
++#if defined(DREAMLTE)
++	/* Map the tested Exynos snapshot cursor and 2 MiB log buffer. */
++	MOV64	x10, 0x91200000
++	and		x11, x10, #(ARM_TT_L2_INDEX_MASK)
++	lsr		x11, x11, #(ARM_TT_L2_SHIFT)
++	add		x12, x2, x11, lsl #TTE_SHIFT
++	MOV64	x13, ARM_TTE_BOOT_BLOCK
++	and		x14, x10, #(ARM_TTE_BLOCK_L2_MASK)
++	orr		x13, x13, x14
++	str		x13, [x12]
++	MOV64	x10, 0x91a00000
++	and		x11, x10, #(ARM_TT_L2_INDEX_MASK)
++	lsr		x11, x11, #(ARM_TT_L2_SHIFT)
++	add		x12, x2, x11, lsl #TTE_SHIFT
++	MOV64	x13, ARM_TTE_BOOT_BLOCK
++	and		x14, x10, #(ARM_TTE_BLOCK_L2_MASK)
++	orr		x13, x13, x14
++	str		x13, [x12]
++#endif
+ #endif
+ 
+ #if defined(SWEET) && !defined(A5XELTE)
+diff --git a/osfmk/arm64/sweet_early.c b/osfmk/arm64/sweet_early.c
+--- a/osfmk/arm64/sweet_early.c
++++ b/osfmk/arm64/sweet_early.c
+@@ -70,7 +70,17 @@
+ static void
+ a5_string(const char *s)
+ {
+ 	while (*s) {
++#if defined(DREAMLTE)
++		uint32_t p = *(volatile uint32_t *)(uintptr_t)0x91200200u;
++		if (p >= 0x91a00000u && p < 0x91c00000u) {
++			*(volatile uint8_t *)(uintptr_t)p = (uint8_t)*s;
++			*(volatile uint32_t *)(uintptr_t)0x91200200u = p + 1;
++			__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)p) : "memory");
++			__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)0x91200200u) : "memory");
++			__asm__ volatile("dsb sy" ::: "memory");
++		}
++#endif
+ 		sweet_early_putc(*s++);
+ 	}
+ }

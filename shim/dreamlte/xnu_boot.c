@@ -7,6 +7,9 @@
 #include "fbtext.h"
 
 #define LOG_BASE 0x8afff000UL
+#define SNAPSHOT_BASE 0x91a00000UL
+#define SNAPSHOT_END  0x91c00000UL
+#define SNAPSHOT_CURSOR 0x91200200UL
 #define RAM_BASE 0x94000000UL
 #define RAM_END  0xb0000000UL
 /* Second DRAM bank (DTB memory@880000000, 2 GiB): no reserved-memory node
@@ -17,6 +20,7 @@
 #define PAGE_SIZE 4096UL
 #define BOOT_LINE_LENGTH 608
 #define FAIL_DELAY_S 30U
+#define SNAPSHOT_READY 0x44524d4cU
 
 struct payload_seg {
     uint64_t vmaddr, vmsize, file_off, file_size;
@@ -93,11 +97,37 @@ static uint64_t counter(void)
     return value;
 }
 
+static void snapshot_write(const char *text)
+{
+    volatile uint32_t *cursor = (volatile uint32_t *)SNAPSHOT_CURSOR;
+    uint32_t p = *cursor;
+    if (p < SNAPSHOT_BASE || p >= SNAPSHOT_END)
+        return;
+    uint32_t begin = p;
+    while (*text && p < SNAPSHOT_END)
+        *(volatile uint8_t *)(uintptr_t)p++ = (uint8_t)*text++;
+    *cursor = p;
+    clean_bytes(begin, p);
+    clean_bytes(SNAPSHOT_CURSOR, SNAPSHOT_CURSOR + sizeof(*cursor));
+}
+
+static void snapshot_begin(void)
+{
+    *(volatile uint64_t *)(SNAPSHOT_END - sizeof(uint64_t)) = 0;
+    *(volatile uint32_t *)SNAPSHOT_CURSOR = SNAPSHOT_BASE;
+    snapshot_write("DREAMLTE loader entered\n");
+}
+
 /* Record failure in the RAM log, delay briefly, then halt in assembly. */
 static uintptr_t fail(volatile uint64_t *log, int64_t step, const char *why)
 {
     uint64_t freq;
     log[10] = (uint64_t)step;
+    if (log[76] == SNAPSHOT_READY) {
+        snapshot_write("DREAMLTE loader failure: ");
+        snapshot_write(why);
+        snapshot_write("\n");
+    }
     clean_bytes(LOG_BASE, LOG_BASE + PAGE_SIZE);
     hero_fb_text(3, "LOADER FAIL:");
     hero_fb_text(4, why);
@@ -121,6 +151,8 @@ uintptr_t hero_prepare_xnu(uintptr_t fdt, volatile uint64_t *log, uint64_t el, u
         return fail(log, -10, "NOT EL1");
     if (sctlr & 1)
         return fail(log, -11, "MMU ALREADY ON");
+    snapshot_begin();
+    log[76] = SNAPSHOT_READY;
     /* Appended payload first: its length is bounded by the Image header. */
     extern char _start[], _image_end[];
     uint64_t image_size = *(volatile uint64_t *)(uintptr_t)(_start + 16);
@@ -201,6 +233,7 @@ uintptr_t hero_prepare_xnu(uintptr_t fdt, volatile uint64_t *log, uint64_t el, u
     log[16] = p->nsegs;
     log[17] = ba_pa;
     log[10] = 5;
+    snapshot_write("DREAMLTE loader handoff to XNU\n");
     hero_fb_hex(1, "ENTRY", entry_pa);
     hero_fb_hex(2, "BOOTARGS", ba_pa);
     hero_fb_text(3, "JUMP TO XNU");

@@ -182,3 +182,23 @@ compile results, hardware observations and restore results below.
   scan passed with zero LSE instructions. It built overlay0205 at527db60;
   no S8 boot/GUI test followed. CI:
   https://github.com/stonedDiscord/ios-a5xelte/actions/runs/43890925469
+
+## 2026-11-17: persistent early XNU trace prepared
+
+- Rechecked the connected SM-G950F: Android completed boot, ADB shell is root,
+  and BOOT /dev/block/sda7 still matches the verified stock hash from Nov 13.
+  RECOVERY, EFS/CPEFS and USERDATA remain untouched.
+- The 20H392 IPSW is iPhone10,3/10,6 (d22ap), iOS 16.7.16. Its BuildManifest
+  identifies OS image 087-86698-044.dmg and DeviceTree.d22ap.im4p. These are
+  donor assets, not S8 runtime evidence. ReVa currently reports no open
+  programs/project files, and the kernelcache import did not complete.
+- Added draft overlay0206 to map only the two verified Exynos snapshot blocks
+  and append loader/XNU early-stage text to the `last_kmsg` buffer. The trial
+  reuses the previously verified 0x91200200 cursor and 0x91a00000..0x91c00000
+  log area; no disk or protected-partition writes are added. Snapshot capture
+  stops at XNU's existing stage-7 low-map teardown.
+- Local validation: overlay applies to the exact CI43890925469 build tree;
+  modified `start.s` and `sweet_early.c` compile with zero failures using the
+  recovered CI commands. DREAMLTE profile stages129 patches. Loader rebuild
+  and minimal ADT generation pass. No candidate XNU image has been packaged
+  or flashed; overlay0206 still needs a complete CI build before hardware use.

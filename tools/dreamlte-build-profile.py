@@ -22,9 +22,10 @@ patches=sorted(p for p in (root/'xnu/patches').glob('*.patch') if int(p.name[:4]
 if len(patches) != 126 or not patches[-1].name.startswith('0203-'):
     p.error('HEROLTE baseline must end at 0203')
 overlays=sorted((root/'xnu/dreamlte').glob('*.patch'))
-if [p.name for p in overlays[:2]] != [
+if [p.name for p in overlays[:3]] != [
         '0204-dreamlte-early-board.patch',
-        '0205-dreamlte-a03-portable-bringup.patch']:
+        '0205-dreamlte-a03-portable-bringup.patch',
+        '0206-dreamlte-snapshot-console.patch']:
     p.error('required DREAMLTE board and portable overlays are missing')
 a.destination.mkdir(parents=True)
 for source in patches:

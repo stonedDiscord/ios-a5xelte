@@ -19,9 +19,14 @@ event loop; no unlocked home or touch result. HID candidate0145 passed
 CI43969089570 and host builder tests, but BOOT0079 runtime delivery remains
 pending in the latest A03 handoff. UNISOC USB transport, 1GiB RAM layout, A03
 account UUIDs and optional root vault metadata are device-specific.
-No S8 XNU boot, rootfs or GUI result is established. No phone writes in
-this adaptation. Next hardware prerequisite is XNU console recovery via
-the verified snapshot path, then scanout/UFS; USERDATA remains untouched.
+No S8 XNU boot, rootfs or GUI result is established. The connected phone is
+still rooted Android; BOOT p7 matches the preserved stock image. Overlay0206
+now adds a bounded early trace to the previously verified Exynos snapshot
+buffer. It applies to CI43890925469's exact source and both changed XNU files
+compile locally; full CI is required before a BOOT-only trial. The iPhone10,3
+16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
+open project, so kernelcache analysis remains pending. USERDATA and all
+protected partitions remain untouched.
 
 The 2026-11-13 returning probe0003 marker was recovered from last_kmsg;
 stock BOOT was restored with verified hash in DREAMLTE_PROGRESS.md.
