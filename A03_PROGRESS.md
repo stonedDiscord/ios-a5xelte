@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: explicit read-only section session0147 prepared
+
+After hardware ROM9383 proof, added touch sections command to inspect fixed
+ERAM20011000/160bytes and conservatively validated firmware-config pointer.
+Requires another successful ROM9383 before entering read-only section session.
+No firmware loading, reset, pinmux or contact dispatch. Failed reads, invalid
+ready/table/lengths, out-of-range DRAM/ERAM entries skip config dereference;
+always attempts backdoor exit and restores0146 controller/clocks.
+Actual extracted session ASan/UBSan tests PASS for wire addresses, successful
+720x1600/18x32 config, entry/read failure, not-ready and refused range cleanup.
+Exact CI-command full usb_console kernel C compile PASS; reverse/plain patch
+application/full source+header equality PASS. Staged0147; full CI pending.
+
 ## 2026-11-17: BOOT0080 hardware Jadard ROM9383 confirmed
 
 At19:03UTC exact A03XNUConsole01 returned. Both HID providers registered,

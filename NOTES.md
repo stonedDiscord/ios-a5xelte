@@ -1,3 +1,9 @@
+ACTIVE0147 touch sections prepared+staged: ROM-gated fixedERAM160byte read,
+validated config pointer only. No reset/firmware/contact events. Exact kernel
+C compile+actual-session ASan/UBSan tests+apply equality PASS. Need full CI.
+0080 ROM9383 already confirmed, restored controls, storage ready1 poisoned0;
+both HID clients opened. Single capture2205 remains. Physical touch pending.
+
 ACTIVE19:04UTC0080 HARDWARE ROM9383 PASS. touch status1 gate0A02DE00/clock0;
 touch rom2 result0/id9383/raw8A/sts2AA/restored gate+clock exact/END.
 SPI3 inherited pins/reset/CS0/1MHz works. No firmware/reset/pinmux write.
