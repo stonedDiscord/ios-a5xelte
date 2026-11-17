@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0082 physical display still boot output
+
+After successful controller RAM startup the user reports brief Apple logo,
+then log output overwriting it. This is not a visible clock/home confirmation.
+Fresh ps2478 shows SpringBoard25/backboardd56; sample2479 at19:54UTC shows
+SpringBoard main thread semaphore wait through libdispatch/libMobileGestalt
+(cache slide36D60000). Not yet measured at application main event loop.
+No Home/swipe event sent on0082. Continue startup observation; firmware
+load result0/readyA55A/config proof remains separate from display progress.
+
 ## 2026-11-17: BOOT0082 temporary touch RAM firmware RUNNING
 
 At19:52UTC baseline touch sections: ROM9383 PASS, ready2317/not-ready,

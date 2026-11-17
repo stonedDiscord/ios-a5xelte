@@ -1,3 +1,8 @@
+ACTIVE19:55UTC0082 user sees briefApplelogo then boot logs (NOT clock/home).
+SB25/bbd56 alive; sample2479 main waits libMobileGestalt semaphore, startup.
+Touch RAM load0/readyA55A/config PASS separate from display. No input sent.
+CI44162912240 (0149poll+0150UTC) running; package68041. Single23880 capture.
+
 ACTIVE19:54UTC0082 TOUCH FIRMWARE RUNNING. Private79104 upload valid0,
 explicit load2477 result0(all7HWCRC pass), readyA55A/config20002AD4/1028/
 report20011580/60/720x1600/18x32. Exit0/gate+clock restored/END. NO contact
