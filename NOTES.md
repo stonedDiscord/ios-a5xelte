@@ -27,7 +27,13 @@ complete-source plain-apply/hash checks pass. Latest full CI44119574729 at
 9498204 is in progress with Build active; poll this exact run. Supersedes44111718665
 (missing snapshot L2) and44115872187 (missing frame requests). No0214 flash
 or physical scanout verification yet. Download exact artifacts and run
-tools/dreamlte-verify-ci.py before packaging/testing dreamlteusb=2.
+tools/dreamlte-verify-ci.py before packaging/testing dreamlteusb=2. Host preparation
+session71698 now waits for this exact run, downloads/verifies its artifacts
+and packages0214 automatically (no flashing). Inspect
+research/dreamlte/ci-44119574729/{prepare.log,prepared-boot.json}; JSON exists
+only after successful verification/packaging. Poll session71698; do not
+restart from an observation timeout. CI watch session13877 also exists.
+
 
 20H392 IPSW OS/SystemOS/AppOS were mounted read-only and converted to:
 research/dreamlte/root/ios-16.7.16-20H392-hfsx.img (32GiB)

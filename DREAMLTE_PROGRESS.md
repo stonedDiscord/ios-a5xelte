@@ -617,3 +617,16 @@ compile results, hardware observations and restore results below.
   restoration or additional BOOT/USERDATA/protected partition write occurred.
 - Host live gadget checker still finds no1209:0001. Objective remains
   unachieved: no verified framebuffer trial, XNU USB enumeration or transfers.
+
+## 2026-11-17: exact-run artifact preparation waiting on CI
+
+- Previous turn made new recovery evidence; current continuation revalidated
+  CI44119574729 still in_progress/Build and phone absent from USB. No reset
+  response yet. No new CI, firmware or partition writes.
+- Started sequential host preparation session71698: wait for exact9498204
+  CI44119574729 success, download kernel/buildtree under
+  research/dreamlte/ci-44119574729, verify all seven actual source hashes and
+  linked symbols, rebuild loader/ADT and package shim/out/dreamlte-xnu-0214.img
+  with dreamlteusb=2. It writes prepared-boot.json only after all checks pass.
+  It performs no flash. Preparation is waiting on the confirmed-live CI;
+  do not restart due to an observation timeout. Watch session13877 also lives.
