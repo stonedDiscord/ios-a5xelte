@@ -1,3 +1,13 @@
+ACTIVE2026-11-17~18:23UTC0079 PHYSICAL HOME MENU after explicit USB Home.
+User finger swipe inert(no physical driver); ready-screen USB swipe22 also
+no visible reaction. Then USB Home23 Menu0x40 down/up1client/result0/END;
+user immediately "now it went to the home menu". Positive button/UI evidence,
+NOT physical touch or digitizer delivery proof. Preserve running0079 and
+0078clock restore; no reset/flash this turn. Current single capture33166
+boot0079-input-ready.log180s ends~18:25UTC. Fresh ps/io requested.
+Next physical Jadard SPI3/ROM/CPT RAM-firmware/section/report driver;
+see docs/a03-touch.md. USB swipe policy/queue acceptance still unresolved.
+
 ACTIVE18:19UTC0079 SpringBoard25 main now GSEventRunModal/UIApplication
 _run/UIApplicationMain/SBSystemAppMain (cache slide09450000), framebuffer
 swaps19; io ready1/poisoned0. User earlier reported Apple logo during first

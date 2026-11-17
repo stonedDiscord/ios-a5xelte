@@ -2,9 +2,11 @@
 
 ## Evidence and current boundary (2026-11-17)
 
-The preserved BOOT0078 checkpoint renders the user-reported iOS clock and
-SpringBoard reaches its application event loop. Physical touch and an unlocked
-home screen remain unverified. Patch0145 supplies software HID event services
+BOOT0079 reaches the physically reported home menu after an explicit USB
+Home-button press/release (~18:23UTC2026-11-17). A USB swipe while SpringBoard
+was visible had no reported effect; physical finger touch remains unsupported.
+The preserved BOOT0078 checkpoint renders the user-reported iOS clock.
+Patch0145 supplies software HID event services
 and explicit USB gestures; it does not drive the panel's physical digitizer.
 Full Xcode CI43969089570 for exact2d4ffd7a44eab34178a13295b0ad3a337044e453
 completed successfully on2026-11-16 at22:42:24UTC. This is build evidence only.
@@ -16,6 +18,11 @@ registered and input status returned3. At18:16UTC both HID user clients
 opened successfully and one explicit swipe-up dispatched down/move/up with
 result0. Visible response and queue consumption remain unverified;
 SpringBoard's latest sample was still startup.
+Later, after the user confirmed SpringBoard visible, a second USB swipe
+dispatched successfully but produced no reported reaction. One following
+USB Home event logged Menu0x40 down/up with one client; the user immediately
+reported the home menu. Button UI response is supported; digitizer consumption
+and touch gesture policy remain unresolved. No physical driver is enabled.
 See latest A03_PROGRESS.md/NOTES.md for runtime updates. Prior temporary
 watchers were absent; this trial has its own image/manifest/capture.
 

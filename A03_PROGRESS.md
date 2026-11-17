@@ -1,5 +1,28 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0079 physical home menu after explicit USB Home
+
+User reports SpringBoard visible and physical finger swipe has no effect.
+This is expected with no physical Jadard/SPI driver wired to HID. Started
+single180s capture boot0079-input-ready.log/session33166 after original
+capture ended; input status3. Sent one USB swipe while UI physically visible:
+worker22 down360,1560/up360,460/result0/END. User explicitly reports no visible
+reaction, so digitizer queue consumption/UI touch acceptance still unverified.
+
+Then sent one paired80ms USB Home event. Worker23 logs consumer Menu0x40
+down/up, one client, result0/END. User immediately reports "now it went to
+the home menu" (~18:23UTC). This is the first physical home-menu report and
+positive UI response following explicit software input. It supports the
+button delivery path, not digitizer delivery or physical touch support. No
+passcode handling, persistent unlock or usable application interaction claim.
+
+Preserve running0079 as home-menu checkpoint,0078 as clock restore. No new
+flash/reset/root changes this turn. Next hardware work remains Jadard SPI3
+ROM/clock/GPIO, private matching CPT RAM firmware and section discovery,
+then actual contact reports into HID. USB swipe failure could also reflect
+UI gesture policy on this Home-button profile; do not infer a queue ABI bug
+from no visual response alone.
+
 ## 2026-11-17: BOOT0079 HID trial flashed after USB reconnect
 
 A03 console re-enumerated as exact A03XNUConsole01. Single40s read-only

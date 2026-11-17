@@ -1,5 +1,11 @@
 # A03 USB input trial
 
+BOOT0079 runtime2026-11-17: both services registered/opened; input status3.
+A USB swipe on visible SpringBoard dispatched with result0 but had no user-
+reported reaction. A following USB Home press/release (Menu0x40, one client)
+was followed immediately by the user's physical home-menu report. This
+establishes a button/UI milestone; physical touch remains unsupported.
+
 For physical digitizer evidence and the separate Jadard hardware work, see
 [a03-touch.md](a03-touch.md). The0145 full Xcode CI43969089570 completed
 successfully for exact2d4ffd7 on2026-11-16; runtime delivery remains unverified.

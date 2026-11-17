@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G bring-up
 
+As of2026-11-17 BOOT0079, the user physically reports the home menu after
+one explicit USB-generated Home-button press/release. Both HID services
+register and open, but a USB swipe while SpringBoard was visible produced
+no reported reaction. Physical finger touch remains unsupported: the Jadard
+SPI/RAM-firmware driver is not implemented. Preserve0079 as the home-menu
+checkpoint and0078 as the clock-screen restore; see docs/a03-touch.md.
+
 As of 2026-11-16 BOOT0078, the user physically reports an iOS clock screen
 beyond the Apple logo. SpringBoard samples progress through UI layout and
 framebuffer submissions continue. Analyticsd and MobileActivation survive
