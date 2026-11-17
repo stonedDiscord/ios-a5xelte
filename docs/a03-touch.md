@@ -30,6 +30,16 @@ BOOT0080/0146 now confirms fresh XNU SPI3 ROM ID9383 on2026-11-17 at19:04UTC.
 Explicit ROM probe returns0 and restores gate0A02DE00/clock0; inherited pins,
 reset and CS0 work at1MHz. No firmware/contact/physical-touch proof yet.
 
+## Display ownership during touch trials
+
+BOOT0082 user reports app icons after explicit Home, and also corrects the
+prior clock report: GUI pictures periodically appear before boot logs cover
+them again. The fallback framebuffer serial logger shares the panel RAM with
+AppleCLCD. This is a display ownership defect distinct from touch reports.
+0151 stops only its glyph writes after a validated GUI surface is ready to
+copy, while retaining every byte in the USB spool. Full Xcode build/hardware
+validation pending in44165152625; current0082 still has the overlay.
+
 ## Hardware RAM startup verified (2026-11-17, 19:53 UTC)
 
 BOOT0082/0148 stages the private79104-byte CPT candidate with valid0 and
