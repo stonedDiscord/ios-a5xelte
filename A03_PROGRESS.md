@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0082 temporary touch RAM firmware RUNNING
+
+At19:52UTC baseline touch sections: ROM9383 PASS, ready2317/not-ready,
+exit0 and SPI gate0A02DE00/clock0 restored. Private CPT79104byte candidate
+SHA2568ba14e32cdeacd6763a9700fd5340f9c91763afc2965231148f72f9c1ceea82d
+then staged sequentially over EP0: all bytes acknowledged, fwstatus2476
+79104/79104 valid0. No bytes stored to phone filesystem or tracked in git.
+
+Explicit touch load2477 at19:53UTC returns0: all seven hardware RAM CRCs
+passed before MCU startup. Subsequent section readyA55A, config20002AD4/1028,
+report20011580/60, config720x1600 sensors18/32. Exit0 and original gate/source
+restored; workerEND. This is actual firmware execution/config evidence, not
+physical contact or HID UI proof. Revision8 candidate now runs on this ROM/
+panel path; full compatibility remains unverified. No external flash/pinmux/
+display reset used. BOOT0082 still lacks polling and UTC command.
+
+0149+0150 CI44162912240 exactda42e57 remains building. Single23880 capture
+boot0082-usb-initial.log1800s. Physical current-screen question sent19:54UTC;
+await reply. Next0083 verified BOOT trial then restage/load (volatile) and
+explicit log-only contact session before HID input; correct UTC separately.
+
 ## 2026-11-17: BOOT0082 flash success; poll/time full CI queued
 
 BOOT0082 upload100percent/success/reboot verified19:50UTC. Single capture

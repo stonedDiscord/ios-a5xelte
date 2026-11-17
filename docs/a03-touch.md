@@ -30,6 +30,16 @@ BOOT0080/0146 now confirms fresh XNU SPI3 ROM ID9383 on2026-11-17 at19:04UTC.
 Explicit ROM probe returns0 and restores gate0A02DE00/clock0; inherited pins,
 reset and CS0 work at1MHz. No firmware/contact/physical-touch proof yet.
 
+## Hardware RAM startup verified (2026-11-17, 19:53 UTC)
+
+BOOT0082/0148 stages the private79104-byte CPT candidate with valid0 and
+loads it explicitly: result0, all seven hardware RAM CRCs passed before MCU
+start. ERAM ready is nowA55A, config20002AD4/1028, report20011580/60,
+720x1600/18x32. Backdoor exit and SPI gate/source restoration pass. Firmware
+execution/configuration is now established; no physical contact/HID result
+yet. Poll0149 and time0150 full CI44162912240 remains in progress. Firmware
+RAM is volatile and must be restaged after reboot. Keep private binary ignored.
+
 ## Current trial status (2026-11-17, 19:38 UTC)
 
 BOOT0081/0147 has ROM9383 transport success and an ERAM ready value2317,

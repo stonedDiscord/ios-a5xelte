@@ -1,3 +1,10 @@
+ACTIVE19:54UTC0082 TOUCH FIRMWARE RUNNING. Private79104 upload valid0,
+explicit load2477 result0(all7HWCRC pass), readyA55A/config20002AD4/1028/
+report20011580/60/720x1600/18x32. Exit0/gate+clock restored/END. NO contact
+poll in0082. Single23880 capture; user screen question pending.0149+0150CI
+44162912240 exactda42e57 building, package68041 waits0083. Next verified
+0083 flash/restage/load -> contacts log -> HID -> physical UI; UTC sync.
+
 ACTIVE19:51UTC0082 flashed BOOT-only100percent/success/reboot. Single23880
 capture waits180/1800s boot0082-usb-initial.log. USB not yet; no commands.
 Next ROM/sections -> private upload79104+valid0 -> explicit touch load.
