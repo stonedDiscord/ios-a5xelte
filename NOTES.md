@@ -23,17 +23,21 @@ Framebuffer0214 now includes loader/early/serial drawing at0xcc000000,
 bit31 then hardware unmask+0x70 bits12/0, clear4/8. The framebuffer,
 snapshot low RAM and DECON have separate bootstrap L2 tables (seven of eight
 pages). Three affected ARM64 compile checks, loader build and all seven
-complete-source plain-apply/hash checks pass. Latest full CI44119574729 at
-9498204 is in progress with Build active; poll this exact run. Supersedes44111718665
-(missing snapshot L2) and44115872187 (missing frame requests). No0214 flash
-or physical scanout verification yet. Download exact artifacts and run
-tools/dreamlte-verify-ci.py before packaging/testing dreamlteusb=2. Host preparation
-session71698 now waits for this exact run, downloads/verifies its artifacts
-and packages0214 automatically (no flashing). Inspect
-research/dreamlte/ci-44119574729/{prepare.log,prepared-boot.json}; JSON exists
-only after successful verification/packaging. Poll session71698; do not
-restart from an observation timeout. CI watch session13877 also exists.
+complete-source plain-apply/hash checks pass. Full CI44119574729 SUCCESS at
+9498204f7e3446d523d4420fcdef683f4e07f5d5, including profile/A53 checks.
+Preparation71698 completed: exact artifacts in research/dreamlte/ci-44119574729;
+seven actual source hashes and six linked symbols PASS. Ready BOOT candidate:
+shim/out/dreamlte-xnu-0214.img,18,432,016 bytes, SHA256
+fa8b862c1eb4e054ca581d45cc5957f7327b8f4cfd3432375471d49aa85a14b3.
+Kernel SHA2562c76fa250cc0c9c38f17d17f75ac7b8470d74bb8580e2aebcd2760bea5bf4214.
+Stock ramdisk/second/DTBH/header fields independently match; exact appended
+payload uses dreamlteusb=2; fits BOOT/chip8895. Prepared, NOT flashed.
+Supersedes44111718665/44115872187. No physical display or USB pass yet.
 
+Goal hardware-blocked after repeated physical Download Mode request and
+failed host session recovery. Phone absent from USB; ready artifacts above
+need no rebuild. Resume when user returns it to Download Mode. Keep
+Android restoration prohibited.
 
 20H392 IPSW OS/SystemOS/AppOS were mounted read-only and converted to:
 research/dreamlte/root/ios-16.7.16-20H392-hfsx.img (32GiB)

@@ -630,3 +630,28 @@ compile results, hardware observations and restore results below.
   with dreamlteusb=2. It writes prepared-boot.json only after all checks pass.
   It performs no flash. Preparation is waiting on the confirmed-live CI;
   do not restart due to an observation timeout. Watch session13877 also lives.
+
+## 2026-11-17: exact framebuffer0214 candidate ready; hardware blocked
+
+- CI44119574729 SUCCESS at9498204f7e3446d523d4420fcdef683f4e07f5d5.
+  Build, profile verification and Cortex-A53 LSE scan passed. Preparation
+  session71698 completed successfully; exact artifacts under
+  research/dreamlte/ci-44119574729. Kernel SHA256
+  2c76fa250cc0c9c38f17d17f75ac7b8470d74bb8580e2aebcd2760bea5bf4214.
+- tools/dreamlte-verify-ci.py PASS for all seven actual compiled source
+  hashes and six linked symbols. Packaged shim/out/dreamlte-xnu-0214.img,
+  18,432,016 bytes, SHA256
+  fa8b862c1eb4e054ca581d45cc5957f7327b8f4cfd3432375471d49aa85a14b3.
+  Exact appended payload uses dreamlteusb=2. Independent comparison verifies
+  stock ramdisk/second/DTBH and load/header fields unchanged, chip8895,
+  fit within41,943,040-byte BOOT. This is prepared, NOT flashed/runtime proven.
+- Phone remains absent from USB. The physical Download Mode/session-reset
+  blocker has persisted across more than three consecutive goal turns.
+  Fresh read-only handshake and host USB reset both failed; no new writes.
+  All currently useful independent preparation is complete. Goal blocked
+  pending user physical re-entry to Download Mode and phone-side error text.
+- Next hardware actions remain authorized: sparse converted root to USERDATA
+  with --no-reboot, then verified0214 BOOT (resume same successful session).
+  Never restore Android. Verify visible loader/XNU text and actual host
+  enumeration/control transfers/bidirectional data before claiming success.
+  Prepared0215 stays outside the active profile pending diagnostic evidence.
