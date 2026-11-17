@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: incorrect displayed date reported; UTC sync prepared
+
+User reports4:19 and December31, unlike actual2026-11-17. Source inspection:
+SweetPlatformExpert does not override getGMTTimeOfDay/getUTCTimeOfDay; base
+IOPlatformExpert::getGMTTimeOfDay returns0, setGMTTimeOfDay is empty. This
+explains missing hardware wall-clock initialization; exact displayed year,
+userspace adjustments and timezone are not measured. No time readback exists
+in current0081.
+
+0150 prepares explicit time status or time UNIX_UTC_SECONDS in the opted-in
+USB worker. Uses XNU calendar setter,2020..2099 range, no automatic setting,
+no PMIC/RTC write or hardcoded current date. Host sender supplies current UTC
+and verifies matching worker acknowledgement/readback. Volatile only; reboot
+persistence/timezone/UI refresh remain unproven. Actual parser/calendar-call
+ASan/UBSan tests, exact kernel C compile and reverse/plain equality PASS.
+Not yet staged/built/deployed; current phone clock unchanged.0148 loader CI
+44159557034 still builds19:48UTC; no firmware upload yet.
+
 ## 2026-11-17: bounded poll yields between samples
 
 0149's bus-delay callback now uses IOSleep for whole milliseconds and

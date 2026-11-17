@@ -1,3 +1,9 @@
+ACTIVE19:48UTC user reports wrong4:19/December31. Platform base UTC source
+returns0/no RTC override.0150 explicit volatile UTC status/set+host sender
+prepared tests/compile/apply PASS, NOT staged/deployed; phone time unchanged.
+0148CI44159557034 exactcdafbe1 still building/package91490 waits.0149 ready
+but not staged.0081 clock physically visible; single23025 until20:01UTC.
+
 ACTIVE19:43UTC0149 bounded polling now sleeps whole-ms delays; compile,
 actual callback delay/dispatch tests and reverse/plain equality PASS. Still
 NOT staged in profile. Candidate offlineconfig720x1600/18x32 confirmed.

@@ -1,0 +1,42 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -24,6 +24,7 @@
+  */
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+ #include <kern/debug.h>
++#include <kern/clock.h>
+ #include <kern/startup.h>
+ #include <libkern/amfi/amfi.h>
+ #include <mach/kern_return.h>
+@@ -556,12 +557,30 @@
+     kauth_cred_unref(&cred);
+ }
+ 
++/* Explicit volatile UTC sync through the opted-in serialized USB worker.
++ * No RTC/PMIC access and no fixed compile-time date. Host supplies Unix UTC.
++ */
++static void a03_probe_time(const char *command) {
++ if(strcmp(command,"status")) {
++  const char *s=command;uint64_t epoch;
++  if(!a03_probe_number(&s,&epoch,10)||!a03_probe_end(s)||
++      epoch<1577836800ULL||epoch>4102444799ULL) {
++   printf("A03 PROBE time rejected; status or Unix UTC seconds2020..2099\n");return;
++  }
++  clock_set_calendar_microtime((clock_sec_t)epoch,0);
++ }
++ clock_sec_t secs;clock_usec_t us;
++ clock_get_calendar_microtime(&secs,&us);
++ printf("A03 PROBE time UTC=%llu usec=%u volatile; hardware RTC not implemented\n",
++     (unsigned long long)secs,(unsigned)us);
++}
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup\n");
++  printf("A03 PROBE help: ping ps vm io creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++ else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+  else if(!strncmp(command,"stat ",5))a03_probe_stat(command+5, false);
