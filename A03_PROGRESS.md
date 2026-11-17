@@ -14,6 +14,12 @@ Gate0A02DE00/clock0 restored. Physical down/movement are previously proven;
 true lift and HID/UI delivery remain unverified. No touch poll sent yet.
 Local timezone remains unresolved; host UTC sync is volatile, not an RTC fix.
 
+Follow-up poll regression exercises a real held->count0/statusFF transition:
+release occurs at sample2 of3, before final session cleanup, with one down
+and one up only. Actual shared poll code passes C11/C++17 ASan/UBSan.
+This is software validation, not physical-lift evidence. Input status on0086
+returns3; both HID service user clients opened. User alignment pending.
+
 ## 2026-11-17: idle decoder fullCI success; BOOT0086 deployment
 
 CI44173996698 SUCCESS exact896330554fd2683801355f753927d4642716cd18,

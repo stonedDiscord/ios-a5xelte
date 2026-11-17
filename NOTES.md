@@ -1,3 +1,8 @@
+ACTIVE21:14UTC0086 inputstatus3/bothHIDclientsopen. Poll C/C++ ASan/UBSan
+regression proves count0/statusFF release at sample2 beforecleanup, no extra
+up. Hardware idle0events proven; user heldfinger/screen reply pending.
+No HID poll sent. CapturePID122914 until~21:38UTC. Docs refreshed; b5e1331.
+
 ACTIVE21:12UTC0086 BOOT-only flash SUCCESS, capturePID122914. UTC synced
 1794949748; privatefw79104 validation0/load0/all7CRC/A55A/configPASS.
 0153 HARDWARE IDLE FIX PROVEN: log-only300valid/events0/hid0; raw0000FF+
