@@ -1,3 +1,11 @@
+ACTIVE22:05UTC0155CI44186495805 exact47a92b3 dispatched/mac15intel.
+CandidateCcompilePASS(retargeted existingconsoleCIflags, not exactperfile),
+8192policycases/reversePASS. Package-only /tmp/a03-0088/package.py gates
+exactSUCCESS/checksum/WImarker/same0087config; noautoflash. Current0087
+STREAMOFF; physicalHID4swipes61events -> SBabort workinterval/user spinner.
+Capture128605 expires~22:06UTC; rotateonlyafterverifiedexit. Neednext0088
+actualCREATE2flags/error/kr +repeatgesture, no provenfixyet.
+
 ACTIVE22:06UTC0087 physicalHID61events/fourswipes reached; user sees
 spinner, logsSpringBoard26abort Failedtocreateworkinterval. STREAMOFF.
 0155candidate documentedUNRESTRICTED default/coreaudio/CAclient privilege

@@ -21,6 +21,14 @@ were not captured (startup trace cap), so this is a concrete compatibility
 candidate, not yet a proven crash fix. Adds bounded create flags/error/kr
 logging. Actual policy C/C++ ASan/UBSan8192cases and reverseapplyPASS.
 
+Candidate sys_work_interval.c compiles locally with the existing console C
+CI command's target/include/definition environment retargeted to this file;
+its own per-file compile command is absent from the cached CI log, so this
+is not an exact per-file CI replay. No compiler errors; full Xcode is the
+linkage/actual-build gate. FullCI44186495805 exact47a92b3 dispatched with
+macos15intel/a03/SWEET/userspace true. Package-only0088 gates exactSUCCESS,
+checksums/markers and unchanged0087 config; no automatic flash scheduled.
+
 ## 2026-11-17: ten-minute HID window ends cleanly; UI test still pending
 
 Host600second trial ends~21:55UTC, active1760slices/events0 then explicit
