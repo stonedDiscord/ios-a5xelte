@@ -1,3 +1,8 @@
+ACTIVE19:11UTC0080 follow-up single reader26068 now600s after initial ended.
+shim/a03/out/boot0080-touch-followup.log (/tmp/a03-0080/followup.log).
+Fresh io ready1/poisoned0, SB25 still app event loop. User current-screen
+question pending (last logo19:07).0147CI44154963110 building; watcher63480.
+
 ACTIVE19:09UTC0080 SB25 now event loop GSEventRunModal/UIApplication/SBMain
 (cache slide1F994000). User last saw logo19:07; new screen question pending.
 No input after reboot.0147CI44154963110 exact7972a72 building; package-only
