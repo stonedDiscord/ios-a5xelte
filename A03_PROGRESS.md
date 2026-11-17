@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: epoch date measured in SpringBoard logs
+
+At19:57UTC current0082 SpringBoard logs report1969-12-31 16:06:24, consistent
+with Unix-epoch wall time and UTC-8 local presentation. This supports the
+zero platform UTC source as cause of wrong date; exact timezone identifier
+not measured. Later sample2481 main thread progresses into FontServices/
+CoreGraphics glyph rendering (cache36D60000), rather than same earlier
+MobileGestalt semaphore. Startup continues; visible clock/home not yet
+confirmed for0082. Repeated sections2480 still readyA55A/config720x1600,
+18x32 after SPI restoration. No contact polling or input sent.
+
 ## 2026-11-17: BOOT0082 physical display still boot output
 
 After successful controller RAM startup the user reports brief Apple logo,
