@@ -1,3 +1,10 @@
+ACTIVE21:22UTC0086 SpringBoard main loop measured(sample25/symbolicated
+cache slide2AA5C000: CFRunLoop/GSEventRunModal/UIApplication/SBSystemAppMain).
+BothHIDclientsopen/inputstatus3; touch HID stillneverrun. Secondidle300valid/
+0events.0154CI44178262587 queued; packagePID124809 /tmp/a03-0087/package.py
+live, noautoflash. CapturePID122914 until~21:38. User heldfinger/screen reply
+pending; do not treat old ready as current. Continuous source10b9f9b tested.
+
 ACTIVE21:18UTC0154 fullCI44178262587 exact10b9f9b queued/mac15intel.
 Package-only /tmp/a03-0087/package.py gates exactSUCCESS/checksum/markers/
 same0086 configuration; noautoflash.0086 remainscurrent/idlezeroevents;

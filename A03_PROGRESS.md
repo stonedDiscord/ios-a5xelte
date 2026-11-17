@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0086 SpringBoard main event loop measured
+
+Explicit sample25 at~21:20UTC shows main thread PC1E9B8A194. Matching private
+plain-arm64 cache/.symbols UUID-validated symbolication with captured cache
+slide2AA5C000 resolves mach_msg2_trap+8, mach_msg_overwrite, CFRunLoop Mach
+port service, CFRunLoopRunSpecific, GSEventRunModal, UIApplication _run /
+UIApplicationMain and SBSystemAppMain. This establishes a running application
+event loop, not a physical screen or touch acknowledgement. Both HID user
+clients are open; inputstatus3. No touch HID session sent. Continuous0154
+fullCI44178262587 remains queued; packagePID124809 alive, no auto deployment.
+
 ## 2026-11-17: explicit continuous touch polling prepared (0154)
 
 0154 adds serialized probe-worker slices of16frames with retained contact
