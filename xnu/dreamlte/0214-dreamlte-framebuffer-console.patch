@@ -1,0 +1,72 @@
+diff --git a/pexpert/pexpert/arm64/A5XELTE.h b/pexpert/pexpert/arm64/A5XELTE.h
+--- a/pexpert/pexpert/arm64/A5XELTE.h
++++ b/pexpert/pexpert/arm64/A5XELTE.h
+@@ -17,7 +17,7 @@
+  * XNU RAM is the upper bank. No S7 display/PMIC/storage driver allowed. */
+ #define DREAMLTE                      1
+ #define HEROLTE                       1
+-#define A5XELTE_FB_PA                 0x8b000000
++#define A5XELTE_FB_PA                 0xcc000000
+ #define A5XELTE_FB_WIDTH              1440
+ #define A5XELTE_FB_HEIGHT             2960
+ #define A5XELTE_FB_STRIDE             5760
+diff --git a/osfmk/arm64/sweet_early.c b/osfmk/arm64/sweet_early.c
+--- a/osfmk/arm64/sweet_early.c
++++ b/osfmk/arm64/sweet_early.c
+@@ -19,6 +19,7 @@
+ static volatile uint32_t *dreamlte_log_cursor = (volatile uint32_t *)(uintptr_t)DREAMLTE_LOG_CURSOR_PA;
+ static volatile uint8_t *dreamlte_log_base = (volatile uint8_t *)(uintptr_t)DREAMLTE_LOG_BASE_PA;
+ #endif
++static unsigned int dreamlte_display_active = 1;
+ static volatile uint32_t *a5_fb = (volatile uint32_t *)(uintptr_t)A5XELTE_FB_PA;
+ 
+ /* The bootstrap TTBR0 maps the board's early output area VA=PA. */
+@@ -57,7 +58,7 @@
+ 		__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)dreamlte_log_cursor) : "memory");
+ 		__asm__ volatile("dsb sy" ::: "memory");
+ 	}
+-	return;
++	if (!dreamlte_display_active) return;
+ #endif
+ 	if (c == '\r') {
+ 		a5_col = 0;
+@@ -143,6 +144,7 @@
+ sweet_early_relocate(uint64_t base)
+ {
+ #if defined(DREAMLTE)
++	dreamlte_display_active = 0; /* Low framebuffer alias ended with TTBR0. */
+ 	dreamlte_log_cursor = (volatile uint32_t *)(uintptr_t)(base + 0x200u);
+ 	dreamlte_log_base = (volatile uint8_t *)(uintptr_t)(base + 0x200000u);
+ #else
+diff --git a/pexpert/arm/pe_serial.c b/pexpert/arm/pe_serial.c
+--- a/pexpert/arm/pe_serial.c
++++ b/pexpert/arm/pe_serial.c
+@@ -815,7 +815,11 @@
+  * framebuffer, root filesystem, scheduler, USB link or memory allocation.
+  */
+ static void dreamlte_snapshot_serial_init(void) {}
+-static void dreamlte_snapshot_serial_putc(uint8_t c) { sweet_early_putc((char)c); }
++static void dreamlte_snapshot_serial_putc(uint8_t c)
++{
++	sweet_early_putc((char)c);
++	if (fbcon_base) fbcon_transmit_data(c);
++}
+ SECURITY_READ_ONLY_LATE(static struct pe_serial_functions) dreamlte_snapshot_serial_functions = {
+ 	.init = dreamlte_snapshot_serial_init,
+ 	.transmit_ready = fbcon_transmit_ready,
+@@ -830,6 +834,15 @@
+ fbcon_probe(void)
+ {
+ #if defined(DREAMLTE)
++	/* S8 live bootargs s3cfb.bootloaderfb; geometry measured from fb0.
++	 * Keep RAM output available even if mapping fails. Loader sets the
++	 * Exynos8895 hardware trigger using dpu/regs-decon.h bit definitions.
++	 */
++	fbcon_width = 1440;
++	fbcon_height = 2960;
++	fbcon_stride = 5760;
++	fbcon_base = (volatile uint32_t *)ml_io_map_wcomb(0xcc000000, 5760 * 2960);
++	if (fbcon_base) fbcon_init();
+ 	register_serial_functions(&dreamlte_snapshot_serial_functions);
+ 	return;
+ #endif

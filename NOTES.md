@@ -2,25 +2,30 @@
 
 ## Active S8 handoff — 2026-11-17
 
-### >>> LATEST UPDATE 2026-11-17: corrected4K aliases + persistent console <<<
+### >>> LATEST UPDATE 2026-11-17: NEVER restore Android; add display/root <<<
 
-Phone remains rooted Android on verified stock BOOT; no new flash this turn.
-Cancelled live CI44091780583 before trial: review found snapshot alias used
-VM_MIN_KERNEL_ADDRESS, a different L1 range from LOW_GLOBAL_BASE_ADDRESS on
-this4K non-large-memory build. Updated0211 to use initialized/reserved low
-globals+2MiB/+4MiB. New0213 keeps RAM logging active through normal kernel
-serial output, closing the pmap-to-BSD/USB diagnostic gap. All five modified
-ARM64 translation units compile; actual git apply and five-file equality on
-fresh exact artifact PASS. Profile stages134 patches. Corrected combined
-CI44094150615 atfe42384 dispatched; poll this exact run, inspect actual source/
-linked code, then package BOOT with dreamlteusb=2.
+User explicitly forbids further Android restoration. User also authorizes
+converted IPSW root on existing USERDATA/sda24 (58,556,678,144 bytes). Preserve
+GPT/RECOVERY/bootloaders/EFS/CPEFS. Do not flash a raw IPSW archive.
+0213 USB-enabled BOOT was verified and flashed successfully; remains installed.
+User sees Samsung logo, host sees no USB gadget. XNU runtime progress unknown.
+CI44094150615 succeeded; actual source hashes/linked symbols verified.
 
-USB candidate0212 uses dreamlteusb=2 for next trial. Cold PHY startup and
-actual enumeration/transfers remain unverified. tools/dreamlte-usb-check.py
-can verify real EP0 requests and optional ECM ping once gadget runs. Protect
-all non-BOOT partitions; Android is only diagnostic recovery while XNU live
-USB is unavailable. Preserve the silent-overlay-skip corrections: workflow
-aborts rejected S8 overlays and checks linked logger/USB/serial symbols.
+Framebuffer0214 candidate adds loader text at live s3cfb.bootloaderfb0xcc000000,
+1440x2960/stride5760. Exynos8895 kernel sources locate DECON_F0x12860000 and
+correct+0x70 trigger bits0/4/12 (S7 bits differ). XNU early and normal serial
+mirroring added; loader/ARM64 compile/plain-apply checks pass. Needs full CI
+and physical display trial. Do not claim scanout until seen.
+
+IPSW is in repo root: iPhone10,3,iPhone10,6_16.7.16_20H392_Restore.ipsw.
+OS/SystemOS/AppOS extracted under ignored research/dreamlte/root/assets,
+read-only APFS-FUSE mounts under research/dreamlte/root/mounts. APFS-FUSE
+built under research/dreamlte/host-tools; no sudo available. HFS userspace
+conversion tooling under development; root image and USERDATA flash pending.
+Current phone has0213, no Android restoration. Next build/test0214 display,
+finish HFSX conversion and flash USERDATA per authorization; continue Exynos
+USB PHY/clock/reset investigation. tools/dreamlte-verify-ci.py checks exact
+compiled source hashes and symbols before future trial.
 
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;

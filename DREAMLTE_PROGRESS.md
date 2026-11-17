@@ -481,3 +481,36 @@ compile results, hardware observations and restore results below.
   Exact source/kernel inspection remains required before USB-enabled BOOT.
   Final Android boot-complete/stock BOOT hash check passed; all protected
   partitions and USERDATA remain untouched.
+
+## 2026-11-17: USB0213 trial; new user direction and framebuffer0214
+
+- User explicitly prohibits restoring Android again. Do not flash stock BOOT
+  for log recovery. User additionally authorizes converting the local IPSW
+  and flashing the converted iOS filesystem to existing USERDATA/sda24.
+  Preserve partition table, RECOVERY, bootloaders and EFS/CPEFS. USERDATA was
+  measured at58,556,678,144 bytes before leaving Android.
+- CI44094150615 SUCCESS. Actual five complete source hashes and six linked
+  symbols verified, matching reviewed0213 inputs (not just patch staging).
+  Kernel SHA2564bb81128dbc81c320f53e20a1d2d6521f988bd446a75b2422364beb848976f5f.
+  New reusable content verifier rejects older false-green artifacts.
+- Packaged0213 with dreamlteusb=2, candidate SHA256
+  3fdc26f35563267c167ed865bc6da99508dc4684857b53f27c147ea70b04ea1d,
+  18,427,920 bytes. Stock header/ramdisk/DTBH preserved. BOOT-only Heimdall
+  upload successful. User reports Samsung Galaxy logo; no host USB gadget.
+  Runtime markers unavailable;0213 remains installed. Android NOT restored.
+- Local IPSW iPhone10,3,iPhone10,6_16.7.16_20H392_Restore.ipsw identified,
+  d22ap OS087-86698-044.dmg, SystemOS087-86593-047.dmg, AppOS087-86715-047.dmg.
+  All extracted privately to research/dreamlte/root/assets. Built APFS-FUSE
+  locally and mounted all three read-only; launchd and arm64 dyld cache exist.
+  Conversion to HFSX/root staging and USERDATA flash remain unfinished.
+- User requested framebuffer console based on kernel source. Reviewed
+  Exynos8895 dpu decon_reg_set_trigger/regs-decon.h at3cfb914658ab:
+  DECON_F0x12860000, trigger+0x70, HW enable bit0, mask bit4, auto-mask bit12.
+  S7 trigger bits are not valid S8 enable sequence. Buffer0xcc000000 is
+  supplied by live s3cfb.bootloaderfb; measured1440x2960/stride5760.
+- Added loader fbtext and overlay0214: early framebuffer output until TTBR0
+  retirement, then RAM-only gap until serial init maps scanout with
+  ml_io_map_wcomb and mirrors normal output to both RAM and display.
+  Loader builds; three affected ARM64 compile checks and plain git apply/
+  full-source equality pass. Physical scanout still needs trial verification.
+  No claim that source addresses alone prove displayed output or live USB.
