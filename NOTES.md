@@ -1,3 +1,10 @@
+ACTIVE22:13UTC0087 userclock2:03stale~9min. KernelUTCstatus22:12:54
+advancing; replacementSpringBoard1079/24threads/mainloopalive. Wholephone
+notfrozen; displayedGUIstale. STREAMOFF.0155CI44186495805 stillBuild,
+packagePID134153/host29898 waiting0088. SinglecapturePID134536 writes
+boot0087-usb-after-swipe-crash.log until~22:37UTC. NeedWI candidate runtime
+flags/error/kr and repeatgesture/UI; nofixclaimyet.
+
 ACTIVE22:09UTC0087 touch reachesUIKit eventFetcher/UIQOSProcessingBegin
 then explicitWIexception/SIGABRT6. No capturedOOMkill, but actualcreateerrno
 notyetknown; donotclaimRAMruledout. User's lag acceptable, spinner confirmed

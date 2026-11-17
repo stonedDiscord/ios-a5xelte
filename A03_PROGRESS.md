@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: displayed clock stale after crash, kernel time advances
+
+User reports clock still2:03 at~22:12UTC/23:12Berlin, about9minutes stale
+under the inherited UTC-8-style display offset. Explicit time status returns
+1794953574=2026-11-17 22:12:54UTC, so the kernel clock is advancing. ps shows
+replacement SpringBoard1079, not crashed26; sample1079 has24threads and the
+same CFRunLoop/GSEvent/UIApplication main-loop PCs (cache38858000). Thus
+whole-device freeze is contradicted, while user sees a stale GUI clock.
+Do not infer fresh display presentation from a live process/event loop.
+0155 fullCI44186495805 remains Build. Touch forwarding remains off.
+
 ## 2026-11-17: swipe crash enters UIKit event processing; no OOM evidence
 
 User asks whether lag/RAM exhaustion caused the spinner. Captured failure
