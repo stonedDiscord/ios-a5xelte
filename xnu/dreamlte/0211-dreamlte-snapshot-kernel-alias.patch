@@ -10,7 +10,7 @@ diff --git a/osfmk/arm64/arm_vm_init.c b/osfmk/arm64/arm_vm_init.c
 + * phystokv() deliberately rejects them. Reserve explicit kernel aliases
 + * below gVirtBase, with the same WB attributes as the bootstrap aliases.
 + */
-+#define DREAMLTE_SNAPSHOT_VA (VM_MIN_KERNEL_ADDRESS + ARM_TT_L2_SIZE)
++#define DREAMLTE_SNAPSHOT_VA (LOW_GLOBAL_BASE_ADDRESS + ARM_TT_L2_SIZE)
 +static void
 +dreamlte_snapshot_map_final(void)
 +{

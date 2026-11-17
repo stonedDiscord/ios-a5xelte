@@ -134,7 +134,7 @@ jobs:
           for symbol in _dreamlte_init_trap_log _dreamlte_daemon_crash_log _dreamlte_sample_task _dreamlte_gui_sample_start _dreamlte_host_log_allowed; do
             grep -F "$symbol" dreamlte-symbols.txt >/dev/null || exit 1
           done
-          for symbol in _dreamlte_log_cursor _dreamlte_log_base _dreamlte_phy _sweet_usb_probe; do
+          for symbol in _dreamlte_log_cursor _dreamlte_log_base _dreamlte_phy _sweet_usb_probe _dreamlte_snapshot_serial_functions; do
             grep -F "$symbol" dreamlte-symbols.txt >/dev/null || exit 1
           done
           grep -F 'dreamlte_snapshot_map_final' dxb/xnu/osfmk/arm64/arm_vm_init.c

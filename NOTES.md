@@ -2,26 +2,23 @@
 
 ## Active S8 handoff — 2026-11-17
 
-### >>> LATEST UPDATE 2026-11-17: fix silent patch skips before USB trial <<<
+### >>> LATEST UPDATE 2026-11-17: corrected4K aliases + persistent console <<<
 
-Phone restored to stock BOOT and hash verified after0211; Android completed
-boot and 47,734-byte last-kmsg-0211.txt recovered privately. User saw Samsung
-logo during trial. IMPORTANT: exact CI44085718513 sources show0209/0211 were
-silently SKIPPED by dxb git apply; staged manifest/green checks did not prove
-application. Last markers therefore came from0208-era logger. Do not claim
-0211 executed. Regenerated0209 with full context; plain git apply now accepts
-0209/0211/0212 in order on exact artifact source. Local ARM64 compiles pass.
+Phone remains rooted Android on verified stock BOOT; no new flash this turn.
+Cancelled live CI44091780583 before trial: review found snapshot alias used
+VM_MIN_KERNEL_ADDRESS, a different L1 range from LOW_GLOBAL_BASE_ADDRESS on
+this4K non-large-memory build. Updated0211 to use initialized/reserved low
+globals+2MiB/+4MiB. New0213 keeps RAM logging active through normal kernel
+serial output, closing the pmap-to-BSD/USB diagnostic gap. All five modified
+ARM64 translation units compile; actual git apply and five-file equality on
+fresh exact artifact PASS. Profile stages134 patches. Corrected CI next.
 
-Workflow now aborts on skipped DREAMLTE overlays and checks linked logger/
-USB symbols, mapping helper source and actual USB wrapper host tests.
-Obsolete run44090286065 cancelled; corrected combined logger+USB CI
-44091780583 at5ac173d dispatched. Poll this exact run; inspect compiled
-sources/linked symbols before packaging.
-Opt-in ECM0212 starts before root discovery, default off; intended next BOOT
-trial uses dreamlteusb=2 after verified CI. Cold PHY clock/reset bring-up and
-actual USB enumeration/transfers remain unproven. No protected partition or
-USERDATA writes. User emphasized XNU+USB runtime, not Android: use recovery
-only as needed to obtain evidence while the live transport is unavailable.
+USB candidate0212 uses dreamlteusb=2 for next trial. Cold PHY startup and
+actual enumeration/transfers remain unverified. tools/dreamlte-usb-check.py
+can verify real EP0 requests and optional ECM ping once gadget runs. Protect
+all non-BOOT partitions; Android is only diagnostic recovery while XNU live
+USB is unavailable. Preserve the silent-overlay-skip corrections: workflow
+aborts rejected S8 overlays and checks linked logger/USB/serial symbols.
 
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;

@@ -1,0 +1,59 @@
+diff --git a/osfmk/arm64/sweet_early.c b/osfmk/arm64/sweet_early.c
+--- a/osfmk/arm64/sweet_early.c
++++ b/osfmk/arm64/sweet_early.c
+@@ -100,7 +100,7 @@
+ sweet_early_mark(unsigned int stage, const char *label)
+ {
+ #if defined(DREAMLTE)
+-	if (!a5_active || stage > 13) {
++	if (!a5_active || stage > 20) {
+ #else
+ 	if (!a5_active || stage > 7) {
+ #endif
+@@ -149,7 +149,12 @@
+ 	(void)base;
+ #endif
+ }
+-void sweet_early_disable(void) { a5_active = 0; }
++void sweet_early_disable(void)
++{
++#if !defined(DREAMLTE)
++	a5_active = 0;
++#endif
++}
+ #elif defined(SWEET)
+ #include <stdint.h>
+ #include <kern/misc_protos.h>
+diff --git a/pexpert/arm/pe_serial.c b/pexpert/arm/pe_serial.c
+--- a/pexpert/arm/pe_serial.c
++++ b/pexpert/arm/pe_serial.c
+@@ -810,9 +810,29 @@
+ 	.device = SERIAL_SWEET_FBCON
+ };
+ 
++#if defined(DREAMLTE)
++/* The explicit kernel snapshot aliases survive TTBR0 and require no UART,
++ * framebuffer, root filesystem, scheduler, USB link or memory allocation.
++ */
++static void dreamlte_snapshot_serial_init(void) {}
++static void dreamlte_snapshot_serial_putc(uint8_t c) { sweet_early_putc((char)c); }
++SECURITY_READ_ONLY_LATE(static struct pe_serial_functions) dreamlte_snapshot_serial_functions = {
++	.init = dreamlte_snapshot_serial_init,
++	.transmit_ready = fbcon_transmit_ready,
++	.transmit_data = dreamlte_snapshot_serial_putc,
++	.receive_ready = fbcon_receive_ready,
++	.receive_data = fbcon_receive_data,
++	.device = SERIAL_SWEET_FBCON
++};
++#endif
++
+ static void
+ fbcon_probe(void)
+ {
++#if defined(DREAMLTE)
++	register_serial_functions(&dreamlte_snapshot_serial_functions);
++	return;
++#endif
+ 	DTEntry entry;
+ 	uint64_t const *reg;
+ 	uint32_t const *val;

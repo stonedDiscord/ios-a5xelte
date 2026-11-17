@@ -95,3 +95,17 @@ version-dependent register offsets, preserved control bits and VBUS masks.
 It does not emulate the DWC3 endpoint/DMA engine or test PHY electrical state.
 0211 must first be flashed/recovered using its own exact CI artifact; do not
 claim that its kernel contains0212 merely because the local profile does.
+
+Overlay0213 retains snapshot output after pmap bootstrap and registers a
+RAM-backed serial console so normal kernel printf reaches the same bounded
+buffer during BSD/USB setup. Snapshot aliases use LOW_GLOBAL_BASE_ADDRESS
+plus2MiB/4MiB, within the reserved low-globals range. VM_MIN_KERNEL_ADDRESS
+is a different L1 range on this4K non-large-memory kernel and is unsuitable.
+No framebuffer, UART or storage accesses are needed for this console.
+
+For a running gadget, `python3 tools/dreamlte-usb-check.py` issues real EP0
+GET_DESCRIPTOR/GET_STATUS/GET_CONFIGURATION requests. After configuring the
+host ECM interface at192.168.7.1/24, add `--interface NAME` to require its
+USB parent/MAC identity and three ICMP request/reply exchanges. This helper
+has only been checked for syntax/help and correct absence reporting so far;
+no running S8 gadget has passed it yet.

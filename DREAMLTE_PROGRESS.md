@@ -452,3 +452,26 @@ compile results, hardware observations and restore results below.
   https://github.com/stonedDiscord/ios-a5xelte/actions/runs/44091780583
   Poll this run; inspect actual sources and linked symbols before packaging
   the next candidate with dreamlteusb=2.
+
+## 2026-11-17: persistent console and correct4K alias range (0213)
+
+- Prior goal turn made source/build-gate progress. Revalidated exact combined
+  CI44091780583 live in Build and Android connection; no new flash performed.
+- Found snapshot alias used VM_MIN_KERNEL_ADDRESS, which differs from
+  LOW_GLOBAL_BASE_ADDRESS in the actual4K non-large-memory kernel. The
+  latter's L2 tables are initialized and its8MiB range is VM-reserved. Changed
+  0211 alias to LOW_GLOBAL_BASE_ADDRESS+2MiB (cursor) /+4MiB (buffer), avoiding
+  an uninitialized L1 slot. The former host model assumed ARM_LARGE_MEMORY;
+  it did not validate this actual build layout.
+- Added0213: keep bounded snapshot output active through stage20 and normal
+  kernel lifetime, register it as serial output without framebuffer writes.
+  This closes the diagnostic gap between pmap and BSD USB startup.
+- Five modified translation units compile to ARM64 objects (gnu11/general
+  regs only). Plain git apply on fresh exact CI source plus full five-file
+  comparison to compile inputs PASS. USB wrapper host checks still PASS.
+  Profile stages134 patches; CI also checks linked snapshot serial provider.
+- Added host live-USB checker for real EP0 descriptors/status/configuration,
+  ECM interface identity and optional three ping replies. Help/syntax and
+  missing-device reporting checked; no hardware pass claimed.
+- Cancelled44091780583 before flashing because this address/console fix is
+  needed for the meaningful USB trial. Corrected combined build follows.
