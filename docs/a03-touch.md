@@ -116,3 +116,24 @@ Use tools/a03-inspect-jadard-firmware.py FILE for offline JSON inspection and
 tools/a03-test-jadard-firmware.py for synthetic regression. Inspector validates
 source bounds, target wrap and CRC; it does not establish panel compatibility,
 ROM identity or permission to load targets. No device access in either tool.
+
+### Source-guided follow-up after ROM9383
+
+First check whether inherited firmware is running before choosing a RAM load.
+Stock ChipInfoInit uses ERAM20011000: ready16-bit LE A55A at+0,
+DSRAM entries at+4 (16 entries, eight bytes each), ESRAM entries at+136.
+Each entry is LE32 address followed by LE32 length. ESRAM entry2 identifies
+the coordinate report; DSRAM entry3 identifies firmware configuration whose
+first six bytes are LE16 X/Y limits and one-byte X/Y sensor counts. These are
+firmware-discovered addresses, not fixed contact-buffer assumptions. Read
+transport success, ready marker, bounds, lengths and configuration must all
+be checked before publishing contacts. Stock coordinate parser has no proven
+integrity/freshness field; IRQ/poll semantics need hardware validation.
+
+If ROM fails, GPIO145 reset is AP GPIO641B0000 bank9/bit1 (bank stride80hex):
+data+480, mask+484, direction+488 and input-enable+4A8. Read-only snapshots
+must precede any change. Saved DT pin controller is64710000/qogirl6; source
+pinctrl-sprd-qogirl6.c encodes global SPI matrix at offset14hex and common/
+misc pads at40/440hex bases. AP GPIO indices are not pinctrl enum indices.
+Do not select SPI pads or power rails by numeric resemblance or alternative
+DT touchscreen nodes. Current0146 intentionally leaves these untouched.
