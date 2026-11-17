@@ -1,3 +1,10 @@
+ACTIVE21:48UTC0087 currentSpringBoard26 mainloopverified cache38858000
+(machmsg/CFRunLoop/GSEvent/UIApplication/SBSystemAppMain). HID600s hostPID
+130376/session44699 live until~21:55UTC. Status246slices/events0, noerrors.
+Prior physicaldown/move/28ups proven logonly. ActualHID/UI needs usergesture
+and pendingvisible-response reply. CapturePID128605 until~22:06UTC. No new
+firmware/reboot/flash needed. Do not count idle0events as a dispatch failure.
+
 ACTIVE21:45UTC0087 HID LONGWINDOW ON for600s/autostop~21:55UTC,
 session44699 /tmp/a03-0087/stream-hid-long-window.log. Physicaldown/move/
 28trueupsproven logonly361slices/341events; firstHID120s350slices/events0

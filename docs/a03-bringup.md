@@ -1,12 +1,14 @@
 # Galaxy A03 SM-A035G bring-up
 
-Latest2026-11-17 BOOT0086: physical touch down/movement have been measured;
-0153 now gives300valid idle samples with zero events on hardware. Private
-volatile firmware RAM load passes seven hardware CRCs and readyA55A.
-Physical lift/HID delivery/UI response are not yet verified. BOOT0084 and
-later keep the iOS image visible without boot-log overwrite. Host UTC sync
-works per boot; local timezone/persistent RTC remain unresolved. See newest
-A03_PROGRESS.md and docs/a03-touch.md; older status entries below are history.
+Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
+been measured on hardware. A120second log-only trial completed361slices/
+341events, including28report-driven releases; stop added no events. Clean
+idle and continuous stop are verified. Private volatile RAM firmware load
+passes seven hardware CRCs and readyA55A/configuration checks. Actual HID
+queue delivery and visible iOS touch response remain unverified. BOOT0084
+and later preserve the GUI without boot-log overwrite. UTC sync works per
+boot; local timezone/persistent RTC remain unresolved. See newest progress
+and handoff for the live trial; older entries below preserve history.
 
 Current touch trial2026-11-17: BOOT0081/0147 physically reaches the clock;
 fresh SPI ROM9383 succeeds, ERAM ready2317 fails the requiredA55A marker.

@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0087 event loop alive during long HID window
+
+Explicit sample26 while HID streaming shows SpringBoard24threads and main
+PC1F7986194, captured cache slide38858000. Matching-cache symbolication
+resolves mach_msg2_trap+8 -> CFRunLoop Mach-port service/RunSpecific ->
+GSEventRunModal -> UIApplication _run/UIApplicationMain -> SBSystemAppMain.
+Thus the current boot is in its event loop; this is not screen/UI evidence.
+Live stream status21:46UTC shows246slices/events0, no stream error. Physical
+contact/UI reply still pending; do not treat the absence of events as a failed
+HID dispatch. Ten-minute hostwindowPID130376 remains live, autostop~21:55UTC.
+
 ## 2026-11-17: longer HID gesture window after physical release proof
 
 Completed log-only capture has87logged events:59down/moves before the cap,
