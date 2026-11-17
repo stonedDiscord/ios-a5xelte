@@ -4,16 +4,10 @@ from pathlib import Path
 import subprocess,tempfile
 ROOT=Path(__file__).resolve().parents[1]
 patch=(ROOT/'xnu/a03/0154-a03-explicit-continuous-touch-poll.patch').read_text()
-# Reconstruct the modified console from the known 0086 baseline plus patch
-# using patch itself in a temporary directory, avoiding local buildtree state.
 with tempfile.TemporaryDirectory(prefix='a03-stream-') as d:
  p=Path(d); (p/'bsd/dev').mkdir(parents=True)
- # Extract only the functions whose behavior this test covers from added lines.
- added='\n'.join(l[1:] for l in patch.splitlines() if l.startswith('+') and not l.startswith('+++'))
- stop=added[added.index('static void a03_touch_stream_stop'):added.index(' if(!strcmp(command,"stop"))')]
- # Diff context can omit the closing brace, so read this complete function
- # directly from the corresponding hunk's added/context lines.
- lines=[]; capture=False
+ # Inspect complete added/context function bodies from the patch under test.
+ lines=[]
  for l in patch.splitlines():
   if l.startswith('--- a/bsd/dev/a03_jd9365t_poll.h'):break
   if l.startswith('@@') or l.startswith('+++') or l.startswith('---'):continue

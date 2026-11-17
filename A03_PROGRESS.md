@@ -16,6 +16,11 @@ double-start preservation and idempotent stop. Kernel console C cross-compile
 and reverse patch dry run pass. Not deployed; BOOT0086 remains current.
 Physical lift/HID/UI verification still pending user aligned touch test.
 
+Full CI44178262587 dispatched exact10b9f9bdff20e8db99f60e9db033f8b08304cfe9
+on macos15intel/a03/SWEET/userspace true. Package-only watcher prepares0087
+from unchanged0086 ADT/bootargs/root/loader/stockramdisk/DT after exact-success
+and checksum/stream-marker checks. No automatic deployment scheduled.
+
 ## 2026-11-17: BOOT0086 hardware idle reports are clean
 
 BOOT-only flash completed successfully and rebooted; single console capture
