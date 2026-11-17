@@ -146,3 +146,9 @@ Standalone shim/a03/jd9365t-sections.h implements the fixed offsets above;
 run tools/a03-test-jd9365t-sections.py for actual C/C++ ASan/UBSan tests.
 It is preparation only, not staged in0146. Address whitelist and actual
 successful read/controller readiness remain caller responsibilities.
+
+The unstaged jd9365t-contact-state.h adapter emits fixed-slot transitions and
+releases held contacts after three consecutive failed/malformed reads. This
+is preparatory policy: a valid report resets the failure counter; a failed
+read never enters the coordinate decoder as zero bytes. It has no polling,
+bus or HID integration. Test with a03-test-jd9365t-contact-state.py.

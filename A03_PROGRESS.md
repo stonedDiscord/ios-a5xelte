@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0080 clock confirmed; contact failure policy prepared
+
+User confirms physical iOS clock/lock screen after0080 reboot and successful
+ROM probe. Sent one explicit paired USB Home at19:13UTC; physical response
+pending. No physical touch or unlocked home claim yet for0080.
+Prepared standalone unstaged contact-state adapter: fixed-slot down/move/up,
+duplicate suppression; failed/malformed reads never synthesize coordinates,
+three consecutive failed samples release held contacts once; valid reports
+reset failure count. Threshold is explicit preparatory policy, not measured
+controller tolerance. Actual-header C11/C++17 ASan/UBSan sparse/move/release/
+bounds/malformed/quarantine/recovery/multi-contact tests PASS. No automatic
+polling, timers, HID or bus wiring.0147CI44154963110 remains running.
+
 ## 2026-11-17: explicit read-only section session0147 prepared
 
 After hardware ROM9383 proof, added touch sections command to inspect fixed
