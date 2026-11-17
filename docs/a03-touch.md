@@ -37,8 +37,9 @@ prior clock report: GUI pictures periodically appear before boot logs cover
 them again. The fallback framebuffer serial logger shares the panel RAM with
 AppleCLCD. This is a display ownership defect distinct from touch reports.
 0151 stops only its glyph writes after a validated GUI surface is ready to
-copy, while retaining every byte in the USB spool. Full Xcode build/hardware
-validation pending in44165152625; current0082 still has the overlay.
+copy, while retaining every byte in the USB spool. Full Xcode CI44165152625 succeeded. On0084 the user physically confirms
+the iOS picture remains visible with no boot-log overwrite; USB capture
+continues.0082 still has the overlay.
 
 ## Hardware RAM startup verified (2026-11-17, 19:53 UTC)
 

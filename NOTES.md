@@ -1,3 +1,8 @@
+ACTIVE20:27UTC0084 user PHYSICALLY CONFIRMS console overwrite FIXED:
+iOS picture stays visible; USB logging remains live. Finger test done but
+no convincing coordinates (capture overlap unmeasured); no HID poll sent.
+0152CI44169153500 exactddf4129 building/package48253 waits0085. Single4287.
+
 ACTIVE20:27UTC0152CI44169153500 exactddf4129 running/mac15intel; package
 only48253 gates0085 same0084 config +rawpacket marker. No auto flash.0084
 UTC advancing, SB logs now2026-11-17. TWO contact log sessions allzero-like

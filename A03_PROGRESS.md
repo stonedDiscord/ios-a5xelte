@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0084 console ownership physically FIXED
+
+User confirms iOS picture stays visible and boot logs no longer overwrite
+it on0084.0151 panel drawing gate now has physical evidence in addition to
+full Xcode success; USB log stream remains live. User also replies done to
+finger touch/drag/lift test. Two earlier bounded captures both produced only
+ten(0,0) slots and releases; exact overlap with user's15s interval is not
+measured. No convincing physical coordinate change captured and no HID poll
+sent. Keep evidence distinct: stable visible GUI+UTC sync+running firmware
+are established, physical digitizer input is not.
+
 ## 2026-11-17: empty-report safeguard full CI underway
 
 0152 exact kernel C compile PASS. Full CI44169153500 exactddf412948a9d8c4345c6c66abf4d62268c6f8ba2
