@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: continuous touch full CI success, BOOT0087 trial
+
+CI44178262587 SUCCESS exact10b9f9bdff20e8db99f60e9db033f8b08304cfe9.
+KernelSHA256 f1709990dacf97ebf89424dec6debf013f0cd9fa9f739d458274c2e9e1bba0df.
+BOOTSHA256 b893cd32b30222c8c9f4692dfa49791be6a0869868c0b808f2421fcf02785a25.
+Artifact checksums/stream markers verified;0086 ADT/1GiB/bootargs/root,
+loader except image_size and stock ramdisk/DT unchanged. SyncedCDC Download
+request followed by04E8:685D and Heimdall detect success21:35UTC. Authorized
+BOOT-only flash49418 in progress; no other partition selected. Next single
+capture/UTC/private volatile firmware load -> continuous log-only physical
+lift -> HID/UI test. Build success is not working physical touch evidence.
+
 ## 2026-11-17: BOOT0086 first HID-enabled idle baseline
 
 Explicit touch poll2483 completed result0/valid300/events0/hid1, with three
