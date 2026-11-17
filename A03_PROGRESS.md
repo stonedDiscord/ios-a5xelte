@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0086 hardware idle reports are clean
+
+BOOT-only flash completed successfully and rebooted; single console capture
+PID122914 writes boot0086-usb-initial.log. Host UTC sync1794949748 is
+2026-11-17 21:09:08UTC. Private79104-byte firmware restaged with validation0;
+explicit RAM load result0 verifies all seven hardware CRCs, readyA55A,
+config20002AD4/1028, report20011580/60,720x1600,18/32 sensors.
+First log-only contacts session on0153: result0, valid300, events0, hid0.
+All three raw idle reports are0000FF followed by57zero bytes. This directly
+confirms the zero-count fix removes phantom corner contacts on hardware.
+Gate0A02DE00/clock0 restored. Physical down/movement are previously proven;
+true lift and HID/UI delivery remain unverified. No touch poll sent yet.
+Local timezone remains unresolved; host UTC sync is volatile, not an RTC fix.
+
 ## 2026-11-17: idle decoder fullCI success; BOOT0086 deployment
 
 CI44173996698 SUCCESS exact896330554fd2683801355f753927d4642716cd18,

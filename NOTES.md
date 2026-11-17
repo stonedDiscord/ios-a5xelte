@@ -1,3 +1,9 @@
+ACTIVE21:12UTC0086 BOOT-only flash SUCCESS, capturePID122914. UTC synced
+1794949748; privatefw79104 validation0/load0/all7CRC/A55A/configPASS.
+0153 HARDWARE IDLE FIX PROVEN: log-only300valid/events0/hid0; raw0000FF+
+57zero. Physicaldown/motion priorproven; true lift/HID/UI stillpending.
+No touch poll yet. Align heldfinger->physical lift next. Singlecapture0086.
+
 ACTIVE21:07UTC0153CI44173996698 SUCCESS/exact8963305.0086 packaged
 same0085 config/BOOT221de96d...8126/kernel81d48ecf...1ba6. SyncedDownload
 +detected; BOOTflash67897 /tmp/a03-0086/flash.log. Nextcapture/UTC/fwload/
