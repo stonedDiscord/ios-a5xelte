@@ -2,30 +2,28 @@
 
 ## Active S8 handoff — 2026-11-17
 
-### >>> LATEST UPDATE 2026-11-17: 0211 snapshot mapping correction prepared <<<
+### >>> LATEST UPDATE 2026-11-17: 0211 flashed; recovery/log pending <<<
 
-Phone is in rooted Android with stock BOOT verified at SHA256
-`71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
-0210 trace is recovered privately (47,726 bytes); DWC3 ID=0x5533280a,
-GCTL=0x30c12004, DCTL=0, DSTS=0x00520004, DCFG=0x00080804. XNU's last
-marker remains `physmap ready; switching TTBR0`. Found0209 incorrectly
-calls phystokv on low RAM outside XNU's managed upper bank, invoking panic.
-New0211 adds explicit WB/XN kernel aliases for the two snapshot blocks and
-routes all DREAMLTE putc output (including panic) to RAM without framebuffer
-writes. Both modified ARM64 objects, patch dry-run, actual mapping-helper
-host check and132-patch staging pass. Fix660745e is pushed; full CI
-44085718513/job134047808756 is compiling (macos-15-intel). Latest API
-poll confirms Build in progress. Watch33999 ended on a network timeout;
-that is not a build failure.
-Poll this exact run; package/BOOT test/log recovery follow only on success. No working XNU USB gadget/stream has been verified. Protected
-partitions and USERDATA remain untouched. USB hardware/source evidence and
-next transport gates are recorded in docs/dreamlte-usb.md; the full Android
-DWC3 dump is private. New0212 is an opt-in ECM transport candidate:
-S8 core/Exynos VBUS setup, USB2 EP0 and pre-root BSD startup hook, default off.
-Host wrapper checks and both ARM64 BSD compiles pass; no donor UFS/log ring
-symbols are required. It is NOT included in the running0211 CI. Test the
-exact0211 artifact first, then build/test0212 with dreamlteusb=2. Cold PHY
-clock/reset bring-up and all actual USB transfers remain unverified.
+CI44085718513 SUCCESS (exact660745e): build/profile/A53 scan passed. Exact
+kernel SHA256 d6fed9f8a40695d70226f4c58bea6970fb0e0c826c5674faff83c19a1d4c1bbd,
+private artifacts/log at /tmp/dreamlte-ci44085718513. Packaged0211 candidate
+shim/out/dreamlte-xnu-0211.img (18,427,920 bytes), SHA256
+3cf785959bfd645bdcc7edfa2554c6a84dca475f1058076be0ed35172f7034c0.
+Stock ramdisk/second/DTBH/chip8895 verified; exact profile excludes0212.
+Stock BOOT hash verified immediately before adb reboot download, then
+Heimdall2.2.2 successfully flashed BOOT only. Phone currently absent from
+ADB/Heimdall/lsusb. Requested physical force restart/download mode; restore
+backup/galaxy-s8-2026-11-13/boot.img and verify stock SHA256
+71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5,
+boot Android, capture0211 last_kmsg before any further trial. Runtime0211
+progress is unknown. Protected partitions and USERDATA remain untouched.
+
+Opt-in ECM candidate0212 (9f90d9f,84f0922) is pushed and locally validated:
+S8 DWC3/Exynos VBUS setup and pre-root BSD network hook; default off.
+Actual wrapper host checks, both ARM64 BSD objects, pristine artifact
+plain-apply/full-file comparison pass. No full CI or device test for0212.
+Cold PHY clock/reset sequence and actual host USB transfers remain unproven.
+Read docs/dreamlte-usb.md for hardware/source evidence and testing gates.
 
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;

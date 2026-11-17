@@ -398,3 +398,24 @@ compile results, hardware observations and restore results below.
 - 0212 is not in CI44085718513 (which intentionally builds0211). Keep its
   result/artifact separate; test0211 first, then build0212 for a USB trial.
   Phone is still on stock Android; no new BOOT flash in this continuation.
+
+## 2026-11-17: 0211 BOOT trial
+
+- CI44085718513 SUCCESS at exact660745e: kernel build, DREAMLTE profile
+  verification and Cortex-A53 LSE scan all passed. Downloaded exact kernel/
+  buildtree and full log privately under /tmp/dreamlte-ci44085718513.
+  Kernel SHA256 d6fed9f8a40695d70226f4c58bea6970fb0e0c826c5674faff83c19a1d4c1bbd.
+- Packaged shim/out/dreamlte-xnu-0211.img, 18,427,920 bytes, SHA256
+  3cf785959bfd645bdcc7edfa2554c6a84dca475f1058076be0ed35172f7034c0.
+  Exact profile contains0211 and excludes0212; kernel checksum verified.
+  Stock ramdisk/second/DTBH match byte-for-byte; chip8895 and BOOT fit pass.
+- Root Android boot complete and stock /dev/block/sda7 hash verified
+  immediately before adb reboot download. Heimdall2.2.2 BOOT-only upload
+  succeeded and rebooted. ADB, Heimdall and USB enumeration are now absent;
+  no runtime0211 marker recovered yet. Screen unobserved.
+- Requested physical forced restart/download mode so original BOOT can be
+  restored, hash-checked and Android last_kmsg recovered before another trial.
+  No RECOVERY, bootloader, EFS/CPEFS or USERDATA writes performed.
+- ECM candidate0212 committed9f90d9f/84f0922 and pushed; pristine artifact
+  plain-apply and whole-file comparison match locally compiled BSD sources.
+  It is not yet full-CI/device tested. Do not confuse it with this0211 trial.
