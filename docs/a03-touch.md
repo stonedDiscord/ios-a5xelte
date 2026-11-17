@@ -55,6 +55,18 @@ Local primary source references (ignored vendor tree):
 
 ## Prepared decoder
 
+Patch0146 adds explicit USB worker commands touch status and touch rom.
+Status reads only the SPI3 gate/source registers. ROM temporarily enables
+SPI3 at1MHz from ext26MHz, saves/restores control and clock state and runs
+the stock enter/read-ROM-ID/exit sequence. It refuses an already busy bus.
+No reset, GPIO, pinmux or firmware writes are present. The stock SPI driver
+selects hardwareCS0 for every logical device, including Jadard's logicalCS1;
+this diagnostic mirrors that behavior. Host tests exercise wire bytes, FIFO
+chunks, bounded timeout and register restoration; hardware results need CI
+and BOOT testing. Run tools/a03-test-jd9365t-spi.py and
+tools/a03-test-touch-probe.py. A failed ROM test does not identify the cause
+(pins, supply, inherited reset state and protocol are not yet runtime-proven).
+
 shim/a03/jd9365t-report.h decodes a complete60-byte coordinate report into
 ten fixed slots. It preserves the stock big-endian coordinates, sparse slot
 indices and inclusive720/1600 bounds. Out-of-range slots indicate no contact;

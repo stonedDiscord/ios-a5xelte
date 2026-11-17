@@ -1,3 +1,11 @@
+ACTIVE0146 explicit touch status|rom prepared+staged. Bounded SPI3/1MHz
+Jadard ROM9383 probe only; no reset/pinmux/firmware/external-flash operations.
+Clock/control restoration, busy refusal; follow stock hardwareCS0 despite
+logicalCS1 node. Actual helper+probe ASan/UBSan tests PASS; exact CI C compiles
+usb_console+sweet_amfi PASS; reverse/plain apply equality PASS. Need full CI
+then same0079 config BOOT0080, explicit status then ROM, inspect result.
+0079 home menu preserved for now; physical touch remains unimplemented.
+
 ACTIVE2026-11-17~18:23UTC0079 PHYSICAL HOME MENU after explicit USB Home.
 User finger swipe inert(no physical driver); ready-screen USB swipe22 also
 no visible reaction. Then USB Home23 Menu0x40 down/up1client/result0/END;

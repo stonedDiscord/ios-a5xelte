@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: explicit SPI3/Jadard ROM probe prepared
+
+Continuing physical-touch goal from confirmed0079 home menu. Added0146
+explicit worker commands touch status/read-only clock snapshot and touch rom/
+bounded SPI ROM-ID session. No automatic probe, controller reset, GPIO/pinmux,
+firmware upload or external-flash operation. SPI3 gate20000000bit8, clock
+20010058 mux0/ext26MHz/div1, local SPI divider12 =>1MHz. Saved clock/control
+registers restored; busy controller refused; polling bounded10ms per wait.
+Stock spi-sprd set_cs selects hardwareCS0 even though DT Jadard node logical
+CS1; implementation follows actual driver. Enter/read40008076/exit diagnostic
+protocol expects little-endian9383. Preserve inherited reset/pinmux for first
+ROM test; timeout is not evidence of absent hardware.
+
+Actual shared SPI helper ASan/UBSan wire/CS/chunk/bounds/timeout cleanup PASS.
+Actual0146 probe fake-MMIO ASan/UBSan exact-command/read-only-status/control-
+restore/mapfailure/busy/timeout PASS (host-only dsb stand-in). Exact CI-command
+full a03_usb_console.c and sweet_amfi.c local kernel C compiles PASS. Reverse/
+plain apply and helper source equality PASS; existing report/HID/action tests
+PASS. Staged0146 for full Xcode CI; no new flash or hardware ROM read yet.
+
 ## 2026-11-17: BOOT0079 physical home menu after explicit USB Home
 
 User reports SpringBoard visible and physical finger swipe has no effect.

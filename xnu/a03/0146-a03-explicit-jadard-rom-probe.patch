@@ -1,0 +1,202 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -370,4 +370,74 @@
+  if(configured) IOSleep(1000);
+  printf("A03 USB console: configuration=%u resets=%u setups=%u; continuing boot\n",configured,reset_count,setup_count);
+ }
++/* Explicit A03 SPI3/Jadard diagnostic on the serialized USB probe worker.
++ * No automatic probing, resets, pinmux, firmware upload or external flash.
++ */
++#include "a03_jd9365t_spi.h"
++static vm_offset_t a03_touch_spi, a03_touch_apb, a03_touch_clk;
++static uint32_t a03_touch_r32(void *p,unsigned o) {
++ return *(volatile uint32_t *)((vm_offset_t)p+o);
++}
++static void a03_touch_w32(void *p,unsigned o,uint32_t v) {
++ *(volatile uint32_t *)((vm_offset_t)p+o)=v;
++ __asm__ volatile("dsb sy" ::: "memory");
++}
++static uint8_t a03_touch_r8(void *p,unsigned o) {
++ return *(volatile uint8_t *)((vm_offset_t)p+o);
++}
++static void a03_touch_w8(void *p,unsigned o,uint8_t v) {
++ *(volatile uint8_t *)((vm_offset_t)p+o)=v;
++ __asm__ volatile("dsb sy" ::: "memory");
++}
++static void a03_touch_delay(void *p __unused,unsigned us) { IODelay(us); }
++void a03_touch_probe(const char *command);
++void a03_touch_probe(const char *command) {
++ if(strcmp(command,"status")&&strcmp(command,"rom")) {
++  printf("A03 TOUCH requires status|rom; no reset/firmware operations\n");return;
++ }
++ if(!a03_touch_apb)a03_touch_apb=ml_io_map(0x20000000,0x3000);
++ if(!a03_touch_clk)a03_touch_clk=ml_io_map(0x20010000,0x1000);
++ if(!a03_touch_apb||!a03_touch_clk){printf("A03 TOUCH clock map failed\n");return;}
++ uint32_t gate=a03_touch_r32((void *)a03_touch_apb,0);
++ uint32_t clock=a03_touch_r32((void *)a03_touch_clk,0x58);
++ printf("A03 TOUCH SPI3 gate=%08x clock=%08x; preserve reset/pinmux\n",gate,clock);
++ if(!strcmp(command,"status"))return;
++ /* Linux ums9230-clk: SPI3 gate bit8; mux0 ext26m, divider bits8..10. */
++ a03_touch_w32((void *)a03_touch_apb,0x1000,0x100);
++ a03_touch_w32((void *)a03_touch_clk,0x58,clock&~0x703u);
++ IODelay(10);
++ if(!(a03_touch_r32((void *)a03_touch_apb,0)&0x100)||
++     (a03_touch_r32((void *)a03_touch_clk,0x58)&0x703)) {
++  printf("A03 TOUCH clock readback failed\n");goto restore_clock;
++ }
++ if(!a03_touch_spi)a03_touch_spi=ml_io_map(0x20150000,0x1000);
++ if(!a03_touch_spi){printf("A03 TOUCH SPI3 map failed\n");goto restore_clock;}
++ struct a03_jd_bus b={(void *)a03_touch_spi,a03_touch_r32,a03_touch_w32,
++     a03_touch_r8,a03_touch_w8,a03_touch_delay};
++ /* Refuse a busy controller; never interrupt an unknown transfer. */
++ if(b.read32(b.context,0x34)&0x100){printf("A03 TOUCH SPI3 busy; refused\n");goto restore_clock;}
++ static const unsigned regs[]={4,8,0x0c,0x10,0x14,0x18,0x1c,0x20,0x40,0x4c,0x54,0x58,0x5c,0x60};
++ uint32_t saved[sizeof(regs)/sizeof(regs[0])];
++ for(unsigned i=0;i<sizeof(saved)/sizeof(saved[0]);i++)saved[i]=b.read32(b.context,regs[i]);
++ b.write32(b.context,0x20,0); /* poll, never register/enable SPI IRQ */
++ b.write32(b.context,0x10,b.read32(b.context,0x10)&~0x40u); /* no DMA */
++ b.write32(b.context,8,(saved[1]&~0x207fu)|0xf22u); /* mode0,8bit,CS idle */
++ b.write32(b.context,4,12); /* 26MHz/(2*(12+1)) = 1MHz */
++ b.write32(b.context,0x0c,(saved[2]&~0xf000u)|0xc000);
++ b.write32(b.context,0x1c,9);
++ b.write32(b.context,0x4c,b.read32(b.context,0x4c)&~0x8038u);
++ b.write32(b.context,0x48,1);b.write32(b.context,0x48,0);
++ b.write32(b.context,0x24,0x33f);
++ b.write32(b.context,0x14,0x208);b.write32(b.context,0x40,0x208);
++ uint16_t id=0;int e=a03_jd_rom_id(&b,&id);
++ printf("A03 TOUCH ROM result=%d id=%04x expected=9383 raw=%08x sts2=%08x\n",
++     e,id,b.read32(b.context,0x28),b.read32(b.context,0x34));
++ a03_jd_cs(&b,0);
++ for(unsigned i=0;i<sizeof(saved)/sizeof(saved[0]);i++)b.write32(b.context,regs[i],saved[i]);
++restore_clock:
++ a03_touch_w32((void *)a03_touch_clk,0x58,clock);
++ if(!(gate&0x100))a03_touch_w32((void *)a03_touch_apb,0x2000,0x100);
++ printf("A03 TOUCH restored gate=%08x clock=%08x\n",
++     a03_touch_r32((void *)a03_touch_apb,0),a03_touch_r32((void *)a03_touch_clk,0x58));
++}
+ #endif
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -414,6 +414,7 @@
+ extern void a03_probe_task(const char *, int, task_t, bool);
+ extern kern_return_t a03_probe_read_user(vm_map_t, uint64_t, void *, vm_size_t);
+ extern int a03_hid_action(unsigned action);
++extern void a03_touch_probe(const char *command);
+ /* Exact commands only. Missing opt-in/provider is reported, never queued as
+  * successful UI input. The existing worker serializes these bounded actions. */
+ static void a03_probe_input(const char *command) {
+@@ -561,6 +562,7 @@
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+   printf("A03 PROBE help: ping ps vm io creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup\n");
++ else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+  else if(!strncmp(command,"stat ",5))a03_probe_stat(command+5, false);
+  else if(!strncmp(command,"acl ",4))a03_probe_stat(command+4, true);
+--- /dev/null
++++ b/bsd/dev/a03_jd9365t_spi.h
+@@ -0,0 +1,104 @@
++/* Bounded polling SPI primitives for A03 Jadard bring-up.
++ * Register behavior follows Samsung's spi-sprd.c; protocol follows JD9365T.
++ * No controller reset, pinmux, touch firmware, flash or storage operations.
++ * Callers serialize access, provide a running SPI clock and own chip select.
++ */
++#ifndef A03_JD9365T_SPI_H
++#define A03_JD9365T_SPI_H
++#include <stddef.h>
++#include <stdint.h>
++
++struct a03_jd_bus {
++ void *context;
++ uint32_t (*read32)(void *, unsigned);
++ void (*write32)(void *, unsigned, uint32_t);
++ uint8_t (*read8)(void *, unsigned);
++ void (*write8)(void *, unsigned, uint8_t);
++ void (*delay_us)(void *, unsigned);
++};
++
++static inline int a03_jd_wait(struct a03_jd_bus *b, unsigned reg,
++    uint32_t mask, uint32_t wanted)
++{
++ for (unsigned i=0; i<10000; i++) {
++  if ((b->read32(b->context,reg)&mask)==wanted) return 0;
++  b->delay_us(b->context,1);
++ }
++ return -1;
++}
++
++/* Exactly one Linux-style transfer phase, retaining CS across phases/chunks.
++ * Hardware four-wire TX starts on FIFO writes; RX starts via CTL4 bit9.
++ */
++static inline int a03_jd_phase(struct a03_jd_bus *b,
++    const uint8_t *tx, uint8_t *rx, size_t length)
++{
++ if ((!tx == !rx) || !length || length>256) return -1;
++ uint32_t ctl=b->read32(b->context,0x0c)&~0x3000u;
++ b->write32(b->context,0x0c,ctl|(tx?0x2000u:0x1000u));
++ for (size_t pos=0;pos<length;) {
++  unsigned n=(unsigned)(length-pos);if(n>32)n=32;
++  b->write32(b->context,0x24,0x300);
++  if(tx) {
++   b->write32(b->context,0x54,b->read32(b->context,0x54)&~15u);
++   b->write32(b->context,0x58,n);
++   for(unsigned i=0;i<n;i++)b->write8(b->context,0,tx[pos+i]);
++   if(a03_jd_wait(b,0x28,0x100,0x100)||a03_jd_wait(b,0x34,0x100,0))goto fail;
++  } else {
++   b->write32(b->context,0x5c,b->read32(b->context,0x5c)&~15u);
++   b->write32(b->context,0x60,n);
++   uint32_t r=b->read32(b->context,0x18)&~0x3ffu;
++   b->write32(b->context,0x18,r);
++   b->write32(b->context,0x18,r|n);
++   b->write32(b->context,0x18,r|n|0x200);
++   if(a03_jd_wait(b,0x28,0x200,0x200))goto fail;
++   for(unsigned i=0;i<n;i++)rx[pos+i]=b->read8(b->context,0);
++  }
++  pos+=n;
++ }
++ b->write32(b->context,0x24,0x300);
++ b->write32(b->context,0x0c,ctl);
++ return 0;
++fail:
++ b->write32(b->context,0x0c,ctl);
++ return -1;
++}
++
++static inline void a03_jd_cs(struct a03_jd_bus *b,int active)
++{
++ uint32_t v=b->read32(b->context,8)|0xf00u;
++ /* Matching Linux set_cs always drives hardware CS0, even spi_device CS1. */
++ b->write32(b->context,8,active?v&~0x100u:v);
++}
++
++static inline int a03_jd_write(struct a03_jd_bus *b,const uint8_t *p,size_t n)
++{
++ a03_jd_cs(b,1);int e=a03_jd_phase(b,p,NULL,n);a03_jd_cs(b,0);return e;
++}
++
++static inline int a03_jd_read(struct a03_jd_bus *b,const uint8_t *cmd,
++    size_t n,uint8_t *out,size_t count)
++{
++ a03_jd_cs(b,1);int e=a03_jd_phase(b,cmd,NULL,n);
++ if(!e)e=a03_jd_phase(b,NULL,out,count);
++ a03_jd_cs(b,0);return e;
++}
++
++/* Stock diagnostic session: enter, read only ROM ID2/3, always attempt exit.
++ * Address0x40008076; bytes83/93 => ROM ID9383. No MCU reset or firmware write.
++ * Return distinguishes transport from a readable but different chip ID.
++ */
++static inline int a03_jd_rom_id(struct a03_jd_bus *b,uint16_t *id)
++{
++ const uint8_t enter[]={0xf2,0xaa,0x55,0x0f,0xf0,0x68};
++ const uint8_t readid[]={0xf3,0x40,0x00,0x80,0x76,0x01};
++ const uint8_t leave[]={0xf2,0xaa,0x88,0,0,0};
++ uint8_t r[2]={0};
++ int e=a03_jd_write(b,enter,sizeof(enter));
++ if(!e)e=a03_jd_read(b,readid,sizeof(readid),r,sizeof(r));
++ int exit_error=a03_jd_write(b,leave,sizeof(leave));
++ if(e||exit_error)return -1;
++ *id=(uint16_t)((unsigned)r[0]|((unsigned)r[1]<<8));
++ return *id==0x9383?0:-2;
++}
++#endif
