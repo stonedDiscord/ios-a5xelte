@@ -1,3 +1,10 @@
+ACTIVE18:16UTC0079: both HID services opened successfully by user clients;
+backboardd56 now8threads. ONE explicit swipeup down360,1560/up360,460
+result0/END after opens. Dispatch proof only; UI reaction/consumption/unlock
+unverified. SpringBoard25 last sample1thread startup; user screen+reaction
+questions pending. Do not claim physical touch works or auto-repeat gesture.
+Single capture52487 remains boot0079-usb-initial.log, ends~18:22UTC.
+
 ACTIVE2026-11-17 18:13UTC BOOT0079 HID trial flashed successfully via
 heimdall --boot only after synced CDC Download. CI43969089570 exact2d4ffd7;
 kernel1960b8a7...705e9a, BOOT97f50f70...f17aea. Exact0078 ADT/1GiB/loader

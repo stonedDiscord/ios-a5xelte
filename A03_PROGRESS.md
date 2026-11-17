@@ -26,6 +26,14 @@ and touch registered; explicit input status result3 confirms both providers.
 Backboardd56 progressing1to3threads in startup samples; SpringBoard25 live.
 No HID client open observed yet at18:15UTC; no gesture dispatched.
 
+At18:16UTC both SweetHIDTouch and SweetHIDButtons open by
+IOHIDEventServiceUserClient ->1, with backboardd56 progressing8threads.
+Sent ONE explicit input swipeup after those opens: down360,1560 then
+up360,460, result0, workerEND. This proves sequence dispatch only; queue
+consumption/visible UI reaction/unlock still require evidence. SpringBoard25
+last sample still1thread/startup, so gesture may precede UI readiness.
+Asked user for current screen and swipe response. No repeated gestures.
+
 ## 2026-11-17: physical touch preparation; Jadard/CPT evidence recovered
 
 User prioritizes touch after SpringBoard clock milestone. Rechecked exact

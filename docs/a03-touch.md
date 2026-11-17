@@ -12,8 +12,10 @@ completed successfully on2026-11-16 at22:42:24UTC. This is build evidence only.
 The A03 USB console returned later on2026-11-17. Old kernel input status
 was unknown; the exact successful0145 artifact was then packaged as0079
 and flashed to BOOT only at18:13UTC. USB returned18:14UTC; both HID services
-registered and input status returned3. Backboardd startup was still progressing
-at18:15UTC; no successful HID client open or gesture delivery observed yet.
+registered and input status returned3. At18:16UTC both HID user clients
+opened successfully and one explicit swipe-up dispatched down/move/up with
+result0. Visible response and queue consumption remain unverified;
+SpringBoard's latest sample was still startup.
 See latest A03_PROGRESS.md/NOTES.md for runtime updates. Prior temporary
 watchers were absent; this trial has its own image/manifest/capture.
 
