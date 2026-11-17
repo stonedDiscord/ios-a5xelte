@@ -46,7 +46,15 @@ booted, and the 47,554-byte 0208 log was captured privately. It reaches
 `physmap ready; switching TTBR0` but has no post-switch marker. Draft overlay
 0209 relocates the trace through `phystokv()` and enables existing stage10-13
 markers; its dry-run passes against the exact 0208 CI source. Profile stages
-131 patches; CI and a followup BOOT-only trial are pending. The iPhone10,3
+131 patches. CI44071890093 passed the S8 DEVELOPMENT/HEROLTE build, profile
+checks and A53 LSE scan; kernel SHA256 is
+`e5781fcec2d37436317c91167c7426c41eaacf66d1e9e8f30dd6fca64d5913f4`.
+Candidate `shim/out/dreamlte-xnu-0209.img` (SHA256
+`1ac1f91771e2e4fffe8535ee2d5338114309be248a6e3e57c2a03188ec3be347`) was
+flashed to BOOT only. Heimdall reported upload successful, but the phone is
+currently absent from ADB, USB and Heimdall; XNU progress is unknown. Return
+to download mode, restore/hash-check stock BOOT, boot Android, and retrieve
+0209 `/proc/last_kmsg` before another trial. The iPhone10,3
 16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
 open project for the Mach-O kernel. Its D22AP `/product` properties are now
 available in ignored `research/ipsw-x/d22ap.adt`; the DREAMLTE ADT builder now

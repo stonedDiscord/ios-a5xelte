@@ -288,5 +288,20 @@ compile results, hardware observations and restore results below.
 - Added draft overlay0209 to relocate the bounded RAM logger and early output
   pointers through `phystokv()` after the TTBR0 switch, then use existing
   stage10-13 markers through `pmap_bootstrap`. Patch dry-run passes against
-  the exact CI44057485509 source tree. Profile now stages131 patches; full CI
-  and BOOT trial are pending.
+  the exact CI44057485509 source tree. Profile now stages131 patches.
+- Full S8 profile CI44071890093 SUCCESS (DEVELOPMENT/HEROLTE,
+  board_profile=dreamlte, commit 908e843). Profile checks and Cortex-A53 LSE
+  scan passed. Kernel SHA256 `e5781fcec2d37436317c91167c7426c41eaacf66d1e9e8f30dd6fca64d5913f4`,
+  stored outside Git in `/tmp/dreamlte-ci44071890093`.
+- Packaged candidate `shim/out/dreamlte-xnu-0209.img`, SHA256
+  `1ac1f91771e2e4fffe8535ee2d5338114309be248a6e3e57c2a03188ec3be347`,
+  18,427,920 bytes, within the S8 BOOT partition. Kernel strings include
+  post-TTBR markers; stock ramdisk, second stage and DTBH match byte-for-byte.
+  Android reported boot complete and `/dev/block/sda7` matched the stock
+  hash immediately before the trial.
+- Flashed 0209 to BOOT only via Heimdall 2.2.2. It reported
+  `BOOT upload successful`. The phone is currently absent from ADB, USB and
+  Heimdall after reboot; screen and XNU progress are unknown. Next: return to
+  download mode, restore and hash-check stock BOOT, boot Android, and collect
+  `/proc/last_kmsg` before deciding the next kernel change. Protected
+  partitions and USERDATA remain untouched.
