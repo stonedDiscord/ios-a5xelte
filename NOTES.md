@@ -1,3 +1,9 @@
+ACTIVE20:27UTC0152CI44169153500 exactddf4129 running/mac15intel; package
+only48253 gates0085 same0084 config +rawpacket marker. No auto flash.0084
+UTC advancing, SB logs now2026-11-17. TWO contact log sessions allzero-like
+ten(0,0) slots -> NO HID poll. Pending user finger/screen/overlay answers.
+Single4287 capture until~20:51UTC. Earlier0083CI44162912240 still running.
+
 ACTIVE20:25UTC0084 UTC sync/status advancing2026-11-17 works. fw reupload
 valid0/load0/A55A/configPASS. contacts2478/2479 log-only tenzero slots ->
 NOT physical touch; NO HID poll sent.0152 now staged rejectallzero + each-

@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: empty-report safeguard full CI underway
+
+0152 exact kernel C compile PASS. Full CI44169153500 exactddf412948a9d8c4345c6c66abf4d62268c6f8ba2
+dispatched20:25UTC macos15intel/a03/SWEET/userspace true. Package-only48253
+/tmp/a03-0085/package.py gates SUCCESS/checksums/packet marker/same0084
+config into0085. No auto deployment.0084 no HID poll sent; raw contact
+baseline must be resolved before forwarding any real input. UTC continues
+advancing and SpringBoard logs now2026-11-17 12:24:47, consistent UTC-8
+presentation (timezone identifier still not measured). No physical screen/
+finger-test reply yet. Preserve0082 running-firmware/home checkpoint.
+
 ## 2026-11-17: BOOT0084 UTC works; first contact samples invalid
 
 BOOT0084 flash success/reboot20:20UTC; single4287 capture waits180/1800s,
