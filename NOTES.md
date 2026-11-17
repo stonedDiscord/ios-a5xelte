@@ -11,7 +11,9 @@ this4K non-large-memory build. Updated0211 to use initialized/reserved low
 globals+2MiB/+4MiB. New0213 keeps RAM logging active through normal kernel
 serial output, closing the pmap-to-BSD/USB diagnostic gap. All five modified
 ARM64 translation units compile; actual git apply and five-file equality on
-fresh exact artifact PASS. Profile stages134 patches. Corrected CI next.
+fresh exact artifact PASS. Profile stages134 patches. Corrected combined
+CI44094150615 atfe42384 dispatched; poll this exact run, inspect actual source/
+linked code, then package BOOT with dreamlteusb=2.
 
 USB candidate0212 uses dreamlteusb=2 for next trial. Cold PHY startup and
 actual enumeration/transfers remain unverified. tools/dreamlte-usb-check.py

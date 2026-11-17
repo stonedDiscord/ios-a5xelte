@@ -475,3 +475,9 @@ compile results, hardware observations and restore results below.
   missing-device reporting checked; no hardware pass claimed.
 - Cancelled44091780583 before flashing because this address/console fix is
   needed for the meaningful USB trial. Corrected combined build follows.
+- Corrected combined logger/USB/serial commitfe42384 pushed. CI44094150615
+  dispatched for DEVELOPMENT/HEROLTE dreamlte on macos-15-intel.
+  https://github.com/stonedDiscord/ios-a5xelte/actions/runs/44094150615
+  Exact source/kernel inspection remains required before USB-enabled BOOT.
+  Final Android boot-complete/stock BOOT hash check passed; all protected
+  partitions and USERDATA remain untouched.
