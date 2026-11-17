@@ -70,3 +70,22 @@ diff --git a/pexpert/arm/pe_serial.c b/pexpert/arm/pe_serial.c
  	register_serial_functions(&dreamlte_snapshot_serial_functions);
  	return;
  #endif
+diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
+--- a/osfmk/arm64/start.s
++++ b/osfmk/arm64/start.s
+@@ -745,6 +745,15 @@
+ 	subs	x13, x13, #1
+ 	b.ne	La5_fb_attr
+ #if defined(DREAMLTE)
++	/* Framebuffer is in L1 slot3; snapshot RAM is in slot2. Allocate its
++	 * own L2 instead of installing snapshot descriptors in the FB table.
++	 * Upper-bank identity/KVA, framebuffer and snapshot use six of eight
++	 * bootstrap pages with the current 512MiB/4K profile.
++	 */
++	MOV64	x0, 0x91200000
++	mov		x4, x0
++	mov		x5, #1
++	create_bootstrap_mapping x0, x4, x5, x1, x2, x6, x10, x11, x12, x13
+ 	/* Map the tested Exynos snapshot cursor and 2 MiB log buffer. */
+ 	MOV64	x10, 0x91200000
+ 	and		x11, x10, #(ARM_TT_L2_INDEX_MASK)

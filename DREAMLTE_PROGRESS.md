@@ -514,3 +514,20 @@ compile results, hardware observations and restore results below.
   Loader builds; three affected ARM64 compile checks and plain git apply/
   full-source equality pass. Physical scanout still needs trial verification.
   No claim that source addresses alone prove displayed output or live USB.
+
+## 2026-11-17: framebuffer bootstrap mapping correction
+
+- CI44111718665 at ae6094f succeeded, but is NOT approved for flashing:
+  review found0214 moved framebuffer from L1 slot2 to slot3 while0206
+  still installed snapshot descriptors in the framebuffer L2. This loses
+  snapshot low aliases after MMU enable. No phone write used that artifact.
+- Corrected0214 to allocate a separate low-RAM L2 for snapshot cursor/log.
+  The current profile fits the eight-page bootstrap allocation. Exact0213
+  artifact plus plain git apply matches all seven reviewed complete sources;
+  start.s now joins the mandatory source-hash check. Corrected actual start.s
+  compiles to ARM64. Previous local start.s sandbox lacked0206; it was
+  replaced with the actual artifact source before this check.
+- Expanded USB source map through Exynos8895 CMU/FSYS0 gates, Q-channel,
+  reference selector and PMU isolation; see docs/dreamlte-usb.md. No new
+  PMU/clock writes or successful USB runtime claimed. Phone remains in
+  Download Mode on0213 BOOT; no Android restoration performed.

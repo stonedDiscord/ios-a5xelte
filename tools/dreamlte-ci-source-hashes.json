@@ -6,7 +6,8 @@
     "pexpert/arm/pe_serial.c": "3aca310577592d52ec7a88b53bc987972d414ea6edec0010a362dbdf50deba86",
     "bsd/dev/sweet_usb.c": "b2fc0e0ab19f626aaf39d6de0be9e1dded2a4c422a38aec1efc77224700064b8",
     "bsd/kern/bsd_init.c": "ef48ed2ff58d8a46621b0911699ab6edf068d4b3b563c8d7ceb7985a807a0402",
-    "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4"
+    "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
+    "osfmk/arm64/start.s": "b69d072b572470ea8acb58382425afba2094e0bc205a49246527d9296cbe39fc"
   },
   "symbols": [
     "_dreamlte_log_cursor",

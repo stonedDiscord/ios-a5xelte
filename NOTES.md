@@ -11,6 +11,12 @@ GPT/RECOVERY/bootloaders/EFS/CPEFS. Do not flash a raw IPSW archive.
 User sees Samsung logo, host sees no USB gadget. XNU runtime progress unknown.
 CI44094150615 succeeded; actual source hashes/linked symbols verified.
 
+CI44111718665 at ae6094f succeeded but must NOT be flashed: it put the
+snapshot low-RAM descriptors in the framebuffer's new L1 slot3 table.
+Corrected0214 allocates a separate snapshot L2 in slot2; all seven complete
+source hashes match actual artifact+plain git apply, including start.s.
+Corrected start.s compiles. A corrected full CI is required next.
+
 Framebuffer0214 candidate adds loader text at live s3cfb.bootloaderfb0xcc000000,
 1440x2960/stride5760. Exynos8895 kernel sources locate DECON_F0x12860000 and
 correct+0x70 trigger bits0/4/12 (S7 bits differ). XNU early and normal serial

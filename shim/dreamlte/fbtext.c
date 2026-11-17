@@ -1,7 +1,8 @@
 /* SPDX-License-Identifier: GPL-2.0-only
  * Text on the dreamlte firmware framebuffer. Framebuffer and DECON trigger
- * values follow uniLoader's board-herolte.c (0xcc000000, 1440x2960
- * ARGB8888; DECON_F 0x12860000 +0x70). Runs with the MMU off, so every
+ * geometry comes from the S8 live bootargs/fb0 (0xcc000000, 1440x2960,
+ * stride5760). Trigger bits come from Exynos8895 dpu/regs-decon.h and
+ * decon_reg_set_trigger (DECON_F 0x12860000 +0x70). Runs with the MMU off, so every
  * access is aligned and the code is position independent.
  */
 #include "fbtext.h"

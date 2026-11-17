@@ -85,6 +85,40 @@ or oversized event counts. Existing ECM configuration uses kernel interface
 bidirectional transfer (for example ARP plus ping) must be measured on S8.
 No runtime success is claimed from compilation or host modeling.
 
+## Source-derived cold-start register map (2026-11-17)
+
+Further review of the same pinned Linux revision resolves the clock and
+isolation dependencies below. These addresses are implementation references;
+none of these new clock/PMU writes has been tested on XNU.
+
+| Dependency | Physical address / field | Source |
+| --- | --- | --- |
+| USB DRD isolation release | PMU `0x16480704`, bit0 set | live PMU node; phy-exynos-usbdrd.h and pipe3_phy_isol |
+| PHY reference selector | `0x10e5007c`, bit24 set | live usbphy-refclk and change_refclk |
+| FSYS0 USB clock user mux | `0x11000180`, select bit4, busy bit16 | cmucal-sfr.c / cmucal-node.c |
+| USB link Q-channel | `0x11003044`, enable bit0, request bit1 | cmucal-sfr.c / clk-exynos8895.c |
+| USB ACLK gate | `0x11002078`, manual bit20, value bit21 | cmucal-sfr.c |
+| USB reference gate | `0x1100207c`, manual bit20, value bit21 | cmucal-sfr.c |
+| USB suspend gate | `0x11002080`, manual bit20, value bit21 | cmucal-sfr.c |
+| Upstream USB clock mux/divider/gate | CMU `0x15a81068` / `0x15a81864` / `0x15a8206c` | cmucal-sfr.c |
+
+Live DT clock IDs `0x2ca` and `0x2bf` select GATE_USBTV_USB30DRD_LINK
+and USBDRD30. PHY version01.1.1 uses CLKCORE, common_block_disable=false,
+and an initial port0 selection overridden by the board GPIO. Do not infer a
+port from cable orientation alone. PHY register-version adjustment shifts
+both banks by4 when the first version word is nonzero.
+
+The CAL sequence first handles Q-channel and link reset, preserves/selects
+the PHY port mux, configures reference source/frequency under PORTRESET,
+waits10us before releasing reset, powers both PHY banks for1ms then powers
+down the unused bank, waits500us, releases sleep/suspend/pulldowns, and sets
+the device VBUS overrides. PHYRESUME Q-channel forcing has500us delays;
+it is separate from the FSYS0 clock-controller Q-channel above. Full cold
+initialization must also retain board tuning and upstream clock rates.
+Candidate0213 only attempts the already-awake PHY path; a refusal is not
+evidence of broken USB endpoints. Framebuffer0214 is intended to expose
+that refusal or an earlier kernel failure without restoring Android.
+
 Host wrapper check against a staged source tree:
 
     python3 tools/dreamlte-usb-host-test.py PATH/TO/xnu/bsd/dev/sweet_usb.c
