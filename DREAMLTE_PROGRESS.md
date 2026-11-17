@@ -70,8 +70,9 @@ Samsung download mode uses VolumeDown+Bixby+Power (not S7 Home).
   8890; S8 DTBH and original ramdisk preserved byte-for-byte in packing test.
 - xnu/dreamlte/0204-dreamlte-early-board.patch: modifies early display sink
   and marker addresses after 0203; dry-run passed on reconstructed headers.
-- tools/dreamlte-build-profile.py: 127 patches (donor through 0203 + S8
-  overlay). Excludes later S7 MMIO drivers. Build uses MACHINE_CONFIG=HEROLTE.
+- tools/dreamlte-build-profile.py: 128 patches (donor through 0203 + S8
+  overlays 0204/0205). Excludes later S7 MMIO drivers. Build uses
+  MACHINE_CONFIG=HEROLTE.
 - Workflow xnu adds board_profile=dreamlte. This is kernel-only bring-up;
   no compatible rootfs assembled, no XNU boot yet, no GUI claim.
 
@@ -159,3 +160,25 @@ compile results, hardware observations and restore results below.
 - Corrected overlay plain-apply/full16-file equality PASS. All15 local C
   translation-unit checks PASS with explicit -std=gnu11 and
   -mgeneral-regs-only; two IOKit C++ objects passed the earlier check.
+
+## 2026-11-17: caught up with Nov 16 A03 branch
+
+- Fetched build/a03-bringup through ebb9eb4 (2026-11-16 23:31 +0100).
+  BOOT0078 evidence is a physical iOS clock/lock-screen report and
+  SpringBoard UIApplication event-loop samples, not an unlocked home or
+  verified touch. analyticsd/backboardd remain in followup samples;
+  ScreenTime vault assertion and PosterBoard crashes persist.
+- A03 0145 USB/HID input candidate passed CI43969089570 and host action/touch
+  tests. The latest committed handoff still queues BOOT0079; no provider,
+  client or physical input delivery result is recorded.
+- A03's 1GiB window is validated against its own live RAM/reservations;
+  0142 local UID/GID UUID mapping matches its Libinfo; 0144 root metadata
+  writer remained unstaged. These device-specific changes were not copied.
+- Reviewed 0135–0145. Read-only VFS/credential probes depend on A03's USB
+  command path; DREAMLTE still needs console recovery before those probes can
+  be useful. Generic HID builder results do not test S8 touch hardware.
+- Updated the adaptation map in docs/dreamlte-a03-port.md. DREAMLTE retry
+  CI43890925469 succeeded: kernel build, profile marker checks and A53 LSE
+  scan passed with zero LSE instructions. It built overlay0205 at527db60;
+  no S8 boot/GUI test followed. CI:
+  https://github.com/stonedDiscord/ios-a5xelte/actions/runs/43890925469

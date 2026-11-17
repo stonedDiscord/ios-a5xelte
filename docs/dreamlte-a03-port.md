@@ -1,17 +1,18 @@
 # A03 progress applied to DREAMLTE
 
-Reference: `build/a03-bringup` at
-`f1e16010e5a1b7d94657a867158a81bad0788682` (2026-11-15).
+Reference: `build/a03-bringup` through `ebb9eb4` (2026-11-16 23:31 +0100).
 The A03 is a UNISOC T606 device with native 16K support, GICv3, eMMC/SDMA
 and a different USB controller. DREAMLTE remains the Exynos8895, 4K,
 GICv2, single-A53 profile. Do not merge the A03 machine/loader profile.
 
-A03 BOOT0069 has a successful kernel build and BOOT deployment. BOOT0068
-captured four SpringBoard page-in waits at the eMMC mutex, with cumulative
-CPU/runnable times. Backboardd submitted full-screen frames, and the user
-reported an Apple logo. Home screen/input and the performance effect of
-0069's read-lock yield remain unverified in that branch's latest record.
-None of these are S8 hardware results.
+A03 BOOT0078 progressed to SpringBoard's UIApplication event loop; the user
+physically reported an iOS clock/lock screen. This establishes UI beyond the
+Apple logo, not an unlocked home screen or working touch. Followup captures
+retained SpringBoard, backboardd and analyticsd. ScreenTime's unsupported
+data-vault assertion and PosterBoard crash records persist. BOOT0079's opt-in
+HID input candidate passed CI and host tests, but the latest committed handoff
+still queues its BOOT-only deployment, so runtime provider/client/event
+delivery is unverified. None of these are S8 hardware results.
 
 ## Adaptation map
 
@@ -38,6 +39,12 @@ None of these are S8 hardware results.
 | 0130 HOST diagnostic budgets | Ported: eight normal reports per site, separate16 failure budget; IPC decisions unchanged. |
 | 0131/0133 durable batching/read-lock fairness | Specific to A03 eMMC. S8 has no ported UFS provider to optimize; no measured S8 speedup claimed. |
 | 0134 platform product name | S8 donor already uses IODTPlatformExpert's ADT model/compatible rather than hardcoded Redmi names. SM-G950F/DREAMLTE remain in its ADT. |
+| 0135 live USB probes, 0136–0141 service/filesystem probes | A03 EP0 transport and validated USERDATA paths do not exist in the S8 loader. Some read-only VFS/credential checks could be adapted after an S8 root and diagnostic transport exist; not staged now. |
+| 0142 local UID/GID UUID compatibility | A03's matched `ffffee...`/`abcdef...` local ID format is specific to its userspace database. DREAMLTE must inspect its own Libinfo/resolver format before changing it. |
+| 0143 read-only task credentials | Generic kernel inspection, exposed through A03's USB command worker. DREAMLTE has no verified XNU log/command transport yet. |
+| 0144 lab ScreenTime vault metadata | Persistent owner xattr/`UF_DATAVAULT` changes on the A03 root. Excluded from S8; it is not Apple vault support and lacks S8 evidence. |
+| 0145 USB-driven HID input | Generic HID event builder/actions passed A03 host tests and CI43969089570; physical provider/client/event delivery is unverified. A03 EP0, 720x1600 coordinates and touch assumptions do not transfer to S8. |
+| 1 GiB managed RAM profile | A03 live DTB/reservation checks justified its `0x102000000` window. DREAMLTE retains its measured upper-bank 512 MiB window. |
 | Root-image tools | Portable root tweaks now read actual SystemVersion build/version, as on A03. A03 installers, pinned firmware/root hashes, GPT validators and write authorization are not S8 tools. |
 | CI | Explicit ARM64 target, linked S8 diagnostic-symbol/string checks, hash manifest in artifacts. Existing A53 LSE scan retained. A03's disabled/truncated KDK-cache workaround is not needed here. |
 
@@ -113,3 +120,18 @@ Cache tools additionally accept `--hfs-image` for a host HFS image. Use the
 matching cache/subcache/symbol UUIDs and captured user cache slide. Their
 file/architecture/UUID checks do not prove S8 kernel or runtime compatibility.
 No Apple assets are included in the repository.
+
+## Nov 16 Donor Checkpoint And CI
+
+The latest reviewed A03 notes are at `ebb9eb4`. BOOT0078 physically showed
+an iOS clock, with SpringBoard samples in its application event loop. Unlock
+and touch remain unverified. A03 CI43969089570 succeeded for the 0145 HID
+candidate and verified its requested probe markers. The committed A03 handoff
+still has BOOT0079 deployment queued, so treat input as a tested candidate,
+not runtime evidence.
+
+DREAMLTE CI43890925469 succeeded on `macos-15-intel`: kernel build, S8
+symbol/string profile checks and the Cortex-A53 LSE scan passed with zero
+LSE instructions. It built the 0205 source committed at `527db60`; later
+commits only updated records and host checks. No S8 boot followed.
+https://github.com/stonedDiscord/ios-a5xelte/actions/runs/43890925469

@@ -1,20 +1,24 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
-## Active S8 handoff — 2026-11-16
+## Active S8 handoff — 2026-11-17
 
-Work remains on dreamlte-bringup. Reviewed A03 f1e1601 and ported its
+Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;
 profile stages128 patches, still HEROLTE config/4K/A53/GICv2. Read
 DREAMLTE_PROGRESS.md, docs/dreamlte-bringup.md and docs/dreamlte-a03-port.md.
 The latter maps all A03 work to applied, already inherited or S8-dependent
 features. Do not copy UNISOC MMIO, eMMC/USB/reset or USERDATA instructions.
 
-Previous S8 CI43434858911 SUCCESS confirmed. New portable host suites and
-17 arm64 object compiles passed. Port5368653 is pushed; full updated CI
-43879179527 failed: Apple Clang rejects an extern directly after a C
-label in ipc_kmsg.c. Placement corrected in527db60; retry43890925469 queued. All15 local C
-checks pass explicit GNU C11; two IOKit C++ objects also compiled. Profile remains
-DEVELOPMENT/HEROLTE, dreamlte.
+S8 port commits through ded113c are pushed. CI43879179527 exposed an Apple
+Clang label-declaration error; fix527db60 corrected it. Retry43890925469
+SUCCESS: kernel build, DREAMLTE symbol/string checks and Cortex-A53 LSE scan
+passed. No S8 boot/package trial followed.
+
+A03 BOOT0078 showed a physical clock/lock screen and SpringBoard's application
+event loop; no unlocked home or touch result. HID candidate0145 passed
+CI43969089570 and host builder tests, but BOOT0079 runtime delivery remains
+pending in the latest A03 handoff. UNISOC USB transport, 1GiB RAM layout, A03
+account UUIDs and optional root vault metadata are device-specific.
 No S8 XNU boot, rootfs or GUI result is established. No phone writes in
 this adaptation. Next hardware prerequisite is XNU console recovery via
 the verified snapshot path, then scanout/UFS; USERDATA remains untouched.
