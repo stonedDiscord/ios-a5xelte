@@ -35,7 +35,14 @@ marker as 0206, `entering arm_vm_init`; the product identity change did not
 advance observed kernel progress. Draft overlay0208 adds bounded VM setup and
 physmap milestones, with logging disabled before the TTBR0 switch. Its patch
 dry-run passes on the exact 0206 CI build tree; profile stages130 patches.
-Run full S8 CI before packaging/flashing 0208. The iPhone10,3
+CI44057485509 passed the S8 DEVELOPMENT/HEROLTE build, profile checks and A53
+LSE scan. Candidate `shim/out/dreamlte-xnu-0208.img` (SHA256
+`94eadeea8a7fe7af5168558af83acdfc4768f442e17c2633db96c0e890c5799d`) was
+flashed to BOOT only; Heimdall reported upload successful, but the phone is
+currently absent from ADB and Heimdall. Progress and `/proc/last_kmsg` are
+unknown. Force restart (VolumeDown+Power), enter download mode
+(VolumeDown+Bixby+Power), restore/verify stock BOOT, boot Android, and retrieve
+the 0208 log before another trial. The iPhone10,3
 16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
 open project for the Mach-O kernel. Its D22AP `/product` properties are now
 available in ignored `research/ipsw-x/d22ap.adt`; the DREAMLTE ADT builder now

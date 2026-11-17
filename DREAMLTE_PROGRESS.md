@@ -259,5 +259,21 @@ compile results, hardware observations and restore results below.
   mark VM window/page-table setup and `arm_vm_physmap_init`, then disable it
   immediately before the TTBR0 switch. This distinguishes a stall in physmap
   setup from a failure during translation-table replacement. Patch dry-run
-  passes against the exact 0206 CI build tree; full profile CI and BOOT trial
-  remain pending. Profile now stages130 patches.
+  passes against the exact 0206 CI build tree. Profile stages130 patches.
+- Full S8 profile CI44057485509 SUCCESS (DEVELOPMENT/HEROLTE,
+  board_profile=dreamlte, commit 0f083da). Profile checks and Cortex-A53 LSE
+  scan passed. Kernel artifact SHA256 is in its private `SHA256SUMS`, kept
+  outside Git at `/tmp/dreamlte-ci44057485509`.
+- Packaged BOOT candidate `shim/out/dreamlte-xnu-0208.img`, SHA256
+  `94eadeea8a7fe7af5168558af83acdfc4768f442e17c2633db96c0e890c5799d`,
+  18,427,920 bytes, within the 41,943,040-byte S8 BOOT partition. Kernel
+  strings contain all four VM milestones. Stock ramdisk, second stage and
+  DTBH match byte-for-byte; DTBH identifies chip8895. The stock BOOT hash was
+  verified immediately before flashing.
+- Flashed 0208 to BOOT only with Heimdall 2.2.2; it reported
+  `BOOT upload successful`. After reboot, neither ADB nor Heimdall currently
+  detects the phone. Screen and XNU progress are unknown; 0208 last_kmsg is
+  not yet recovered. Next: force restart (VolumeDown+Power), enter download
+  mode (VolumeDown+Bixby+Power), restore original BOOT and verify its hash,
+  boot Android, and retrieve `/proc/last_kmsg` before planning another trial.
+  RECOVERY, bootloader, EFS/CPEFS and USERDATA remain untouched.
