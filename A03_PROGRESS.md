@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: physical lift transitions confirmed on BOOT0087
+
+Two-minute continuous log-only stream starts~21:40:46UTC; at active status
+238slices/events302, contact logs already include25slot0 up transitions
+at distinct nonzero coordinates, interleaved with down/motion. Final status
+360slices/events341; explicit stop361slices/events341, so stopping adds no
+up event. No stream error. This separates real report-driven lift from
+synthetic session-final cleanup. Down/motion/up chain is now measured on
+physical hardware, with no HID forwarding in this session. First motion
+starts385,1545 and moves upward across many coordinates. Full logged range
+and release count retained in private capture; motion cap omits later downs.
+A two-minute physical HID-forwarding trial starts~21:42:48UTC; visible UI
+response asked separately and remains pending. Do not infer UI success from
+coordinates or dispatch logs.
+
 ## 2026-11-17: BOOT0087 continuous log-only polling works on hardware
 
 BOOT-only flash completed100percent/success/reboot21:35UTC. Single capture

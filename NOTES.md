@@ -1,3 +1,9 @@
+ACTIVE21:43UTC0087 TRUE PHYSICAL LIFT PROVEN: logonly120s361slices/
+341events;25upalreadylogged whileactive238slices; stopadds0events. Noerrors.
+HIDphysical120s session98064 NOWRUNNING /tmp/a03-0087/stream-physical-hid.log.
+User asked swipe/tap visibleUI; responsepending. Needinspect HIDevents then
+UIreply. CapturePID128605 until~22:06UTC. Firmwareloaded; noflashneeded.
+
 ACTIVE21:40UTC0087 continuous HIDidle10s PASS:33slicesactive->34stopped,
 544frames/events0/noerror. Logonly30s85slices1360framesalsoPASS. STREAMOFF.
 Physical user screen/readiness replypending; need real down/move/up then
