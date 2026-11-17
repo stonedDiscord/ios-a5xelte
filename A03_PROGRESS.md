@@ -6,7 +6,8 @@ Explicit touch poll2483 completed result0/valid300/events0/hid1, with three
 count0/statusFF idle packets and normal SPI gate/source restoration. This is
 the first hardware poll with HID forwarding enabled; no actual event was
 emitted, so it does not establish HID queue delivery or visible UI response.
-Physical lift/user-aligned input still pending. Full0154 CI44178262587 queued.
+Physical lift/user-aligned input still pending. Full0154 CI44178262587 later acquired its runner21:23:28UTC and entered
+Build21:25:02UTC; still running21:29UTC. Package-onlyPID124809 remains live.
 
 Added explicit host timed-stream helper for0154: defaults log-only, correlates
 BEGIN/END by exact command and worker ID, preserves an existing active stream,

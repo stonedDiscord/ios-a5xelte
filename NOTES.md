@@ -1,3 +1,11 @@
+ACTIVE21:29UTC0154CI44178262587 exact10b9f9b RUNNING Build step since
+21:25UTC (not queued anymore). PackagePID124809 waits exactsuccess0087,
+noautodeploy. Current0086 capturePID122914 until~21:38UTC. HIDidle2483
+300valid/events0/hid1; actual HID event delivery stillunverified. Timedhost
+controls3b61053 pushed/testsPASS; physical user-held/lift/screen reply pending.
+Next checkCI/package -> BOOT-only0087 -> UTC/privatefwload -> startcontacts
+for physicalup -> HID visible response. Do not claim touch usable yet.
+
 ACTIVE21:24UTC0086 FIRST HID-ENABLED IDLE poll2483 result0/valid300/
 events0/hid1, no actual events forwarded. Physical lift/HID/UI stillpending.
 0154CI44178262587 queued; packagePID124809 live. Added timed host helper
