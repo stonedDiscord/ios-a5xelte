@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: RAM-only transport preparation
+
+Added unstaged jd9365t-memory.h for later validated RAM firmware/report access.
+Writes limited to PRAM00000000..0000FFFF or DRAM20000000..2000FFFF;
+read-only ERAM20011000..20011FFF additionally allowed. Whole range checked
+before first transfer; no MMIO/peripheral/external-flash write accepted.
+Uses verified0146 backdoor protocol,240byte chunks with same-CS6byte header;
+returns first transport error, existing SPI timeout/CS cleanup retained.
+Actual-helper C/C++ ASan/UBSan chunk/header/address/data/CS/bounds/peripheral-
+refusal/timeout tests PASS. No firmware or control session staged/enabled;
+this does not prove RAM transfer or contact operation on hardware.
+
 ## 2026-11-17: BOOT0080 home icons confirmed after paired Home
 
 At19:14UTC user answers yes, app icons visible after explicit USB Home9.

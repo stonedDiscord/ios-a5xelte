@@ -152,3 +152,11 @@ releases held contacts after three consecutive failed/malformed reads. This
 is preparatory policy: a valid report resets the failure counter; a failed
 read never enters the coordinate decoder as zero bytes. It has no polling,
 bus or HID integration. Test with a03-test-jd9365t-contact-state.py.
+
+The unstaged jd9365t-memory.h transport restricts whole RAM ranges before
+any transfer: PRAM00000000..0000FFFF and DRAM20000000..2000FFFF; ERAM page
+20011000..20011FFF is read-only. No peripheral register writes accepted.
+It uses240-byte data chunks and the hardware-verified backdoor SPI framing.
+Caller must identify the controller and manage the diagnostic session; this
+helper neither loads firmware nor changes MCU state. Run its actual helper
+regression with tools/a03-test-jd9365t-memory.py.

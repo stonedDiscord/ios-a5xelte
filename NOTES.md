@@ -1,3 +1,8 @@
+ACTIVE19:16UTC RAM-only transport helper prepared+unstaged with strict
+PRAM/DRAM writes, read-only ERAM,240byte chunks. Actual C/C++ ASan tests PASS.
+NO hardware RAM operation/firmware upload yet.0147CI44154963110 building;
+package63480 waits exact7972a72.0080 home/ROM confirmed; reader26068.
+
 ACTIVE19:14UTC0080 PHYSICAL HOME ICONS confirmed after USB Home9.
 ROM9383/probe restoration and visible home both verified on current image.
 Physical touch still pending.0147CI44154963110 exact7972a72 building;
