@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0082 flash success; poll/time full CI queued
+
+BOOT0082 upload100percent/success/reboot verified19:50UTC. Single capture
+23880 waits180 then1800s into boot0082-usb-initial.log. No other reader.
+USB not enumerated yet19:51UTC; no ROM/load command sent after this boot.
+
+0149+0150 full CI44162912240 exactda42e57da7ee15ec8722ae8b40a2882f1b5d896b
+started19:50UTC, SWEET/a03/userspace true/macOS26intel/no buildtree upload.
+Package-only68041 /tmp/a03-0083/package.py waits exact SUCCESS/checksums,
+then preserves0082 payload config in0083. No auto deployment. Current0082
+has explicit firmware loader, not poll/time. Physical touch/date correction
+still pending hardware validation.
+
 ## 2026-11-17: RAM-loader full CI success and0082 deployment
 
 CI44159557034 SUCCESS exactcdafbe19909f1b4b99a1523d57c5dd48957dc24a.
