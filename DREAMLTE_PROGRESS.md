@@ -200,5 +200,15 @@ compile results, hardware observations and restore results below.
 - Local validation: overlay applies to the exact CI43890925469 build tree;
   modified `start.s` and `sweet_early.c` compile with zero failures using the
   recovered CI commands. DREAMLTE profile stages129 patches. Loader rebuild
-  and minimal ADT generation pass. No candidate XNU image has been packaged
-  or flashed; overlay0206 still needs a complete CI build before hardware use.
+  and minimal ADT generation pass. ReVa imported and analyzed the loader ELF;
+  its snapshot writer checks the verified buffer bounds and persists through
+  the ARM data cache. ReVa cannot import the kernelcache/IMG4 file formats.
+- Full S8 profile CI44047499178 SUCCESS (DEVELOPMENT/HEROLTE,
+  board_profile=dreamlte, commit da1a8b1). Kernel build, DREAMLTE checks and
+  Cortex-A53 LSE scan passed. Kernel artifact SHA256 is in its private
+  `SHA256SUMS`; it is kept outside Git at `/tmp/dreamlte-ci44047499178`.
+- Packaged BOOT candidate `shim/out/dreamlte-xnu-0206.img`, SHA256
+  `7635350bc14ee2cbcb983f668e6f53d34d3c6ad5a7ce7ba01c23b054ca4efca8`;
+  18,423,824 bytes, within the 41,943,040-byte S8 BOOT partition. S8 chip
+  8895 DTBH, stock ramdisk, empty second stage and DTBH are preserved. This is
+  a kernel-only XNU entry test; no rootfs is assembled. BOOT test flash is next.

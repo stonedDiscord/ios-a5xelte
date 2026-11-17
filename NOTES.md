@@ -21,9 +21,11 @@ pending in the latest A03 handoff. UNISOC USB transport, 1GiB RAM layout, A03
 account UUIDs and optional root vault metadata are device-specific.
 No S8 XNU boot, rootfs or GUI result is established. The connected phone is
 still rooted Android; BOOT p7 matches the preserved stock image. Overlay0206
-now adds a bounded early trace to the previously verified Exynos snapshot
-buffer. It applies to CI43890925469's exact source and both changed XNU files
-compile locally; full CI is required before a BOOT-only trial. The iPhone10,3
+adds a bounded early trace to the previously verified Exynos snapshot buffer.
+Full CI44047499178 passed the S8 profile and A53 scan. Candidate
+`shim/out/dreamlte-xnu-0206.img` is built and package-checked; the next action
+is the authorized BOOT-only trial, with original BOOT ready for restoration.
+The iPhone10,3
 16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
 open project, so kernelcache analysis remains pending. USERDATA and all
 protected partitions remain untouched.
