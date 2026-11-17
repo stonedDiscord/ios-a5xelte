@@ -1,5 +1,24 @@
 # A03 physical touchscreen bring-up
 
+## Latest measured state (2026-11-17, BOOT0086)
+
+Physical held-finger coordinates were aligned on0084 (332,805). Two aligned
+0085 movement captures followed the user's drag across the screen. BOOT0086
+includes0153 and now confirms300valid untouched-screen samples with zero
+events, fixing the measured count0/statusFF phantom contacts. Its full Xcode
+CI44173996698 succeeded at exact8963305. Private volatile firmware load again
+passes all seven hardware CRCs and readyA55A/configuration checks.
+
+True physical lift within a session and physical HID/UI response are still
+pending. Session-final release alone is cleanup evidence. No physical touch
+poll/HID session has yet run. Keep the older0149/0152 HID paths disabled;
+0086 is the first hardware-clean idle baseline. USB Home previously changed
+the visible UI, but earlier synthetic digitizer swipes had no visible effect.
+Display console ownership is physically fixed on0084 and later. UTC sync
+works per boot; local timezone and a persistent RTC remain unresolved.
+
+The sections below preserve the bring-up chronology.
+
 ## Evidence and current boundary (2026-11-17)
 
 BOOT0079 reaches the physically reported home menu after an explicit USB
