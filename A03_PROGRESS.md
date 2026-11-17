@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0082 event loop and physical clock confirmed
+
+Sample2482/cache36D60000 resolves main thread CFRunLoopRunSpecific,
+GSEventRunModal, UIApplicationMain and SBSystemAppMain at19:59UTC. User then
+physically confirms clock/lock screen. This now confirms visible UI after
+successful RAM-firmware load; it does not confirm physical contact input.
+One explicit USB Home sent after confirmation; physical response pending.
+0149+0150CI44162912240 remains building. Single23880 capture continues.
+
 ## 2026-11-17: epoch date measured in SpringBoard logs
 
 At19:57UTC current0082 SpringBoard logs report1969-12-31 16:06:24, consistent
