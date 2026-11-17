@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0088 work-interval candidate fullCI success/deployment
+
+CI44186495805 SUCCESS exact47a92b35332aac7a9c6173e2d57f18125a525c0d.
+KernelSHA256 245542b4cdec8f7b26d7b8a20ce7955b706d4d6ac16727b602e3ff2b040cdab2.
+BOOTSHA256 1e3309cb2a186fb931fae7bc0e85a6237b77424f7de1b1d9aff6c26afec696f3.
+Artifact checksums/0155 marker and0087 configuration preservation pass.
+On resume22:28UTC no XNU CDC device, Samsung04E8:685D already enumerated;
+Heimdall detect succeeds. Attempted CDC Download sender reports noenumeration,
+so it did not request this transition; its cause is not established. Authorized
+BOOT-only0088 flash17164 now in progress; no other partition selected.
+0155 is still a candidate for the UIKit work-interval abort, not proven fixed.
+Next singlecapture/UTC/privatefirmwareload -> WIflags/error/kr -> physicalUI.
+
 ## 2026-11-17: displayed clock stale after crash, kernel time advances
 
 User reports clock still2:03 at~22:12UTC/23:12Berlin, about9minutes stale

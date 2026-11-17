@@ -1,3 +1,10 @@
+ACTIVE22:28UTC0155CI44186495805 SUCCESS/exact47a92b3.0088 checksum/
+marker/same0087configPASS; BOOT1e3309cb...696f3/kernel245542b4...cdab2.
+PhonealreadyDownload04e8:685d/detectPASS; CDCsenderdidnotconnect (cause
+oftransitionunknown). AuthorizedBOOT-onlyflash17164 /tmp/a03-0088/flash.log
+running. Nextsinglecapture UTC/fwstage/load WIlogs physicalswipe. NoUI fix
+claim yet.0087 physicalHIDreachesUIKit thenWIabort; restore0087/0086kept.
+
 ACTIVE22:13UTC0087 userclock2:03stale~9min. KernelUTCstatus22:12:54
 advancing; replacementSpringBoard1079/24threads/mainloopalive. Wholephone
 notfrozen; displayedGUIstale. STREAMOFF.0155CI44186495805 stillBuild,
