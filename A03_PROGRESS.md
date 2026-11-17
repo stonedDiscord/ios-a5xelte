@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: explicit continuous touch polling prepared (0154)
+
+0154 adds serialized probe-worker slices of16frames with retained contact
+state across slices. touch startcontacts is continuous log-only; touch start
+requires the HID provider and forwards events. touch stop releases once;
+streamstatus remains available, and uploads/other touch probes are refused
+while streaming. SPI registers and gates are restored between slices. ROM,
+ready/config/read failures release and stop. No automatic firmware load or
+boot-time input. Release events bypass the64-event motion log cap.
+Actual poll C11/C++17 ASan/UBSan tests pass retained held states, physical-
+style idle release before cleanup, ROM/config-error release. Actual command
+policy C ASan/UBSan tests pass provider gating, log-only/HID isolation,
+double-start preservation and idempotent stop. Kernel console C cross-compile
+and reverse patch dry run pass. Not deployed; BOOT0086 remains current.
+Physical lift/HID/UI verification still pending user aligned touch test.
+
 ## 2026-11-17: BOOT0086 hardware idle reports are clean
 
 BOOT-only flash completed successfully and rebooted; single console capture

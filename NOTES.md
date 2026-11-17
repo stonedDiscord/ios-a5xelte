@@ -1,3 +1,9 @@
+ACTIVE21:19UTC0154 prepared explicit continuous startcontacts/start/stop/
+streamstatus on serialized worker,16frame slices preserve heldstate, failure
+releases/stops; noautoload. Poll+command ASan/UBSan/kernelC/reversePASS.
+Not deployed.0086 idleclean; user heldfinger/screen reply pending. No HID
+poll sent. Next fullCI then0087; keep0086 physical baseline available.
+
 ACTIVE21:14UTC0086 inputstatus3/bothHIDclientsopen. Poll C/C++ ASan/UBSan
 regression proves count0/statusFF release at sample2 beforecleanup, no extra
 up. Hardware idle0events proven; user heldfinger/screen reply pending.

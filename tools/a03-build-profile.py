@@ -155,7 +155,8 @@ def main():
                      '0150-a03-explicit-volatile-utc-sync.patch',
                      '0151-a03-gui-panel-console-handoff.patch',
                      '0152-a03-reject-empty-contact-and-cycle-session.patch',
-                     '0153-a03-zero-count-reports-release-contacts.patch'):
+                     '0153-a03-zero-count-reports-release-contacts.patch',
+                     '0154-a03-explicit-continuous-touch-poll.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

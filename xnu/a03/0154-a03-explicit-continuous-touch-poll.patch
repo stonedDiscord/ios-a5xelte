@@ -1,0 +1,191 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -38,11 +38,12 @@
+  ml_set_interrupts_enabled(irq);return 1;
+ }
+ extern void a03_live_probe(const char *);
++static void a03_touch_stream_tick(void);
+ static void probe_worker(__unused void *arg,__unused wait_result_t result) {
+  for(;;) {
+   char command[128];
+   if(probe_dequeue(command))a03_live_probe(command);
+-  else IOSleep(10);
++  else { a03_touch_stream_tick();IOSleep(10); }
+  }
+ }
+ 
+@@ -376,7 +377,8 @@
+ #include "a03_jd9365t_spi.h"
+ #include "a03_jd9365t_sections.h"
+ #include "a03_jd9365t_loader.h"
+-#define A03_JD_POLL_TRACE(i,p) do { if((i)<3) { \
++static unsigned a03_touch_packet_count;
++#define A03_JD_POLL_TRACE(i,p) do { if(a03_touch_packet_count++<3) { \
+  printf("A03 TOUCH packet%u:",(i)); \
+  for(unsigned j=0;j<60;j++)printf("%02x",(p)[j]); \
+  printf("\n"); } } while(0)
+@@ -440,10 +442,20 @@
+ extern void sweet_hid_touch(int finger,int down,int x,int y);
+ extern int a03_hid_action(unsigned action);
+ static unsigned a03_touch_emit_count,a03_touch_emit_hid;
++static unsigned a03_touch_streaming,a03_touch_stream_slices;
++static struct a03_jd_contact_state a03_touch_stream_state;
+ static void a03_touch_emit(void *context __unused,unsigned slot,int down,unsigned x,unsigned y) {
+- if(a03_touch_emit_count<64)printf("A03 TOUCH contact slot=%u down=%d x=%u y=%u hid=%u\n",slot,down,x,y,a03_touch_emit_hid);
++ if(a03_touch_emit_count<64||!down)printf("A03 TOUCH contact slot=%u down=%d x=%u y=%u hid=%u\n",slot,down,x,y,a03_touch_emit_hid);
+  a03_touch_emit_count++;
+  if(a03_touch_emit_hid)sweet_hid_touch((int)slot,down,(int)x,(int)y);
++}
++/* Only the serialized probe worker calls this state and owns SPI3. */
++static void a03_touch_stream_stop(void) {
++ for(unsigned i=0;i<3;i++)a03_jd_contact_update(&a03_touch_stream_state,
++     0,NULL,0,a03_touch_emit,NULL);
++ a03_touch_streaming=0;
++ printf("A03 TOUCH stream stopped slices=%u events=%u; released\n",
++     a03_touch_stream_slices,a03_touch_emit_count);
+ }
+ /* Host transfers a private candidate into kernel RAM, never the root image.
+  * Sequential bounded hex chunks; validate entire image before SPI writes.
+@@ -489,9 +501,26 @@
+ }
+ void a03_touch_probe(const char *command);
+ void a03_touch_probe(const char *command) {
++ if(!strcmp(command,"stop")){a03_touch_stream_stop();return;}
++ if(!strcmp(command,"streamstatus")) {
++  printf("A03 TOUCH streaming=%u slices=%u events=%u\n",a03_touch_streaming,
++      a03_touch_stream_slices,a03_touch_emit_count);return;
++ }
++ if(!strcmp(command,"start")||!strcmp(command,"startcontacts")) {
++  if(a03_touch_streaming){printf("A03 TOUCH already streaming\n");return;}
++  if(!strcmp(command,"start")&&!(a03_hid_action(0)&2)){printf("A03 TOUCH start refused: HID provider absent\n");return;}
++  memset(&a03_touch_stream_state,0,sizeof(a03_touch_stream_state));
++  a03_touch_emit_count=a03_touch_packet_count=a03_touch_stream_slices=0;
++  a03_touch_emit_hid=!strcmp(command,"start");a03_touch_streaming=1;
++  printf("A03 TOUCH stream requested hid=%u; validated slices, explicit stop\n",a03_touch_emit_hid);return;
++ }
++ if(a03_touch_streaming&&strcmp(command,"streamtick")) {
++  printf("A03 TOUCH stop streaming before other touch operations\n");return;
++ }
++ if(!strcmp(command,"streamtick")&&!a03_touch_streaming)return;
+  if(a03_touch_upload(command))return;
+- if(strcmp(command,"status")&&strcmp(command,"rom")&&strcmp(command,"sections")&&strcmp(command,"load")&&strcmp(command,"contacts")&&strcmp(command,"poll")) {
+-  printf("A03 TOUCH requires status|rom|sections|load|contacts|poll|fwbegin|fwdata|fwstatus; explicit RAM-only operations\n");return;
++ if(strcmp(command,"status")&&strcmp(command,"rom")&&strcmp(command,"sections")&&strcmp(command,"load")&&strcmp(command,"contacts")&&strcmp(command,"poll")&&strcmp(command,"streamtick")) {
++  printf("A03 TOUCH requires status|rom|sections|load|contacts|poll|start|startcontacts|stop|streamstatus|fwbegin|fwdata|fwstatus; explicit RAM-only operations\n");return;
+  }
+  if(!strcmp(command,"poll")&&!(a03_hid_action(0)&2)) {
+   printf("A03 TOUCH poll refused: HID provider absent\n");return;
+@@ -503,12 +532,13 @@
+    printf("A03 TOUCH load refused: upload incomplete/invalid\n");return;
+   }
+  }
++ int streaming=!strcmp(command,"streamtick"),stream_ok=0;
+  if(!a03_touch_apb)a03_touch_apb=ml_io_map(0x20000000,0x3000);
+  if(!a03_touch_clk)a03_touch_clk=ml_io_map(0x20010000,0x1000);
+- if(!a03_touch_apb||!a03_touch_clk){printf("A03 TOUCH clock map failed\n");return;}
++ if(!a03_touch_apb||!a03_touch_clk){printf("A03 TOUCH clock map failed\n");if(streaming)a03_touch_stream_stop();return;}
+  uint32_t gate=a03_touch_r32((void *)a03_touch_apb,0);
+  uint32_t clock=a03_touch_r32((void *)a03_touch_clk,0x58);
+- printf("A03 TOUCH SPI3 gate=%08x clock=%08x; preserve reset/pinmux\n",gate,clock);
++ if(!streaming)printf("A03 TOUCH SPI3 gate=%08x clock=%08x; preserve reset/pinmux\n",gate,clock);
+  if(!strcmp(command,"status"))return;
+  /* Linux ums9230-clk: SPI3 gate bit8; mux0 ext26m, divider bits8..10. */
+  a03_touch_w32((void *)a03_touch_apb,0x1000,0x100);
+@@ -538,7 +568,7 @@
+  b.write32(b.context,0x24,0x33f);
+  b.write32(b.context,0x14,0x208);b.write32(b.context,0x40,0x208);
+  uint16_t id=0;int e=a03_jd_rom_id(&b,&id);
+- printf("A03 TOUCH ROM result=%d id=%04x expected=9383 raw=%08x sts2=%08x\n",
++ if(!streaming||e)printf("A03 TOUCH ROM result=%d id=%04x expected=9383 raw=%08x sts2=%08x\n",
+      e,id,b.read32(b.context,0x28),b.read32(b.context,0x34));
+  if(!e&&!strcmp(command,"load")) {
+   printf("A03 TOUCH RAM load begin size=%u; no external flash\n",a03_touch_fw_size);
+@@ -547,11 +577,16 @@
+   if(!e)a03_touch_sections(&b);
+  }
+  if(!e&&!strcmp(command,"sections"))a03_touch_sections(&b);
+- if(!e&&(!strcmp(command,"contacts")||!strcmp(command,"poll"))) {
+-  a03_touch_emit_count=0;a03_touch_emit_hid=!strcmp(command,"poll");
++ if(!e&&(!strcmp(command,"contacts")||!strcmp(command,"poll")||streaming)) {
++  if(!streaming){a03_touch_emit_count=a03_touch_packet_count=0;a03_touch_emit_hid=!strcmp(command,"poll");}
+   unsigned valid=0;
+-  e=a03_jd_poll(&b,300,a03_touch_emit,NULL,&valid);
+-  printf("A03 TOUCH poll result=%d valid=%u events=%u hid=%u; final release\n",
++  if(streaming) {
++   e=a03_jd_poll_slice(&b,16,&a03_touch_stream_state,0,a03_touch_emit,NULL,&valid);
++   a03_touch_stream_slices++;
++   stream_ok=!e&&valid==16;
++   if(!stream_ok)printf("A03 TOUCH stream error=%d valid=%u\n",e,valid);
++  } else e=a03_jd_poll(&b,300,a03_touch_emit,NULL,&valid);
++  if(!streaming)printf("A03 TOUCH poll result=%d valid=%u events=%u hid=%u; final release\n",
+       e,valid,a03_touch_emit_count,a03_touch_emit_hid);
+  }
+  a03_jd_cs(&b,0);
+@@ -559,7 +594,11 @@
+ restore_clock:
+  a03_touch_w32((void *)a03_touch_clk,0x58,clock);
+  if(!(gate&0x100))a03_touch_w32((void *)a03_touch_apb,0x2000,0x100);
+- printf("A03 TOUCH restored gate=%08x clock=%08x\n",
++ if(!streaming)printf("A03 TOUCH restored gate=%08x clock=%08x\n",
+      a03_touch_r32((void *)a03_touch_apb,0),a03_touch_r32((void *)a03_touch_clk,0x58));
++ if(streaming&&!stream_ok)a03_touch_stream_stop();
++}
++static void a03_touch_stream_tick(void) {
++ if(a03_touch_streaming)a03_touch_probe("streamtick");
+ }
+ #endif
+--- a/bsd/dev/a03_jd9365t_poll.h
++++ b/bsd/dev/a03_jd9365t_poll.h
+@@ -10,15 +10,20 @@
+ #ifndef A03_JD_POLL_TRACE
+ #define A03_JD_POLL_TRACE(i,p) ((void)0)
+ #endif
+-static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
++static inline int a03_jd_poll_slice(struct a03_jd_bus *b,unsigned frames,
++    struct a03_jd_contact_state *state,int release,
+     a03_jd_contact_emit emit,void *context,unsigned *valid_out)
+ {
+- if(!b||!b->delay_us||!emit||!frames||frames>300)return -1;
+- uint16_t id;if(a03_jd_rom_id(b,&id))return -2;
++ if(valid_out)*valid_out=0;
++ if(!b||!b->delay_us||!state||!emit||!frames||frames>300)return -1;
++ uint16_t id;if(a03_jd_rom_id(b,&id)) {
++  for(unsigned i=0;i<3;i++)(void)a03_jd_contact_update(state,0,NULL,0,emit,context);
++  return -2;
++ }
+  const uint8_t enter[]={0xf2,0xaa,0x55,0x0f,0xf0,0x68};
+  const uint8_t leave[]={0xf2,0xaa,0x88,0,0,0};
+  uint8_t table[160],config[6],packet[60];struct a03_jd_sections sections;
+- struct a03_jd_contact_state state={{{0,0,0,0}},0};int result=-3;unsigned valid=0;
++ int result=-3;unsigned valid=0;
+  if(a03_jd_write(b,enter,sizeof(enter)))goto done;
+  if(a03_jd_ram_read(b,0x20011000,table,sizeof(table))||
+     a03_jd_decode_sections(table,sizeof(table),&sections))goto done;
+@@ -45,15 +50,23 @@
+     * genuine (0,0) slot remains valid within a nonzero complete packet. */
+    if(!nonzero)ok=0;
+   }
+-  if(!a03_jd_contact_update(&state,ok,packet,sizeof(packet),emit,context))valid++;
+-  else if(state.failures>=3){result=-4;break;}
++  if(!a03_jd_contact_update(state,ok,packet,sizeof(packet),emit,context))valid++;
++  else if(state->failures>=3){result=-4;break;}
+   b->delay_us(b->context,16000);
+  }
+- /* A bounded session never leaves a finger held after its final sample. */
+- for(unsigned i=0;i<3;i++)(void)a03_jd_contact_update(&state,0,NULL,0,emit,context);
+ done:
+  if(a03_jd_write(b,leave,sizeof(leave))&&!result)result=-5;
++ /* Continuing slices retain contacts; stopping or any failed slice releases
++  * once. Ordinary bounded diagnostics preserve their final-release policy. */
++ if(release||result)for(unsigned i=0;i<3;i++)
++  (void)a03_jd_contact_update(state,0,NULL,0,emit,context);
+  if(valid_out)*valid_out=valid;
+  return result;
+ }
++static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
++    a03_jd_contact_emit emit,void *context,unsigned *valid_out)
++{
++ struct a03_jd_contact_state state={{{0,0,0,0}},0};
++ return a03_jd_poll_slice(b,frames,&state,1,emit,context,valid_out);
++}
+ #endif

@@ -28,6 +28,14 @@ int main(void){struct a03_jd_bus b={NULL,delay};unsigned valid=999;
  reset();badconfig=1;assert(a03_jd_poll(&b,3,emit,NULL,&valid)==-3&&writes==2&&!samples&&!events);
  reset();pramconfig=1;assert(a03_jd_poll(&b,3,emit,NULL,&valid)==-3&&writes==2&&!samples&&!events);
  reset();idleafterfirst=1;assert(!a03_jd_poll(&b,3,emit,NULL,&valid));assert(valid==3&&downs==1&&ups==1&&upsample==2&&events==2);
+ reset();struct a03_jd_contact_state state={{{0,0,0,0}},0};
+ assert(!a03_jd_poll_slice(&b,1,&state,0,emit,NULL,&valid));assert(downs==1&&!ups&&state.contacts[0].down);
+ assert(!a03_jd_poll_slice(&b,1,&state,0,emit,NULL,&valid));assert(downs==2&&!ups&&state.contacts[0].down);
+ idleafterfirst=1;assert(!a03_jd_poll_slice(&b,1,&state,0,emit,NULL,&valid));assert(ups==1&&!state.contacts[0].down&&upsample==3);
+ idleafterfirst=0;assert(!a03_jd_poll_slice(&b,1,&state,0,emit,NULL,&valid));assert(downs==3&&ups==1);
+ badid=1;assert(a03_jd_poll_slice(&b,1,&state,0,emit,NULL,&valid)==-2);assert(ups==2&&!state.contacts[0].down&&!valid);
+ badid=0;assert(!a03_jd_poll_slice(&b,1,&state,0,emit,NULL,&valid));assert(downs==4&&ups==2);
+ notready=1;assert(a03_jd_poll_slice(&b,1,&state,0,emit,NULL,&valid)==-3);assert(ups==3&&!state.contacts[0].down);
  reset();zero=1;assert(a03_jd_poll(&b,300,emit,NULL,&valid)==-4&&samples==3&&!valid&&!events&&writes==9);
  reset();failframes=1;assert(a03_jd_poll(&b,300,emit,NULL,&valid)==-4&&samples==4&&valid==1&&downs==1&&ups==1&&writes==11);
 }
@@ -37,4 +45,4 @@ with tempfile.TemporaryDirectory(prefix='a03-jd-poll-') as d:
  for cc,std,lang in [('clang','c11','c'),('clang++','c++17','c++')]:
   subprocess.run([cc,'-x',lang,'-std='+std,'-Wall','-Wextra','-Werror','-Wno-missing-field-initializers','-fsanitize=address,undefined','-I',str(ROOT),str(p/'test.c'),'-o',str(p/'test')],check=True)
   subprocess.run([str(p/'test')],check=True)
-print('PASS actual bounded poll: ROM/ready/config gates, frame cap, no failed-read presses, consecutive-failure stop, measured idle release before cleanup, final release/exit')
+print('PASS actual bounded poll: ROM/ready/config gates, frame cap, no failed-read presses, consecutive-failure stop, measured idle release before cleanup, continuing slices retain contacts, ROM/config failure releases, final release/exit')
