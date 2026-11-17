@@ -20,7 +20,12 @@ that is not a build failure.
 Poll this exact run; package/BOOT test/log recovery follow only on success. No working XNU USB gadget/stream has been verified. Protected
 partitions and USERDATA remain untouched. USB hardware/source evidence and
 next transport gates are recorded in docs/dreamlte-usb.md; the full Android
-DWC3 dump is private.
+DWC3 dump is private. New0212 is an opt-in ECM transport candidate:
+S8 core/Exynos VBUS setup, USB2 EP0 and pre-root BSD startup hook, default off.
+Host wrapper checks and both ARM64 BSD compiles pass; no donor UFS/log ring
+symbols are required. It is NOT included in the running0211 CI. Test the
+exact0211 artifact first, then build/test0212 with dreamlteusb=2. Cold PHY
+clock/reset bring-up and all actual USB transfers remain unverified.
 
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;

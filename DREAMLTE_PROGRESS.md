@@ -378,3 +378,23 @@ compile results, hardware observations and restore results below.
   Build active; dependency/setup steps succeeded. Watch33999 subsequently
   hit a network timeout, not a terminal build result. Continue polling this
   exact run rather than dispatching a replacement. No new BOOT flash yet.
+
+## 2026-11-17: opt-in S8 ECM transport candidate0212
+
+- Previous turn made progress through measured USB/source evidence; exact
+  CI44085718513 remains live in its Build step (not a failed/stale job).
+- Added0212: reuses the donor DWC3 ECM endpoint/network code under DREAMLTE,
+  substitutes S8 core mapping and Exynos PHY VBUS setup, and hooks BSD network
+  startup before root discovery. No donor UFS or disk log startup is called.
+  Default dreamlteusb=0 does nothing; =1 reads core state; =2 attempts takeover
+  only for the measured ID and stopped core/awake PHY. Cold clock/reset PHY
+  bring-up remains necessary if those firmware-state preconditions fail.
+- Actual staged wrapper host test PASS for opt-in/read-only paths, invalid ID,
+  running core, PHY reset/suspend refusal, version-dependent register layout,
+  device-mode selection and preserved-bit VBUS writes. Both modified BSD
+  translation units compile to ARM64 objects with gnu11/general-register-only
+  flags. USB object has no unresolved donor sweet_log symbols. Profile stages
+  133 patches. These checks do not prove endpoint/PHY/DMA operation on S8.
+- 0212 is not in CI44085718513 (which intentionally builds0211). Keep its
+  result/artifact separate; test0211 first, then build0212 for a USB trial.
+  Phone is still on stock Android; no new BOOT flash in this continuation.

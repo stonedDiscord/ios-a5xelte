@@ -1,0 +1,231 @@
+diff --git a/bsd/dev/sweet_usb.c b/bsd/dev/sweet_usb.c
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -10,7 +10,8 @@
+  * DWC3 / PHY register blocks only when the GCC status registers say their
+  * power domain and clocks are on (an access to a gated block would hang).
+  */
+-#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <pexpert/arm64/board_config.h>
++#if defined(ARM64_BOARD_CONFIG_SWEET) || defined(DREAMLTE)
+ #include <sys/param.h>
+ #include <sys/systm.h>
+ #include <kern/clock.h>
+@@ -42,6 +43,7 @@
+ static void sweet_usb_gadget_start(vm_offset_t dwc);
+ extern ppnum_t pmap_find_phys(pmap_t pmap, addr64_t va);
+ 
++#if !defined(DREAMLTE)
+ #define GCC_PA                  0x00100000
+ #define GCC_SIZE                0x00090000
+ #define GCC_USB30_PRIM_GDSCR    0x0f004         /* bit 31: power on */
+@@ -65,6 +67,11 @@
+ #define QUSB2_PA                0x088e2000
+ #define QUSB2_SIZE              0x00000400
+ 
++#else
++#define DWC3_PA 0x10c00000
++#define DWC3_SIZE 0x10000
++#endif
++
+ static uint32_t
+ usb_rd(vm_offset_t base, uint32_t off)
+ {
+@@ -73,6 +80,66 @@
+ 	return v;
+ }
+ 
++#if defined(DREAMLTE)
++/* Reuse firmware PHY state initially. A cold PHY requires the full Exynos
++ * clock/isolation/reset path; never apply Qualcomm clock/PHY registers.
++ */
++static vm_offset_t dreamlte_phy;
++static int
++dreamlte_usb_prepare(vm_offset_t dwc)
++{
++	vm_offset_t phy = ml_io_map(0x10e00000, 0x100);
++	if (!phy) return -1;
++	uint32_t version = usb_rd(phy, 0);
++	/* Samsung's PHYCON version word shifts the legacy register file by4. */
++	if (version && version != 0xffffffffu) phy += 4;
++	if (version == 0xffffffffu) return -1;
++	uint32_t clk = usb_rd(phy, 0x10), utmi = usb_rd(phy, 0x08);
++	printf("DREAMLTE USB: PHY version %08x CLK %08x UTMI %08x\n", version, clk, utmi);
++	if ((clk & (1u << 1)) || (utmi & 3u)) {
++		printf("DREAMLTE USB: PHY reset/suspended; clock bring-up required\n");
++		return -1;
++	}
++	dreamlte_phy = phy;
++	/* Select device mode while stopped. */
++	uint32_t gctl = usb_rd(dwc, 0xc110);
++	*(volatile uint32_t *)(dwc + 0xc110) = (gctl & ~(3u << 12)) | (2u << 12);
++	__asm__ volatile("dsb sy" ::: "memory");
++	return 0;
++}
++
++static void
++dreamlte_usb_vbus(void)
++{
++	/* Live DT says is_not_vbus_pad. Do not drive the host's VBUS supply. */
++	uint32_t link = usb_rd(dreamlte_phy, 0x04);
++	uint32_t utmi = usb_rd(dreamlte_phy, 0x08);
++	*(volatile uint32_t *)(dreamlte_phy + 0x04) = link | (1u << 7) | (1u << 8);
++	*(volatile uint32_t *)(dreamlte_phy + 0x08) =
++	    (utmi & ~((1u << 4) | (1u << 3) | (1u << 2))) |
++	    (1u << 10) | (1u << 9) | (1u << 6);
++	__asm__ volatile("dsb sy" ::: "memory");
++}
++
++void
++sweet_usb_probe(void)
++{
++	int enabled = 0;
++	PE_parse_boot_argn("dreamlteusb", &enabled, sizeof(enabled));
++	if (enabled < 1 || enabled > 2) return;
++	vm_offset_t dwc = ml_io_map(DWC3_PA, DWC3_SIZE);
++	if (!dwc) return;
++	uint32_t id = usb_rd(dwc, 0xc120);
++	printf("DREAMLTE USB: ID %08x GCTL %08x DSTS %08x\n", id,
++	    usb_rd(dwc, 0xc110), usb_rd(dwc, 0xc70c));
++	if (id != 0x5533280a || enabled == 1) return;
++	if (usb_rd(dwc, 0xc704) & (1u << 31)) {
++		printf("DREAMLTE USB: firmware controller still running; refusing takeover\n");
++		return;
++	}
++	if (!dreamlte_usb_prepare(dwc)) sweet_usb_gadget_start(dwc);
++}
++#else
+ void
+ sweet_usb_probe(void)
+ {
+@@ -133,6 +200,8 @@
+ 	printf("SWEET USB: QUSB2 PLL_STATUS 0x%08x PWR_CTRL1 0x%08x PORT_TUNE1 0x%08x TEST1 0x%08x\n",
+ 	    usb_rd(phy, 0x1a0), usb_rd(phy, 0x210), usb_rd(phy, 0x240), usb_rd(phy, 0x254));
+ }
++
++#endif
+ 
+ /*
+  * Step 2: USB device mode with only the default control endpoint, enough
+@@ -161,6 +230,7 @@
+ #define DEPCMDPAR0(n)   (0xc808 + 0x10 * (n))
+ #define DEPCMD(n)       (0xc80c + 0x10 * (n))
+ 
++#if !defined(DREAMLTE)
+ /*
+  * Qualcomm wrapper registers ("QSCRATCH", core base + 0xf8800). The
+  * controller only connects (pull-up on D+) while it sees a valid VBUS
+@@ -173,6 +243,8 @@
+ #define   SW_SESSVLD_SEL        (1u << 28)
+ #define QSCRATCH_SS_PHY_CTRL    0x30
+ #define   LANE0_PWR_PRESENT     (1u << 24)
++
++#endif
+ 
+ #define DCTL_RUN_STOP   (1u << 31)
+ #define DCTL_CSFTRST    (1u << 30)
+@@ -781,6 +853,12 @@
+ 	uint32_t ticks = 0;
+ 	for (;;) {
+ 		uint32_t count = dwc_rd(GEVNTCOUNT) & 0xffff;
++#if defined(DREAMLTE)
++		if (count > UD_EVT_SIZE || (count & 3)) {
++			printf("DREAMLTE USB: invalid event count %u; stopping poller\n", count);
++			return;
++		}
++#endif
+ 		if (count) {
+ 			ud_sync(UD_EVT, UD_EVT_SIZE);
+ 			for (uint32_t done = 0; done < count; done += 4) {
+@@ -807,6 +885,7 @@
+  * so the boot is included. Nothing here may print (it would feed itself).
+  * Boot-arg sweetusblog=0 disables it.
+  */
++#if !defined(DREAMLTE)
+ extern uint32_t sweet_log_copy(uint64_t *pos, char *out, uint32_t max);
+ extern uint64_t sweet_log_position(void);
+ 
+@@ -848,6 +927,8 @@
+ 	}
+ }
+ 
++#endif
++
+ static void
+ sweet_usb_gadget_start(vm_offset_t dwc)
+ {
+@@ -890,11 +971,16 @@
+ 	/* Events: disconnect, USB reset, connect done */
+ 	dwc_wr(DEVTEN, 0x7);
+ 
+-	/* Endpoint 0 OUT/IN: start config, control type, max packet 512 until connect done. */
++	/* EP0: S8 forces USB2; donor retains its original initial packet size. */
++#if defined(DREAMLTE)
++	const uint32_t ep0_mps = 64;
++#else
++	const uint32_t ep0_mps = 512;
++#endif
+ 	if (ud_epcmd(0, DEPCMD_DEPSTARTCFG, 0, 0, 0) ||
+-	    ud_epcmd(0, DEPCMD_SETEPCONFIG, (0u << 1) | (512u << 3), (1u << 8) | (1u << 10) | (0u << 25), 0) ||
++	    ud_epcmd(0, DEPCMD_SETEPCONFIG, (0u << 1) | (ep0_mps << 3), (1u << 8) | (1u << 10) | (0u << 25), 0) ||
+ 	    ud_epcmd(0, DEPCMD_SETTRANSFRESOURCE, 1, 0, 0) ||
+-	    ud_epcmd(1, DEPCMD_SETEPCONFIG, (0u << 1) | (512u << 3), (1u << 8) | (1u << 10) | (1u << 25), 0) ||
++	    ud_epcmd(1, DEPCMD_SETEPCONFIG, (0u << 1) | (ep0_mps << 3), (1u << 8) | (1u << 10) | (1u << 25), 0) ||
+ 	    ud_epcmd(1, DEPCMD_SETTRANSFRESOURCE, 1, 0, 0)) {
+ 		printf("SWEET USB: endpoint 0 setup failed\n");
+ 		return;
+@@ -902,6 +988,9 @@
+ 	dwc_wr(DALEPENA, 0x3);
+ 	ud_start_setup();
+ 
++#if defined(DREAMLTE)
++	dreamlte_usb_vbus();
++#else
+ 	vm_offset_t qs = ml_io_map(QSCRATCH_PA, 0x100);
+ 	if (qs != 0) {
+ 		uint32_t hs = usb_rd(qs, QSCRATCH_HS_PHY_CTRL), ss = usb_rd(qs, QSCRATCH_SS_PHY_CTRL);
+@@ -914,6 +1003,8 @@
+ 		    usb_rd(qs, QSCRATCH_HS_PHY_CTRL), usb_rd(qs, QSCRATCH_SS_PHY_CTRL));
+ 	}
+ 
++#endif
++
+ 	dwc_wr(DCTL, dwc_rd(DCTL) | DCTL_RUN_STOP);
+ 	for (i = 0; i < 500 && (dwc_rd(DSTS) & DSTS_DEVCTRLHLT); i++) {
+ 		delay(1000);
+@@ -922,10 +1013,12 @@
+ 	if (kernel_thread_start(ud_thread, NULL, &thread) == KERN_SUCCESS) {
+ 		thread_deallocate(thread);
+ 	}
++#if !defined(DREAMLTE)
+ 	int livelog = 1;
+ 	PE_parse_boot_argn("sweetusblog", &livelog, sizeof(livelog));
+ 	if (livelog && ud.ifp != NULL && kernel_thread_start(ud_log_thread, NULL, &thread) == KERN_SUCCESS) {
+ 		thread_deallocate(thread);
+ 	}
++#endif
+ }
+ #endif /* ARM64_BOARD_CONFIG_SWEET */
+diff --git a/bsd/kern/bsd_init.c b/bsd/kern/bsd_init.c
+--- a/bsd/kern/bsd_init.c
++++ b/bsd/kern/bsd_init.c
+@@ -195,6 +195,7 @@
+ #endif /* SKYWALK */
+ 
+ #include <pexpert/pexpert.h>
++#include <pexpert/arm64/board_config.h>
+ #include <machine/pal_routines.h>
+ #include <console/video_console.h>
+ 
+@@ -867,6 +868,11 @@
+ 	 */
+ 	bsd_init_kprintf("calling net_init_run\n");
+ 	net_init_run();
++#if defined(DREAMLTE)
++	/* USB must work before any root device exists. Default is disabled. */
++	extern void sweet_usb_probe(void);
++	sweet_usb_probe();
++#endif
+ #endif /* NETWORKING */
+ 
+ 	bsd_init_kprintf("calling inittodr\n");

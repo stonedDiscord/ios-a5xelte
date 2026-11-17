@@ -67,3 +67,31 @@ owned DMA buffers and explicit cache maintenance. The existing
 its Qualcomm clock/PHY accesses are not S8 code. Verify host enumeration,
 control transfers, and bidirectional data while shim/XNU is running before
 claiming working USB. Preserve all non-BOOT partitions.
+
+## Opt-in ECM candidate0212
+
+Overlay0212 enables the inherited polled DWC3 CDC-ECM transport for DREAMLTE
+and starts it after BSD network initialization, before root-device discovery.
+It never calls the donor UFS initialization or its disk-backed log stream.
+`dreamlteusb=0` (default) performs no controller accesses; `=1` reports core
+state; `=2` attempts firmware-state takeover for the measured DWC3 ID only.
+It refuses a running core, PHY port reset or forced sleep/suspend. It sets
+DWC3 device mode and uses the Exynos PHY VBUS masks above. Cold PHY clock/
+isolation/reset initialization still needs device evidence and implementation.
+
+The candidate initializes USB2 EP0 with64-byte packets and rejects malformed
+or oversized event counts. Existing ECM configuration uses kernel interface
+`ue0` at192.168.7.2/24; a host must configure192.168.7.1/24. Enumeration and
+bidirectional transfer (for example ARP plus ping) must be measured on S8.
+No runtime success is claimed from compilation or host modeling.
+
+Host wrapper check against a staged source tree:
+
+    python3 tools/dreamlte-usb-host-test.py PATH/TO/xnu/bsd/dev/sweet_usb.c
+
+The test compiles the actual wrapper/PHY functions with modeled MMIO. It
+checks default-off/read-only behavior, ID/running/reset/suspend refusal,
+version-dependent register offsets, preserved control bits and VBUS masks.
+It does not emulate the DWC3 endpoint/DMA engine or test PHY electrical state.
+0211 must first be flashed/recovered using its own exact CI artifact; do not
+claim that its kernel contains0212 merely because the local profile does.
