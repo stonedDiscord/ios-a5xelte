@@ -10,6 +10,8 @@ ready/table/lengths, out-of-range DRAM/ERAM entries skip config dereference;
 always attempts backdoor exit and restores0146 controller/clocks.
 Actual extracted session ASan/UBSan tests PASS for wire addresses, successful
 720x1600/18x32 config, entry/read failure, not-ready and refused range cleanup.
+Full CI44154963110 dispatched exact7972a72 at19:06UTC; hardware section
+read requires that full build and a separately verified BOOT0081.
 Exact CI-command full usb_console kernel C compile PASS; reverse/plain patch
 application/full source+header equality PASS. Staged0147; full CI pending.
 

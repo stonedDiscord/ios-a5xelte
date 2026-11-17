@@ -1,3 +1,8 @@
+ACTIVE19:06UTC0147 full CI44154963110 exact7972a72ff7122185158e973762eeab7a76c237af
+queued macos-26-intel/SWEET/a03/userspace, upload_buildtree=false. Do NOT
+duplicate. No0081 packaged yet.0080 touch ROM9383 PASS; preserve checkpoint.
+Physical current-screen question pending; no Home/swipe sent after reboot.
+
 ACTIVE0147 touch sections prepared+staged: ROM-gated fixedERAM160byte read,
 validated config pointer only. No reset/firmware/contact events. Exact kernel
 C compile+actual-session ASan/UBSan tests+apply equality PASS. Need full CI.
