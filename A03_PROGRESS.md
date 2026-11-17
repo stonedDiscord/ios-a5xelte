@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: longer HID gesture window after physical release proof
+
+Completed log-only capture has87logged events:59down/moves before the cap,
+28releases, slot0only, x16..719/y83..1587. Final eventcount341 unchanged
+by stop confirms no held contact remained. Following120second HID trial
+finishes350slices/events0, without errors: no physical contacts arrived in
+that interval, so HID delivery remains untested. Started600second HID window
+~21:45UTC (hostsession44699), auto-stop~21:55UTC. Visible response question
+remains pending. Current capturePID128605 remains live until~22:06UTC.
+
 ## 2026-11-17: physical lift transitions confirmed on BOOT0087
 
 Two-minute continuous log-only stream starts~21:40:46UTC; at active status

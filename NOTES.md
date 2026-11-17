@@ -1,3 +1,10 @@
+ACTIVE21:45UTC0087 HID LONGWINDOW ON for600s/autostop~21:55UTC,
+session44699 /tmp/a03-0087/stream-hid-long-window.log. Physicaldown/move/
+28trueupsproven logonly361slices/341events; firstHID120s350slices/events0
+(nocontactsarrived). ActualHIDdelivery/UI stillpending user gestures/reply.
+CapturePID128605 until~22:06. No reboot/fwreloadneeded; source0154 deployed.
+Check livewindowbefore changing commands; use streamstatus/stop ifneeded.
+
 ACTIVE21:43UTC0087 TRUE PHYSICAL LIFT PROVEN: logonly120s361slices/
 341events;25upalreadylogged whileactive238slices; stopadds0events. Noerrors.
 HIDphysical120s session98064 NOWRUNNING /tmp/a03-0087/stream-physical-hid.log.

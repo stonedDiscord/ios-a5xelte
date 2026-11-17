@@ -19,6 +19,21 @@ works per boot; local timezone and a persistent RTC remain unresolved.
 
 The sections below preserve the bring-up chronology.
 
+## Physical down/movement/lift measured (BOOT0087)
+
+A120second log-only stream at~21:40:46UTC completes361slices/341events.
+It logs59down/move entries before the motion cap and28up transitions total,
+slot0 only, coordinates x16..719/y83..1587. At238slices/events302 there
+were already25up transitions; stop at361slices leaves the341event count
+unchanged. Thus release is report-driven during polling, not final cleanup.
+No stream errors occur. This establishes a physical down/move/lift chain.
+
+The following120second HID window completes350slices/events0: no contacts
+arrived during that window, so actual HID delivery/UI response is still
+unverified. A longer600second HID window starts~21:45UTC to accommodate user
+gestures, with automatic stop at the end. Consult newest NOTES.md for live
+state; do not treat this historical active-window description as current.
+
 ## Continuous-input hardware baseline (BOOT0087 /0154)
 
 Full Xcode CI44178262587 succeeded at exact10b9f9b; authorized BOOT-only
