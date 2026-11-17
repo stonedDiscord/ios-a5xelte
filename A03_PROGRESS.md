@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: offline CPT firmware candidate recovered
+
+0146 full Xcode CI44150337660 is building exact542f9b5. Preserved running
+BOOT0079 home menu; no reset, ROM read or new phone write at this milestone.
+Privately streamed local Samsung A035GXXS8CYG1 AP/super image, converted sparse
+and extracted vendor read-only. CPT_Jadard_firmware.bin is79104bytes, SHA256
+8ba14e32cdeacd6763a9700fd5340f9c91763afc2965231148f72f9c1ceea82d.
+Stock move-table parsing finds7sections; all software CRC16/8005/FFFF values
+match. First PRAM section target0 lengthDC2A CRC E911; six PSRAM sections at
+20002000..20002ED8 have valid zero CRC residues. Source firmware revision8
+is NOT matched to installed revision5; CRC validity is not compatibility.
+Nothing uploaded to touch controller. Private images/source/inspection remain
+ignored research/a03-touch-firmware. Added offline inspector plus synthetic
+CRC/bounds/corruption/wrap tests; no Apple/Samsung binaries tracked.
+
 ## 2026-11-17: explicit SPI3/Jadard ROM probe prepared
 
 Continuing physical-touch goal from confirmed0079 home menu. Added0146

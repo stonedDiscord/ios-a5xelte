@@ -1,3 +1,10 @@
+ACTIVE2026-11-17~18:45UTC0146 CI44150337660 exact542f9b5 Building.
+Offline rev8 CPT firmware extracted privately;79104bytes SHA8ba14e32...a82d,
+7move-section CRCs pass. Installed revision5 compatibility NOT established;
+NO controller upload/phone write. New offline inspector+synthetic tests PASS.
+Next full CI success->verify exact artifact/package0080 same0079 config->
+BOOT-only test explicit touch status then ROM. Running0079 home preserved.
+
 ACTIVE0146 explicit touch status|rom prepared+staged. Bounded SPI3/1MHz
 Jadard ROM9383 probe only; no reset/pinmux/firmware/external-flash operations.
 Clock/control restoration, busy refusal; follow stock hardwareCS0 despite

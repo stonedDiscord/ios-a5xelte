@@ -104,3 +104,15 @@ hardware operation or HID queue consumption.
    provider, and verify down/move/up physically at all display edges. Failed
    reads must not synthesize presses; define bounded retry/release handling
    before enabling input. Preserve recovery, bootloaders, GPT and EFS/NV.
+
+## Offline firmware candidate
+
+Local revision8 A035GXXS8CYG1 stock vendor contains79104-byte CPT firmware,
+SHA2568ba14e32cdeacd6763a9700fd5340f9c91763afc2965231148f72f9c1ceea82d.
+All seven stock move-table CRC16 values validate with the source polynomial
+8005/initialFFFF. This is not matched to installed revision5 and has not been
+loaded. Private artifacts remain ignored under research/a03-touch-firmware.
+Use tools/a03-inspect-jadard-firmware.py FILE for offline JSON inspection and
+tools/a03-test-jadard-firmware.py for synthetic regression. Inspector validates
+source bounds, target wrap and CRC; it does not establish panel compatibility,
+ROM identity or permission to load targets. No device access in either tool.
