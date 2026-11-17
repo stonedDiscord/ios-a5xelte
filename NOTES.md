@@ -1,3 +1,13 @@
+ACTIVE2026-11-17 TOUCH: saved Android evidence selects Jadard JD9365T/CPT,
+SPI3@20150000/CS1/10MHz; stock zero-flash RAM firmware required path.
+Standalone unstaged60byte contact decoder+C/C++ASan/UBSan PASS; existing HID
+tests PASS. See docs/a03-touch.md. Exact0145CI43969089570/2d4ffd7 SUCCESS
+2026-11-16T22:42:24Z. No0079 manifest locally, old/tmp0079 watchers absent.
+Neither A03/Samsung USB currently enumerates; NO flash/reset/input this turn.
+Next reconnect/identify kernel, verify HID/client+explicit swipe, then physical
+SPI/ROM/RAM-firmware/report path. Clock checkpoint0078 retained; touch and
+unlocked home unverified. Older ACTIVE entries below are historical.
+
 ACTIVE22:29UTC0078 fresh SB26 main remains application event loop;
 backboardd56/analytics91 alive, io ready1/poisoned0. Physical clock confirmed,
 no unlocked home/touch proof. Short45s capture59755 ends before gated0079.

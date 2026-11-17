@@ -1,5 +1,9 @@
 # A03 USB input trial
 
+For physical digitizer evidence and the separate Jadard hardware work, see
+[a03-touch.md](a03-touch.md). The0145 full Xcode CI43969089570 completed
+successfully for exact2d4ffd7 on2026-11-16; runtime delivery remains unverified.
+
 The first physical iOS clock screen is BOOT0078 (2026-11-16). That kernel
 has no HID provider and cannot deliver touch or Home input. Preserve its
 verified image and manifest as the rendering checkpoint.

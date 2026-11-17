@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: physical touch preparation; Jadard/CPT evidence recovered
+
+User prioritizes touch after SpringBoard clock milestone. Rechecked exact
+0145 CI43969089570 SHA2d4ffd7a44eab34178a13295b0ad3a337044e453: completed
+SUCCESS2026-11-16T22:42:24Z. Build only; no0079 manifest found locally.
+Current USB enumeration has neither A03 console nor Samsung device; old
+/tmp/a03-0079 directory absent. Prior watchers are historical, not live proof.
+No reset, flash, firmware operation or gesture performed this session.
+
+Saved2026-11-13 Android dmesg has repeated Jadard JDTP successful feature
+commands and lcd_jd9365t_cpt_mipi_hdp; matching Samsung HS03 source selects
+CPT_Jadard_firmware.bin/JD9365T(ROM constant9383). Saved DT places Jadard on
+SPI3 20150000/CS1/10MHz,10contacts720x1600; alternative controller nodes also
+exist. Strong saved controller evidence, NOT fresh XNU ROM read. Stock uses
+JD_ZERO_FLASH and firmware-discovered report address; display initialization
+does not prove touch RAM firmware exists at XNU entry.
+
+Added standalone unstaged shim/a03/jd9365t-report.h60byte coordinate decoder
+and C11/C++17 ASan/UBSan regression: big-endian/sparse10slots/down-move-up/
+inclusivebounds/state/null-length-count handling PASS. Existing actual HID
+builder/actions ASan tests PASS; git diff check PASS. No bus/MMIO/provider
+wiring claimed. docs/a03-touch.md records source anchors and next SPI/ROM/
+RAM-firmware/HID checkpoints. Physical touch/unlock still unverified.
+
 ## 2026-11-16: 22:29 UTC clock checkpoint rechecked; local C++ command replay
 
 Fresh BOOT0078 read-only capture boot0078-clock-check.log retains SpringBoard26,
