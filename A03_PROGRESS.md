@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0080 explicit touch-ROM probe flashed
+
+0146 CI44150337660 SUCCESS exact542f9b5ca51dfda442875485ca1ab319e1863abb.
+Checksum-verified kernel5828529da29b5a3f2bfbeba253f2ed42d67f9b99e7ccd86b3a38be1d5b7c88e3.
+BOOT0080 SHA25635ca7403585d7a6b28f404dc6a0965bc7f55db4596a4e0e3a5ffeea323dbc5f9.
+Exact0079 ADT/1GiB/bootargs/root/loader(except image_size)/stockramdisk/DT
+verified. No firmware embedded and no new bootarg; touch status|rom explicit.
+Synced CDC Download->Samsung detected->Heimdall --boot only upload100percent/
+success/reboot~19:02UTC.0079home and0078clock restore images retained.
+Single boot0080-usb-initial.log capture waitsUSB180s then480s. No ROM command
+yet; runtime boot/ROM and physical display observations pending separately.
+
 ## 2026-11-17: source-guided section decoder prepared
 
 Added standalone unstaged ERAM section decoder using actual stock offsets:

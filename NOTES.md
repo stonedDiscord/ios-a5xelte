@@ -1,3 +1,10 @@
+ACTIVE2026-11-17~19:02UTC BOOT0080 flashed BOOT-only successful/reboot.
+CI44150337660 exact542f9b5 SUCCESS, kernel5828529d...88e3 BOOT35ca7403...c5f9.
+Same0079 config/ADT/loader/ramdisk/DT; no firmware/new arg. Single capture
+/tmp/a03-0080/capture.log->shim/a03/out/boot0080-usb-initial.log waits180s,
+480s capture. Next USB worker ready->touch status then ONE touch rom;
+inspect exact ID/restoration/health. No ROM yet.0079/0078 restore retained.
+
 ACTIVE~18:53UTC prepared standalone section decoder+actual-header C/C++
 ASan/UBSan tests PASS; NOT staged/no bus or firmware operations. Fresh0079
 status3/SpringBoard25/backboardd56 alive/storage ready1 poisoned0; other
