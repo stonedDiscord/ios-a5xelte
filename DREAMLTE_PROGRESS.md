@@ -369,3 +369,8 @@ compile results, hardware observations and restore results below.
   Superseded dispatch44085601704 used0210; do not use its kernel for0211.
 - Rechecked Android USB: UDC10c00000.dwc3 reports high-speed/configured.
   This is Android's transport; bare XNU USB enumeration remains unverified.
+- During CI, captured the live Android debugfs DWC3 regdump privately and
+  reviewed Exynos8895 Linux PHY/wrapper source at3cfb914658ab. Recorded
+  measured core state, DMA upper-address evidence, Exynos VBUS override,
+  PHY version-dependent register-base adjustment and next transport gates in
+  docs/dreamlte-usb.md. No PHY or controller writes were performed.

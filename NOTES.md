@@ -16,7 +16,9 @@ writes. Both modified ARM64 objects, patch dry-run, actual mapping-helper
 host check and132-patch staging pass. Fix660745e is pushed; full CI
 44085718513/job134047808756 is queued (macos-15-intel), live watch87525.
 Poll this exact run; package/BOOT test/log recovery follow only on success. No working XNU USB gadget/stream has been verified. Protected
-partitions and USERDATA remain untouched.
+partitions and USERDATA remain untouched. USB hardware/source evidence and
+next transport gates are recorded in docs/dreamlte-usb.md; the full Android
+DWC3 dump is private.
 
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;
