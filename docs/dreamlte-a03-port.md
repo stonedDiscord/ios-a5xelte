@@ -50,7 +50,7 @@ delivery is unverified. None of these are S8 hardware results.
 
 The implementation is the S8-only overlay
 `xnu/dreamlte/0205-dreamlte-a03-portable-bringup.patch`, after0204. The
-stager includes the portable and diagnostic overlays: 130 patches total.
+stager includes the portable and diagnostic overlays: 131 patches total.
 Each generated
 `DREAMLTE-PROFILE.json` records the reference commits and file hashes.
 Other board profiles do not stage these overlays.

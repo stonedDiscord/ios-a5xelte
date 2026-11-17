@@ -277,3 +277,16 @@ compile results, hardware observations and restore results below.
   mode (VolumeDown+Bixby+Power), restore original BOOT and verify its hash,
   boot Android, and retrieve `/proc/last_kmsg` before planning another trial.
   RECOVERY, bootloader, EFS/CPEFS and USERDATA remain untouched.
+- Download mode returned. Restored verified stock BOOT with Heimdall 2.2.2,
+  booted Android, and confirmed `/dev/block/sda7` hash
+  `71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
+  Captured ignored `backup/galaxy-s8-2026-11-13/last-kmsg-0208.txt` (47,554
+  bytes). After the 0208 markers for completed VM window/page tables,
+  `arm_vm_physmap_init` entry, and `physmap ready; switching TTBR0`, there is
+  no post-switch marker. The trace does not establish whether the fault is in
+  TTBR0 replacement or in the logger's deliberate shutdown before it.
+- Added draft overlay0209 to relocate the bounded RAM logger and early output
+  pointers through `phystokv()` after the TTBR0 switch, then use existing
+  stage10-13 markers through `pmap_bootstrap`. Patch dry-run passes against
+  the exact CI44057485509 source tree. Profile now stages131 patches; full CI
+  and BOOT trial are pending.
