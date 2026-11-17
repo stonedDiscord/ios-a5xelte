@@ -1,3 +1,10 @@
+ACTIVE21:55UTC0087 HID600s COMPLETE/CLEANSTOP1761slices/28176frames/
+0events; statusstreaming0. NoHIDphysicaleventarrived. STREAMOFF; do not
+restart/reflash to chase idle evidence. Needusergesture+visibleUIreply;
+physicaldown/movement/28truelifts alreadyproven logonly. Firmwareloaded,
+SpringBoard26 mainloopalive. CapturePID128605 until~22:06UTC; preserve
+single-reader discipline if it expires. Current0087 restore0086 retained.
+
 ACTIVE21:48UTC0087 currentSpringBoard26 mainloopverified cache38858000
 (machmsg/CFRunLoop/GSEvent/UIApplication/SBSystemAppMain). HID600s hostPID
 130376/session44699 live until~21:55UTC. Status246slices/events0, noerrors.

@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: ten-minute HID window ends cleanly; UI test still pending
+
+Host600second trial ends~21:55UTC, active1760slices/events0 then explicit
+stop1761slices/events0 (28176frames). Follow-up streamstatus confirms
+streaming0. No stream errors or SWEET HID physical down/up logs occurred in
+this interval. This extends continuous idle/stop evidence, not actual event
+queue delivery. Earlier log-only physical down/move/28report-driven lifts
+remain established; no physical contact arrived during the HID window.
+User visible-response question is unanswered. Do not repeat idle windows as
+a substitute for an aligned physical HID/UI test. BOOT0087 remains running,
+firmwareloaded; singlecapturePID128605 until~22:06UTC. Touch forwardingOFF.
+
 ## 2026-11-17: BOOT0087 event loop alive during long HID window
 
 Explicit sample26 while HID streaming shows SpringBoard24threads and main
