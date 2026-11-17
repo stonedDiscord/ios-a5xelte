@@ -1,3 +1,9 @@
+ACTIVE21:40UTC0087 continuous HIDidle10s PASS:33slicesactive->34stopped,
+544frames/events0/noerror. Logonly30s85slices1360framesalsoPASS. STREAMOFF.
+Physical user screen/readiness replypending; need real down/move/up then
+visibleUI. CapturePID128605 until~22:06UTC; firmwarealreadyloaded/A55A.
+Next timedcontacts30s aligneduser then timedHID UI. No moreflash needed now.
+
 ACTIVE21:40UTC0087 flashedBOOT-onlySUCCESS. CapturePID128605 live.
 UTC1794951400/privatefw79104valid0/load0/all7CRC/A55A/configPASS.
 CONTINUOUS logonly30s hardwarePASS:84slicesactive->85stop=1360frames,

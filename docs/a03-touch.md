@@ -19,6 +19,19 @@ works per boot; local timezone and a persistent RTC remain unresolved.
 
 The sections below preserve the bring-up chronology.
 
+## Continuous-input hardware baseline (BOOT0087 /0154)
+
+Full Xcode CI44178262587 succeeded at exact10b9f9b; authorized BOOT-only
+0087 flash succeeded2026-11-17~21:35UTC. Private volatile firmware restaged
+and explicit load again passed all seven hardware CRCs, readyA55A/config.
+A30second log-only stream completed85slices/1360frames with zero events;
+a10second HID-enabled idle stream completed34slices/544frames with zero
+events. Both stopped explicitly without stream errors. Continuous polling
+and command responsiveness are hardware-proven. Physical lift and actual
+HID/UI response still need an aligned user test. Polling is currently off.
+
+The implementation/trial controls below describe this deployed version.
+
 ## Pending continuous-input trial (0154)
 
 Full Xcode run44178262587 builds exact10b9f9b. This source change is not yet

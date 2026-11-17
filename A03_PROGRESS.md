@@ -15,6 +15,11 @@ stop on actual hardware, with no phantom idle contacts. Both HID clients
 open. Ten-second HID-enabled idle trial started next; no physical user input
 or UI response claimed. Current screen/readiness question pending.
 
+Ten-second continuous HID idle trial then completes34slices (544frames),
+events0, no stream error; active status reports33slices before explicit stop.
+No physical input arrived during either baseline. Polling is now stopped.
+This verifies continuous HID-enabled idle safety, not actual queue delivery.
+
 ## 2026-11-17: continuous touch full CI success, BOOT0087 trial
 
 CI44178262587 SUCCESS exact10b9f9bdff20e8db99f60e9db033f8b08304cfe9.
