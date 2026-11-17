@@ -1,3 +1,9 @@
+ACTIVE22:38UTC0088 visibleiOSconfirmed. FirstHID60s178slices18events/
+oneswipe noUIresponse; noSBcrash/noSBWIcreate. MainwaitAudioToolbox AU
+registration thenresolvedbacktomainloop~22:37. SECONDHID90s14155 NOWON
+/tmp/a03-0088/stream-after-audio-wait.log, useroneswipeasked; inspectWIlogs/
+UIreply. CapturePID141846 until~23:09UTC; UTC/fwloaded.0155fixunproven.
+
 ACTIVE22:32UTC0088BOOT-onlyflashSUCCESS. SinglecapturePID141846/
 41773 boot0088-usb-initial.log until~23:09UTC. UTCsynced22:29:46, fw79104
 valid0/load0/all7CRC/A55A/configPASS. UserstillApplelogo/bootlogs22:31.

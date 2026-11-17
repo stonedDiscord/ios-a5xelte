@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0088 first swipe no visible response, temporary audio wait
+
+User confirms iOS visible/ready22:35UTC. Explicit60s HID trial receives one
+swipe416,1581 ->413,451,18events,178slices, clean stop. User reports no visible
+response. No SpringBoard crash or SpringBoard WIcreate diagnostic appears.
+Main thread sample after swipe resolves (cache15410000) to AudioToolboxCore
+AURegistrationServerConnection::Connect, CADeprecated singleton/IPCAUClient
+registration and audio-component findNext. This is a sampled main-thread IPC
+wait, not a proven permanent blocker. Subsequent sample~22:37UTC returns to
+CFRunLoop/GSEvent/UIApplication main loop. Thus this trial does not exercise
+or prove0155 fix. A second90s window14155 begins~22:37:30UTC after that wait;
+user asked one aligned swipe, visible response pending. Firmware remains
+loaded; no new flash. Normal backboardd WIcreate still succeeds flags20000000/
+20000002, error0/kr0. No fabricated success for the missing client path.
+
 ## 2026-11-17: BOOT0088 running, firmware loaded, UI still starting
 
 BOOT-only flash17164 completes100percent/success/reboot~22:28UTC. Single
