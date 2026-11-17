@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0081 read-only section trial flashed
+
+0147 CI44154963110 SUCCESS exact7972a72ff7122185158e973762eeab7a76c237af.
+Kernel SHA25671d6e2cecc9304509ed995a48c6956a99f74484fce94419034e22d97a5a827e4.
+BOOT SHA2564e5fbb3a4f6bc544c6ab4cb3a5665f92b58473ae31241ba43b15dec494173caa.
+Exact0080 ADT/1GiB/bootargs/root/loader(except image_size)/stockramdisk/DT
+verified. No firmware embedded or new bootarg. Synced CDC Download; first
+immediate detect preceded enumeration, later Samsung+Heimdall detected.
+BOOT-only upload100percent/success/reboot~19:26UTC. Current capture84861
+waits180USB then480s boot0081-usb-initial.log. Explicit sections command not
+yet sent; runtime readiness/contact state unknown.0080 home/ROM restore kept.
+
 ## 2026-11-17: pre-write firmware validation prepared
 
 Standalone unstaged C firmware parser validates the entire image before any

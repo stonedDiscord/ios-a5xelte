@@ -1,3 +1,9 @@
+ACTIVE19:26UTC0081 flashed BOOT-only success/reboot.0147CI44154963110 exact
+7972a72 SUCCESS; kernel71d6e2ce...27e4 BOOT4e5fbb3a...3caa. Same0080 config.
+Single capture84861 waits180s/480s boot0081-usb-initial.log (/tmp/a03-0081).
+Next worker ready->ONE explicit touch sections; inspect ROM/ready/config/
+restoration. NO firmware upload/reset/pinmux.0080 home+ROM checkpoint kept.
+
 ACTIVE19:22UTC0080 reader26068 completed normally. New single reader99340
 boot0080-touch-followup2.log600s (/tmp/a03-0080/followup2.log). Home icons
 physically confirmed; ROM9383 PASS.0147CI44154963110 remains Build;
