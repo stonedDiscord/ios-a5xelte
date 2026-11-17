@@ -17,6 +17,10 @@ patches when board_profile=dreamlte and machine_config=HEROLTE are chosen.
 Output kernel is still named kernel.development.herolte; the profile, not
 that filename, determines which board header was built.
 
+When `research/ipsw-x/d22ap.adt` is available, the builder retains its
+non-placeholder `/product` properties so the iOS 16.7.16 D22AP userspace sees
+the expected iPhone X product identity. Keep that Apple-derived tree ignored.
+
 Package only after a successful S8-profile kernel build:
 
     python3 tools/mkpayload.py KERNEL shim/out/dreamlte.adt shim/out/dreamlte-payload.bin --cmdline 'debug=0xc serial=3 cpus=1 keepsyms=1 -enable_kprintf_spam -noprogress'

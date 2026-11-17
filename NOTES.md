@@ -28,8 +28,10 @@ phone stopped enumerating over USB, so runtime progress is unknown. A physical
 forced restart and download-mode key sequence is needed to restore original
 BOOT, then recover `/proc/last_kmsg`. The iPhone10,3
 16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
-open project, so kernelcache analysis remains pending. USERDATA and all
-protected partitions remain untouched.
+open project for the Mach-O kernel. Its D22AP `/product` properties are now
+available in ignored `research/ipsw-x/d22ap.adt`; the DREAMLTE ADT builder now
+retains that product identity. Product-aware candidate 0207 is package-checked
+but not flashed. USERDATA and all protected partitions remain untouched.
 
 The 2026-11-13 returning probe0003 marker was recovered from last_kmsg;
 stock BOOT was restored with verified hash in DREAMLTE_PROGRESS.md.

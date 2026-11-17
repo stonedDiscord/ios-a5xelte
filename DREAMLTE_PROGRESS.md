@@ -220,3 +220,15 @@ compile results, hardware observations and restore results below.
   VolumeDown+Bixby+Power to re-enter download mode, restore the original BOOT,
   boot Android, and read `/proc/last_kmsg`. Do not attempt another flash until
   the verified original hash is restored.
+- Extracted the matching `DeviceTree.d22ap.im4p` to ignored
+  `research/ipsw-x/d22ap.adt`. Inspection found its 66-property `/product`
+  node reports iPhone X. The DREAMLTE ADT builder had been deleting this node;
+  changed it to retain the donor's non-placeholder product properties for the
+  eventual 20H392 userspace identity. This does not alter Exynos memory/GIC
+  hardware data. Product-aware ADT round-trip and S8 RAM/CPU assertions PASS.
+- Packaged a separate product-aware candidate at
+  `shim/out/dreamlte-xnu-0207.img`, SHA256
+  `9e48ccafd2d00e7e1ad3a4cd9c3cef785e72cf4f23c19f28ecf0a7acd0001ce4`.
+  Stock Samsung ramdisk, second stage, and DTBH match byte-for-byte; candidate
+  fits BOOT. Not flashed. The connected phone remains absent from ADB/Heimdall;
+  0206 recovery and `/proc/last_kmsg` retrieval are still pending physical reset.

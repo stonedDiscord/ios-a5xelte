@@ -23,7 +23,7 @@ def build():
     set_prop(root, 'target-type', cstr('DREAMLTE'))
     set_prop(root, 'target-sub-type', cstr('DREAMLTE'))
     root.children = [n for n in root.children if n.name not in
-                     ('sweet-fbcon','sweet-ufs','product','buttons')]
+                     ('sweet-fbcon','sweet-ufs','buttons')]
     chosen = child(root,'chosen')
     set_prop(chosen,'dram-base',u64(DRAM_BASE))
     set_prop(chosen,'dram-size',u64(DRAM_SIZE))
