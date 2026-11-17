@@ -602,3 +602,18 @@ compile results, hardware observations and restore results below.
 -0215 intentionally not part of CI44119574729 or current source-hash manifest.
   First test0214 display, then promote0215/update hashes/build if warranted.
   Next USB source SHA256df5d49b67402780ee2b3f347197b80c407a4c81598593cb8916082cda262770b.
+
+## 2026-11-17: read-only Download Mode session recovery check
+
+- Re-polled exact framebuffer CI44119574729: in_progress, Build active at
+  job134168348363 (started16:06UTC). This is a verified wait, not a stopped
+  build; no restart dispatched. Prepared0215 remains outside active profile.
+- Tested a fresh read-only download-pit --no-reboot handshake to avoid
+  unnecessarily requiring physical buttons. It failed sending the handshake;
+  no PIT downloaded and no partition payload sent. Host PyUSB reset_device
+  subsequently returned ENOENT/Entity not found; phone now absent from lsusb.
+  These operations cannot establish a recovered flashing session. Existing
+  physical Download Mode re-entry request remains necessary. No Android
+  restoration or additional BOOT/USERDATA/protected partition write occurred.
+- Host live gadget checker still finds no1209:0001. Objective remains
+  unachieved: no verified framebuffer trial, XNU USB enumeration or transfers.

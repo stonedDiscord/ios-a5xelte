@@ -13,8 +13,10 @@ IPSW. Never use donor S7/A5 partition paths or restore stock for RAM logs.
 
 0213 remains installed in BOOT; user saw Samsung logo, host saw no gadget.
 CI44094150615 passed exact compiled source/linked-symbol checks. Runtime
-progress beyond the older recovered VM trace is unknown. Phone currently
-shows Download Mode over USB, but its flashing session needs physical reset.
+progress beyond the older recovered VM trace is unknown. Phone was in Download Mode with a failed session. A fresh read-only
+download-pit handshake failed; host USB reset then returned ENOENT and the
+phone is now absent from lsusb. Physical Download Mode re-entry is pending.
+No partition writes occurred during those recovery checks.
 
 Framebuffer0214 now includes loader/early/serial drawing at0xcc000000,
 1440x2960/stride5760; DECON0x12860000 source-derived frame request+0x60
