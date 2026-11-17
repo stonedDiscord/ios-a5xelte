@@ -531,3 +531,27 @@ compile results, hardware observations and restore results below.
   reference selector and PMU isolation; see docs/dreamlte-usb.md. No new
   PMU/clock writes or successful USB runtime claimed. Phone remains in
   Download Mode on0213 BOOT; no Android restoration performed.
+
+## 2026-11-17: converted20H392 root passes host validation
+
+- Corrected framebuffer full CI44115872187 dispatched at7e95994; now Build
+  in progress. Poll that exact run;44111718665 is superseded. No new BOOT
+  flash yet. Phone is visible in Download Mode; Android was not restored.
+- Added userspace HFSX conversion tools. Patched private libdmg-hfsplus
+  UTF-8 decoding and allocation offsets above4GiB; forced high-offset/Unicode
+  smoke image passes fsck. Original full attempts were rejected before flash
+  due to these issues and cryptex symlink traversal; final generator skips
+  already-supplied symlink subtrees. No phone write used incomplete images.
+- Final root image research/dreamlte/root/ios-16.7.16-20H392-hfsx.img is
+  34,359,738,368 bytes, below measured58,556,678,144-byte USERDATA. Full
+  read-only fsck PASS. Extracted launchd and all43 dyld-cache components
+  match source SHA256 byte-for-byte (44 comparisons). Mode/UID/GID checks
+  passed for launchd, logd markers and plaintext keybag. Root has both
+  cryptexes; hard links are materialized as copies.
+- Image is non-journaled; xattrs/BSD flags/timestamps are not preserved.
+  These conversion limits are documented in docs/dreamlte-root-conversion.md.
+  No claim of metadata-complete restore, runtime mounting or userspace boot.
+- Heimdall2.2.2 source inspected:64-bit total-byte packet and64-bit host
+  unsigned-long offsets handle this image size. USERDATA write is explicitly
+  authorized; preserve PIT and all other partitions. Flash remains pending
+  until final image checksum is recorded.

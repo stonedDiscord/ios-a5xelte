@@ -28,6 +28,12 @@ OS/SystemOS/AppOS extracted under ignored research/dreamlte/root/assets,
 read-only APFS-FUSE mounts under research/dreamlte/root/mounts. APFS-FUSE
 built under research/dreamlte/host-tools; no sudo available. HFS userspace
 conversion tooling under development; root image and USERDATA flash pending.
+Final32GiB HFSX image now exists at
+research/dreamlte/root/ios-16.7.16-20H392-hfsx.img. Full read-only fsck PASS;
+launchd plus43 cache-component extracted hashes match source. Non-journaled;
+xattrs/BSD flags/timestamps omitted, hard links copied. USERDATA flash is
+pending final checksum; docs/dreamlte-root-conversion.md has build details.
+Corrected framebuffer CI44115872187 at7e95994 is in Build; poll this run.
 Current phone has0213, no Android restoration. Next build/test0214 display,
 finish HFSX conversion and flash USERDATA per authorization; continue Exynos
 USB PHY/clock/reset investigation. tools/dreamlte-verify-ci.py checks exact
