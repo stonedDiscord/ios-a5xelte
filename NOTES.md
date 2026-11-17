@@ -1,3 +1,9 @@
+ACTIVE19:04UTC0080 HARDWARE ROM9383 PASS. touch status1 gate0A02DE00/clock0;
+touch rom2 result0/id9383/raw8A/sts2AA/restored gate+clock exact/END.
+SPI3 inherited pins/reset/CS0/1MHz works. No firmware/reset/pinmux write.
+Next explicit ERAM section readiness/config/contact read patch0147; no
+physical touch proof. Single capture2205 until~19:11UTC; outputs/tmp/a03-0080.
+
 ACTIVE2026-11-17~19:02UTC BOOT0080 flashed BOOT-only successful/reboot.
 CI44150337660 exact542f9b5 SUCCESS, kernel5828529d...88e3 BOOT35ca7403...c5f9.
 Same0079 config/ADT/loader/ramdisk/DT; no firmware/new arg. Single capture

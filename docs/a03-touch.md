@@ -26,6 +26,10 @@ and touch gesture policy remain unresolved. No physical driver is enabled.
 See latest A03_PROGRESS.md/NOTES.md for runtime updates. Prior temporary
 watchers were absent; this trial has its own image/manifest/capture.
 
+BOOT0080/0146 now confirms fresh XNU SPI3 ROM ID9383 on2026-11-17 at19:04UTC.
+Explicit ROM probe returns0 and restores gate0A02DE00/clock0; inherited pins,
+reset and CS0 work at1MHz. No firmware/contact/physical-touch proof yet.
+
 ## Controller selection
 
 Private saved Android dmesg from2026-11-13 contains repeated successful

@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0080 hardware Jadard ROM9383 confirmed
+
+At19:03UTC exact A03XNUConsole01 returned. Both HID providers registered,
+probe worker enabled. Explicit touch status1 reports gate0A02DE00/clock0.
+Explicit touch rom2 returns result0 id9383 expected9383 raw0000008A/
+sts2000000AA; restored gate0A02DE00/clock0, workerEND. This is fresh XNU
+SPI3/CS0/1MHz protocol and controller ROM identity evidence. No reset,
+pinmux, GPIO, firmware upload or external-flash operation was performed.
+Does NOT prove inherited touch firmware, contact reports or physical input.
+Next explicit bounded ERAM ready/section/config read, then matching RAM
+firmware only if required. Initial capture2205 remains single reader.
+
 ## 2026-11-17: BOOT0080 explicit touch-ROM probe flashed
 
 0146 CI44150337660 SUCCESS exact542f9b5ca51dfda442875485ca1ab319e1863abb.
