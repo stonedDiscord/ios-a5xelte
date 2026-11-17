@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: idle decoder fullCI success; BOOT0086 deployment
+
+CI44173996698 SUCCESS exact896330554fd2683801355f753927d4642716cd18,
+0153 zero-count decoder. Kernel81d48ecfc9a800bbb8a76868b14303de16929efdb3c6e2d6afc4701a3cf41ba6.
+BOOT221de96d02edb1ac0552057a651c67a1c08ad622aaf76dde9136c6a2a9be8126.
+Packaging checksums/markers/same0085 ADT/1GiB/bootargs/root/loader(except
+image_size)/stockramdisk/DT verified. SyncedCDC Download and Heimdall detect
+21:07UTC; BOOT-only flash67897 in progress. No HID event trial yet. Next
+singlecapture->UTC/fw upload/load->idle noevents->physicallift->boundedHID.
+
 ## 2026-11-17: physical finger MOVEMENT confirmed on0085
 
 User reports ready for movement test; explicit start instruction immediately

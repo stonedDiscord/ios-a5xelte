@@ -1,3 +1,8 @@
+ACTIVE21:07UTC0153CI44173996698 SUCCESS/exact8963305.0086 packaged
+same0085 config/BOOT221de96d...8126/kernel81d48ecf...1ba6. SyncedDownload
++detected; BOOTflash67897 /tmp/a03-0086/flash.log. Nextcapture/UTC/fwload/
+idle+lift/HID. Physicalmotion proven0085, noHID/UI yet. Preserve0084/0085.
+
 ACTIVE20:57UTC0085 PHYSICAL MOVEMENT confirmed: aligned userdrag, TWO
 300frame log-only sessions valid300/events301 each, changing slot0x/y,
 rawcount1/otherFFFF. No HID. Physical lift stillpending0153(count0fix).
