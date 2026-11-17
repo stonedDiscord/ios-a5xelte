@@ -1,0 +1,17 @@
+--- a/bsd/kern/sys_work_interval.c
++++ b/bsd/kern/sys_work_interval.c
+@@ -47,7 +47,13 @@
+ static bool
+ a03_wi_unrestricted(uint32_t flags)
+ {
+- if (!a03_wi_client_compat || !(flags & WORK_INTERVAL_FLAG_UNRESTRICTED)) return false;
++ if (!a03_wi_client_compat) return false;
++ /* iOS16 UIKit requests CA_CLIENT without UNRESTRICTED (hardware flags
++  * 30000000). kern_work_interval_create still rejects GROUP, non-app tasks,
++  * and a second CA-client interval for the task. No other type gains this
++  * implicit exemption. */
++ if ((flags & WORK_INTERVAL_TYPE_MASK) == WORK_INTERVAL_TYPE_CA_CLIENT) return true;
++ if (!(flags & WORK_INTERVAL_FLAG_UNRESTRICTED)) return false;
+  switch (flags & WORK_INTERVAL_TYPE_MASK) {
+  case WORK_INTERVAL_TYPE_DEFAULT:
+  case WORK_INTERVAL_TYPE_COREAUDIO:

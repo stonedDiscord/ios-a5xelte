@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: exact swipe failure is CA_CLIENT privilege denial
+
+Second aligned0088 swipe391,1597 ->431,572 produces15HIDevents. User first
+reports no response then spinner. New diagnostic logs SpringBoard flags
+30000000/error1(EPERM)/kr8(KERN_NO_ACCESS), followed by the same Failed to
+create work interval exception. This is the privilege-return branch before
+kern_work_interval_create, not an allocation attempt/ENOMEM or task-app check.
+Explicit stop completes130slices/events15; forwarding off.0155 alone does
+not fix UIKit: its request omits the documented UNRESTRICTED bit.
+
+0156 candidate treats CA_CLIENT as implicitly unprivileged under the existing
+a03_work_interval opt-in. Other types retain0155 policy. Actual kernel create
+still validates CA_CLIENT noGROUP/app-type/single-interval ownership and all
+port/lifecycle rules; no fake handle/success. Actual policy C/C++ ASan/UBSan
+8192flag cases and reverseapplyPASS. Local kernel C compile uses retargeted
+cachedconsole flags, not the missing exact per-file CI command. FullCI next;
+app-type validation may reveal another failure, so no runtime fix claim.
+
 ## 2026-11-17: BOOT0088 first swipe no visible response, temporary audio wait
 
 User confirms iOS visible/ready22:35UTC. Explicit60s HID trial receives one

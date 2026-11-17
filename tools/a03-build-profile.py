@@ -157,7 +157,8 @@ def main():
                      '0152-a03-reject-empty-contact-and-cycle-session.patch',
                      '0153-a03-zero-count-reports-release-contacts.patch',
                      '0154-a03-explicit-continuous-touch-poll.patch',
-                     '0155-a03-unrestricted-client-work-interval.patch'):
+                     '0155-a03-unrestricted-client-work-interval.patch',
+                     '0156-a03-ios16-ca-client-work-interval.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',

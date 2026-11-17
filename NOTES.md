@@ -1,3 +1,10 @@
+ACTIVE22:40UTC0088 SECONDswipe15events -> WIflags30000000/error1EPERM/
+kr8NOACCESS, sameSBabort/user spinner. ExactprivilegedbranchBEFOREcreate,
+notENOMEM. STREAMOFF130slices15events.0156implicitCAclientpermissioncandidate
+preserveskernelapp/noGROUP/singleWI/lifecyclechecks;8192tests/reversePASS.
+NeedfullCI0089 thenBOOT-only/UTC/fwload/oneswipe WIresult. Capture141846
+boot0088-usb-initial until~23:09UTC.0155alonefailed; noUIworkingclaim.
+
 ACTIVE22:38UTC0088 visibleiOSconfirmed. FirstHID60s178slices18events/
 oneswipe noUIresponse; noSBcrash/noSBWIcreate. MainwaitAudioToolbox AU
 registration thenresolvedbacktomainloop~22:37. SECONDHID90s14155 NOWON
