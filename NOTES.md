@@ -1,3 +1,8 @@
+ACTIVE20:57UTC0085 PHYSICAL MOVEMENT confirmed: aligned userdrag, TWO
+300frame log-only sessions valid300/events301 each, changing slot0x/y,
+rawcount1/otherFFFF. No HID. Physical lift stillpending0153(count0fix).
+CI44173996698 exact8963305 building/package70851 waits0086. Single43981.
+
 ACTIVE20:54UTC0153CI44173996698 exact8963305 running; package-only70851
 /tmp/a03-0086/package.py gates0086 same0085. Current0085 log-only: idle count0
 packet0000FF+57zero falsely corners; NEVER touch poll until0153. First physical

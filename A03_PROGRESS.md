@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: physical finger MOVEMENT confirmed on0085
+
+User reports ready for movement test; explicit start instruction immediately
+followed by two serialized log-only300frame sessions. Both result0/valid300/
+events301/hid0, slot0 coordinates continuously follow movement; first logged
+capture x159..553/y397..1282, secondx148..520/y303..1148 (64event log cap).
+Raw packets count1, real big-endian coordinates, other slotsFFFF. This proves
+physical coordinate motion, not HID/UI response. Session-final up remains
+cleanup; true physical lift awaits0153 idle fix. User told release afterward.
+No touch poll/HID sent. FullCI44173996698 exact8963305 still builds0086.
+
 ## 2026-11-17: zero-count fix full CI dispatched
 
 0153 fullCI44173996698 exact896330554fd2683801355f753927d4642716cd18
