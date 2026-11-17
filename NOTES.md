@@ -1,3 +1,10 @@
+ACTIVE~18:53UTC prepared standalone section decoder+actual-header C/C++
+ASan/UBSan tests PASS; NOT staged/no bus or firmware operations. Fresh0079
+status3/SpringBoard25/backboardd56 alive/storage ready1 poisoned0; other
+daemon crashes persist.0146CI44150337660 still Build. Package-only watcher
+76572 waits exact542f9b5 success then checksum/markers/same0079 config0080;
+NO automatic deployment. Script/log/tmp/a03-0080; no duplicate watcher.
+
 ACTIVE2026-11-17~18:45UTC0146 CI44150337660 exact542f9b5 Building.
 Offline rev8 CPT firmware extracted privately;79104bytes SHA8ba14e32...a82d,
 7move-section CRCs pass. Installed revision5 compatibility NOT established;

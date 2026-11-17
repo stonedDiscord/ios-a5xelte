@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: source-guided section decoder prepared
+
+Added standalone unstaged ERAM section decoder using actual stock offsets:
+ready LE A55A, DSRAM firmware-config entry3 at+28, ESRAM coordinate entry2
+at+152 (complete snapshot160bytes). Enforces successful caller read/ready,
+nonzero nonwrapping entries, minimum6byte config and exact60byte report.
+Leaves prior output intact on invalid snapshots; does not infer undocumented
+count widths, controller RAM whitelist, freshness or power state. C11/C++17
+actual-header ASan/UBSan malformed-length/endian/wrap/retention tests PASS.
+No bus integration or new firmware operation; next gate remains0146 full CI
+44150337660/package0080/status+ROM. Fresh0079 health: input status3,
+SpringBoard25/backboardd56 alive, ready1/poisoned0. Ancillary daemon crashes
+continue; this bounded health check does not establish a fully stable OS.
+
 ## 2026-11-17: offline CPT firmware candidate recovered
 
 0146 full Xcode CI44150337660 is building exact542f9b5. Preserved running

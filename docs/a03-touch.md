@@ -137,3 +137,8 @@ pinctrl-sprd-qogirl6.c encodes global SPI matrix at offset14hex and common/
 misc pads at40/440hex bases. AP GPIO indices are not pinctrl enum indices.
 Do not select SPI pads or power rails by numeric resemblance or alternative
 DT touchscreen nodes. Current0146 intentionally leaves these untouched.
+
+Standalone shim/a03/jd9365t-sections.h implements the fixed offsets above;
+run tools/a03-test-jd9365t-sections.py for actual C/C++ ASan/UBSan tests.
+It is preparation only, not staged in0146. Address whitelist and actual
+successful read/controller readiness remain caller responsibilities.
