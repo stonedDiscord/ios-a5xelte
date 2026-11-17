@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0088 running, firmware loaded, UI still starting
+
+BOOT-only flash17164 completes100percent/success/reboot~22:28UTC. Single
+capturePID141846 writes boot0088-usb-initial.log (host41773,2400seconds).
+UTC sync1794954586=2026-11-17 22:29:46UTC. Private79104-byte touch firmware
+staged/valid0; explicit load0 again passes seven hardware CRCs, readyA55A,
+config20002AD4/1028 report20011580/60 geometry720x1600 sensors18/32;
+SPI gate/source restored. No touch forwarding enabled on0088 yet.
+
+Both HID clients opened and inputstatus3; ps shows SpringBoard25. First0155
+hardware diagnostic: backboardd flags20000000/error0/kr0, confirming normal
+privileged create still succeeds. This does not test unrestricted CA-client
+policy. User reports Apple logo or boot logs at22:31UTC; wait for actual UI.
+streamstatus confirms0slices/events0. Work-interval crash fix remains unproven.
+
 ## 2026-11-17: BOOT0088 work-interval candidate fullCI success/deployment
 
 CI44186495805 SUCCESS exact47a92b35332aac7a9c6173e2d57f18125a525c0d.

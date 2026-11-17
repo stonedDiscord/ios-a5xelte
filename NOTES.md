@@ -1,3 +1,10 @@
+ACTIVE22:32UTC0088BOOT-onlyflashSUCCESS. SinglecapturePID141846/
+41773 boot0088-usb-initial.log until~23:09UTC. UTCsynced22:29:46, fw79104
+valid0/load0/all7CRC/A55A/configPASS. UserstillApplelogo/bootlogs22:31.
+STREAMOFF0slices/events0. SB25/inputstatus3/bothclientsopen. WIhardware
+backboarddflags20000000/error0/kr0 (normalprivilegedpathPASS). CAclient
+fixnotyettested. sample25queued; waitmainloop+physicalUI thenalignedswipe.
+
 ACTIVE22:28UTC0155CI44186495805 SUCCESS/exact47a92b3.0088 checksum/
 marker/same0087configPASS; BOOT1e3309cb...696f3/kernel245542b4...cdab2.
 PhonealreadyDownload04e8:685d/detectPASS; CDCsenderdidnotconnect (cause
