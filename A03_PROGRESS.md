@@ -1,5 +1,31 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0079 HID trial flashed after USB reconnect
+
+A03 console re-enumerated as exact A03XNUConsole01. Single40s read-only
+capture touch-reconnect-20261117.log returned live ps SpringBoard26 and
+backboardd56; input status unknown command confirms current kernel lacks
+0145 command (not proof of exact boot image). No gesture sent on old kernel.
+
+Downloaded exact successful0145 CI43969089570 artifact; SHA256SUMS verified
+kernel1960b8a764f690b7c6d8f7d184de76c693add08cb28a3585bdf3e42f68705e9a.
+Packaged0079 from0078 exact ADT/1GiB/loader(except image_size)/stock ramdisk/
+stockDT, adding only a03_hid=1. Existing0078 payload has NO RAMDisk property
+or RAM-root segment; preserved actual USERDATA-root configuration rather than
+inferring RAM fallback from historical notes. No0144 lab-vault change.
+BOOT SHA25697f50f70b82dfe5596226f21a3b29c7e16991de5ff2b3be0c5044dfe38f17aea.
+
+Requested normal synced CDC Download; Samsung Download enumerated. Heimdall
+--boot only upload100%/successful and reboot confirmed~18:13UTC. Single
+capture session52487 waitsUSB180s then480s boot0079-usb-initial.log. Runtime
+HID registration/client open/gesture and physical response still pending.
+0078 restore image retained. No other partition flashed.
+
+USB returned~18:14UTC. Fresh0079 logs show exact a03_hid=1 bootargs, buttons
+and touch registered; explicit input status result3 confirms both providers.
+Backboardd56 progressing1to3threads in startup samples; SpringBoard25 live.
+No HID client open observed yet at18:15UTC; no gesture dispatched.
+
 ## 2026-11-17: physical touch preparation; Jadard/CPT evidence recovered
 
 User prioritizes touch after SpringBoard clock milestone. Rechecked exact

@@ -9,11 +9,13 @@ and explicit USB gestures; it does not drive the panel's physical digitizer.
 Full Xcode CI43969089570 for exact2d4ffd7a44eab34178a13295b0ad3a337044e453
 completed successfully on2026-11-16 at22:42:24UTC. This is build evidence only.
 
-In this2026-11-17 session neither the A03 XNU USB console nor a Samsung USB
-device enumerates. The old /tmp/a03-0079 watcher directory is absent. No0079
-manifest is present in shim/a03/out; do not infer deployment from scheduled
-watchers in the older handoff. No flash, input delivery or live chip read was
-performed in this session.
+The A03 USB console returned later on2026-11-17. Old kernel input status
+was unknown; the exact successful0145 artifact was then packaged as0079
+and flashed to BOOT only at18:13UTC. USB returned18:14UTC; both HID services
+registered and input status returned3. Backboardd startup was still progressing
+at18:15UTC; no successful HID client open or gesture delivery observed yet.
+See latest A03_PROGRESS.md/NOTES.md for runtime updates. Prior temporary
+watchers were absent; this trial has its own image/manifest/capture.
 
 ## Controller selection
 

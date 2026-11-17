@@ -1,3 +1,15 @@
+ACTIVE2026-11-17 18:13UTC BOOT0079 HID trial flashed successfully via
+heimdall --boot only after synced CDC Download. CI43969089570 exact2d4ffd7;
+kernel1960b8a7...705e9a, BOOT97f50f70...f17aea. Exact0078 ADT/1GiB/loader
+(except image_size)/stockramdisk/DT; only+a03_hid=1.0078 has no RAMDisk;
+actual USERDATA-root setup preserved. Capture52487 waits180 then480s,
+shim/a03/out/boot0079-usb-initial.log (stdout/tmp/a03-0079/capture.txt).
+USB returned18:14UTC: buttons+touch registered, input status3 confirmed.
+Backboardd56 startup1to3threads/SpringBoard25; no client open yet18:15UTC.
+Need actual HID client open BEFORE explicit swipe, then user
+physical response. No gesture yet.0078 restore retained. Physical touch
+hardware preparation separate: docs/a03-touch.md; decoder tests pass.
+
 ACTIVE2026-11-17 TOUCH: saved Android evidence selects Jadard JD9365T/CPT,
 SPI3@20150000/CS1/10MHz; stock zero-flash RAM firmware required path.
 Standalone unstaged60byte contact decoder+C/C++ASan/UBSan PASS; existing HID
