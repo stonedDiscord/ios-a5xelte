@@ -74,6 +74,8 @@ int main(void) {
     assert(maps == 1 && !phy_reads && !starts);
     reset(); core[0xc704/4] = 1u << 31; sweet_usb_probe();
     assert(maps == 1 && !phy_reads && !starts);
+    reset(); core[0xc704/4] = 1u << 30; sweet_usb_probe();
+    assert(maps == 1 && !phy_reads && !starts);
     reset(); phy[0] = 0x010101; phy[0x14/4] = 2; sweet_usb_probe();
     assert(!starts && core[0xc110/4] == 0x30c11004);
     reset(); phy[0] = 0x010101; phy[0x0c/4] = 3; sweet_usb_probe();

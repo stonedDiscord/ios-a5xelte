@@ -88,8 +88,8 @@ diff --git a/bsd/dev/sweet_usb.c b/bsd/dev/sweet_usb.c
 +	printf("DREAMLTE USB: ID %08x GCTL %08x DSTS %08x\n", id,
 +	    usb_rd(dwc, 0xc110), usb_rd(dwc, 0xc70c));
 +	if (id != 0x5533280a || enabled == 1) return;
-+	if (usb_rd(dwc, 0xc704) & (1u << 31)) {
-+		printf("DREAMLTE USB: firmware controller still running; refusing takeover\n");
++	if (usb_rd(dwc, 0xc704) & ((1u << 31) | (1u << 30))) {
++		printf("DREAMLTE USB: firmware controller running/resetting; refusing takeover\n");
 +		return;
 +	}
 +	if (!dreamlte_usb_prepare(dwc)) sweet_usb_gadget_start(dwc);
