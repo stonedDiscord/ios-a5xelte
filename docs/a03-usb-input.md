@@ -56,3 +56,24 @@ proves the kernel/userspace ABI. Full local C++ syntax checks require host
 stand-ins for unavailable Apple allocation builtins; those stand-ins must
 never enter CI or a bootable kernel. Full Xcode build and runtime checks
 remain required.
+
+## Explicit volatile UTC sync (0150, prepared)
+
+The A03 platform expert currently inherits a UTC source that returns zero;
+there is no implemented hardware RTC read/write. On2026-11-17 the user reports
+the lock screen showing4:19/December31. This is a separate missing wall-clock
+facility, not evidence of physical digitizer operation. The exact displayed
+year and timezone are unmeasured.
+
+0150 adds time status and time UNIX_UTC_SECONDS to the existing opted-in USB
+probe worker. A host can explicitly supply live UTC after boot:
+
+    python3 tools/a03-usb-time-sync.py --log LIVE_CONSOLE.log
+    python3 tools/a03-usb-time-sync.py --log LIVE_CONSOLE.log --status
+
+The sender requires a matching worker acknowledgement and UTC readback.
+Only2020..2099 Unix seconds are accepted. The XNU calendar changes in RAM;
+there is no RTC/PMIC access, boot-time fixed date or automatic repeated sync.
+Time must be supplied again after reboot until a persistent RTC source is
+implemented. Display timezone/UI refresh still require physical validation.
+At preparation time0150 is not staged in the build profile or deployed.

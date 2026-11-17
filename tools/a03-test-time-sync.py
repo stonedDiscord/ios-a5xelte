@@ -5,9 +5,8 @@ import subprocess,tempfile
 ROOT=Path(__file__).resolve().parents[1]
 p=(ROOT/'xnu/a03/0135-a03-live-usb-probes.patch').read_text()
 p='\n'.join(l[1:] for l in p.splitlines() if l.startswith('+') and not l.startswith('+++'))
-start=p.index('static int a03_probe_number(');end=p.index('static ',start+12)
-# Reuse exact number/end parsers from the currently patched source below.
-# Their implementation is stable across0135 and the current source.
+start=p.index('static int a03_probe_number(')
+# Reuse the original number/end parsers that remain unchanged in0150.
 end=p.index('static ',p.index('static int a03_probe_end',start)+12)
 parsers=p[start:end]
 s=(ROOT/'xnu/a03/0150-a03-explicit-volatile-utc-sync.patch').read_text()
