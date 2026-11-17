@@ -1,0 +1,207 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -376,6 +376,7 @@
+ #include "a03_jd9365t_spi.h"
+ #include "a03_jd9365t_sections.h"
+ #include "a03_jd9365t_loader.h"
++#include "a03_jd9365t_poll.h"
+ static vm_offset_t a03_touch_spi, a03_touch_apb, a03_touch_clk;
+ static uint32_t a03_touch_r32(void *p,unsigned o) {
+  return *(volatile uint32_t *)((vm_offset_t)p+o);
+@@ -432,6 +433,14 @@
+  int exit_error=a03_jd_write(b,leave,sizeof(leave));
+  printf("A03 TOUCH sections exit=%d\n",exit_error);
+ }
++extern void sweet_hid_touch(int finger,int down,int x,int y);
++extern int a03_hid_action(unsigned action);
++static unsigned a03_touch_emit_count,a03_touch_emit_hid;
++static void a03_touch_emit(void *context __unused,unsigned slot,int down,unsigned x,unsigned y) {
++ if(a03_touch_emit_count<64)printf("A03 TOUCH contact slot=%u down=%d x=%u y=%u hid=%u\n",slot,down,x,y,a03_touch_emit_hid);
++ a03_touch_emit_count++;
++ if(a03_touch_emit_hid)sweet_hid_touch((int)slot,down,(int)x,(int)y);
++}
+ /* Host transfers a private candidate into kernel RAM, never the root image.
+  * Sequential bounded hex chunks; validate entire image before SPI writes.
+  */
+@@ -477,8 +486,11 @@
+ void a03_touch_probe(const char *command);
+ void a03_touch_probe(const char *command) {
+  if(a03_touch_upload(command))return;
+- if(strcmp(command,"status")&&strcmp(command,"rom")&&strcmp(command,"sections")&&strcmp(command,"load")) {
+-  printf("A03 TOUCH requires status|rom|sections|load|fwbegin|fwdata|fwstatus; explicit RAM-only operations\n");return;
++ if(strcmp(command,"status")&&strcmp(command,"rom")&&strcmp(command,"sections")&&strcmp(command,"load")&&strcmp(command,"contacts")&&strcmp(command,"poll")) {
++  printf("A03 TOUCH requires status|rom|sections|load|contacts|poll|fwbegin|fwdata|fwstatus; explicit RAM-only operations\n");return;
++ }
++ if(!strcmp(command,"poll")&&!(a03_hid_action(0)&2)) {
++  printf("A03 TOUCH poll refused: HID provider absent\n");return;
+  }
+  if(!strcmp(command,"load")) {
+   struct a03_jd_firmware f;
+@@ -531,6 +543,13 @@
+   if(!e)a03_touch_sections(&b);
+  }
+  if(!e&&!strcmp(command,"sections"))a03_touch_sections(&b);
++ if(!e&&(!strcmp(command,"contacts")||!strcmp(command,"poll"))) {
++  a03_touch_emit_count=0;a03_touch_emit_hid=!strcmp(command,"poll");
++  unsigned valid=0;
++  e=a03_jd_poll(&b,300,a03_touch_emit,NULL,&valid);
++  printf("A03 TOUCH poll result=%d valid=%u events=%u hid=%u; final release\n",
++      e,valid,a03_touch_emit_count,a03_touch_emit_hid);
++ }
+  a03_jd_cs(&b,0);
+  for(unsigned i=0;i<sizeof(saved)/sizeof(saved[0]);i++)b.write32(b.context,regs[i],saved[i]);
+ restore_clock:
+--- /dev/null
++++ b/bsd/dev/a03_jd9365t_report.h
+@@ -0,0 +1,64 @@
++/* A03 Jadard coordinate-report decoder; no bus, MMIO or firmware operations.
++ * Layout: Samsung HS03 jdchipset/jadard_common.{c,h}, coordinate IRQ path.
++ * This is preparation for a driver, not an enabled XNU touch provider.
++ */
++#ifndef A03_JD9365T_REPORT_H
++#define A03_JD9365T_REPORT_H
++
++#include <stddef.h>
++#include <stdint.h>
++
++#define A03_JD9365T_REPORT_SIZE 60u
++#define A03_JD9365T_CONTACTS 10u
++
++struct a03_jd9365t_contact {
++	uint16_t x, y;
++	uint8_t width, down;
++};
++
++struct a03_jd9365t_report {
++	uint8_t reported_count;
++	struct a03_jd9365t_contact contacts[A03_JD9365T_CONTACTS];
++	uint8_t state[5];
++};
++
++/* Call only after a successful complete coordinate-report transfer from a
++ * running, identified controller. Gesture/debug packets are different paths.
++ * No checksum or freshness field is established by the coordinate parser.
++ * A zero-filled transfer MUST NOT stand in for a failed bus read: zero is a
++ * valid coordinate. reported_count is metadata, not a packed-contact bound;
++ * the stock parser examines every fixed slot, including sparse slot IDs.
++ * On invalid arguments/size/count, leave the caller's previous report intact.
++ */
++static inline int
++a03_jd9365t_decode(const uint8_t *packet, size_t size,
++    struct a03_jd9365t_report *out)
++{
++	struct a03_jd9365t_report next = {0};
++	unsigned i;
++
++	if (!packet || !out || size != A03_JD9365T_REPORT_SIZE ||
++	    packet[0] > A03_JD9365T_CONTACTS) {
++		return -1;
++	}
++	next.reported_count = packet[0];
++	for (i = 0; i < A03_JD9365T_CONTACTS; i++) {
++		const uint8_t *p = packet + 3u + 5u * i;
++		unsigned x = ((unsigned)p[0] << 8) | p[1];
++		unsigned y = ((unsigned)p[2] << 8) | p[3];
++		/* Match stock inclusive panel maxima; clamp only at HID conversion. */
++		if (x <= 720u && y <= 1600u) {
++			next.contacts[i].x = (uint16_t)x;
++			next.contacts[i].y = (uint16_t)y;
++			next.contacts[i].width = p[4];
++			next.contacts[i].down = 1;
++		}
++	}
++	for (i = 0; i < 5u; i++) {
++		next.state[i] = packet[53u + i];
++	}
++	*out = next;
++	return 0;
++}
++
++#endif
+--- /dev/null
++++ b/bsd/dev/a03_jd9365t_contact_state.h
+@@ -0,0 +1,38 @@
++/* Contact transition policy; caller provides verified complete coordinate
++ * reports and serializes calls. No timers, bus access or HID side effects.
++ * Three consecutive failed/malformed reads release held contacts once.
++ */
++#ifndef A03_JD9365T_CONTACT_STATE_H
++#define A03_JD9365T_CONTACT_STATE_H
++#include "a03_jd9365t_report.h"
++struct a03_jd_contact_state {
++ struct a03_jd9365t_contact contacts[A03_JD9365T_CONTACTS];
++ unsigned failures;
++};
++typedef void (*a03_jd_contact_emit)(void *,unsigned,int,unsigned,unsigned);
++static inline int a03_jd_contact_update(struct a03_jd_contact_state *state,
++    int read_ok,const uint8_t *packet,size_t size,
++    a03_jd_contact_emit emit,void *context)
++{
++ struct a03_jd9365t_report next;
++ if(!state||!emit)return -1;
++ if(!read_ok||a03_jd9365t_decode(packet,size,&next)) {
++  if(state->failures<3)state->failures++;
++  if(state->failures==3) {
++   for(unsigned i=0;i<A03_JD9365T_CONTACTS;i++) {
++    struct a03_jd9365t_contact *p=&state->contacts[i];
++    if(p->down){emit(context,i,0,p->x,p->y);p->down=0;}
++   }
++  }
++  return -1;
++ }
++ state->failures=0;
++ for(unsigned i=0;i<A03_JD9365T_CONTACTS;i++) {
++  struct a03_jd9365t_contact *old=&state->contacts[i],*n=&next.contacts[i];
++  if(old->down!=n->down || (n->down&&(old->x!=n->x||old->y!=n->y)))
++   emit(context,i,n->down,n->down?n->x:old->x,n->down?n->y:old->y);
++  *old=*n;
++ }
++ return 0;
++}
++#endif
+--- /dev/null
++++ b/bsd/dev/a03_jd9365t_poll.h
+@@ -0,0 +1,43 @@
++/* Explicit bounded contact poll session; no scheduling or firmware loading.
++ * Caller owns a ROM9383 bus with running firmware. Frame read errors cannot
++ * produce contacts; three consecutive failed samples release all contacts.
++ */
++#ifndef A03_JD9365T_POLL_H
++#define A03_JD9365T_POLL_H
++#include "a03_jd9365t_memory.h"
++#include "a03_jd9365t_sections.h"
++#include "a03_jd9365t_contact_state.h"
++static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
++    a03_jd_contact_emit emit,void *context,unsigned *valid_out)
++{
++ if(!b||!b->delay_us||!emit||!frames||frames>300)return -1;
++ uint16_t id;if(a03_jd_rom_id(b,&id))return -2;
++ const uint8_t enter[]={0xf2,0xaa,0x55,0x0f,0xf0,0x68};
++ const uint8_t leave[]={0xf2,0xaa,0x88,0,0,0};
++ uint8_t table[160],config[6],packet[60];struct a03_jd_sections sections;
++ struct a03_jd_contact_state state={{{0,0,0,0}},0};int result=-3;unsigned valid=0;
++ if(a03_jd_write(b,enter,sizeof(enter)))goto done;
++ if(a03_jd_ram_read(b,0x20011000,table,sizeof(table))||
++    a03_jd_decode_sections(table,sizeof(table),&sections))goto done;
++ if(sections.firmware_config.address<0x20000000u||
++    !a03_jd_ram_range(sections.firmware_config.address,sections.firmware_config.length,1)||
++    sections.coordinate_report.address<0x20011000u||
++    !a03_jd_ram_range(sections.coordinate_report.address,60,0))goto done;
++ if(a03_jd_ram_read(b,sections.firmware_config.address,config,sizeof(config))||
++    ((unsigned)config[0]|((unsigned)config[1]<<8))!=720||
++    ((unsigned)config[2]|((unsigned)config[3]<<8))!=1600||config[4]!=18||config[5]!=32)goto done;
++ result=0;
++ for(unsigned i=0;i<frames;i++) {
++  int ok=!a03_jd_ram_read(b,sections.coordinate_report.address,packet,sizeof(packet));
++  if(!a03_jd_contact_update(&state,ok,packet,sizeof(packet),emit,context))valid++;
++  else if(state.failures>=3){result=-4;break;}
++  b->delay_us(b->context,16000);
++ }
++ /* A bounded session never leaves a finger held after its final sample. */
++ for(unsigned i=0;i<3;i++)(void)a03_jd_contact_update(&state,0,NULL,0,emit,context);
++done:
++ if(a03_jd_write(b,leave,sizeof(leave))&&!result)result=-5;
++ if(valid_out)*valid_out=valid;
++ return result;
++}
++#endif

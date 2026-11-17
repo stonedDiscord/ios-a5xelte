@@ -1,3 +1,10 @@
+ACTIVE19:38UTC0081 CLOCK physically confirmed. Single reader23025 until
+~20:01UTC boot0081-touch-followup.log.0149 explicit contacts/log vs poll/HID
+prepared+tested+compile/apply equality PASS; NOT staged in build profile.
+0148CI44159557034 exactcdafbe1 still building; package91490 gates0082,
+NO auto flash. No firmware uploaded/loaded, no physical contacts verified.
+Next verified0082 BOOT-only trial -> private staging -> explicit RAM load.
+
 ACTIVE19:35UTC bounded poll helper prepared+unstaged/tests PASS. Requires
 ROM+ready/config, max300frames,3failed read stop/final releases; no HID yet.
 0148CI44159557034 exactcdafbe1 running/package91490 waits.0081 ROM good/

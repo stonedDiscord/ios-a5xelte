@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0081 clock confirmed; bounded poll0149 prepared
+
+User physically confirms clock/lock screen after latest0081 reboot. No Home
+or synthetic swipe sent in this followup. Old84861 reader ended; single
+23025 now captures boot0081-touch-followup.log1500s from19:36UTC.
+
+0149 adds explicit touch contacts (log-only) and touch poll (existing HID
+callback) for max300frames/16ms with ROM9383/readyA55A/exact720x1600/18x32
+gates. Config must be DRAM, report exactly60bytes in ERAM. No auto polling.
+Three bad samples stop and release; normal completion releases held slots.
+Actual callback isolation/down/up/coordinates/log-cap tests ASan/UBSan PASS;
+actual helper C/C++ ASan/UBSan PASS including PRAM config rejection. Exact
+full kernel C compile PASS; reverse/plain patch+source/header equality PASS.
+0149 remains OUT of build profile pending0148 RAM-loader hardware evidence.
+CI44159557034 exactcdafbe1 still building19:37UTC; package91490 waits. No
+firmware upload or controller RAM load yet. Physical contacts unverified.
+
 ## 2026-11-17: bounded contact poll preparation
 
 Standalone unstaged poll helper gates on ROM9383, ready A55A, validated

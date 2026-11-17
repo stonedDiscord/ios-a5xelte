@@ -10,7 +10,7 @@
 static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
     a03_jd_contact_emit emit,void *context,unsigned *valid_out)
 {
- if(!b||!emit||!frames||frames>300)return -1;
+ if(!b||!b->delay_us||!emit||!frames||frames>300)return -1;
  uint16_t id;if(a03_jd_rom_id(b,&id))return -2;
  const uint8_t enter[]={0xf2,0xaa,0x55,0x0f,0xf0,0x68};
  const uint8_t leave[]={0xf2,0xaa,0x88,0,0,0};
@@ -19,7 +19,8 @@ static inline int a03_jd_poll(struct a03_jd_bus *b,unsigned frames,
  if(a03_jd_write(b,enter,sizeof(enter)))goto done;
  if(a03_jd_ram_read(b,0x20011000,table,sizeof(table))||
     a03_jd_decode_sections(table,sizeof(table),&sections))goto done;
- if(!a03_jd_ram_range(sections.firmware_config.address,sections.firmware_config.length,1)||
+ if(sections.firmware_config.address<0x20000000u||
+    !a03_jd_ram_range(sections.firmware_config.address,sections.firmware_config.length,1)||
     sections.coordinate_report.address<0x20011000u||
     !a03_jd_ram_range(sections.coordinate_report.address,60,0))goto done;
  if(a03_jd_ram_read(b,sections.firmware_config.address,config,sizeof(config))||
