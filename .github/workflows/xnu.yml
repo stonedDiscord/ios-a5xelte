@@ -85,7 +85,17 @@ jobs:
               new = 'ARCHS="x86_64 arm64e arm64" VALID_ARCHS="x86_64 arm64e arm64"'
           text = path.read_text()
           assert text.count(old) == 1, 'darwin-xnu-build firehose line changed'
-          path.write_text(text.replace(old, new))
+          text = text.replace(old, new)
+          skip = '                warning "Skipping patch ${PATCH} (already upstream, previously applied, or malformed): ${APPLY_CHECK}"'
+          assert text.count(skip) == 1, 'patch failure handler changed'
+          strict = '\n'.join([
+              '                if [[ "${BOARD_PROFILE:-}" == dreamlte && "${PATCH##*/}" == *-dreamlte-*.patch ]]; then',
+              '                    echo "ERROR: required DREAMLTE overlay failed: ${PATCH}: ${APPLY_CHECK}" >&2',
+              '                    exit 1',
+              '                fi',
+          ])
+          text = text.replace(skip, strict + '\n' + skip)
+          path.write_text(text)
           print('firehose:', new)
           PY
           ls dxb/patches
@@ -124,6 +134,11 @@ jobs:
           for symbol in _dreamlte_init_trap_log _dreamlte_daemon_crash_log _dreamlte_sample_task _dreamlte_gui_sample_start _dreamlte_host_log_allowed; do
             grep -F "$symbol" dreamlte-symbols.txt >/dev/null || exit 1
           done
+          for symbol in _dreamlte_log_cursor _dreamlte_log_base _dreamlte_phy _sweet_usb_probe; do
+            grep -F "$symbol" dreamlte-symbols.txt >/dev/null || exit 1
+          done
+          grep -F 'dreamlte_snapshot_map_final' dxb/xnu/osfmk/arm64/arm_vm_init.c
+          python3 tools/dreamlte-usb-host-test.py dxb/xnu/bsd/dev/sweet_usb.c
           strings "$kernel" > dreamlte-strings.txt
           for marker in 'DREAMLTE WAIT' 'DREAMLTE START' 'dreamlte_ios16_provisional_reply' 'dreamlte_sandbox_disabled'; do
             grep -F "$marker" dreamlte-strings.txt >/dev/null || exit 1

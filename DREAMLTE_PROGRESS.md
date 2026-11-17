@@ -419,3 +419,31 @@ compile results, hardware observations and restore results below.
 - ECM candidate0212 committed9f90d9f/84f0922 and pushed; pristine artifact
   plain-apply and whole-file comparison match locally compiled BSD sources.
   It is not yet full-CI/device tested. Do not confuse it with this0211 trial.
+
+## 2026-11-17: recovered0211; caught silently skipped overlays
+
+- User reports Samsung logo during0211, then returned phone to Download
+  Mode. Restored stock BOOT with Heimdall, booted Android solely to retrieve
+  diagnostics, rooted ADB and verified stock /dev/block/sda7 SHA256. Captured
+  47,734-byte last-kmsg-0211.txt privately; final marker still TTBR0 boundary.
+- CRITICAL correction to prior claims: extracted actual CI44085718513 source
+  does NOT contain0209 or0211. Its manifest lists staged patches, not applied
+  patches. The compiler used0208-era logger, which explains missing digits/
+  newlines. Thus this trial did not execute0211; its green CI/profile checks
+  were insufficient proof of the intended patch set. Earlier0209/0210 also
+  need to be interpreted as0208-era kernel diagnostics.
+- Reproduced0209 rejection with the build system's actual git apply --check.
+  Its short-context hunks worked with GNU patch (including fuzz) but failed
+  git apply. Regenerated0209 with full context from exact artifact source;
+  now plain git apply accepts0209,0211 and0212 in sequence. Four resulting
+  sources match local ARM64 compile inputs (after normalizing logger indent).
+- CI now fails immediately if a DREAMLTE overlay cannot apply, requires
+  linked snapshot/USB symbols plus actual mapping helper in compiled source,
+  and runs the wrapper host test against staged USB source. Embedded workflow
+  Python and modified dxb bash syntax validated. This closes the false-green
+  gate before any further phone trial.
+- Cancelled obsolete0212 run44090286065 (997a740) because it could silently
+  skip the same logger fixes. A corrected combined logger+USB CI is next.
+  No new flash until that verified build; stock BOOT is restored. Android is
+  a diagnostic recovery checkpoint, not the target runtime. User explicitly
+  emphasized progressing to running XNU with USB.

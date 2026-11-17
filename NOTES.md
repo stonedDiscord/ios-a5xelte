@@ -2,28 +2,24 @@
 
 ## Active S8 handoff — 2026-11-17
 
-### >>> LATEST UPDATE 2026-11-17: 0211 flashed; recovery/log pending <<<
+### >>> LATEST UPDATE 2026-11-17: fix silent patch skips before USB trial <<<
 
-CI44085718513 SUCCESS (exact660745e): build/profile/A53 scan passed. Exact
-kernel SHA256 d6fed9f8a40695d70226f4c58bea6970fb0e0c826c5674faff83c19a1d4c1bbd,
-private artifacts/log at /tmp/dreamlte-ci44085718513. Packaged0211 candidate
-shim/out/dreamlte-xnu-0211.img (18,427,920 bytes), SHA256
-3cf785959bfd645bdcc7edfa2554c6a84dca475f1058076be0ed35172f7034c0.
-Stock ramdisk/second/DTBH/chip8895 verified; exact profile excludes0212.
-Stock BOOT hash verified immediately before adb reboot download, then
-Heimdall2.2.2 successfully flashed BOOT only. Phone currently absent from
-ADB/Heimdall/lsusb. Requested physical force restart/download mode; restore
-backup/galaxy-s8-2026-11-13/boot.img and verify stock SHA256
-71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5,
-boot Android, capture0211 last_kmsg before any further trial. Runtime0211
-progress is unknown. Protected partitions and USERDATA remain untouched.
+Phone restored to stock BOOT and hash verified after0211; Android completed
+boot and 47,734-byte last-kmsg-0211.txt recovered privately. User saw Samsung
+logo during trial. IMPORTANT: exact CI44085718513 sources show0209/0211 were
+silently SKIPPED by dxb git apply; staged manifest/green checks did not prove
+application. Last markers therefore came from0208-era logger. Do not claim
+0211 executed. Regenerated0209 with full context; plain git apply now accepts
+0209/0211/0212 in order on exact artifact source. Local ARM64 compiles pass.
 
-Opt-in ECM candidate0212 (9f90d9f,84f0922) is pushed and locally validated:
-S8 DWC3/Exynos VBUS setup and pre-root BSD network hook; default off.
-Actual wrapper host checks, both ARM64 BSD objects, pristine artifact
-plain-apply/full-file comparison pass. No full CI or device test for0212.
-Cold PHY clock/reset sequence and actual host USB transfers remain unproven.
-Read docs/dreamlte-usb.md for hardware/source evidence and testing gates.
+Workflow now aborts on skipped DREAMLTE overlays and checks linked logger/
+USB symbols, mapping helper source and actual USB wrapper host tests.
+Obsolete run44090286065 cancelled; corrected combined logger+USB build next.
+Opt-in ECM0212 starts before root discovery, default off; intended next BOOT
+trial uses dreamlteusb=2 after verified CI. Cold PHY clock/reset bring-up and
+actual USB enumeration/transfers remain unproven. No protected partition or
+USERDATA writes. User emphasized XNU+USB runtime, not Android: use recovery
+only as needed to obtain evidence while the live transport is unavailable.
 
 Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
 applicable portable diagnostics/compatibility fixes into S8 overlay0205;
