@@ -51,3 +51,21 @@ hashes and size/partition checks are still required before any USERDATA flash.
 Installed Heimdall2.2.2 on64-bit Linux uses64-bit total-byte packets and
 unsigned-long file offsets, reviewed against its v2.2.2 source. Preserve the
 PIT; never use --repartition or --skip-size-check.
+
+The completed20H392 image passed full read-only fsck. Extracted launchd and
+43 cache components match their mounted-source SHA256 values. The HFS-image
+cache prerequisite checker also passes all42 declared subcache UUIDs,
+mapping bounds, symbols UUID and core dependency names (2710 images).
+Raw image SHA256:
+`35427cc9d9f40b6383afabf1b0f5370ebc4f85a42d3f079708b6548121dca3e7`.
+
+Raw USERDATA upload failed at the first sequence confirmation; USERDATA may
+be partial. An Android sparse container was generated with img2simg:
+
+    img2simg root.img root.sparse.img
+
+Its15,409,217,756-byte file expands to the exact same32GiB image SHA256
+(RAW/FILL chunks, no omitted blocks). The subsequent --resume retry failed
+to begin a session, sending no payload. Physical Download Mode re-entry is
+required to clear this failed session before another upload. No successful
+USERDATA deployment has been observed yet.

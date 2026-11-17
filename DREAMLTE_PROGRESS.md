@@ -577,3 +577,8 @@ compile results, hardware observations and restore results below.
   failed to begin session (no payload sent). Asked for physical forced restart
   and re-entry to Download Mode to reset the failed raw-upload USB session.
   Pending user physical action; no Android restoration/other partition write.
+
+- Additional read-only HFS-image cache prerequisite check PASS: all42 declared
+  subcache UUIDs, mapping bounds, symbols UUID and required core dependency
+  names; cache has2710 image entries. This supplements full content hashes
+  without claiming signature/runtime verification.
