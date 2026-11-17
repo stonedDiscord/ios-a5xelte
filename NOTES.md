@@ -14,7 +14,9 @@ application. Last markers therefore came from0208-era logger. Do not claim
 
 Workflow now aborts on skipped DREAMLTE overlays and checks linked logger/
 USB symbols, mapping helper source and actual USB wrapper host tests.
-Obsolete run44090286065 cancelled; corrected combined logger+USB build next.
+Obsolete run44090286065 cancelled; corrected combined logger+USB CI
+44091780583 at5ac173d dispatched. Poll this exact run; inspect compiled
+sources/linked symbols before packaging.
 Opt-in ECM0212 starts before root discovery, default off; intended next BOOT
 trial uses dreamlteusb=2 after verified CI. Cold PHY clock/reset bring-up and
 actual USB enumeration/transfers remain unproven. No protected partition or

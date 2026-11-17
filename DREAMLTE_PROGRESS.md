@@ -447,3 +447,8 @@ compile results, hardware observations and restore results below.
   No new flash until that verified build; stock BOOT is restored. Android is
   a diagnostic recovery checkpoint, not the target runtime. User explicitly
   emphasized progressing to running XNU with USB.
+- Corrective commit5ac173d pushed; combined logger/USB CI44091780583
+  dispatched at exact5ac173d (DEVELOPMENT/HEROLTE, dreamlte, macos-15-intel).
+  https://github.com/stonedDiscord/ios-a5xelte/actions/runs/44091780583
+  Poll this run; inspect actual sources and linked symbols before packaging
+  the next candidate with dreamlteusb=2.
