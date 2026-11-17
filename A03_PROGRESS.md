@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: BOOT0086 first HID-enabled idle baseline
+
+Explicit touch poll2483 completed result0/valid300/events0/hid1, with three
+count0/statusFF idle packets and normal SPI gate/source restoration. This is
+the first hardware poll with HID forwarding enabled; no actual event was
+emitted, so it does not establish HID queue delivery or visible UI response.
+Physical lift/user-aligned input still pending. Full0154 CI44178262587 queued.
+
+Added explicit host timed-stream helper for0154: defaults log-only, correlates
+BEGIN/END by exact command and worker ID, preserves an existing active stream,
+and requests stop in finally even after a lost start acknowledgement. Host
+regressions pass transaction correlation/lost-ACK cleanup/existing-stream
+preservation. Status probe on0086 correctly shows stream commands absent;
+no start sent. Firmware load remains a separate explicit operation.
+
 ## 2026-11-17: BOOT0086 SpringBoard main event loop measured
 
 Explicit sample25 at~21:20UTC shows main thread PC1E9B8A194. Matching private

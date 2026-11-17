@@ -1,3 +1,9 @@
+ACTIVE21:24UTC0086 FIRST HID-ENABLED IDLE poll2483 result0/valid300/
+events0/hid1, no actual events forwarded. Physical lift/HID/UI stillpending.
+0154CI44178262587 queued; packagePID124809 live. Added timed host helper
+(a03-usb-touch-stream.py) logonlydefault, exactACK, finally-stop; testsPASS.
+Current0086 lacks stream commands; no start sent. User alignment pending.
+
 ACTIVE21:22UTC0086 SpringBoard main loop measured(sample25/symbolicated
 cache slide2AA5C000: CFRunLoop/GSEventRunModal/UIApplication/SBSystemAppMain).
 BothHIDclientsopen/inputstatus3; touch HID stillneverrun. Secondidle300valid/

@@ -280,3 +280,14 @@ checks hardware CRC per RAM section and starts MCU only after every section
 passes. No external-flash program/erase, GPIO/pinmux or phone filesystem
 write is implemented. A valid candidate still needs correct panel identity;
 revision8 stock extraction is not a match to the installed revision5 image.
+
+Host trial control (0154 only), with the existing single-reader capture:
+
+    python3 tools/a03-usb-touch-stream.py --log LIVELOG --mode contacts --duration 30
+    python3 tools/a03-usb-touch-stream.py --log LIVELOG --mode hid --duration 30
+    python3 tools/a03-usb-touch-stream.py --log LIVELOG --mode status
+    python3 tools/a03-usb-touch-stream.py --log LIVELOG --mode stop
+
+The timed helper always requests stop after its own start, even when the start
+acknowledgement is lost. It refuses to replace an already active stream.
+It does not load firmware; a valid explicit firmware RAM load must precede it.
