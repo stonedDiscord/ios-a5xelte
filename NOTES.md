@@ -1,3 +1,8 @@
+ACTIVE19:22UTC0080 reader26068 completed normally. New single reader99340
+boot0080-touch-followup2.log600s (/tmp/a03-0080/followup2.log). Home icons
+physically confirmed; ROM9383 PASS.0147CI44154963110 remains Build;
+package-only63480 exact7972a72 waits. No0081 image/flash yet.
+
 ACTIVE19:18UTC pre-write C firmware validator prepared+unstaged; all source/
 RAM/overlap/CRC/command checks before writes. C/C++ ASan tests+private7moves
 PASS. No hardware upload/firmware embedded.0147CI44154963110 building,
