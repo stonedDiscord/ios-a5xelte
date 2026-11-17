@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: pre-write firmware validation prepared
+
+Standalone unstaged C firmware parser validates the entire image before any
+future device write:80KiB limit, stock12byte moves, source bounds, command0,
+PRAM/DRAM whitelist, nonoverlap and CRC16 on every section. Output unchanged
+on rejection. Actual C/C++ ASan/UBSan synthetic corruption/truncation/range/
+overlap/unknown-command tests PASS; private79104byte candidate validates7
+moves using same C code. Compatibility remains unverified. No firmware data
+tracked/embedded, no loader/control sequence enabled or hardware upload.
+
 ## 2026-11-17: RAM-only transport preparation
 
 Added unstaged jd9365t-memory.h for later validated RAM firmware/report access.

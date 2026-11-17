@@ -160,3 +160,9 @@ It uses240-byte data chunks and the hardware-verified backdoor SPI framing.
 Caller must identify the controller and manage the diagnostic session; this
 helper neither loads firmware nor changes MCU state. Run its actual helper
 regression with tools/a03-test-jd9365t-memory.py.
+
+The unstaged jd9365t-firmware.h validator checks every move and CRC before
+any future load:80KiB total, command0, bounded source/PRAM/DRAM targets,
+nonoverlapping targets, all section CRCs. It has no device access. Run
+its C/C++ regression with tools/a03-test-jd9365t-firmware.py and optionally
+pass a private candidate file; successful parsing does not prove compatibility.
