@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: console handoff full CI dispatched separately
+
+0151 now staged. Full CI44165152625 exactd6800e414746e684fa67088a7e9d8f1baf4b3716
+on macos15intel (separate concurrency pool) includes0149poll+0150UTC+0151
+panel gate; does not cancel current44162912240 macos26intel. Package-only
+63708 /tmp/a03-0084/package.py waits exact success/checksums then same0082
+config as0084. No auto flash. Existing0083 watcher68041 remains for earlier
+poll/UTC build. Prefer first verified artifact for contact trial; console fix
+may require0084 afterward. Current0082 remains running firmwareA55A/home
+reported with intermittent boot-log overlay; physical contacts still untested.
+
 ## 2026-11-17: user corrects display report; console overwrite identified
 
 User clarifies SpringBoard picture appears every few seconds, then boot logs

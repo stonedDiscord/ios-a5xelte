@@ -1,3 +1,8 @@
+ACTIVE20:04UTC0151 staged/fullCI44165152625 exactd6800e4 macos15intel
+(separate pool/no cancellation), package63708 waits0084 same0082 baseline.
+Earlier0149+0150CI44162912240/mac26 builds; package68041 waits0083. Current
+0082 running RAMfwA55A, home reported but console overlay. Single23880.
+
 ACTIVE20:03UTC0082 HOME ICONS visible afterHome2483, but user corrects:
 boot logs overwrite SpringBoard between refreshes.0151 prepared fbcon draw
 gate after USB append + validatedGUI ownership. Gate tests/C compile/apply
