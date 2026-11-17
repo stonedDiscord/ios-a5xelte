@@ -17,6 +17,8 @@ RAM failure/no-start and50ms busy bound PASS. Actual upload-parser ASan/UBSan
 size/offset/hex/atomic-rejection tests PASS. Exact full kernel C compile PASS;
 reverse/plain patch application equality PASS. Host upload sender validates
 private file and waits worker ack/END per chunk; it never sends load itself.
+Full CI44159557034 dispatched exactcdafbe1 at19:31UTC; package-only watcher
+91490 waits success/checksum/same0081 config0082. No deployment scheduled.
 No firmware embedded/tracked or uploaded yet; rev8 candidate panel/rev5 match
 still unverified. Full Xcode CI and explicit temporary RAM trial pending.
 

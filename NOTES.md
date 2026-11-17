@@ -1,3 +1,9 @@
+ACTIVE19:32UTC0148 full CI44159557034 exactcdafbe19909f1b4b99a1523d57c5dd48957dc24a
+queued/running. Package-only91490 /tmp/a03-0082/package.py waits exact success/
+checksum/markers/same0081 config0082; NO auto deployment.0081 fresh io ready1
+poisoned0; current-screen question pending. ROM9383 good, ERAM2317 not-ready.
+Single84861 capture ends~19:35; extend after end. No firmware uploaded yet.
+
 ACTIVE19:33UTC0148 explicit RAM-only loader prepared+staged, compile/tests/
 apply equality PASS. No CI yet. EP0 fwbegin/fwdata/fwstatus stages80KiB max;
 separate load requires all moves/CRC+ROM then stock RAM sequence+HW CRC,
