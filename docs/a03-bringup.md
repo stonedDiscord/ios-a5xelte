@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G bring-up
 
+Current touch trial2026-11-17: BOOT0081/0147 physically reaches the clock;
+fresh SPI ROM9383 succeeds, ERAM ready2317 fails the requiredA55A marker.
+0148 explicit RAM-loader full CI44159557034 is running, with no firmware
+upload/load yet.0149 bounded contact/HID polling is prepared but not staged.
+Preserve0080 home+ROM checkpoint. See newest A03_PROGRESS.md and
+docs/a03-touch.md for current evidence and private candidate compatibility.
+
 As of2026-11-17 BOOT0079, the user physically reports the home menu after
 one explicit USB-generated Home-button press/release. Both HID services
 register and open, but a USB swipe while SpringBoard was visible produced

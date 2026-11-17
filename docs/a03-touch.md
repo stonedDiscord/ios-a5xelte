@@ -30,6 +30,31 @@ BOOT0080/0146 now confirms fresh XNU SPI3 ROM ID9383 on2026-11-17 at19:04UTC.
 Explicit ROM probe returns0 and restores gate0A02DE00/clock0; inherited pins,
 reset and CS0 work at1MHz. No firmware/contact/physical-touch proof yet.
 
+## Current trial status (2026-11-17, 19:38 UTC)
+
+BOOT0081/0147 has ROM9383 transport success and an ERAM ready value2317,
+which fails the requiredA55A marker. The diagnostic refuses configuration
+pointers after this failure and restores the SPI gate/source. The user
+physically confirms the clock/lock screen after this boot. BOOT0080 remains
+the physically confirmed home-icons plus working-ROM checkpoint.
+
+0148 adds explicit private firmware staging into bounded kernel RAM and a
+separate validated controller RAM load. Full CI44159557034 is in progress;
+no controller firmware has been uploaded or started. The candidate remains
+revision8 CPT firmware, not byte-matched to installed revision5. The RAM
+loader permits only validated PRAM/DRAM moves and exact stock startup/CRC
+controls, including DMA command3; it has no external-flash program path.
+
+0149 is prepared but excluded from the build profile until the loader trial.
+The touch contacts command logs contacts only. The touch poll command forwards
+those same fixed slots to the existing HID provider. Both are explicit, bounded
+300-frame sessions requiring ROM9383, readyA55A, DRAM config720x1600/18x32
+and a60-byte ERAM coordinate report. Three consecutive failed samples stop
+the session; held contacts are released at completion or sample failure.
+Helpers, actual callback and kernel C compile pass local checks. Physical
+reports and iOS digitizer consumption remain unverified; button response
+proves neither.
+
 ## Controller selection
 
 Private saved Android dmesg from2026-11-13 contains repeated successful
