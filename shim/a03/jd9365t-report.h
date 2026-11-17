@@ -26,8 +26,9 @@ struct a03_jd9365t_report {
  * running, identified controller. Gesture/debug packets are different paths.
  * No checksum or freshness field is established by the coordinate parser.
  * A zero-filled transfer MUST NOT stand in for a failed bus read: zero is a
- * valid coordinate. reported_count is metadata, not a packed-contact bound;
+ * valid coordinate. positive reported_count is metadata, not a packed-contact bound;
  * the stock parser examines every fixed slot, including sparse slot IDs.
+ * A zero count is no contacts, as confirmed by the A03 idle wire packet.
  * On invalid arguments/size/count, leave the caller's previous report intact.
  */
 static inline int

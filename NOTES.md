@@ -1,3 +1,8 @@
+ACTIVE20:54UTC0153CI44173996698 exact8963305 running; package-only70851
+/tmp/a03-0086/package.py gates0086 same0085. Current0085 log-only: idle count0
+packet0000FF+57zero falsely corners; NEVER touch poll until0153. First physical
+heldcenter332,805 on0084 proven. Need lift/move/HID/UI; single43981.
+
 ACTIVE20:53UTC0085 current. UTC synced/fwload0/A55A. Raw idle exactly
 0000FF +57zero bytes/count0 -> phantom10corners in0152; NO HID poll sent.
 0153 staged count0=no contacts, sparse positive counts retained; tests/

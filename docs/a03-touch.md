@@ -30,6 +30,18 @@ BOOT0080/0146 now confirms fresh XNU SPI3 ROM ID9383 on2026-11-17 at19:04UTC.
 Explicit ROM probe returns0 and restores gate0A02DE00/clock0; inherited pins,
 reset and CS0 work at1MHz. No firmware/contact/physical-touch proof yet.
 
+## First physical coordinate and measured idle packet
+
+On0084 an explicitly aligned held finger near screen center produces slot0
+at332,805 across300samples. Session-final release is cleanup; physical lift
+is not proven by that event. Raw0085 idle report is0000FF followed by57zeros,
+with count0 but all coordinate fields0.0153 must ignore slot payload on a
+zero count and release held contacts, while preserving positive sparse slots
+and genuine0,0 coordinates in a nonzero contact packet. Earlier0149/0152
+incorrectly interpret idle as ten corner contacts. Never enable their HID
+poll command; all hardware captures so far used log-only contacts.0153 full
+CI44173996698 exact8963305 is running; physical motion/lift/UI pending.
+
 ## Display ownership during touch trials
 
 BOOT0082 user reports app icons after explicit Home, and also corrects the
@@ -121,7 +133,7 @@ shim/a03/jd9365t-report.h decodes a complete60-byte coordinate report into
 ten fixed slots. It preserves the stock big-endian coordinates, sparse slot
 indices and inclusive720/1600 bounds. Out-of-range slots indicate no contact;
 a later HID adapter must turn previously active slots into releases and use
-the existing HID boundary clamp. Count is metadata, not a packed-slot bound.
+the existing HID boundary clamp. Positive count is metadata, not a packed-slot bound; count0 is idle/no contacts.
 Malformed lengths/counts leave prior output intact.
 
 The decoder has no MMIO, transport, firmware upload or kernel registration.

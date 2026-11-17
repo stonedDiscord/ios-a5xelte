@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-17: zero-count fix full CI dispatched
+
+0153 fullCI44173996698 exact896330554fd2683801355f753927d4642716cd18
+macos15intel/a03/SWEET/userspace true dispatched20:53UTC. Package-only70851
+/tmp/a03-0086/package.py waits exactSUCCESS/checksum/same0085 config into
+0086; no auto deployment. Current0085 stays log-only with known phantom
+idle corners. First physical center coordinate proven0084; need0153 to
+verify true lift/motion before HID. Single43981 capture ends~21:20UTC.
+
 ## 2026-11-17: BOOT0085 raw idle packet explains phantom corners
 
 0085 BOOT-only flash100percent/success/reboot20:49UTC; single43981 capture
