@@ -18,6 +18,10 @@ port/lifecycle rules; no fake handle/success. Actual policy C/C++ ASan/UBSan
 cachedconsole flags, not the missing exact per-file CI command. FullCI next;
 app-type validation may reveal another failure, so no runtime fix claim.
 
+FullCI44192146474 exactfd1fc5e59b7c9f3bee377bb1fb1a7c6541c42e7e is
+running macos15intel/a03/SWEET/userspace true. Package-only0089 waits exact
+SUCCESS/checksum/markers/same0088 configuration; no automatic deployment.
+
 ## 2026-11-17: BOOT0088 first swipe no visible response, temporary audio wait
 
 User confirms iOS visible/ready22:35UTC. Explicit60s HID trial receives one

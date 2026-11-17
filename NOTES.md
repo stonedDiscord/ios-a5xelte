@@ -1,3 +1,9 @@
+ACTIVE22:40UTC0156fullCI44192146474 exactfd1fc5e RUNNING. Package-only
+/tmp/a03-0089/package.py gatesexactSUCCESS/checksums/same0088config.
+Noautoflash. Current0088STREAMOFF; physicalswipe reachesUIKit but denied
+CAclientflags30000000EPERMbeforeallocation. Need0089runtimeappcheck/result
+and visibleUI. Source/testscommitted; nofixclaimyet.
+
 ACTIVE22:40UTC0088 SECONDswipe15events -> WIflags30000000/error1EPERM/
 kr8NOACCESS, sameSBabort/user spinner. ExactprivilegedbranchBEFOREcreate,
 notENOMEM. STREAMOFF130slices15events.0156implicitCAclientpermissioncandidate
