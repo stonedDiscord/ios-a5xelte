@@ -569,3 +569,11 @@ compile results, hardware observations and restore results below.
   do not claim deployment success or restore Android. USB still Download
   Mode. Requested phone-side error text; converting the same validated HFSX
   image to Android sparse format and checking expanded hash before retry.
+
+- Final framebuffer CI44119574729 dispatched at9498204. This is the required
+  frame-request+separate-L2 build; poll exact run without replacement.
+- Android sparse image15,409,217,756B passed complete expanded-image SHA256
+  equality to the validated32GiB HFSX. Sparse USERDATA retry with --resume
+  failed to begin session (no payload sent). Asked for physical forced restart
+  and re-entry to Download Mode to reset the failed raw-upload USB session.
+  Pending user physical action; no Android restoration/other partition write.

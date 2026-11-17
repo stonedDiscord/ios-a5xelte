@@ -2,112 +2,58 @@
 
 ## Active S8 handoff — 2026-11-17
 
-### >>> LATEST UPDATE 2026-11-17: NEVER restore Android; add display/root <<<
+Target: Galaxy S8 SM-G950F, Exynos8895, dreamlte-bringup branch. Read
+DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md first. S7/A5/SWEET history
+below is donor evidence, not S8 behavior.
 
-User explicitly forbids further Android restoration. User also authorizes
-converted IPSW root on existing USERDATA/sda24 (58,556,678,144 bytes). Preserve
-GPT/RECOVERY/bootloaders/EFS/CPEFS. Do not flash a raw IPSW archive.
-0213 USB-enabled BOOT was verified and flashed successfully; remains installed.
-User sees Samsung logo, host sees no USB gadget. XNU runtime progress unknown.
-CI44094150615 succeeded; actual source hashes/linked symbols verified.
+User prohibits restoring Android. Authorized writes: BOOT/sda7 test images
+and converted20H392 iOS root on existing USERDATA/sda24. Preserve GPT,
+RECOVERY, bootloaders, EFS/CPEFS and all other partitions. Do not flash raw
+IPSW. Never use donor S7/A5 partition paths or restore stock for RAM logs.
 
-CI44111718665 at ae6094f succeeded but must NOT be flashed: it put the
-snapshot low-RAM descriptors in the framebuffer's new L1 slot3 table.
-Corrected0214 allocates a separate snapshot L2 in slot2; all seven complete
-source hashes match actual artifact+plain git apply, including start.s.
-Corrected start.s compiles. A corrected full CI is required next.
+0213 remains installed in BOOT; user saw Samsung logo, host saw no gadget.
+CI44094150615 passed exact compiled source/linked-symbol checks. Runtime
+progress beyond the older recovered VM trace is unknown. Phone currently
+shows Download Mode over USB, but its flashing session needs physical reset.
 
-Framebuffer0214 candidate adds loader text at live s3cfb.bootloaderfb0xcc000000,
-1440x2960/stride5760. Exynos8895 kernel sources locate DECON_F0x12860000 and
-correct+0x70 trigger bits0/4/12 (S7 bits differ). XNU early and normal serial
-mirroring added; loader/ARM64 compile/plain-apply checks pass. Needs full CI
-and physical display trial. Do not claim scanout until seen.
+Framebuffer0214 now includes loader/early/serial drawing at0xcc000000,
+1440x2960/stride5760; DECON0x12860000 source-derived frame request+0x60
+bit31 then hardware unmask+0x70 bits12/0, clear4/8. The framebuffer,
+snapshot low RAM and DECON have separate bootstrap L2 tables (seven of eight
+pages). Three affected ARM64 compile checks, loader build and all seven
+complete-source plain-apply/hash checks pass. Latest full CI44119574729 at
+9498204 is pending/in progress; poll this exact run. Supersedes44111718665
+(missing snapshot L2) and44115872187 (missing frame requests). No0214 flash
+or physical scanout verification yet. Download exact artifacts and run
+tools/dreamlte-verify-ci.py before packaging/testing dreamlteusb=2.
 
-IPSW is in repo root: iPhone10,3,iPhone10,6_16.7.16_20H392_Restore.ipsw.
-OS/SystemOS/AppOS extracted under ignored research/dreamlte/root/assets,
-read-only APFS-FUSE mounts under research/dreamlte/root/mounts. APFS-FUSE
-built under research/dreamlte/host-tools; no sudo available. HFS userspace
-conversion tooling under development; root image and USERDATA flash pending.
-Final32GiB HFSX image now exists at
-research/dreamlte/root/ios-16.7.16-20H392-hfsx.img. Full read-only fsck PASS;
-launchd plus43 cache-component extracted hashes match source. Non-journaled;
-xattrs/BSD flags/timestamps omitted, hard links copied. USERDATA flash is
-pending final checksum; docs/dreamlte-root-conversion.md has build details.
-Framebuffer candidate further corrected to request command-mode frames
-(DECON+0x60 bit31) before unmask; loader/early/serial all present drawing.
-CI44115872187 lacks this and is superseded; new build required.
-Raw USERDATA flash failed first sequence (0%) and end-session; phone remains
-Download Mode, USERDATA possibly partial. Android sparse container from same
-validated root is being round-trip verified before retry. No restore Android.
-Current phone has0213, no Android restoration. Next build/test0214 display,
-finish HFSX conversion and flash USERDATA per authorization; continue Exynos
-USB PHY/clock/reset investigation. tools/dreamlte-verify-ci.py checks exact
-compiled source hashes and symbols before future trial.
+20H392 IPSW OS/SystemOS/AppOS were mounted read-only and converted to:
+research/dreamlte/root/ios-16.7.16-20H392-hfsx.img (32GiB)
+SHA25635427cc9d9f40b6383afabf1b0f5370ebc4f85a42d3f079708b6548121dca3e7.
+Full read-only fsck PASS. launchd plus43 cache-file extracted hashes match
+source. Permissions/owners checked. Non-journaled; xattrs/BSD flags/times
+omitted, hard links copied; see docs/dreamlte-root-conversion.md. UFS runtime
+is unfinished; image deployment does not prove root mounting or iOS startup.
 
-Work remains on dreamlte-bringup. Reviewed A03 through ebb9eb4 and ported its
-applicable portable diagnostics/compatibility fixes into S8 overlay0205;
-profile stages128 patches, still HEROLTE config/4K/A53/GICv2. Read
-DREAMLTE_PROGRESS.md, docs/dreamlte-bringup.md and docs/dreamlte-a03-port.md.
-The latter maps all A03 work to applied, already inherited or S8-dependent
-features. Do not copy UNISOC MMIO, eMMC/USB/reset or USERDATA instructions.
+Raw USERDATA Heimdall upload FAILED first sequence at0%; end-session failed.
+USERDATA may be partially written. Android sparse container generated at
+research/dreamlte/root/ios-16.7.16-20H392-hfsx.sparse.img (15,409,217,756B),
+expanded whole-image SHA256 exactly matches raw image. Sparse retry with
+--resume FAILED TO BEGIN SESSION, so it sent no filesystem payload. Asked
+user to force-restart and re-enter Download Mode to clear failed USB session,
+and report phone error text. Retry sparse USERDATA with --no-reboot after
+physical reset; later BOOT flash needs --resume if same successful session.
+Do not use --repartition/--skip-size-check. USERDATA measured58,556,678,144B.
 
-S8 port commits through ded113c are pushed. CI43879179527 exposed an Apple
-Clang label-declaration error; fix527db60 corrected it. Retry43890925469
-SUCCESS: kernel build, DREAMLTE symbol/string checks and Cortex-A53 LSE scan
-passed. No S8 boot/package trial followed.
+USB0212/0213 currently attempts guarded awake-PHY takeover, not cold start.
+No real S8 gadget enumeration/control/bidirectional transfer success yet.
+Source map now resolves CMU/FSYS0 clock gates, Q-channel, PMU isolation and
+reference selector in docs/dreamlte-usb.md. Framebuffer should expose the
+actual failure before implementing remaining cold PHY dependencies.
 
-A03 BOOT0078 showed a physical clock/lock screen and SpringBoard's application
-event loop; no unlocked home or touch result. HID candidate0145 passed
-CI43969089570 and host builder tests, but BOOT0079 runtime delivery remains
-pending in the latest A03 handoff. UNISOC USB transport, 1GiB RAM layout, A03
-account UUIDs and optional root vault metadata are device-specific.
-No S8 XNU boot, rootfs or GUI result is established. Overlay0206 adds a bounded
-early trace to the previously verified Exynos snapshot buffer. Full
-CI44047499178 passed the S8 profile and A53 scan. After the 0206 BOOT-only
-trial, the phone returned to rooted Android and `/dev/block/sda7` matched the
-stock hash. Recovered `/proc/last_kmsg` reaches `arm_vm_init` after platform,
-CPU topology, CPU bootstrap, startup bootstrap and CPU init; no return marker
-exists. Candidate 0207 preserves the donor iPhone X `/product` identity and
-was then flashed to BOOT only. Heimdall reported upload successful; after its
-reboot the phone was briefly absent from both ADB and Heimdall. Download mode
-returned; stock BOOT was restored and verified at SHA256
-`71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`.
-Android booted and 0207 `/proc/last_kmsg` was retrieved. It has the same final
-marker as 0206, `entering arm_vm_init`; the product identity change did not
-advance observed kernel progress. Draft overlay0208 adds bounded VM setup and
-physmap milestones, with logging disabled before the TTBR0 switch. Its patch
-dry-run passes on the exact 0206 CI build tree; profile stages130 patches.
-CI44057485509 passed the S8 DEVELOPMENT/HEROLTE build, profile checks and A53
-LSE scan. Candidate `shim/out/dreamlte-xnu-0208.img` (SHA256
-`94eadeea8a7fe7af5168558af83acdfc4768f442e17c2633db96c0e890c5799d`) was
-flashed to BOOT only; Heimdall reported upload successful and the phone was
-briefly absent from ADB/Heimdall. Download mode returned; stock BOOT was
-restored and verified at SHA256
-`71fb593969288f3a5a5dc6c4c4da35a53b045650cc293c6e8e4028ac3a7982a5`, Android
-booted, and the 47,554-byte 0208 log was captured privately. It reaches
-`physmap ready; switching TTBR0` but has no post-switch marker. Draft overlay
-0209 relocates the trace through `phystokv()` and enables existing stage10-13
-markers; its dry-run passes against the exact 0208 CI source. Profile stages
-131 patches. CI44071890093 passed the S8 DEVELOPMENT/HEROLTE build, profile
-checks and A53 LSE scan; kernel SHA256 is
-`e5781fcec2d37436317c91167c7426c41eaacf66d1e9e8f30dd6fca64d5913f4`.
-Candidate `shim/out/dreamlte-xnu-0209.img` (SHA256
-`1ac1f91771e2e4fffe8535ee2d5338114309be248a6e3e57c2a03188ec3be347`) was
-flashed to BOOT only. Heimdall reported upload successful, but the phone is
-currently absent from ADB, USB and Heimdall; XNU progress is unknown. Return
-to download mode, restore/hash-check stock BOOT, boot Android, and retrieve
-0209 `/proc/last_kmsg` before another trial. The iPhone10,3
-16.7.16 IPSW is present and identifies d22ap OS/DeviceTree assets; ReVa has no
-open project for the Mach-O kernel. Its D22AP `/product` properties are now
-available in ignored `research/ipsw-x/d22ap.adt`; the DREAMLTE ADT builder now
-retains that product identity. USERDATA and all protected partitions remain
-untouched.
-
-The 2026-11-13 returning probe0003 marker was recovered from last_kmsg;
-stock BOOT was restored with verified hash in DREAMLTE_PROGRESS.md.
-SWEET/Redmi and Samsung donor history below remains historical evidence
-for those devices, not S8 observations.
-
+Origin wardevsa/ios-a5xelte (read-only); CI remote build is
+stonedDiscord/ios-a5xelte. Latest commits9498204 (display),919d460 (root tools).
+Keep Apple binaries, backups/device identifiers and converted images ignored.
 
 ## a5xelte fork handoff (2026-10-20)
 
