@@ -555,3 +555,17 @@ compile results, hardware observations and restore results below.
   unsigned-long offsets handle this image size. USERDATA write is explicitly
   authorized; preserve PIT and all other partitions. Flash remains pending
   until final image checksum is recorded.
+
+- Further0214 source review added required command-mode frame requests:
+  DECON SHADOW_REG_UPDATE_REQ+0x60 bit31 before HW unmask at+0x70, matching
+  decon_reg_update_req_and_unmask. Loader presents after drawing; early XNU
+  maps DECON's L1 slot0 (seven of eight bootstrap pages total); normal serial
+  maps DECON MMIO and presents each character. Three affected ARM64 files
+  compile; all seven complete source hashes match plain apply to actual0213.
+  CI44115872187 lacks this frame-request change and is superseded.
+- Converted root SHA25635427cc9d9f40b6383afabf1b0f5370ebc4f85a42d3f079708b6548121dca3e7.
+  Raw USERDATA Heimdall upload failed at its first sequence confirmation
+  (reported0%); session end failed too. USERDATA may be partially written;
+  do not claim deployment success or restore Android. USB still Download
+  Mode. Requested phone-side error text; converting the same validated HFSX
+  image to Android sparse format and checking expanded hash before retry.

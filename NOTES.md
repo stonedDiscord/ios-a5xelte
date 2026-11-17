@@ -33,7 +33,12 @@ research/dreamlte/root/ios-16.7.16-20H392-hfsx.img. Full read-only fsck PASS;
 launchd plus43 cache-component extracted hashes match source. Non-journaled;
 xattrs/BSD flags/timestamps omitted, hard links copied. USERDATA flash is
 pending final checksum; docs/dreamlte-root-conversion.md has build details.
-Corrected framebuffer CI44115872187 at7e95994 is in Build; poll this run.
+Framebuffer candidate further corrected to request command-mode frames
+(DECON+0x60 bit31) before unmask; loader/early/serial all present drawing.
+CI44115872187 lacks this and is superseded; new build required.
+Raw USERDATA flash failed first sequence (0%) and end-session; phone remains
+Download Mode, USERDATA possibly partial. Android sparse container from same
+validated root is being round-trip verified before retry. No restore Android.
 Current phone has0213, no Android restoration. Next build/test0214 display,
 finish HFSX conversion and flash USERDATA per authorization; continue Exynos
 USB PHY/clock/reset investigation. tools/dreamlte-verify-ci.py checks exact

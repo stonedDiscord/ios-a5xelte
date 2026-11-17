@@ -2,12 +2,12 @@
   "description": "Reviewed complete source inputs through DREAMLTE0214 framebuffer console; host compile and plain apply required before update.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
-    "osfmk/arm64/sweet_early.c": "c3a7fc506d3900cbe8a7366ba9f68b8c872a7031a089bdcc50305a79fb3d081e",
-    "pexpert/arm/pe_serial.c": "3aca310577592d52ec7a88b53bc987972d414ea6edec0010a362dbdf50deba86",
+    "osfmk/arm64/sweet_early.c": "6cb58dc6032959bd53ba8c8e8321cbbe4240fa99d8bf56b1ec33cc8ff76f98f4",
+    "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
     "bsd/dev/sweet_usb.c": "b2fc0e0ab19f626aaf39d6de0be9e1dded2a4c422a38aec1efc77224700064b8",
     "bsd/kern/bsd_init.c": "ef48ed2ff58d8a46621b0911699ab6edf068d4b3b563c8d7ceb7985a807a0402",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
-    "osfmk/arm64/start.s": "b69d072b572470ea8acb58382425afba2094e0bc205a49246527d9296cbe39fc"
+    "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d"
   },
   "symbols": [
     "_dreamlte_log_cursor",

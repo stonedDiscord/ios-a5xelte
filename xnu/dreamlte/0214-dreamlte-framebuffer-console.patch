@@ -13,15 +13,26 @@ diff --git a/pexpert/pexpert/arm64/A5XELTE.h b/pexpert/pexpert/arm64/A5XELTE.h
 diff --git a/osfmk/arm64/sweet_early.c b/osfmk/arm64/sweet_early.c
 --- a/osfmk/arm64/sweet_early.c
 +++ b/osfmk/arm64/sweet_early.c
-@@ -19,6 +19,7 @@
+@@ -18,6 +18,18 @@
+ #define DREAMLTE_LOG_END_PA    0x91c00000u
  static volatile uint32_t *dreamlte_log_cursor = (volatile uint32_t *)(uintptr_t)DREAMLTE_LOG_CURSOR_PA;
  static volatile uint8_t *dreamlte_log_base = (volatile uint8_t *)(uintptr_t)DREAMLTE_LOG_BASE_PA;
- #endif
++#endif
++#if defined(DREAMLTE)
 +static unsigned int dreamlte_display_active = 1;
++static void dreamlte_early_present(void)
++{
++	/* Exynos8895 decon_reg_update_req_and_unmask, command-mode panel. */
++	__asm__ volatile("dsb sy" ::: "memory");
++	*(volatile uint32_t *)(uintptr_t)0x12860060 |= 1u << 31;
++	volatile uint32_t *trig = (volatile uint32_t *)(uintptr_t)0x12860070;
++	*trig = (*trig & ~((1u << 4) | (1u << 8))) | (1u << 12) | 1u;
++	__asm__ volatile("dsb sy" ::: "memory");
++}
+ #endif
  static volatile uint32_t *a5_fb = (volatile uint32_t *)(uintptr_t)A5XELTE_FB_PA;
  
- /* The bootstrap TTBR0 maps the board's early output area VA=PA. */
-@@ -57,7 +58,7 @@
+@@ -57,7 +69,7 @@
  		__asm__ volatile("dc cvac, %0" :: "r"((uintptr_t)dreamlte_log_cursor) : "memory");
  		__asm__ volatile("dsb sy" ::: "memory");
  	}
@@ -30,7 +41,27 @@ diff --git a/osfmk/arm64/sweet_early.c b/osfmk/arm64/sweet_early.c
  #endif
  	if (c == '\r') {
  		a5_col = 0;
-@@ -143,6 +144,7 @@
+@@ -68,6 +80,9 @@
+ 		a5_row = (a5_row + 1) % (A5XELTE_FB_HEIGHT / A5_ROW_HEIGHT);
+ 		a5_clear_row();
+ 		if (c == '\n') {
++#if defined(DREAMLTE)
++			dreamlte_early_present();
++#endif
+ 			return;
+ 		}
+ 	}
+@@ -86,6 +101,9 @@
+ 		}
+ 	}
+ 	a5_col++;
++#if defined(DREAMLTE)
++	dreamlte_early_present();
++#endif
+ }
+ 
+ static void
+@@ -143,6 +161,7 @@
  sweet_early_relocate(uint64_t base)
  {
  #if defined(DREAMLTE)
@@ -41,20 +72,31 @@ diff --git a/osfmk/arm64/sweet_early.c b/osfmk/arm64/sweet_early.c
 diff --git a/pexpert/arm/pe_serial.c b/pexpert/arm/pe_serial.c
 --- a/pexpert/arm/pe_serial.c
 +++ b/pexpert/arm/pe_serial.c
-@@ -815,7 +815,11 @@
+@@ -814,8 +814,22 @@
+ /* The explicit kernel snapshot aliases survive TTBR0 and require no UART,
   * framebuffer, root filesystem, scheduler, USB link or memory allocation.
   */
++static volatile uint32_t *dreamlte_decon;
  static void dreamlte_snapshot_serial_init(void) {}
 -static void dreamlte_snapshot_serial_putc(uint8_t c) { sweet_early_putc((char)c); }
 +static void dreamlte_snapshot_serial_putc(uint8_t c)
 +{
 +	sweet_early_putc((char)c);
-+	if (fbcon_base) fbcon_transmit_data(c);
++	if (fbcon_base) {
++		fbcon_transmit_data(c);
++		if (dreamlte_decon) {
++			__asm__ volatile("dsb sy" ::: "memory");
++			dreamlte_decon[0x60 / 4] |= 1u << 31;
++			uint32_t trig = dreamlte_decon[0x70 / 4];
++			dreamlte_decon[0x70 / 4] = (trig & ~((1u << 4) | (1u << 8))) | (1u << 12) | 1u;
++			__asm__ volatile("dsb sy" ::: "memory");
++		}
++	}
 +}
  SECURITY_READ_ONLY_LATE(static struct pe_serial_functions) dreamlte_snapshot_serial_functions = {
  	.init = dreamlte_snapshot_serial_init,
  	.transmit_ready = fbcon_transmit_ready,
-@@ -830,6 +834,15 @@
+@@ -830,6 +844,16 @@
  fbcon_probe(void)
  {
  #if defined(DREAMLTE)
@@ -66,6 +108,7 @@ diff --git a/pexpert/arm/pe_serial.c b/pexpert/arm/pe_serial.c
 +	fbcon_height = 2960;
 +	fbcon_stride = 5760;
 +	fbcon_base = (volatile uint32_t *)ml_io_map_wcomb(0xcc000000, 5760 * 2960);
++	dreamlte_decon = (volatile uint32_t *)ml_io_map(0x12860000, 0x1000);
 +	if (fbcon_base) fbcon_init();
  	register_serial_functions(&dreamlte_snapshot_serial_functions);
  	return;
@@ -73,15 +116,20 @@ diff --git a/pexpert/arm/pe_serial.c b/pexpert/arm/pe_serial.c
 diff --git a/osfmk/arm64/start.s b/osfmk/arm64/start.s
 --- a/osfmk/arm64/start.s
 +++ b/osfmk/arm64/start.s
-@@ -745,6 +745,15 @@
+@@ -745,6 +745,20 @@
  	subs	x13, x13, #1
  	b.ne	La5_fb_attr
  #if defined(DREAMLTE)
 +	/* Framebuffer is in L1 slot3; snapshot RAM is in slot2. Allocate its
 +	 * own L2 instead of installing snapshot descriptors in the FB table.
-+	 * Upper-bank identity/KVA, framebuffer and snapshot use six of eight
++	 * Upper-bank identity/KVA, framebuffer and snapshot use seven of eight
 +	 * bootstrap pages with the current 512MiB/4K profile.
 +	 */
++	/* DECON MMIO for early command-mode frame requests, L1 slot0. */
++	MOV64	x0, 0x12800000
++	mov		x4, x0
++	mov		x5, #1
++	create_bootstrap_mapping x0, x4, x5, x1, x2, x6, x10, x11, x12, x13
 +	MOV64	x0, 0x91200000
 +	mov		x4, x0
 +	mov		x5, #1

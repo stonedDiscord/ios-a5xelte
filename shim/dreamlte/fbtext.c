@@ -9,6 +9,7 @@
 
 #define DECON_F 0x12860000UL
 #define HW_SW_TRIG_CONTROL 0x70U
+#define SHADOW_REG_UPDATE_REQ 0x60U
 #define HW_TRIG_EN ((1U << 12) | 1U)
 #define SCALE 6U
 #define CELL_W (6U * SCALE)
@@ -46,6 +47,8 @@ uint32_t hero_fb_enable(void)
 {
     volatile uint32_t *trig = (volatile uint32_t *)(DECON_F + HW_SW_TRIG_CONTROL);
     uint32_t before = *trig;
+    /* decon_reg_update_req_and_unmask: request the frame before unmasking. */
+    *(volatile uint32_t *)(DECON_F + SHADOW_REG_UPDATE_REQ) |= 1U << 31;
     /* Exynos8895 dpu regs-decon.h and decon_reg_set_trigger:
      * auto mask bit12 must stay enabled; HW enable bit0, mask bit4 clear. */
     *trig = (before & ~((1U << 4) | (1U << 8))) | HW_TRIG_EN;
@@ -87,6 +90,8 @@ void hero_fb_text(unsigned row, const char *s)
                            LEFT + col * CELL_W + x * SCALE + sx] = 0xffffffffU;
             }
     }
+    __asm__ volatile("dsb sy" : : : "memory");
+    hero_fb_enable();
 }
 
 /* "LABEL 0123456789ABCDEF" without library helpers. */
