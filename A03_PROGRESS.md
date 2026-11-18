@@ -26,6 +26,11 @@ no replacementsused, fullXcodebuildrequired. PreprocessorconfirmsSWEET1.
 FreshfullCI thenexactsource/linkedmarkers/checksum gates beforeall8BOOTtest;
 no claimall8alreadyworking. Preserve0092twoA55 and0090singleCPU restores.
 
+All8fullCI44381915946 exact3cf8d51 dispatchedmacos26intel/a03/SWEET/
+userspacetrue/buildtreetrue19:35UTC. Supersedesfreeze-only44381013070;
+workflowconcurrency maycancelolderrun. Nextexactsuccess->0093all8packaging.
+
+
 ## 2026-11-18: BOOT0092 displayed image freezes; kernel and event loops progress
 
 User reports clock froze~2minutes before19:24UTC and confirms entireimage

@@ -1,3 +1,8 @@
+ACTIVE19:35UTC ALL8fullCI44381915946 exact3cf8d51 submitted/mac26intel,
+a03/SWEET/userspacetrue/buildtreetrue. Supersedesfreeze-only44381013070.
+Next0093=cpus8+8realCPUADT/1984MiB/lowtrampoline; newA75match+cpususageprobe.
+Needexactsuccess/source/linkedmarkers/checksum thenBOOT-onlytest; notflashed.
+
 ACTIVEUSERDIRECTION2026-11-18 NEXT0093ALL8CORES; FREEZEDEFERRED.
 6A55MPIDR0..500+2A75600/700/cpus8/1984MiB/same0092lowtrampoline/root.
 0160addsA75IOKitmatch+readonlycpusrecountticks toproveworkdistribution.
