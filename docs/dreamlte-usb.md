@@ -1,5 +1,14 @@
 # DREAMLTE USB bring-up evidence
 
+##0220 hardware trial (2026-11-18)
+
+Exact CI44270585173 SUCCESS; nine source hashes/six symbols/fifteen linked
+markers and BOOT packaging verified. Fresh Download Mode051 accepted0220
+BOOT100%, Heimdall exit0/reboot. Host no1209:0001/ECM yet. Requested physical
+link-wake Q/LINK/SEL and subsequent command diagnostics. Source-derived
+QACT/link reset remains a hypothesis until runtime readbacks/progress arrive.
+Only BOOT written; no Android restoration. Older candidate states follow.
+
 ##0219 PHY evidence and0220 wake candidate (2026-11-18)
 
 Physical0219: ep0 cmd2 reg402, PAR0=1/PAR1=0/PAR2=0; PIPE010c0002,

@@ -1,5 +1,23 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0220 verified and BOOT flashed
+
+- Exact CI44270585173 SUCCESS at a1ea67a281f8009de43e974490a974927ef4a8ca.
+  Preparation96056/PID56313 and download57495 completed. Nine complete
+  source hashes/six symbols/fifteen linked diagnostics/profile checks PASS.
+  Kernel SHA256b0f0724bcf1584fbc81fce66b5eb8fb407635cbd085a0a15cdbfa82215958b88.
+- BOOT shim/out/dreamlte-xnu-0220.img,18,448,400B,SHA256
+  918a116e78dd148c5d5727ff396c16d7ddb86e9720f7ee143c916d9cd92f7df0.
+  Original ramdisk/second/DTBH/header retained; payload/partition fit and
+  independent manifest/image hash PASS before write.
+- Fresh Download Mode051 accepted BOOT100%, Heimdall exit0/reboot. Installed
+  BOOT now0220. Private artifacts/manifests/flash log ci-44270585173 under
+  research/dreamlte. Only BOOT written; no Android restoration/other write.
+- Immediate host zero1209:0001/no ECM interface; journal shows051 disconnect
+  10:19:39 CET, no new enumeration in observed window. Requested link-wake
+  Q/LINK/SEL, resources-assigned and FAIL/CORE/PHY or running/event lines.
+  Physical0220 sequence effect pending. No USB success inferred from CI.
+
 ## 2026-11-18:0220 CI success; artifact transfer live
 
 - Exact CI44270585173 at a1ea67a281f8009de43e974490a974927ef4a8ca

@@ -2,55 +2,32 @@
 
 ## Active S8 handoff — 2026-11-18
 
-Latest0220 CI44270585173 SUCCESS at a1ea67a281f8009de43e974490a974927ef4a8ca.
-Preparation96056/PID56313 and download57495 live; artifact read bytes
-increasing (19.2->22.1MB observed), not failed. Phone fresh Download Mode051
-ready, no handshake yet. Wait for prepared-boot.json plus independent hash,
-then BOOT-only trial. Installed still0219; no0220 flash/runtime proof yet.
-Older in-progress-CI wording below superseded; preparation remains active.
+CURRENT INSTALLED:0220 BOOT. Fresh Download Mode051 accepted100%, Heimdall
+exit0/reboot; only BOOT/sda7 written. Immediate host zero1209:0001/no ECM
+interface; journal051 disconnect10:19:39 CET. Physical0220 result pending:
+requested link-wake Q/LINK/SEL, resources-assigned and FAIL/CORE/PHY lines,
+or running/events if reached. No USB enumeration/control/data success.
 
-0220 CI44270585173 confirmed in_progress at a1ea67a281f8009de43e974490a974927ef4a8ca.
-Preparation session96056/script research/dreamlte/prepare-0220.py waits,
-verifies nine sources/six symbols/fifteen strings then packages; never flashes.
-Log alongside. Download Mode requested. Installed0219 until next verified
-BOOT trial; do not restart live run. Physical0219 snapshot recorded below.
+Exact0220 CI44270585173 SUCCESS at a1ea67a281f8009de43e974490a974927ef4a8ca.
+Nine compiled sources/six symbols/fifteen diagnostics/profile PASS. Kernel
+SHA256b0f0724bcf1584fbc81fce66b5eb8fb407635cbd085a0a15cdbfa82215958b88.
+BOOT shim/out/dreamlte-xnu-0220.img,18,448,400B,SHA256
+918a116e78dd148c5d5727ff396c16d7ddb86e9720f7ee143c916d9cd92f7df0.
+Original BOOT components/header retained; fit/independent hash PASS.
+Preparation96056/PID56313 and download57495 complete, no live CI/prep.
+Private exact artifacts/manifests/flash log research/dreamlte/ci-44270585173.
+Current source manifest0220;0219 own expected manifest archived in its CI dir.
 
-Latest0219 physical trace received: ep0 cmd2 reg402 PAR0=1/PAR1=0/PAR2=0;
+0220 implements pinned Samsung CAL force-QACT and10us LINK_SW_RESET pulse
+before existing DCTL reset, with500us waits. Primary selected PIPE-clock
+bank only; refuses secondary clock/preasserted reset. Preserves unrelated
+Q bits, port mux, PLL/reference/tuning. Actual ARM64 compile/three modeled
+suites/plain patch match PASS. Expected Q7c00->7e00 not yet physical proof.
+0219 physical: first SETTRANSFRESOURCE ep0cmd2 reg402/PAR0=1/PAR1=0/PAR2=0;
 GCTL80e92004 GSTS3e800000 USB2=40102400 DCTL0 DSTS00520000 EN0;
 PIPE010c0002 HW3=10420085 BUS22220001/300; PHY LINK08000000 UTMI60
-CLK801b0949 Q7c00 SEL0. First SETTRANSFRESOURCE stuck after STARTCFG.
-0220 promoted: Samsung CAL force-QACT/link-reset before DCTL reset, primary
-bank only; preserves port/PLL/reference/tuning, refuses secondary clock or
-asserted reset. ARM64 compile/three suites/plain patch equality PASS.
-Expected Q7e00 not physical proof. Current source manifest0220/15 strings;
-0219 own expected manifest archived in its CI directory. Installed still0219.
-Full CI live as above; no new phone write. Prior pending-report statuses superseded.
-
-CURRENT INSTALLED:0219 BOOT; fresh Download Mode050 accepted100%, Heimdall
-exit0/reboot. Only BOOT/sda7 written. Immediate host no1209:0001 gadget.
-Requested physical four USB FAIL lines, one USB CORE and two USB PHY lines,
-plus resources-assigned marker if present; otherwise last three lines.
-No0218 physical trace received. No enumeration/control/data pass yet.
-Post-flash host journal:050 disconnect09:41:44 CET, no subsequent reconnect
-or descriptor errors in observed fifteen-minute window. No live CI/prep now;
-current0219 physical snapshot is required before selecting a clock/reset fix.
-
-
-Exact0219 CI44265115339 SUCCESS at41f5575831f48c6796d71024d220915ae9b14587.
-Nine source hashes/six symbols/fourteen linked strings/active profile PASS.
-Kernel SHA256ea0a8e9d5678f4c3a39b7f92d60a750553cc73678d67b637c1e626cc0664cf40.
-BOOT shim/out/dreamlte-xnu-0219.img,18,448,400B,SHA256
-b555a272b1859e176944657ad896891be857d2cb17f4c1aaa1fbe4b6cb63c9d9.
-Preparation65521/PID53546 completed, original ramdisk/second/DTBH/header
-preserved; payload/partition fit and independent image hash PASS. Private
-artifacts/manifests/flash log research/dreamlte/ci-44265115339. Current
-source manifest0219;0218 own expected manifest archived in ci-44261810052.
-No live build/preparation remains. Next action depends on0219 physical trace.
-
-0219 adds failure-only PIPE/HW3/BUS and existing PHY LINK/UTMI/CLK/Q/SEL
-readbacks. No added map/write/reset/retry or functional sequence change.
-Actual ARM64 compilation and modeled wrapper/resource/32-endpoint suites
-PASS; these do not prove physical PHY/clock readiness or USB success.
+CLK801b0949 Q7c00 SEL0. STARTCFG completed. Resource reorder alone failed.
+0219 diagnostics retained in0220. Physical0218 trace was never received.
 
 0218 tests Samsung STARTCFG then resources for every implemented physical
 endpoint before SETEPCONFIG; removes repeated data STARTCFG on DREAMLTE.
@@ -90,7 +67,7 @@ Avoid blind retries. S8 UFS runtime provider unfinished; root mount unproven.
 
 Origin wardevsa/ios-a5xelte read-only; writable build remote
 stonedDiscord/ios-a5xelte. Keep Apple binaries/device dumps/backups ignored.
-Next: physical0219 result, then diagnose exact failing command and PHY
+Next: physical0220 result, then diagnose exact failing command and PHY
 state; if enumeration appears, verify real descriptors/configuration and
 bidirectional network traffic. Do not claim success from CI/model tests.
 Existing goal remains active. No new USERDATA or protected writes.
