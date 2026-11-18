@@ -11,6 +11,18 @@
     "pexpert/arm/pe_init.c": "55d5b55ebc537818d7192f5b6fc0f9fe3db5556fa212e4ba45a0115bd9ffb997",
     "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469"
   },
+  "strings": [
+    "DREAMLTE IOKIT: zalloc lockdown enter",
+    "DREAMLTE IOKIT: matching enter",
+    "DREAMLTE IOKIT: matching returned",
+    "DREAMLTE BOOT: PE_lockdown_iokit returned",
+    "DREAMLTE BOOT: vm restrictions enter",
+    "DREAMLTE BOOT: vm restrictions returned",
+    "DREAMLTE BOOT: bsd_init enter",
+    "bsd_init: calling throttle_init",
+    "DREAMLTE USB FAIL: ep",
+    "DREAMLTE USB FAIL: GCTL="
+  ],
   "symbols": [
     "_dreamlte_log_cursor",
     "_dreamlte_log_base",

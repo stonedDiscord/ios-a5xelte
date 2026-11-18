@@ -27,6 +27,11 @@
   Download Mode ahead of next trial. No new flash. Consolidated active S8
   NOTES handoff to remove contradictory superseded statuses; byte-for-byte
   donor tail unchanged. Goal remains active; no USB completion claim.
+- Added pre-flash linked-string gate for ten required0217/0216 checkpoint
+  messages in addition to nine complete source hashes and six symbols. All
+  ten strings present in actual local ARM64 objects; old0215 kernel lacks
+  them. Exact0217 preparation will run updated verifier after download.
+  CI44259521488 remains live/Build; no rebuild/replacement or phone write.
 
 ## 2026-11-18: framebuffer0214 boots to USB endpoint setup
 

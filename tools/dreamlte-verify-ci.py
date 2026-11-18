@@ -18,7 +18,8 @@ a = p.parse_args()
 root = Path(__file__).resolve().parent.parent
 expected = json.loads((root / 'tools/dreamlte-ci-source-hashes.json').read_text())
 kernel = a.kernel_dir / 'kernel.development.herolte'
-checksum = hashlib.sha256(kernel.read_bytes()).hexdigest()
+kernel_bytes = kernel.read_bytes()
+checksum = hashlib.sha256(kernel_bytes).hexdigest()
 checks = (a.kernel_dir / 'SHA256SUMS').read_text().splitlines()
 assert f'{checksum}  {kernel.name}' in checks, 'kernel artifact checksum mismatch'
 profile = json.loads((a.kernel_dir / 'DREAMLTE-PROFILE.json').read_text())
@@ -34,7 +35,10 @@ symbols = subprocess.check_output(['llvm-nm', str(kernel)], text=True)
 names = {line.split()[-1] for line in symbols.splitlines() if line.split()}
 for symbol in expected['symbols']:
     assert symbol in names, f'linked symbol missing: {symbol}'
+for marker in expected.get('strings', []):
+    assert marker.encode() in kernel_bytes, f'linked diagnostic missing: {marker}'
 print(json.dumps({'build_content': 'PASS', 'kernel_sha256': checksum,
                   'source_files': len(expected['sources']),
                   'linked_symbols': len(expected['symbols']),
+                  'linked_diagnostics': len(expected.get('strings', [])),
                   'runtime': 'not tested'}, indent=2))

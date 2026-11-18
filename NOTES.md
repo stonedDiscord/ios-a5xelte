@@ -27,6 +27,8 @@ to exact0215 artifact match reviewed sources; both USB modeled host suites
 pass. No IOKit/root bypass or USB sequence change in0216/0217.
 Preparation session27807/PID49363 waits on this exact run, verifies nine
 compiled source hashes/six linked symbols and packages separate0217 BOOT
+plus ten required linked diagnostic strings (verified against local ARM64
+objects; old0215 lacks them).
 with startup_debug=1/dreamlteusb=2. Private script/log:
 research/dreamlte/prepare-0217.py and .log. Never flashes automatically.
 Do not restart a live CI due to observation timeout. Download Mode request
