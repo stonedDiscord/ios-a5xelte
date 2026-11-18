@@ -14,7 +14,10 @@ kernel time and process CPU counters still advance.0159 display diagnostics
 prepared; no stableGUI/freeze fix claim. A75s/allcores and UI speedup unproven.
 Next iteration per user request: all eight cores (six A55 + two A75),
 validated eight-node ADT plus0160 A75 driver match and per-CPU usage probe.
-Freeze investigation deferred; eight-core hardware success remains unproven.
+BOOT0093 now confirms all eight cores initialized with SGI checks. Per-core
+user/system tick deltas prove real work on every core, including both A75s.
+CPU0 remains busiest; capacity-aware scheduling and UI speedup are unproven.
+Freeze investigation remains deferred.
 
 Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
 been measured on hardware. A120second log-only trial completed361slices/

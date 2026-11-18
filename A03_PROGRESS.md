@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0093 starts all eight cores and schedules real work on both A75s
+
+BOOT-onlyHeimdall64645 upload100percent/success/reboot~20:05UTC. Singlecapture
+32555 waits120s thenCDCreturnsUSB005/019. Actualkernel requests8/selects8;
+CPU_ONrc0/initCPU/SGI1OK forCPU1..7 MPIDR100..700 via low0x80081000.
+CPU0init/SGIalsoOK. InparticularCPU6/7(A75 byvalidatedliveDT) enterEL1 and
+passSGI. No capturedpanic. This is firsthardwareall8init evidence, not yet
+physicalGUI/stability/speedup proof. CurrentSpringBoard25sample1thread/startup.
+
+Readonlycpusprobe reports8registered and twofullsnapshots. User/systemtick
+deltasCPU0..7:47/891,16/773,15/297,15/97,3/46,3/17,1/14,1/11.
+All8havepositiveuserANDsystemdeltas: real userspace/kernel scheduling, not
+merelypoweredandparked. A75usageislightinthisstartupwindow; CPU0dominates.
+NoA75capacityawareness/pinning/DVFSchangeorbalancedworkloadclaim. Private
+rawsnapshots/deltas retainedignored. VM118837free16KiBpages/compressor0,
+ioReady1/poisoned0; Applelaunchd/SpringBoardstart. UTC1795032388syncedvolatile.
+
+Private79104fwstaging10055 inprogress; continuousforwardingnotrestoredyet.
+Needstagevalid0/load0/A55A/touchstartleaveON andfollow-upVM/io/cpus/UI.
+Singlecapture32555 boot0093-usb-initial1200s until~20:26UTC; preserveowner.
+Freezedeferred peruser.0092twoA55/0090singleCPUrestores retained.
+
 ## 2026-11-18: all-eight-core BOOT0093 artifact verified; BOOT-only trial
 
 FullCI44381915946 SUCCESS exact3cf8d518a55389dfc5323962226a3e67045ca6c7.

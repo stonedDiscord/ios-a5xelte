@@ -1,3 +1,10 @@
+ACTIVE2026-11-18~20:07UTC0093 ALL8CORESINIT+USAGEPROVEN. CPU1..7
+CPU_ONrc0/initSGIinclA756/7; CPU0OK.8registered/twosnapshotsall8positive
+user/systemticks(A756:+1/+14,A757:+1/+11). CPU0dominant; notcapacityaware.
+VM/iohealthy/SB25stillstartup. UTCsynced. Privatefwstaging10055inprogress,
+needload/A55A/touchstartleaveON. Singlecapture32555 until~20:26UTC.
+NoGUI/stability/speedupclaim. Freezedeferred;0092/0090restorekept.
+
 ACTIVE2026-11-18~20:05UTC0093ALL8 BOOT-onlyflash64645 INPROGRESS.
 44381915946SUCCESS/exact3cf8d51/checksum/SMPusageA75matching/sourcePASS.
 BOOTe3c29209...85149831/kernelf2ad4098...82a6e63e; cpus8(6A55+2A75),
