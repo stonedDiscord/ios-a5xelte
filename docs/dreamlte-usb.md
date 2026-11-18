@@ -1,5 +1,12 @@
 # DREAMLTE USB bring-up evidence
 
+##0221 hardware trial (2026-11-18)
+
+Exact CI44276126788 SUCCESS,9 sources/6 symbols/15 diagnostics and BOOT
+packaging verified. Fresh Download Mode052 accepted0221 BOOT100%, exit0,
+reboot. Only BOOT written. Host no1209:0001; physical USB2CFG/resource/event
+trace requested. Actual post-reset wake retention and USB success unproven.
+
 ##0220 physical result and0221 reset-order correction
 
 User confirms Q7e00 LINK08000000 SEL0, but ep0cmd2 still active (reg402).

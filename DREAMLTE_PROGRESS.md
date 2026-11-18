@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0221 verified and flashed; physical reset-wake test pending
+
+- Exact CI44276126788 SUCCESS at3e18153bae65d8386c824e42cbb66a32b8968084.
+  Original preparation58444 exited after GitHub poll failure, confirmed
+  terminal before retry. Retry53993 added same-run poll-error handling,
+  downloaded/verified and completed packaging; no replacement CI run.
+- Nine complete source hashes/six symbols/fifteen linked diagnostics/profile
+  PASS. Kernel SHA2561135da14873d81cba5a9e4dd573a9db9e04e022a41b979400b60b6a3ddf7afbf.
+  BOOT shim/out/dreamlte-xnu-0221.img,18,448,400B,SHA256
+  69d063af00bee0e864b94f9557f4559a991a6b91b8488b3f89864b4f31a193a3.
+  Original BOOT components/header retained; payload/partition fit and
+  independent image hash PASS before flash.
+- Fresh Download Mode052 accepted BOOT100%, Heimdall exit0/reboot. Installed
+  BOOT0221; only BOOT written. Exact artifacts/manifests/flash log under
+  research/dreamlte/ci-44276126788. Immediate host no1209:0001 gadget.
+- Requested USB2CFG post-reset line and resources/FAIL/CORE/PHY or events.
+  Actual retention of40102400 and successful resource setup still unproven.
+  No Android restoration or protected/USERDATA writes. Goal remains active.
+
 ## 2026-11-18:0220 QACT confirmed; reset restores USB2 low-power bits
 
 - User0220 physical report: ID5533280a/GCTL30c12004/DSTS00520004;

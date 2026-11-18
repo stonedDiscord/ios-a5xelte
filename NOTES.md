@@ -2,46 +2,33 @@
 
 ## Active S8 handoff — 2026-11-18
 
-0221 CI44276126788 at3e18153bae65d8386c824e42cbb66a32b8968084 dispatched.
-Preparation55332/script research/dreamlte/prepare-0221.py waits exact run,
-verifies9 sources/6 symbols/15 diagnostics then packages; never flashes.
-Log alongside. Download Mode052 ready; installed0220. Do not restart live CI.
+CURRENT INSTALLED:0221 BOOT; fresh Download Mode052 accepted100%, Heimdall
+exit0/reboot. Only BOOT/sda7 written. Immediate host no1209:0001 gadget.
+Physical0221 result requested: post-reset USB2CFG, resources-assigned then
+FAIL/CORE/PHY or running/events. No enumeration/control/data success yet.
 
-Latest0220 physical: Q7e00 confirmed after link wake, but first resource
-cmd2 reg402 still stuck. USB2=40102540 has bits8/6 restored after resets;
-0219 was40102400. PHY version00010000 CLK801b0049 UTMI60 LINK08000000
-SEL0; full physical trace in DREAMLTE_PROGRESS.md.0221 promoted: reapply
-USB2 bits8/6 clear after link wake and post-DCTL reset before commands.
-Actual ARM64 compile/three modeled suites/plain patch PASS, no hardware fix
-claim. Source manifest0221;0220 own expected archived. Installed0220,
-fresh Download Mode052 available. Full CI next; no new flash.
-
-CURRENT INSTALLED:0220 BOOT. Fresh Download Mode051 accepted100%, Heimdall
-exit0/reboot; only BOOT/sda7 written. Immediate host zero1209:0001/no ECM
-interface; journal051 disconnect10:19:39 CET. Physical0220 result pending:
-requested link-wake Q/LINK/SEL, resources-assigned and FAIL/CORE/PHY lines,
-or running/events if reached. No USB enumeration/control/data success.
-
-Exact0220 CI44270585173 SUCCESS at a1ea67a281f8009de43e974490a974927ef4a8ca.
-Nine compiled sources/six symbols/fifteen diagnostics/profile PASS. Kernel
-SHA256b0f0724bcf1584fbc81fce66b5eb8fb407635cbd085a0a15cdbfa82215958b88.
-BOOT shim/out/dreamlte-xnu-0220.img,18,448,400B,SHA256
-918a116e78dd148c5d5727ff396c16d7ddb86e9720f7ee143c916d9cd92f7df0.
+Exact0221 CI44276126788 SUCCESS at3e18153bae65d8386c824e42cbb66a32b8968084.
+Nine source hashes/six symbols/fifteen strings/profile PASS. Kernel SHA256
+1135da14873d81cba5a9e4dd573a9db9e04e022a41b979400b60b6a3ddf7afbf.
+BOOT shim/out/dreamlte-xnu-0221.img,18,448,400B,SHA256
+69d063af00bee0e864b94f9557f4559a991a6b91b8488b3f89864b4f31a193a3.
 Original BOOT components/header retained; fit/independent hash PASS.
-Preparation96056/PID56313 and download57495 complete, no live CI/prep.
-Private exact artifacts/manifests/flash log research/dreamlte/ci-44270585173.
-Current source manifest0220;0219 own expected manifest archived in its CI dir.
+Original preparation55332/PID58444 terminal poll-network error; retry53993
+with same-run poll retries completed download/verification/packaging.
+No live CI/prep remains. Private artifacts/manifests/flash log:
+research/dreamlte/ci-44276126788. Current source manifest0221;0220 own
+expected manifest archived in its exact CI directory.
 
-0220 implements pinned Samsung CAL force-QACT and10us LINK_SW_RESET pulse
-before existing DCTL reset, with500us waits. Primary selected PIPE-clock
-bank only; refuses secondary clock/preasserted reset. Preserves unrelated
-Q bits, port mux, PLL/reference/tuning. Actual ARM64 compile/three modeled
-suites/plain patch match PASS. Expected Q7c00->7e00 not yet physical proof.
-0219 physical: first SETTRANSFRESOURCE ep0cmd2 reg402/PAR0=1/PAR1=0/PAR2=0;
-GCTL80e92004 GSTS3e800000 USB2=40102400 DCTL0 DSTS00520000 EN0;
-PIPE010c0002 HW3=10420085 BUS22220001/300; PHY LINK08000000 UTMI60
-CLK801b0949 Q7c00 SEL0. STARTCFG completed. Resource reorder alone failed.
-0219 diagnostics retained in0220. Physical0218 trace was never received.
+0221 reapplies USB2 ENBLSLPM/SUSPHY bits8/6 clear immediately after link
+reset and again after DCTL reset before endpoint commands. Source mask is
+Samsung dwc3_phy_setup. Other board fields retained. Actual ARM64 compile,
+modeled reset-default/all32-bit preservation and other USB suites PASS.
+0220 physically confirmed Q7e00/LINK08000000/SEL0, but resource cmd2 still
+active402 and USB2 reverted40102540 (previous0219 was40102400). PHY
+version00010000 CLK801b0049 UTMI60. Thus QACT alone did not solve commands;
+0221 tests reset-order regression.0219 first resource cmd2 reg402;
+GCTL80e92004 GSTS3e800000 DCTL0 DSTS00520000 EN0; PIPE010c0002 HW3=10420085
+BUS22220001/300.0219/0220 diagnostics retained. No physical0221 proof yet.
 
 0218 tests Samsung STARTCFG then resources for every implemented physical
 endpoint before SETEPCONFIG; removes repeated data STARTCFG on DREAMLTE.
@@ -81,7 +68,7 @@ Avoid blind retries. S8 UFS runtime provider unfinished; root mount unproven.
 
 Origin wardevsa/ios-a5xelte read-only; writable build remote
 stonedDiscord/ios-a5xelte. Keep Apple binaries/device dumps/backups ignored.
-Next: physical0220 result, then diagnose exact failing command and PHY
+Next: physical0221 result, then diagnose exact failing command and PHY
 state; if enumeration appears, verify real descriptors/configuration and
 bidirectional network traffic. Do not claim success from CI/model tests.
 Existing goal remains active. No new USERDATA or protected writes.
