@@ -1,5 +1,11 @@
 # Prepared S8 USB follow-up
 
+Current2026-11-18:0216 promoted into active xnu/dreamlte with0217 startup
+checkpoints after user reports startup trace ending at PE_lockdown_iokit.
+Four actual ARM64 files compile; exact0215 source plus plain patches matches
+all four reviewed files. Full CI required; no new runtime claim. Earlier
+outside-profile status below is preparation history.
+
 0216-dreamlte-usb-ep-failure-snapshot.patch stays outside the active profile.
 It adds failure-only readbacks of the endpoint command/parameters, GCTL,
 GSTS, USB2PHYCFG, DCTL, DSTS and DALEPENA. No retries or recovery writes.

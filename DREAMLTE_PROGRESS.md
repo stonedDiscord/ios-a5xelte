@@ -1,5 +1,23 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18: startup trace reaches PE_lockdown_iokit;0217 checkpoints
+
+- User reports last startup-trace line kernel_bootstrap: PE_lockdown_iokit.
+  This demonstrates execution beyond the version banner. It does not prove
+  the call blocks: next vm restrictions/kperf/BSD steps have sparse logging.
+- Source PE_lockdown_iokit performs a scalar zone flag assignment then
+  StartIOKitMatching; root matching allocates an IOWorkLoop/registers service.
+  Added DREAMLTE-only checkpoints before/after matching, return, VM CPU
+  restrictions, kperf and BSD entry; enables existing BSD init checkpoints
+  and brackets throttle_init. No bypass of IOKit, scheduler or root logic.
+- Promoted0216 failure-only endpoint snapshots alongside0217; no USB
+  initialization sequence change. Four actual ARM64 translation units PASS
+  (pe_init/startup/bsd_init/sweet_usb). Exact0215 artifact plus plain patches
+  matches all four reviewed complete files. Both USB wrapper and actual
+  endpoint completion/status/timeout tests PASS; new test added to CI gate.
+- Current phone still has0215 startup_debug=1; host sees no gadget.0217
+  requires full CI and exact artifact verification before a new BOOT trial.
+
 ## 2026-11-18: framebuffer0214 boots to USB endpoint setup
 
 - Fresh Download Mode session accepted verified framebuffer0214 BOOT:

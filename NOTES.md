@@ -2,6 +2,13 @@
 
 ## Active S8 handoff — 2026-11-18
 
+Current diagnostic evidence: user reads kernel_bootstrap: PE_lockdown_iokit
+on0215 startup-debug BOOT. No proven blocked callee yet.0216 snapshot now
+active with0217 checkpoints around IOKit return, VM restrictions/kperf/BSD
+and existing BSD init logs enabled. Four actual ARM64 files compile; exact
+0215 artifact/plain-apply hashes and both USB host suites PASS. Full CI
+dispatch next; no new BOOT flash. Host still has no gadget.
+
 Latest:0215 is now installed. CI44256127913 SUCCESS at5439710; seven actual
 source/six symbol/profile checks PASS. Kernel SHA256
 d0359a2566c1c9048c17f7c9f0d107ad10c428b5bc41870abb87ad35a790080a.

@@ -1,0 +1,91 @@
+--- a/pexpert/arm/pe_init.c
++++ b/pexpert/arm/pe_init.c
+@@ -378,8 +378,17 @@
+ 	 * against a kernel which has not yet enabled the full set of available
+ 	 * hardware protections.
+ 	 */
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE IOKIT: zalloc lockdown enter\n");
++#endif
+ 	zalloc_iokit_lockdown();
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE IOKIT: matching enter\n");
++#endif
+ 	StartIOKitMatching();
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE IOKIT: matching returned\n");
++#endif
+ }
+ 
+ void
+--- a/osfmk/kern/startup.c
++++ b/osfmk/kern/startup.c
+@@ -771,23 +771,44 @@
+ #ifdef  IOKIT
+ 	kernel_bootstrap_log("PE_lockdown_iokit");
+ 	PE_lockdown_iokit();
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE BOOT: PE_lockdown_iokit returned\n");
++#endif
+ #endif
+ 	/*
+ 	 * max_cpus must be nailed down by the time PE_lockdown_iokit() finishes,
+ 	 * at the latest
+ 	 */
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE BOOT: vm restrictions enter cpus=%u\n", machine_info.max_cpus);
++#endif
+ 	vm_set_restrictions(machine_info.max_cpus);
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE BOOT: vm restrictions returned\n");
++#endif
+ 
+ 
+ #if KPERF
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE BOOT: kperf early enter\n");
++#endif
+ 	kperf_init_early();
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE BOOT: kperf early returned\n");
++#endif
+ #endif
+ 
+ 	/*
+ 	 *	Start the user bootstrap.
+ 	 */
+ #ifdef  MACH_BSD
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE BOOT: bsd_init enter\n");
++#endif
+ 	bsd_init();
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE BOOT: bsd_init returned\n");
++#endif
+ #endif
+ 
+ 
+--- a/bsd/kern/bsd_init.c
++++ b/bsd/kern/bsd_init.c
+@@ -491,7 +491,11 @@
+ 	platform_stall_panic_or_spin(PLATFORM_STALL_XNU_LOCATION_BSD_INIT);
+ #endif
+ 
++#if defined(DREAMLTE)
++#define DEBUG_BSDINIT 1
++#else
+ #define DEBUG_BSDINIT 0
++#endif
+ 
+ #if DEBUG_BSDINIT
+ #define bsd_init_kprintf(x, ...) kprintf("bsd_init: " x, ## __VA_ARGS__)
+@@ -499,7 +503,9 @@
+ #define bsd_init_kprintf(x, ...)
+ #endif
+ 
++	bsd_init_kprintf("calling throttle_init\n");
+ 	throttle_init();
++	bsd_init_kprintf("throttle_init returned; copyright next\n");
+ 
+ 	printf(copyright);
+ 
