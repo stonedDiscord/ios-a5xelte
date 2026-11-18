@@ -163,7 +163,8 @@ def main():
                      '0158-a03-loader-owned-smp-trampoline.patch',
                      '0159-a03-readonly-display-progress-probe.patch',
                      '0160-a03-readonly-per-cpu-usage.patch',
-                     '0161-a03-prefer-idle-a75.patch'):
+                     '0161-a03-prefer-idle-a75.patch',
+                     '0162-a03-passive-gpu-probe.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

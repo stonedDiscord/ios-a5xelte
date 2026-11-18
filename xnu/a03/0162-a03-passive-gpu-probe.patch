@@ -1,0 +1,142 @@
+--- /dev/null
++++ b/bsd/dev/a03_gpu.c
+@@ -0,0 +1,94 @@
++/* A03 ums9230 GPU diagnostic. Explicit live-worker request only.
++ * Provenance: docs/a03-gpu.md. No register writes, power-on, DVFS or jobs. */
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++#include <sys/param.h>
++#include <sys/systm.h>
++#include <machine/machine_routines.h>
++extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
++
++#define A03_GPU_PMU_PA 0x64020000ULL
++#define A03_GPU_AON_PA 0x64000000ULL
++#define A03_GPU_APB_PA 0x23000000ULL
++#define A03_GPU_PA 0x23100000ULL
++#define A03_GPU_MAP_SIZE 0x1000
++#define A03_GPU_FORCE_OFF ((1U << 25) | (1U << 24))
++#define A03_GPU_STATE_MASK 0x1f1f0000U
++#define A03_GPU_BUS_ENABLE (1U << 11)
++
++/* Permanent mappings, owned only by the single dedicated probe worker.
++ * ml_io_map must not be paired with ml_io_unmap. */
++static vm_offset_t a03_gpu_pmu, a03_gpu_aon, a03_gpu_apb, a03_gpu_regs;
++static uint32_t
++a03_gpu_read(vm_offset_t base, unsigned offset)
++{
++    return *(volatile uint32_t *)(base + offset);
++}
++
++static int
++a03_gpu_domain_accessible(uint32_t force, uint32_t state, uint32_t bus)
++{
++    return !(force & A03_GPU_FORCE_OFF) && !(state & A03_GPU_STATE_MASK) &&
++        (bus & A03_GPU_BUS_ENABLE) != 0;
++}
++
++void a03_gpu_probe(void);
++void
++a03_gpu_probe(void)
++{
++    uint32_t force, state, bus, core, mem, sys;
++    if (!a03_gpu_pmu) a03_gpu_pmu = ml_io_map(A03_GPU_PMU_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_aon) a03_gpu_aon = ml_io_map(A03_GPU_AON_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_pmu || !a03_gpu_aon) {
++        printf("A03 GPU: system mapping failed; no GPU access\n");
++        return;
++    }
++    force = a03_gpu_read(a03_gpu_pmu, 0x2c4);
++    state = a03_gpu_read(a03_gpu_pmu, 0x500);
++    bus = a03_gpu_read(a03_gpu_aon, 0);
++    printf("A03 GPU: passive pmu-force=%08x pmu-state=%08x aon-enable=%08x\n",
++        force, state, bus);
++    if (!a03_gpu_domain_accessible(force, state, bus)) {
++        printf("A03 GPU: power/bus gate closed; GPU aperture untouched\n");
++        return;
++    }
++    if (!a03_gpu_apb) a03_gpu_apb = ml_io_map(A03_GPU_APB_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_apb) {
++        printf("A03 GPU: clock mapping failed; GPU aperture untouched\n");
++        return;
++    }
++    core = a03_gpu_read(a03_gpu_apb, 4);
++    mem = a03_gpu_read(a03_gpu_apb, 8);
++    sys = a03_gpu_read(a03_gpu_apb, 12);
++    printf("A03 GPU: inherited core-clock=%08x mem-clock=%08x sys-clock=%08x\n",
++        core, mem, sys);
++    if (!(core & mem & sys & 1U)) {
++        printf("A03 GPU: clock gate closed; GPU aperture untouched\n");
++        return;
++    }
++    /* Recheck before GPU access. No asynchronous power manager exists in
++     * this profile. A disabled GPU stays disabled. */
++    force = a03_gpu_read(a03_gpu_pmu, 0x2c4);
++    state = a03_gpu_read(a03_gpu_pmu, 0x500);
++    bus = a03_gpu_read(a03_gpu_aon, 0);
++    if (!a03_gpu_domain_accessible(force, state, bus)) {
++        printf("A03 GPU: domain changed; GPU aperture untouched\n");
++        return;
++    }
++    if (!a03_gpu_regs) a03_gpu_regs = ml_io_map(A03_GPU_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_regs) {
++        printf("A03 GPU: register mapping failed\n");
++        return;
++    }
++    uint32_t id = a03_gpu_read(a03_gpu_regs, 0);
++    if (!id || id == UINT32_MAX) {
++        printf("A03 GPU: invalid GPU_ID=%08x; stop\n", id);
++        return;
++    }
++    printf("A03 GPU: GPU_ID=%08x status=%08x; no GPU jobs\n", id,
++        a03_gpu_read(a03_gpu_regs, 0x34));
++    printf("A03 GPU: present shader=%08x:%08x tiler=%08x:%08x l2=%08x:%08x\n",
++        a03_gpu_read(a03_gpu_regs, 0x104), a03_gpu_read(a03_gpu_regs, 0x100),
++        a03_gpu_read(a03_gpu_regs, 0x114), a03_gpu_read(a03_gpu_regs, 0x110),
++        a03_gpu_read(a03_gpu_regs, 0x124), a03_gpu_read(a03_gpu_regs, 0x120));
++}
++#endif
+--- a/bsd/conf/files
++++ b/bsd/conf/files
+@@ -105,6 +105,7 @@
+ 
+ bsd/dev/a03_emmc.c			standard
+ bsd/dev/a03_usb.c			standard
++bsd/dev/a03_gpu.c			standard
+ bsd/dev/a03_usb_console.c		standard
+ bsd/dev/memdev.c			standard
+ bsd/dev/mem.c				standard
+--- a/bsd/conf/Makefile.template
++++ b/bsd/conf/Makefile.template
+@@ -98,6 +98,7 @@
+ kern_exit.o_CFLAGS_ADD += -mgeneral-regs-only
+ a03_usb_console.o_CFLAGS_ADD += -mgeneral-regs-only
+ a03_emmc.o_CFLAGS_ADD += -mgeneral-regs-only
++a03_gpu.o_CFLAGS_ADD += -mgeneral-regs-only
+ 
+ # A03 built-in userspace providers execute without kernel FP/SIMD state.
+ sweet_pthread_init.o_CFLAGS_ADD += -mgeneral-regs-only
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -610,12 +610,13 @@
+ }
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
++extern void a03_gpu_probe(void);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus gpu creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -637,6 +638,7 @@
+  } else if(!strcmp(command,"io"))a03_emmc_probe_stats();
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
++ else if(!strcmp(command,"gpu"))a03_gpu_probe();
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);
