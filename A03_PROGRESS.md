@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0092 touch restored; two-core userspace startup ongoing
+
+Private79104bytefw stage valid0 and explicitload result0/readyA55A pass.
+touchstart requestedHID1; streamstatus1/slices2/events0 then1/42/events0.
+LeavecontinuousforwardingON peruserrequest; no timedstophelper. HIDclients
+notyetseenopen inboundedcurrentlog; SpringBoard26 sample1thread/startup,
+so donotclaimGUIready or touchUIresponse. VM108106free/12483active/588inactive/
+5525wired16KiBpages/compressor0; ioReady1/poisoned0/5343requests; userspace
+continuesstartup. Initialtime set syntaxrejected; corrected time SECONDS
+followedstatus returns1795029580UTC withvolatileclock (19:19:40UTC).
+Singlecapture58347 remainsactive until~19:33UTC. No furtherflash.
+TwoCPUhardwareinit/SGI success remainsproven; independentperCPUtimercounters,
+A75/allcores and measuredlagimprovement remainunproven. Currentkernel0158,
+BOOT0092 SHA9dda3af2...0639c4fc.0090restore retained.
+
 ## 2026-11-18: BOOT0092 low trampoline starts second A55; two-core XNU/userspace
 
 Heimdall36454 upload100percent/success/reboot~19:17UTC. Singlecapture58347

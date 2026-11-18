@@ -1,3 +1,12 @@
+ACTIVE2026-11-18~19:20UTC BOOT0092 TWOA55init/SGIverified/1984MiB.
+Privatefw79104stagedvalid0/load0/A55A; TOUCHSTREAMON1/42slices/events0,
+leaveON/no timedstop. SB26sample1threadstillstartup, noGUIreadyclaim.
+VM108106free/compressor0/ioReady1poisoned0. UTC1795029580syncedvolatile
+(correcttimeSECONDSsyntax; initialtime set rejected). Singlecapture58347
+boot0092-usb-initial900s until~19:33UTC; preserveowner. NeedUIreadiness/
+HIDclientopens/physicalresponse and laterA75trial; no newflash requirednow.
+0090restore retained; BOOT0092=9dda3af2...0639c4fc/fullCI44375549972.
+
 ACTIVE2026-11-18~19:19UTC0092 TWOA55SUCCESS: CPU_ONrc0 via0x80081000;
 cpu1MPIDR100 EL1init+SGI1OK; cpu0SGI1OK/final2CPUinitialized. UserbootingUSB.
 VM/io/pslive, launchd/SB26starts, compressor0/ioReady1poisoned0. NotA75/allcores
