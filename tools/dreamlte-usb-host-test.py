@@ -12,6 +12,7 @@ import tempfile
 source = pathlib.Path(sys.argv[1]).read_text()
 has_core_timing = 'dreamlte_usb_core_timing' in source
 has_link_wake = 'dreamlte_usb_link_wake' in source
+has_reset_wake = 'Reapply after DCTL reset as well' in source
 
 def function(name):
     match = re.search(r'\b' + name + r'\([^;{}]*\)\s*\{', source)
@@ -66,6 +67,8 @@ if has_link_wake:
 code += 'static int\n' + function('dreamlte_usb_prepare') + '\n'
 if has_core_timing:
     code += '#define HAS_CORE_TIMING 1\n'
+    if has_reset_wake:
+        code += '#define HAS_RESET_WAKE 1\n'
     code += 'static void\n' + function('dreamlte_usb_core_timing') + '\n'
 code += 'static void\n' + function('dreamlte_usb_vbus') + '\n'
 code += 'static void\n' + function('sweet_usb_probe') + '\n'
@@ -111,8 +114,21 @@ int main(void) {
 #if defined(HAS_CORE_TIMING)
         assert(core[0xc200/4] == 0x40102400);
         core[0xc110/4] |= 0xc0;
+#ifdef HAS_RESET_WAKE
+        /* Model the low-power defaults observed after0220 link reset. */
+        core[0xc200/4] = 0x40102540;
+#endif
         dreamlte_usb_core_timing((uintptr_t)core);
         assert(core[0xc110/4] == 0x80e92004);
+#ifdef HAS_RESET_WAKE
+        assert(core[0xc200/4] == 0x40102400);
+        for (unsigned bit = 0; bit < 32; bit++) {
+            unsigned before = 1u << bit;
+            core[0xc200/4] = before;
+            dreamlte_usb_core_timing((uintptr_t)core);
+            assert(core[0xc200/4] == (before & ~0x140u));
+        }
+#endif
         for (unsigned bits = 0; bits < 32; ++bits) {
             unsigned before = 1u << bits;
             core[0xc110/4] = before;

@@ -2,6 +2,15 @@
 
 ## Active S8 handoff — 2026-11-18
 
+Latest0220 physical: Q7e00 confirmed after link wake, but first resource
+cmd2 reg402 still stuck. USB2=40102540 has bits8/6 restored after resets;
+0219 was40102400. PHY version00010000 CLK801b0049 UTMI60 LINK08000000
+SEL0; full physical trace in DREAMLTE_PROGRESS.md.0221 promoted: reapply
+USB2 bits8/6 clear after link wake and post-DCTL reset before commands.
+Actual ARM64 compile/three modeled suites/plain patch PASS, no hardware fix
+claim. Source manifest0221;0220 own expected archived. Installed0220,
+fresh Download Mode052 available. Full CI next; no new flash.
+
 CURRENT INSTALLED:0220 BOOT. Fresh Download Mode051 accepted100%, Heimdall
 exit0/reboot; only BOOT/sda7 written. Immediate host zero1209:0001/no ECM
 interface; journal051 disconnect10:19:39 CET. Physical0220 result pending:

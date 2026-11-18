@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0220 QACT confirmed; reset restores USB2 low-power bits
+
+- User0220 physical report: ID5533280a/GCTL30c12004/DSTS00520004;
+  PHY version00010000 CLK801b0049 UTMI60; link wake Q7e00 LINK08000000 SEL0.
+  Failure ep0cmd2 reg402 PAR0=1/PAR1=0/PAR2=0; GCTL80e92004 GSTS3e800000
+  USB2=40102540 DCTL0 DSTS00520000 EN0; PIPE010c0002 HW3=10420085
+  BUS22220001/300; PHY LINK08000000 UTMI60 CLK801b0049 Q7e00 SEL0.
+- QACT changed as intended, but first resource command still active.
+  USB2 now has ENBLSLPM/SUSPHY restored (0x140), unlike0219's40102400.
+  Existing clear precedes new link reset and DCTL reset; reapply afterward.
+  This isolates a reset-order regression, not proof of sole USB root cause.
+-0221 clears only USB2 bits8/6 immediately after link wake and again in
+  post-DCTL-reset timing setup before any endpoint command. Preserves all
+  other USB2 board fields and retains QACT/reset flow and failure snapshots.
+  Actual ARM64 compile, modeled reset-default/all32-bit preservation, wrapper,
+  EP and resource suites PASS; plain patch/full-source equality PASS.
+ 0220 exact artifact reverified, expected manifest archived before0221
+  promotion/source hash update. No new flash;0220 installed, Download Mode052.
+
 ## 2026-11-18:0220 verified and BOOT flashed
 
 - Exact CI44270585173 SUCCESS at a1ea67a281f8009de43e974490a974927ef4a8ca.

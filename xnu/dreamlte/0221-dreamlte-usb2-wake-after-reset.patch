@@ -1,0 +1,25 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -146,6 +146,10 @@
+ 	 */
+ 	*(volatile uint32_t *)(dwc + 0xc200) = usb2 & ~((1u << 8) | (1u << 6));
+ 	if (dreamlte_usb_link_wake(phy)) return -1;
++	/* LINK_SW_RESET restores USB2 low-power defaults on measured0220. */
++	usb2 = usb_rd(dwc, 0xc200);
++	*(volatile uint32_t *)(dwc + 0xc200) = usb2 & ~((1u << 8) | (1u << 6));
++	__asm__ volatile("dsb sy" ::: "memory");
+ 	dreamlte_phy = phy;
+ 	/* Select device mode while stopped. */
+ 	uint32_t gctl = usb_rd(dwc, 0xc110);
+@@ -160,6 +164,11 @@
+ static void
+ dreamlte_usb_core_timing(vm_offset_t dwc)
+ {
++	/* Reapply after DCTL reset as well, before any endpoint commands.
++	 * Samsung dwc3_phy_setup: clear ENBLSLPM/SUSPHY, retain board fields.
++	 */
++	uint32_t usb2 = usb_rd(dwc, 0xc200);
++	*(volatile uint32_t *)(dwc + 0xc200) = usb2 & ~((1u << 8) | (1u << 6));
+ 	uint32_t gctl = usb_rd(dwc, 0xc110);
+ 	gctl = (gctl & ~((0x1fffu << 19) | 0xc0u)) | ((66000000u / 16000u) << 19);
+ 	*(volatile uint32_t *)(dwc + 0xc110) = gctl;
