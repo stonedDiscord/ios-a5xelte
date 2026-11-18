@@ -13,6 +13,15 @@ handshake or flash before0225 verification. CI44316294206 still running.
 research/dreamlte/prepare-0226.py waits exact run; verifies11sources/
 6symbols/38strings and packages; never flashes. Physical mode request pending.
 
+CURRENT0227 installed. Exact CI44331761587 SUCCESS at
+b11e4f62e81cfb01eeef11d27c1fce7244c473b9;11 sources/6symbols/38strings/
+profile PASS. Kernel SHA256d0b770e5d09c70d287a7bd7c3d0a0ce101a3a940490e1e2bbd096430936a5ca0.
+BOOT18,448,400B SHA25608c9565fdac4d803fdef4434e720d51c0ffe15f84479024d3d69f3ce00ff8dbb.
+Fresh Download Mode058 accepted100%, exit0/reboot; only BOOT written.
+Exact artifacts/source manifest/flash log research/dreamlte/ci-44331761587.
+Requested full clock/power/resource/failure trace. No USB success; no live
+CI/prep. Next act on physical output only.
+
 0227 CI44331761587 atb11e4f6 dispatched. Preparation15325 waits exact
 run/head and verifies/packages, never flashes; private script/log
 research/dreamlte/prepare-0227.py/.log. Fresh Download Mode request pending.

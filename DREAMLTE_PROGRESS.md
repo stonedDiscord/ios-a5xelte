@@ -1,5 +1,20 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0227 verified and BOOT flashed; continuation trace pending
+
+- Exact CI44331761587 SUCCESS atb11e4f62e81cfb01eeef11d27c1fce7244c473b9.
+  Preparation15325 completed.11 sources/6 symbols/38 diagnostics/profile
+  PASS. Kernel SHA256d0b770e5d09c70d287a7bd7c3d0a0ce101a3a940490e1e2bbd096430936a5ca0.
+- BOOT shim/out/dreamlte-xnu-0227.img,18,448,400B,SHA256
+  08c9565fdac4d803fdef4434e720d51c0ffe15f84479024d3d69f3ce00ff8dbb.
+  Original BOOT components/header preserved; fit/independent hash PASS.
+- Fresh Download Mode058 accepted BOOT100%, Heimdall exit0/reboot.
+  Only BOOT written;0227 installed. Exact artifacts/source manifest/flash
+  log research/dreamlte/ci-44331761587.
+- Requested full clock/power/resource/FAIL trace. Predicted continuation
+  after bit4 mismatch remains physically unverified; USB remains unverified.
+  No live CI/prep. No Android/USERDATA/protected-partition write.
+
 ## 2026-11-18:0226 clock trial stopped at RETENABLEN readback;0227 continuation
 
 - User reports only line PHY clock CLK=801b0049->001b0048

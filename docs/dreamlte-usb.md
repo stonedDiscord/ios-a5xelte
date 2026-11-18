@@ -1,5 +1,11 @@
 # DREAMLTE USB bring-up evidence
 
+##0227 verified hardware trial
+
+CI44331761587 SUCCESS; source/profile and preserved BOOT packaging checks
+PASS. Fresh Download Mode058 accepted BOOT100%,exit0/reboot; only BOOT
+written. Physical continuation after RETENABLEN guard pending; no USB pass.
+
 ##0226 RETENABLEN readback;0227 guard correction
 
 User's last0226 USB line: CLK801b0049->001b0048, PIPE0->10. The exact
