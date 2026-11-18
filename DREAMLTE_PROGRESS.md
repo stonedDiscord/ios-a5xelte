@@ -17,6 +17,11 @@
   endpoint completion/status/timeout tests PASS; new test added to CI gate.
 - Current phone still has0215 startup_debug=1; host sees no gadget.0217
   requires full CI and exact artifact verification before a new BOOT trial.
+- Code commita947a493d424c503224c594a3b9ba046b7967fc1 pushed. Full0217
+  CI44259521488 dispatched and confirmed queued. Preparation session27807
+  waits on this exact run then verifies nine sources/six symbols, preserves
+  stock BOOT components and packages0217 with startup_debug=1/dreamlteusb=2.
+  Private script/log research/dreamlte/prepare-0217.py and .log; never flashes.
 
 ## 2026-11-18: framebuffer0214 boots to USB endpoint setup
 

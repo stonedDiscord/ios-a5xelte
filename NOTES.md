@@ -8,6 +8,9 @@ active with0217 checkpoints around IOKit return, VM restrictions/kperf/BSD
 and existing BSD init logs enabled. Four actual ARM64 files compile; exact
 0215 artifact/plain-apply hashes and both USB host suites PASS. Full CI
 dispatch next; no new BOOT flash. Host still has no gadget.
+Full0217 CI44259521488 queued at exacta947a493d424c503224c594a3b9ba046b7967fc1.
+Preparation session27807 waits/verifies/packages without flashing; script
+research/dreamlte/prepare-0217.py and log. Do not replace a live run.
 
 Latest:0215 is now installed. CI44256127913 SUCCESS at5439710; seven actual
 source/six symbol/profile checks PASS. Kernel SHA256
