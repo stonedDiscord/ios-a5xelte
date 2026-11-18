@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: all-eight-core BOOT0093 artifact verified; BOOT-only trial
+
+FullCI44381915946 SUCCESS exact3cf8d518a55389dfc5323962226a3e67045ca6c7.
+Kernelchecksum/SMP+trampoline+usage+displaymarkers and actualsource0160/
+0158reversechecksPASS; A75IOKitmatchpresent. Kernel SHA256
+f2ad40985314f4bf5d842307f5e897200e29880ab7136fe318400b6682a6e63e.
+BOOT0093 SHA256
+e3c292092852b96ebf07f4294a45faeaac59f8b7c340a1fde538a45485149831.
+
+Same0092root/1984MiB/lowtrampoline/args exceptcpus8. Exact0092ADTseed/nodes/
+CPU0+1preserved; addedCPU2..7 uniquephandles, A75compatiblefor6/7. Eight
+liveDTtypes/MPIDRs and23RAMreservations validated. Packerexactkernelpayload
+rebuild/uniqueentry0x103485000/stockramdiskDT preservationPASS. HosttestsSMP/
+CPUusage/trampolinePASS. HostHeimdalldetectDownload succeeds; authorized
+BOOT-onlyflash64645 launched~20:05UTC, nootherpartitionselected. Awaitresult/
+singlecapture; no8corehardwareclaimuntilCPU_ON/init/SGI andusageticks.
+Afterboot UTC/privatefwstage+load/touchstartleaveON; cpus two snapshots to
+measureactualuser/systemwork eachcore. Freezeinvestigationdeferred peruser.
+Preserve0092twoCPU/0090singleCPUrestores.
+
 ## 2026-11-18: user requests Download while waiting; serial reset succeeds
 
 At19:36UTC freshsingleCDCcapture and EP0time status returns1795030581UTC,

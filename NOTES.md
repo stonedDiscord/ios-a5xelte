@@ -1,3 +1,10 @@
+ACTIVE2026-11-18~20:05UTC0093ALL8 BOOT-onlyflash64645 INPROGRESS.
+44381915946SUCCESS/exact3cf8d51/checksum/SMPusageA75matching/sourcePASS.
+BOOTe3c29209...85149831/kernelf2ad4098...82a6e63e; cpus8(6A55+2A75),
+1984MiB/same0092root/lowtrampoline0x103485000target. No8coreclaimyet.
+Nextflashresult->singlecapture CPU_ON/initSGI all8->cpususagedeltas,
+UTC/privatefwload/touchstartleaveON/VMio. Freezedeferred.0092/0090restorekept.
+
 ACTIVE2026-11-18~19:37UTC PHONEINDOWNLOAD confirmedHeimdalldetect.
 Useraskedresetwhilewaiting;0092serial/EP0time replied1795030581 thenexplicit
 CDCDownloadrequest/disconnect; initialdetectearlyfails thenPASS. NOFLASH.
