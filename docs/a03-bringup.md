@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G bring-up
 
+2026-11-18 A75 scheduling candidate0161: add a03_prefer_a75=1 to the
+validated eight-core profile to prefer idle CPU6, then CPU7, for unbound
+non-realtime wakeups before last-CPU affinity. A55s remain available when
+both A75s are busy. This leaves the physical A55 bootstrap path intact;
+it is not a boot-CPU switch or full capacity-aware/AMP scheduler. The option
+defaults off and requires the exact validated CPU6/7 MPIDR600/700 topology.
+Actual selector sanitizer tests and sched_prim.c cross-compile pass; full
+CI44398834193 and hardware activation remain pending. BOOT0094 preparation
+uses exact0093 inputADT/1984MiB/all8, removes startup_debug=1 verbosity flag
+and appends the preference flag for599bytes within the607byte command limit.
+
 2026-11-18 BOOT0093 follow-up: one explicit HID Home resumed actual frame
 copies after the frozen 12:11 image. User confirms physical touch responds
 and clock advances. No kernel change/reboot/flash. All eight cores/1984 MiB
