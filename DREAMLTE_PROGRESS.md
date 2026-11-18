@@ -1,5 +1,25 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0224 PHY power-down confirmed;0225 primary wake candidate
+
+- User supplies omitted0224 lines: DCFG00080800 HW1=0160c93b;
+  EVT82cad000/00000008/80001000/00000000; PHY TEST0000000c PIPE00000000.
+  Pinned Samsung header defines PHYTEST bits2/3 as POWERDOWN_HSP/SSP.
+  Both asserted despite reset/sleep clear. This is a concrete missing
+  prerequisite, not proof that clearing it alone solves endpoint execution.
+-0225 follows exynos_cal_ss_power_down(info,1): clear only primary PHYTEST
+  bits2/3, settle1000+500us, readback exact preserved fields. Supports only
+  observed SEL lower6bits0; refuses other mux/reset selections/all-ones
+  TEST. Existing QACT/link reset precedes power release; existing session/
+  device reset follow. Post-reset power bits must remain clear or stop.
+  No PLL/reference/port mux/CMU/PMU/secondary bank changes.
+- Actual ARM64 object compile, wrapper/EP/resource/CSR suites PASS. Wrapper
+  tests both register layouts, all32 unrelated bit preservation, observed
+  c->0 and mux/all-ones refusal. Plain overlay/full-source equality PASS.
+  Manifest11 sources/6 symbols/36 diagnostics;0224 own manifest archived.
+- Installed0224; no host gadget or Download Mode. Asked user to return to
+  Download Mode while full0225 CI builds. No new phone write yet.
+
 ## 2026-11-18:0224 event CSR and STARTCFG physically verified
 
 - User reports0224 session LINK08000180/UTMI660 before endpoints; event

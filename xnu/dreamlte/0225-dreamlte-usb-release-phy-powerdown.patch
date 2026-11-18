@@ -1,0 +1,59 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -121,6 +121,34 @@
+ 	return 0;
+ }
+ 
++/* Samsung CAL exynos_cal_ss_power_down(info, 1) releases PHYTEST
++ * POWERDOWN_HSP/SSP before its 500us settling delay. Only the observed
++ * all-primary mux is supported: do not wake an unselected/secondary bank.
++ * Retain reference/PLL, port selection and all unrelated PHYTEST fields.
++ */
++static int
++dreamlte_usb_phy_power_up(vm_offset_t phy)
++{
++	uint32_t sel = usb_rd(phy, 0x6c);
++	if (sel & 0x3fu) {
++		printf("DREAMLTE USB: unsupported PHY power mux SEL=%08x\n", sel);
++		return -1;
++	}
++	uint32_t before = usb_rd(phy, 0x28);
++	if (before == 0xffffffffu) return -1;
++	if (before & 0xcu) {
++		*(volatile uint32_t *)(phy + 0x28) = before & ~0xcu;
++		__asm__ volatile("dsb sy" ::: "memory");
++		delay(1000);
++	}
++	delay(500);
++	uint32_t after = usb_rd(phy, 0x28);
++	printf("DREAMLTE USB: PHY power TEST=%08x->%08x SEL=%08x\n",
++	    before, after, sel);
++	if (after != (before & ~0xcu)) return -1;
++	return 0;
++}
++
+ static int
+ dreamlte_usb_prepare(vm_offset_t dwc)
+ {
+@@ -146,6 +174,7 @@
+ 	 */
+ 	*(volatile uint32_t *)(dwc + 0xc200) = usb2 & ~((1u << 8) | (1u << 6));
+ 	if (dreamlte_usb_link_wake(phy)) return -1;
++	if (dreamlte_usb_phy_power_up(phy)) return -1;
+ 	/* LINK_SW_RESET restores USB2 low-power defaults on measured0220. */
+ 	usb2 = usb_rd(dwc, 0xc200);
+ 	*(volatile uint32_t *)(dwc + 0xc200) = usb2 & ~((1u << 8) | (1u << 6));
+@@ -1118,6 +1147,13 @@
+ 
+ #if defined(DREAMLTE)
+ 	dreamlte_usb_core_timing(dwc);
++	/* Device reset must not silently power the PHY down again. */
++	uint32_t phytest = usb_rd(dreamlte_phy, 0x28);
++	if (phytest & 0xcu) {
++		printf("DREAMLTE USB: PHY powered down after reset TEST=%08x\n", phytest);
++		return;
++	}
++
+ 	/* Reassert after reset; readback distinguishes session gating from
+ 	 * endpoint-command failure without changing host VBUS power.
+ 	 */

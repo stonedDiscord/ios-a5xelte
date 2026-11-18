@@ -11,6 +11,7 @@ import tempfile
 
 source = pathlib.Path(sys.argv[1]).read_text()
 has_core_timing = 'dreamlte_usb_core_timing' in source
+has_phy_power = 'dreamlte_usb_phy_power_up' in source
 has_link_wake = 'dreamlte_usb_link_wake' in source
 has_reset_wake = 'Reapply after DCTL reset as well' in source
 
@@ -71,8 +72,10 @@ static void sweet_usb_gadget_start(vm_offset_t dwc) {
 '''
 if has_link_wake:
     code += '#define HAS_LINK_WAKE 1\n'
-    code += 'static void delay(unsigned us) { assert(us == 500 || us == 10); delays++; }\n'
+    code += 'static void delay(unsigned us) { assert(us == 500 || us == 10 || us == 1000); delays++; }\n'
     code += 'static int\n' + function('dreamlte_usb_link_wake') + '\n'
+if has_phy_power:
+    code += '#define HAS_PHY_POWER 1\nstatic int\n' + function('dreamlte_usb_phy_power_up') + '\n'
 code += 'static int\n' + function('dreamlte_usb_prepare') + '\n'
 if has_core_timing:
     code += '#define HAS_CORE_TIMING 1\n'
@@ -153,7 +156,7 @@ int main(void) {
         assert(phy[(off+0x04)/4] == 0x41000180);
         assert(phy[(off+0x08)/4] == 0xa0000640);
 #ifdef HAS_LINK_WAKE
-        assert(delays == 4);
+        assert(delays == 5);
         assert(phy[(off+0x34)/4] == 0x3e00);
         for (unsigned bit = 0; bit < 32; bit++) {
             uint32_t before = 1u << bit;
@@ -163,6 +166,28 @@ int main(void) {
             assert(phy[(off+0x34)/4] == (before | 0x3e00));
             assert(phy[(off+0x04)/4] == 0x08000000);
         }
+#ifdef HAS_PHY_POWER
+        for (unsigned bit = 0; bit < 32; bit++) {
+            uint32_t before = (1u << bit) | 0xcu;
+            phy[(off+0x28)/4] = before;
+            assert(dreamlte_usb_phy_power_up((uintptr_t)phy+off) == 0);
+            assert(phy[(off+0x28)/4] == (before & ~0xcu));
+        }
+        phy[(off+0x28)/4] = 0xcu;
+        assert(dreamlte_usb_phy_power_up((uintptr_t)phy+off) == 0);
+        assert(phy[(off+0x28)/4] == 0);
+        for (unsigned bit = 0; bit < 6; bit++) {
+            phy[(off+0x6c)/4] = 1u << bit;
+            phy[(off+0x28)/4] = 0xcu;
+            unsigned prior_power = delays;
+            assert(dreamlte_usb_phy_power_up((uintptr_t)phy+off) == -1);
+            assert(phy[(off+0x28)/4] == 0xcu && delays == prior_power);
+        }
+        phy[(off+0x6c)/4] = 0;
+        phy[(off+0x28)/4] = 0xffffffffu;
+        assert(dreamlte_usb_phy_power_up((uintptr_t)phy+off) == -1);
+        assert(phy[(off+0x28)/4] == 0xffffffffu);
+#endif
         phy[(off+0x34)/4] = 0x7c00;
         assert(dreamlte_usb_link_wake((uintptr_t)phy+off) == 0);
         assert(phy[(off+0x34)/4] == 0x7e00);

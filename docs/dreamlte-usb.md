@@ -1,5 +1,16 @@
 # DREAMLTE USB bring-up evidence
 
+##0224 confirmed PHY power-down;0225 targeted release
+
+Physical0224 CSR: DCFG80800/HW1=0160c93b; EVT82cad000/8/80001000/0.
+POWER TEST=c PIPE=0. Pinned CAL header defines bits2/3 POWERDOWN_HSP/SSP;
+both asserted.0225 clears only these primary-bank bits after existing link
+wake, preserves other fields, waits1000+500us, checks exact readback and
+refuses nonprimary mux (SEL low6bits nonzero). Post-device-reset power bits
+must stay clear or startup stops. No PLL/clock/PMU/secondary changes.
+ARM64, modeled preservation/refusal and existing USB suites PASS; hardware
+result untested. Root cause remains a hypothesis until physical progress.
+
 ##0224 physical CSR result
 
 User confirms event CSR verified DMA82cad000/00000008,size80001000 and

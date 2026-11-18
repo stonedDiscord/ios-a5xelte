@@ -2,6 +2,15 @@
 
 ## Active S8 handoff — 2026-11-18
 
+LATEST0224 missing readbacks received: DCFG80800/HW1=0160c93b;
+EVT82cad000/8/80001000/0; PHY TEST=c PIPE=0. Header identifies TEST bits2/3
+as HSP/SSP power-down, both asserted.0225 clears only those bits on strict
+primary mux SEL lower6bits0; settle/readback and post-reset power guard.
+No reference/PLL/CMU/PMU/mux/secondary-bank change. Not a proven sole cause.
+ARM64 actual object, wrapper/EP/resource/CSR suites, patch equality PASS.
+Current manifest11sources/6symbols/36strings. Full CI next;0224 installed,
+phone not in Download Mode yet; physical mode request sent. No flash yet.
+
 LATEST0224 physical: event CSR verified DMA82cad000/00000008,size80001000;
 STARTCFG completed reg9. First resource cmd2 still active402, PAR0=1,
 PAR1/2=0; session bits remain LINK08000180/UTMI660. No successful DMA,
