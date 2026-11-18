@@ -2,17 +2,19 @@
 
 ## Active S8 handoff — 2026-11-18
 
-CURRENT:0222 installed. User confirms persistent final visible phase5 with
-no later text. This is PMAP_STEAL completion inside vm_page_bootstrap before
-USB;0222 session-valid sequence is physically untested.0223 adds bounded
-DREAMLTE-only VM checkpoints (free pages, hash/lock allocation/init, tags,
-pmap_startup and VM stages), with no memory/startup/USB behavior changes.
-Both actual ARM64 units compile;12 diagnostic strings linked into objects;
-plain patch/full-source equality PASS. Current manifest11 sources/28 strings.
-0222 manifest archived with exact artifacts after successful reverification.
-Fresh Download Mode054 untouched. Next full0223 CI, content verification,
-package and authorized BOOT-only trial, then recover last VM lines. No
-Android restoration or other partition writes. USB goal remains incomplete.
+CURRENT:0223 installed, exact CI44298522029 SUCCESS at
+ d5f6472b35b456acbaa95c0716be23533066a2ea.11 sources/6 symbols/28 strings/
+profile PASS. Kernel SHA25632291c02b546143bfc39bb61c09170afb2fbe9c94a44f14ab014282de659550f.
+BOOT18,448,400B,SHA256dd65dd0a0fa476de64c12ff15245383c6d7073fee94b73ecc2f8912c772e35ce.
+Original BOOT components/header, fit and independent hash PASS. Fresh
+Download Mode054 BOOT100%, Heimdall exit0/reboot. Only BOOT written.
+Private artifacts/own manifest/flash log research/dreamlte/ci-44298522029.
+Preparation25298 completed after narrowing retry to missing buildtree;
+no live CI/prep. Requested last3 visible lines, especially DREAMLTE VM.
+Physical VM result pending; USB goal incomplete.0222 persistent phase5/no
+later text means PMAP_STEAL completion before USB, not a USB failure trace.
+0223 only adds bounded VM checkpoints; no allocator/startup bypass changes.
+Next depends on physical trace. Never restore Android or blindly retry root.
 
 
 0223 CI44298522029 at d5f6472 dispatched. Preparation26124 waits exact

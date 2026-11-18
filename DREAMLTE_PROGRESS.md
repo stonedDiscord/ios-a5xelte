@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0223 verified and BOOT flashed; VM trace pending
+
+- Exact CI44298522029 SUCCESS at d5f6472b35b456acbaa95c0716be23533066a2ea.
+  Original preparation26124 exited terminally on TLS artifact download;
+  retry70483 hit existing kernel-file collision after network errors.
+  Narrowed buildtree-only preparation25298 completed; no replacement CI.
+- Eleven actual sources/six symbols/twenty-eight diagnostics/active profile
+  PASS. Kernel SHA25632291c02b546143bfc39bb61c09170afb2fbe9c94a44f14ab014282de659550f.
+  BOOT shim/out/dreamlte-xnu-0223.img,18,448,400B,SHA256
+  dd65dd0a0fa476de64c12ff15245383c6d7073fee94b73ecc2f8912c772e35ce.
+  Original BOOT components/header preserved; fit and independent hash PASS.
+- Fresh Download Mode054 accepted BOOT100%, Heimdall exit0/reboot.
+  Only BOOT written;0223 now installed. Artifacts/own reviewed manifest/log
+  under research/dreamlte/ci-44298522029. Requested last three visible lines,
+  especially DREAMLTE VM markers. Physical result pending; USB unverified.
+-0222 report remains persistent phase5/no later text, before USB.0223 only
+  adds VM checkpoints, preserving0222 USB sequence. No Android restoration,
+  USERDATA or protected-partition writes. No live CI/preparation remains.
+
 ## 2026-11-18:0222 persistent phase5 stop;0223 VM checkpoints
 
 - User explicitly confirms last persistent line on0222 was
