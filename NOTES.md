@@ -2,6 +2,14 @@
 
 ## Active S8 handoff — 2026-11-18
 
+0219 CI44265115339 confirmed in_progress at41f5575831f48c6796d71024d220915ae9b14587.
+Preparation session65521/script research/dreamlte/prepare-0219.py waits for
+exact run and verifies nine sources/six symbols/fourteen linked diagnostics
+before BOOT packaging; never flashes. Log alongside.140 active patches.
+Next: inspect exact prepared-boot.json/hash after success; physical0218
+screen report and fresh Download Mode are still needed for next BOOT trial.
+Do not replace live CI due to observation timeout.
+
 Latest:0219 read-only PHY/core failure diagnostics promoted to active profile
 for full CI; reviewed manifest now0219/14 diagnostics.0218 own expected
 manifest archived in ci-44261810052. Staged source0219. Installed BOOT still

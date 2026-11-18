@@ -12,6 +12,13 @@
   before updating current manifest to0219 and14 linked diagnostic strings.
   Staged source now0219.0218 remains installed; no new phone write.
 
+- Full0219 CI44265115339 at41f5575831f48c6796d71024d220915ae9b14587
+  confirmed in_progress. Preparation session65521 waits for this exact run,
+  then verifies nine sources/six symbols/fourteen diagnostic strings, retains
+  original BOOT components and packages0219; it never flashes automatically.
+  Private script/log research/dreamlte/prepare-0219.py and .log. Active
+  profile generator stages140 patches. Do not restart this live build.
+
 ## 2026-11-18: prepared read-only PHY failure diagnostics after0218
 
 - Rechecked host after0218 flash: no1209:0001, so physical USB is still
