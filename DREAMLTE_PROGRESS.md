@@ -59,6 +59,22 @@
 
 ## 2026-11-18: USB0215 verified, flashed; runtime report pending
 
+- New0215 physical report: last visible line Darwin Kernel Version22.6.8,
+  much less output than0214. Host has no gadget. Do not classify0215 as an
+  EP0 failure without its trace. Source startup.c prints version at entry
+  to kernel_bootstrap, before scale_setup/vm_mem_bootstrap and much earlier
+  than BSD USB probe. Visible stop is not proof of the precise CPU halt.
+- Streaming comparison of every xnu/ file in exact0214 and0215 buildtrees
+  finds only bsd/dev/sweet_usb.c changed; no added/deleted source files.
+  ADTs byte-identical. USB changes execute after networking initialization,
+  so they do not directly execute before the reported version line.
+- Packaged same verified0215 kernel/ADT/loader with existing startup_debug=1
+  to expose startup phases without source changes. Candidate
+  shim/out/dreamlte-xnu-0215-startup.img,18,432,016B,SHA256
+  6ddd75d186a5d8881a47d65bcc9266314e48ae5907c799b8455f338c1826cacc.
+  BOOT component/header preservation and exact payload PASS; not flashed.
+  Requested Download Mode re-entry.0216 remains prepared, not promoted.
+
 - CI44256127913 SUCCESS at5439710b649202ada57dbef4fd50e061d57f18ed. Exact
   artifact verification PASS: seven complete compiled source hashes, six
   linked symbols and all active patch/profile hashes. Kernel SHA256

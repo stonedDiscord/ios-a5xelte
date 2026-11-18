@@ -9,6 +9,13 @@ BOOT shim/out/dreamlte-xnu-0215.img,18,432,016B, SHA256
 5a484fa65b5e4ba3039562cd1bde43cea68faba732e19d4b7ba8391dd4fff17f.
 Heimdall BOOT100%, exit0, reboot successful from fresh Download Mode046.
 Immediate host check sees no1209:0001; user framebuffer report pending.
+Update: user reports0215 stops displaying at Darwin Kernel Version22.6.8,
+before the BSD USB path. Exact buildtree comparison: only sweet_usb.c differs
+from0214; ADTs identical. No precise CPU fault established. Same verified
+0215 kernel with startup_debug=1 packaged as
+shim/out/dreamlte-xnu-0215-startup.img (18,432,016B), SHA256
+6ddd75d186a5d8881a47d65bcc9266314e48ae5907c799b8455f338c1826cacc.
+Preservation/payload checks PASS, not flashed. Download Mode request pending.
 No Android restoration. Latest write BOOT only; USERDATA remains possibly
 partial from failed upload. Exact files/logs research/dreamlte/ci-44256127913.
 Prepared0216 snapshot is still outside active profile and not flashed.
