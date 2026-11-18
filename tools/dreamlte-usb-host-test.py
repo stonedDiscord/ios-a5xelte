@@ -26,6 +26,15 @@ def function(name):
         end += 1
     return re.sub(r'__asm__ volatile\("[^"\n]*" ::: "memory"\);', '', source[start:end])
 
+if 'DREAMLTE USB: session LINK=' in source:
+    startup = function('sweet_usb_gadget_start')
+    sessions = [m.start() for m in re.finditer(r'\bdreamlte_usb_vbus\(\);', startup)]
+    reset = startup.index('dwc_wr(DCTL, DCTL_CSFTRST)')
+    timing = startup.index('dreamlte_usb_core_timing(dwc)')
+    endpoints = startup.index('dreamlte_usb_resources()')
+    assert len(sessions) == 2 and sessions[0] < reset < timing < sessions[1] < endpoints
+    print('PASS: session-valid before reset and reasserted before endpoint commands')
+
 code = r'''
 #include <assert.h>
 #include <stdint.h>

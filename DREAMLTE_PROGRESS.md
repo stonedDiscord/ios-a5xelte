@@ -1,5 +1,26 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0221 wake retained;0222 corrects session-valid ordering
+
+- User0221 physical report: ID5533280a/GCTL30c12004/DSTS00520004;
+  PHYversion00010000 CLK801b0049 UTMI60; Q7e00 LINK08000000 SEL0;
+  soft reset done1ms GCTL30c12004 DCFG4; post-timing USB2=40102400
+  GCTL80e92004. First resource ep0cmd2 remains active402, PAR0=1/PAR1=0/
+  PAR2=0; GSTS3e800000 DCTL0 DSTS00520000 EN0; PIPE010c0002 HW3=10420085
+  BUS22220001/300; PHY LINK08000000 UTMI60 CLK801b0049 Q7e00 SEL0.
+  Reset-order fix retained wake mask but did not solve command execution.
+- Pinned Samsung CAL asserts LINK FORCE_BVALID/FORCE_VBUSVALID and UTMI
+  VBUSVLDEXTSEL/VBUSVLDEXT during PHY init before DCTL/endpoint commands.
+  Our existing helper ran after failed endpoint setup, so physical LINK/UTMI
+  have no session-valid bits.0222 moves existing helper before DCTL reset,
+  reasserts after reset before endpoints, prints session readback. No new
+  power/PLL/clock writes; retained reset-wake and QACT changes. This is a
+  source-derived ordering hypothesis, not demonstrated hardware root cause.
+- Actual ARM64 compile, wrapper ordering/masks and EP/resource tests PASS;
+  plain patch/full-source match PASS. Reverified0221 then archived own source
+  manifest; promoted0222/current manifest16 strings.0221 remains installed,
+  fresh Download Mode053 ready, no new flash. Full CI next.
+
 ## 2026-11-18:0221 verified and flashed; physical reset-wake test pending
 
 - Exact CI44276126788 SUCCESS at3e18153bae65d8386c824e42cbb66a32b8968084.

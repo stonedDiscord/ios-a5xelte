@@ -2,6 +2,15 @@
 
 ## Active S8 handoff — 2026-11-18
 
+Latest0221 physical: USB2 remains40102400/Q7e00 but first resource cmd2
+still402; soft reset done1ms GCTL30c12004/DCFG4. LINK08000000/UTMI60
+lack session-valid; existing helper was after failed endpoint setup.
+0222 promoted: existing VBUS override before DCTL reset and reassert/readback
+before endpoints, matching Samsung CAL ordering. Actual ARM64/three suites/
+plain patch PASS. Current source manifest0222/16 strings;0221 own archived.
+Installed0221, fresh Download Mode053, no new flash; full CI next. Earlier
+pending0221 screen statuses below are superseded by physical trace above.
+
 CURRENT INSTALLED:0221 BOOT; fresh Download Mode052 accepted100%, Heimdall
 exit0/reboot. Only BOOT/sda7 written. Immediate host no1209:0001 gadget.
 Physical0221 result requested: post-reset USB2CFG, resources-assigned then

@@ -1,0 +1,40 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -1091,6 +1091,13 @@
+ 	ud.dma_pa = ptoa_64(pn);
+ 	ud_if_create();
+ 
++#if defined(DREAMLTE)
++	/* Samsung CAL asserts session-valid during PHY init, before DCTL reset
++	 * and endpoint setup. Do not defer it until after STARTTRANSFER.
++	 */
++	dreamlte_usb_vbus();
++#endif
++
+ 	/* Device controller soft reset (PHY and global setup stay as ABL left them). */
+ 	dwc_wr(DCTL, DCTL_CSFTRST);
+ 	int i;
+@@ -1105,6 +1112,12 @@
+ 
+ #if defined(DREAMLTE)
+ 	dreamlte_usb_core_timing(dwc);
++	/* Reassert after reset; readback distinguishes session gating from
++	 * endpoint-command failure without changing host VBUS power.
++	 */
++	dreamlte_usb_vbus();
++	printf("DREAMLTE USB: session LINK=%08x UTMI=%08x before endpoints\n",
++	    usb_rd(dreamlte_phy, 0x04), usb_rd(dreamlte_phy, 0x08));
+ #endif
+ 	dwc_wr(GEVNTADRLO, (uint32_t)(ud.dma_pa + UD_EVT));
+ 	dwc_wr(GEVNTADRHI, (uint32_t)((ud.dma_pa + UD_EVT) >> 32));
+@@ -1144,9 +1157,7 @@
+ 	dwc_wr(DALEPENA, 0x3);
+ 	ud_start_setup();
+ 
+-#if defined(DREAMLTE)
+-	dreamlte_usb_vbus();
+-#else
++#if !defined(DREAMLTE)
+ 	vm_offset_t qs = ml_io_map(QSCRATCH_PA, 0x100);
+ 	if (qs != 0) {
+ 		uint32_t hs = usb_rd(qs, QSCRATCH_HS_PHY_CTRL), ss = usb_rd(qs, QSCRATCH_SS_PHY_CTRL);
