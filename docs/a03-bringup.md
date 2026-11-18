@@ -7,7 +7,9 @@ and storage work; no measured UI speedup yet. Multicore0157 is a separate
 opt-in candidate: fullCI44367277857 linkedSMP/source/checksum verified;
 BOOT0091 twoA55/1984MiB panics at CPU_ON rc=-9 (invalid address), with
 secondary entry0x103481000.0158 prepares a retained low BOOT-shim trampoline;
-full build and hardware checks pending. cpus=8 alone is unsafe.
+BOOT0092 now confirms CPU_ONrc0 via0x80081000 and both A55s initialized
+with SGI1checks. Userspace/USB work; A75s/allcores and UI speedup unproven.
+cpus=8 alone is unsafe.
 
 Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
 been measured on hardware. A120second log-only trial completed361slices/

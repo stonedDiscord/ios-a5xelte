@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0092 low trampoline starts second A55; two-core XNU/userspace
+
+Heimdall36454 upload100percent/success/reboot~19:17UTC. Singlecapture58347
+waits thenCDCreturnsUSB005/017. Exact hardwarelog:
+A03 CPU: requested=2 selected=2 (limit=8)
+cpu0 MPIDR0 initCPU/SGI1OK.
+highentry0x103485000 via loadertrampoline0x80081000.
+cpu1 CPU_ON target0x100 entry0x80081000 context1 returnsrc0.
+cpu1 entersinitCPU MPIDR100 EL1 IRQs0 then SGI1OK.
+Final2CPUsinitialized/SGI1verified line captured (interleaved). User independently
+reports bootingandUSBvisible. This proves secondA55execution and bothCPUinit/
+selfSGI; not allcores, A75, independenttimermeasurement or GUI speedup.
+Prior0091 highentry returned-9; lowentry nowworks, supporting entryrangeissue.
+
+LiveEP0VM/io/ps/streamstatus return. VM121804free/1090active/69inactive/
+3989wired16KiBpages/compressor0, ioReady1/poisoned0; launchd andSpringBoard26
+start. VolatileUTCsync sent. Private79104firmware staging11918 inprogress;
+touch currentlyoff0slices/events0 until explicitload/start. Singlecapture58347
+900seconds~19:33UTC; verifyownerbeforeanotherreader. Need finishfwstage/load/
+touchstart (leaveenabled), follow-upVM/io/SpringBoard andphysicalresponse.
+No additionalflash or protectedpartitionwrite.0090restore retained.
+
 ## 2026-11-18: BOOT0092 low-shim trampoline verified; BOOT-only deployment
 
 FullCI44375549972 SUCCESS exact87f1b0ed025f69fef9ee199af70146ab3b385343.

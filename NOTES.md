@@ -1,3 +1,10 @@
+ACTIVE2026-11-18~19:19UTC0092 TWOA55SUCCESS: CPU_ONrc0 via0x80081000;
+cpu1MPIDR100 EL1init+SGI1OK; cpu0SGI1OK/final2CPUinitialized. UserbootingUSB.
+VM/io/pslive, launchd/SB26starts, compressor0/ioReady1poisoned0. NotA75/allcores
+or measuredGUI speedup. Singlecapture58347 boot0092-usb-initial900s(~19:33UTC).
+Privatefwstaging11918 inprogress; needstagevalid0->touchload/A55A->touchstart
+leaveON thenVM/io/SBsample/UI. Noautoflash.0090restore retained.
+
 ACTIVE2026-11-18 BOOT0092trampolineflash36454 INPROGRESS/BOOTonly.
 FullCI44375549972 SUCCESS/exact87f1b0e/checksum/5SMPmarkers/actualsourcePASS.
 BOOT9dda3af2...0639c4fc/kernelbb831647...02dabbb. Same2A55/1984MiB/args/
