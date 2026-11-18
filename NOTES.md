@@ -2,6 +2,13 @@
 
 ## Active S8 handoff — 2026-11-18
 
+Latest:0219 read-only PHY/core failure diagnostics promoted to active profile
+for full CI; reviewed manifest now0219/14 diagnostics.0218 own expected
+manifest archived in ci-44261810052. Staged source0219. Installed BOOT still
+0218, no gadget, physical screen result pending. No USB sequence change or
+additional phone write. Full build dispatch next; older staging states below
+are superseded by this paragraph.
+
 CURRENT INSTALLED:0218 BOOT; fresh Download Mode049 accepted100%, Heimdall
 exit0/reboot. Only BOOT/sda7 written. Immediate host checker finds zero
 1209:0001 gadgets. Physical screen result requested and pending: resources

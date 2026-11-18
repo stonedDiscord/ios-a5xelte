@@ -1,5 +1,17 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0219 diagnostics promoted for full build
+
+- Prior goal turn progressed by preparing/test-compiling read-only PHY/core
+  diagnostics and expanding command tests; no working USB claim. Current
+  host still sees no gadget and0218 screen report is pending.
+- Promoted0219 into active profile to prepare a verified next trial without
+  waiting to start its build. No USB sequence change, clock/reset write or
+  new map. Actual ARM64 compilation and all three modeled suites PASS.
+- Archived0218 own expected source manifest with its private CI artifacts
+  before updating current manifest to0219 and14 linked diagnostic strings.
+  Staged source now0219.0218 remains installed; no new phone write.
+
 ## 2026-11-18: prepared read-only PHY failure diagnostics after0218
 
 - Rechecked host after0218 flash: no1209:0001, so physical USB is still

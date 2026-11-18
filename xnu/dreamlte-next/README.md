@@ -1,5 +1,11 @@
 # Prepared S8 USB follow-up
 
+Latest2026-11-18:0219 failure-only diagnostics promoted to active profile
+for full build.0218 remains installed and screen report remains pending.
+No new functional USB sequence or hardware success. Older staging statuses
+below are history; current reviewed source manifest targets0219.
+
+
 Current2026-11-18:0218 is installed following exact CI44261810052 success
 and verified BOOT flash. Host still sees no1209:0001; physical report pending.
 The older staging/installed statuses below are historical.
