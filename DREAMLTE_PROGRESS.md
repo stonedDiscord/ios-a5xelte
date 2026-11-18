@@ -1,5 +1,28 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0219 physical PHY snapshot;0220 source-derived wake
+
+- User physical0219 dump: ep0 cmd2 reg00000402; PAR0=1/PAR1=0/PAR2=0;
+  GCTL80e92004,GSTS3e800000,USB2=40102400,DCTL0,DSTS00520000,EN0;
+  PIPE010c0002,HW3=10420085,BUS22220001/00000300;
+  PHY LINK08000000,UTMI00000060,CLK801b0949,Q00007c00,SEL00000000.
+- STARTCFG completed; first OUT EP0 SETTRANSFRESOURCE now remains active.
+  Thus changing resource/config order did not solve command execution.
+  Q has DIS_ID0/VBUS/BVALID/LINKGATE bits set but FORCE_QACT(bit9) clear;
+  SEL PIPE-clock bit3 clear selects measured primary bank. Reset/UTMI sleep
+  bits clear do not prove functional link clocks. Host still no gadget.
+-0220 follows pinned Samsung exynos_cal_usbphy_q_ch(enable=1): disable
+  automatic QACT sources, force QACT after prescribed500us delays, pulse
+  LINK_SW_RESET with10us delay, then existing DCTL reset. Retains unrelated
+  Q bits, port mux, PLL/reference/tuning. Refuses secondary PIPE clock or
+  preasserted link reset. Predicted Q7c00->7e00 is not yet physical evidence.
+- Actual ARM64 translation-unit compile PASS; actual wrapper/EP/resource
+  modeled suites PASS, both PHY register layouts, all32 Q-bit preservation,
+  primary selection/refusal and physical sample covered. Plain patch/full
+  reviewed-source equality PASS.0220 promoted, source manifest updated with
+  fifteenth linked marker after archiving verified0219 manifest privately.
+  No new hardware write;0219 remains installed. Full CI next.
+
 ## 2026-11-18:0219 post-flash host observation
 
 - Rechecked actual USB devices and control-transfer checker after0219:

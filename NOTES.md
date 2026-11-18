@@ -2,6 +2,17 @@
 
 ## Active S8 handoff — 2026-11-18
 
+Latest0219 physical trace received: ep0 cmd2 reg402 PAR0=1/PAR1=0/PAR2=0;
+GCTL80e92004 GSTS3e800000 USB2=40102400 DCTL0 DSTS00520000 EN0;
+PIPE010c0002 HW3=10420085 BUS22220001/300; PHY LINK08000000 UTMI60
+CLK801b0949 Q7c00 SEL0. First SETTRANSFRESOURCE stuck after STARTCFG.
+0220 promoted: Samsung CAL force-QACT/link-reset before DCTL reset, primary
+bank only; preserves port/PLL/reference/tuning, refuses secondary clock or
+asserted reset. ARM64 compile/three suites/plain patch equality PASS.
+Expected Q7e00 not physical proof. Current source manifest0220/15 strings;
+0219 own expected manifest archived in its CI directory. Installed still0219.
+Full CI next; no new phone write. Prior pending0219-report statuses superseded.
+
 CURRENT INSTALLED:0219 BOOT; fresh Download Mode050 accepted100%, Heimdall
 exit0/reboot. Only BOOT/sda7 written. Immediate host no1209:0001 gadget.
 Requested physical four USB FAIL lines, one USB CORE and two USB PHY lines,

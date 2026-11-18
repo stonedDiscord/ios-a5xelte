@@ -1,10 +1,10 @@
 {
-  "description": "Reviewed DREAMLTE0219 failure-only PHY/core snapshots on0218 resource ordering; ARM64 compile and actual-function modeled tests pass. Physical USB unverified.",
+  "description": "Reviewed DREAMLTE0220 Samsung Q-channel force/link reset before DCTL reset; ARM64 compile and modeled suites PASS, physical USB unverified.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "6cb58dc6032959bd53ba8c8e8321cbbe4240fa99d8bf56b1ec33cc8ff76f98f4",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "199d6dca3e30ce5e1f2000ef90dfdd52a3c959dd4c35031c26065829078b13c5",
+    "bsd/dev/sweet_usb.c": "b2a259d45857f5bd5b99b1525a546794dc03b2b1f98e2bf51cc700e44d950ae6",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
@@ -25,7 +25,8 @@
     "DREAMLTE USB: resources assigned",
     "DREAMLTE USB CORE: PIPE=",
     "DREAMLTE USB PHY: LINK=",
-    "DREAMLTE USB PHY: Q="
+    "DREAMLTE USB PHY: Q=",
+    "DREAMLTE USB: link wake Q="
   ],
   "symbols": [
     "_dreamlte_log_cursor",

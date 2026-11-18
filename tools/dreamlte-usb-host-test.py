@@ -11,6 +11,7 @@ import tempfile
 
 source = pathlib.Path(sys.argv[1]).read_text()
 has_core_timing = 'dreamlte_usb_core_timing' in source
+has_link_wake = 'dreamlte_usb_link_wake' in source
 
 def function(name):
     match = re.search(r'\b' + name + r'\([^;{}]*\)\s*\{', source)
@@ -35,6 +36,7 @@ typedef uintptr_t vm_offset_t;
 static uint32_t core[0x10000 / 4], phy[0x100 / 4];
 static vm_offset_t dreamlte_phy;
 static unsigned maps, starts, phy_reads;
+static unsigned delays;
 static int mode;
 static vm_offset_t ml_io_map(uintptr_t pa, unsigned size) {
     maps++;
@@ -57,6 +59,10 @@ static void sweet_usb_gadget_start(vm_offset_t dwc) {
     assert(dwc == (uintptr_t)core); starts++;
 }
 '''
+if has_link_wake:
+    code += '#define HAS_LINK_WAKE 1\n'
+    code += 'static void delay(unsigned us) { assert(us == 500 || us == 10); delays++; }\n'
+    code += 'static int\n' + function('dreamlte_usb_link_wake') + '\n'
 code += 'static int\n' + function('dreamlte_usb_prepare') + '\n'
 if has_core_timing:
     code += '#define HAS_CORE_TIMING 1\n'
@@ -66,7 +72,7 @@ code += 'static void\n' + function('sweet_usb_probe') + '\n'
 code += r'''
 static void reset(void) {
     memset(core, 0, sizeof(core)); memset(phy, 0, sizeof(phy));
-    maps = starts = phy_reads = 0; dreamlte_phy = 0;
+    maps = starts = phy_reads = delays = 0; dreamlte_phy = 0;
     core[0xc120/4] = 0x5533280a;
     core[0xc110/4] = 0x30c11004;
 }
@@ -94,7 +100,7 @@ int main(void) {
     for (unsigned shifted = 0; shifted < 2; shifted++) {
         reset(); unsigned off = shifted ? 4 : 0;
         phy[0] = shifted ? 0x010101 : 0;
-        phy[(off+0x04)/4] = 0x51000000;
+        phy[(off+0x04)/4] = 0x41000000;
         phy[(off+0x08)/4] = 0xa000001c;
 #if defined(HAS_CORE_TIMING)
         core[0xc200/4] = 0x40102540;
@@ -119,8 +125,31 @@ int main(void) {
         }
 #endif
         dreamlte_usb_vbus();
-        assert(phy[(off+0x04)/4] == 0x51000180);
+        assert(phy[(off+0x04)/4] == 0x41000180);
         assert(phy[(off+0x08)/4] == 0xa0000640);
+#ifdef HAS_LINK_WAKE
+        assert(delays == 4);
+        assert(phy[(off+0x34)/4] == 0x3e00);
+        for (unsigned bit = 0; bit < 32; bit++) {
+            uint32_t before = 1u << bit;
+            phy[(off+0x34)/4] = before;
+            phy[(off+0x04)/4] = 0x08000000;
+            assert(dreamlte_usb_link_wake((uintptr_t)phy+off) == 0);
+            assert(phy[(off+0x34)/4] == (before | 0x3e00));
+            assert(phy[(off+0x04)/4] == 0x08000000);
+        }
+        phy[(off+0x34)/4] = 0x7c00;
+        assert(dreamlte_usb_link_wake((uintptr_t)phy+off) == 0);
+        assert(phy[(off+0x34)/4] == 0x7e00);
+        phy[(off+0x6c)/4] = 1u << 3;
+        unsigned prior = delays;
+        assert(dreamlte_usb_link_wake((uintptr_t)phy+off) == -1);
+        assert(delays == prior && phy[(off+0x34)/4] == 0x7e00);
+        phy[(off+0x6c)/4] = 0;
+        phy[(off+0x04)/4] |= 1u << 28;
+        assert(dreamlte_usb_link_wake((uintptr_t)phy+off) == -1);
+        assert(delays == prior);
+#endif
     }
     puts("PASS: actual S8 wrapper refusal paths, device mode, PHY layout and VBUS masks");
 }
