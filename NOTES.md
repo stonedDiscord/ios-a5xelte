@@ -1,3 +1,12 @@
+ACTIVEUSERDIRECTION2026-11-18 NEXT0093ALL8CORES; FREEZEDEFERRED.
+6A55MPIDR0..500+2A75600/700/cpus8/1984MiB/same0092lowtrampoline/root.
+0160addsA75IOKitmatch+readonlycpusrecountticks toproveworkdistribution.
+CurrentsecondA55normalXNU schedulerregistered (notparked); no usage%measured.
+ADT8/liveDT/types/extensionseed+CPU0/1preserved/hosttestsPASS.0093inputADT
+stagedprivate; fullCI next, notflashed. Linuxprocessor.ccompileApplebuiltin
+blocked; do not claimfullcompile.0159mayremainpassive butnofreezeblocker.
+Preserve0092/0090restores/touchON; no newphoneI/O thisturn.
+
 ACTIVE19:29UTC displaydiagnosticfullCI44381013070 exactc6b9a55 RUNNING,
 macos26intel/a03/SWEET/userspacetrue/buildtreetrue.0159probesvsync/notify/
 swap/copy, notfix. Same0092stillrunning/frozenimage/touchON. Nextexactsuccess

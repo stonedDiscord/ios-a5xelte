@@ -161,7 +161,8 @@ def main():
                      '0156-a03-ios16-ca-client-work-interval.patch',
                      '0157-a03-opt-in-psci-smp.patch',
                      '0158-a03-loader-owned-smp-trampoline.patch',
-                     '0159-a03-readonly-display-progress-probe.patch'):
+                     '0159-a03-readonly-display-progress-probe.patch',
+                     '0160-a03-readonly-per-cpu-usage.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

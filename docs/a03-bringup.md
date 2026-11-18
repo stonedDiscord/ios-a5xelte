@@ -12,7 +12,9 @@ with SGI1checks. User confirms visible SpringBoard on0092 at19:23UTC;
 continuous touch forwarding remains enabled. User later reports frozen image;
 kernel time and process CPU counters still advance.0159 display diagnostics
 prepared; no stableGUI/freeze fix claim. A75s/allcores and UI speedup unproven.
-cpus=8 alone is unsafe.
+Next iteration per user request: all eight cores (six A55 + two A75),
+validated eight-node ADT plus0160 A75 driver match and per-CPU usage probe.
+Freeze investigation deferred; eight-core hardware success remains unproven.
 
 Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
 been measured on hardware. A120second log-only trial completed361slices/

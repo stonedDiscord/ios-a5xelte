@@ -15,14 +15,14 @@ for marker in verifier.MARKERS:
     else:raise AssertionError('missing SMP marker accepted')
 
 p=argparse.ArgumentParser();p.add_argument('--source',type=Path);a=p.parse_args()
-for count in (1,2,6):
+for count in (1,2,6,8):
     tree=mkadt_a03.build(memory_mib=1984,cpu_count=count)
     cpus=next(n for n in tree.children if n.name=='cpus').children
     assert len(cpus)==count
     for i,node in enumerate(cpus):
         assert node.name=='cpu'+str(i)
         assert node.prop('reg')==struct.pack('<I',i<<8)
-        assert node.prop('compatible').startswith(b'arm,cortex-a55')
+        assert node.prop('compatible').startswith(b'arm,cortex-a75' if i>=6 else b'arm,cortex-a55')
         assert node.prop('state')==(b'running'+bytes(1) if i==0 else b'stopped'+bytes(1))
     def ph(n):
         values=[v for k,f,v in n.props if k=='AAPL,phandle']
@@ -30,7 +30,15 @@ for count in (1,2,6):
         return values
     values=ph(tree);assert len(values)==len(set(values))
     blob=adt.serialize(tree);assert adt.parse(blob)[1]==len(blob)
-for count in (0,3,7,8):
+tree=mkadt_a03.build(memory_mib=1984,cpu_count=2)
+original=adt.serialize(tree)
+mkadt_a03.configure_cpu_count(tree,8)
+cpus=next(n for n in tree.children if n.name=='cpus')
+assert len(cpus.children)==8
+values=ph(tree);assert len(values)==len(set(values))
+cpus.children=cpus.children[:2]
+assert adt.serialize(tree)==original, 'extension replaced original nodes or seed'
+for count in (0,3,7,9):
     try:mkadt_a03.build(cpu_count=count)
     except ValueError:pass
     else:raise AssertionError('unsupported CPU trial accepted')

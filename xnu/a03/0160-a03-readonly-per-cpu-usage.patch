@@ -1,0 +1,80 @@
+--- a/osfmk/kern/processor.c
++++ b/osfmk/kern/processor.c
+@@ -663,6 +663,37 @@
+ 	ticks[CPU_STATE_IDLE] += (uint32_t)(idle_time / hz_tick_interval);
+ }
+ 
++#if defined(SWEET)
++/* Same recount-backed tick source and list lock as host_statistics.
++ * No processor starts, binding, scheduler changes or reset of counters. */
++void a03_cpu_usage_probe(void);
++void
++a03_cpu_usage_probe(void)
++{
++    natural_t snapshots[MAX_CPUS][CPU_STATE_MAX] = { 0 };
++    unsigned int ids[MAX_CPUS] = { 0 };
++    unsigned int count;
++    simple_lock(&processor_list_lock, LCK_GRP_NULL);
++    count = processor_count;
++    if (count > MAX_CPUS) count = MAX_CPUS;
++    for (unsigned int i = 0; i < count; i++) {
++        processor_t processor = processor_array[i];
++        ids[i] = i;
++        if (processor != PROCESSOR_NULL) {
++            ids[i] = processor->cpu_id;
++            processor_cpu_load_info(processor, snapshots[i]);
++        }
++    }
++    simple_unlock(&processor_list_lock);
++    printf("A03 CPUS registered=%u cumulative-ticks wrap32; compare deltas\n", count);
++    for (unsigned int i = 0; i < count; i++) {
++        printf("A03 CPUS cpu=%u user=%u system=%u idle=%u nice=%u\n", ids[i],
++            snapshots[i][CPU_STATE_USER], snapshots[i][CPU_STATE_SYSTEM],
++            snapshots[i][CPU_STATE_IDLE], snapshots[i][CPU_STATE_NICE]);
++    }
++}
++#endif
++
+ kern_return_t
+ processor_info(
+ 	processor_t     processor,
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -609,12 +609,13 @@
+      (unsigned long long)secs,(unsigned)us);
+ }
+ extern void a03_display_probe(void);
++extern void a03_cpu_usage_probe(void);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -635,6 +636,7 @@
+   }
+  } else if(!strcmp(command,"io"))a03_emmc_probe_stats();
+  else if(!strcmp(command,"display"))a03_display_probe();
++ else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);
+--- a/iokit/KernelConfigTables.cpp
++++ b/iokit/KernelConfigTables.cpp
+@@ -48,6 +48,12 @@
+     "     'IOProbeScore'    = 10000:32;"
+     "   },"
+     "   {"
++    "     'IOClass'         = SweetCPU;"
++    "     'IOProviderClass' = IOPlatformDevice;"
++    "     'IONameMatch'     = 'arm,cortex-a75';"
++    "     'IOProbeScore'    = 10000:32;"
++    "   },"
++    "   {"
+     "     'IOClass'         = AppleKeyStore;"
+     "     'IOProviderClass' = IOResources;"
+     "     'IOMatchCategory' = AppleKeyStore;"

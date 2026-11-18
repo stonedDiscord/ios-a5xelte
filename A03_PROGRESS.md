@@ -1,5 +1,31 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: user redirects next iteration to all eight cores; freeze deferred
+
+User explicitlyrequestsremainingcores nextiteration; defersdisplayfreeze.
+NextBOOT0093 supersedesearlier2A55diagnosticplan: sixA55MPIDR0..500 plus
+bothA75MPIDR600/700, cpus8,1984MiB, same0092root/args/lowtrampoline except
+CPUcount. Existing0159 passivecounters may remain but nofreezeinvestigation
+is prerequisite. No touchstop/reboot/flash thisturn;0092state notfreshlyprobed.
+
+CurrentsecondA55 isregistered throughml_processor_register/processor_start,
+normalboundstartupthread and scheduler path, notmerelypowered/parked. Existing
+hardwareprovesinit/SGI only; no perCPUworkloaddeltas measured. GenericSMP
+scheduler handlesselectedcores aspeers; not yetA75capacityaware or UIpinning.
+Added0160 A75IOKitmatch (prior tableonlyA55) and cpus readonlyprobe using
+sameprocessor_cpu_load_info/recountticks ashoststatistics, listlock/bounded8,
+printingafterunlock. User/system/idletickdeltas willmeasureactualusage.
+No schedulingpolicy/clock/DVFSchanges or workloadpinning.
+
+ADTgenerator supports8 withrealA75compatible andliveDTchecks. Existing0092
+seed/nodes/CPU0+1preserved; onlyCPU2..7added/uniquephandles. Private0093input
+ADTstaged (notbootimage). TestsCPUidentities/extensionpreservation/pass and
+actual0160C ASan/UBSan bounds/null/lock/no schedulingmutations/pass/reverse.
+Localprocessor.c exactCIcommand hitsLinuxClangmissingAppleXNUtypebuiltins;
+no replacementsused, fullXcodebuildrequired. PreprocessorconfirmsSWEET1.
+FreshfullCI thenexactsource/linkedmarkers/checksum gates beforeall8BOOTtest;
+no claimall8alreadyworking. Preserve0092twoA55 and0090singleCPU restores.
+
 ## 2026-11-18: BOOT0092 displayed image freezes; kernel and event loops progress
 
 User reports clock froze~2minutes before19:24UTC and confirms entireimage
