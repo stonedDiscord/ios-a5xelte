@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: requested A75-first scheduling candidate0161
+
+User asks to make the A75 the main CPU XNU uses. BOOT0093 already runs
+all eight cores; firmware enters on A55 MPIDR0 and that path remains intact.
+Candidate0161 adds opt-in a03_prefer_a75=1: for unbound, non-realtime wakeups,
+choose idle logical CPU6 (A75 MPIDR600), then CPU7 (A75 MPIDR700), before
+last-CPU affinity. If neither is eligible, existing scheduling handles all
+cores. Bound kernel work, realtime selection, all-core recommendation masks,
+DVFS and physical bootstrap CPU remain unchanged. This is an idle-placement
+preference, not a boot-CPU migration, exclusive pinning or full AMP scheduler.
+
+Guard requires exact validated eight-node A75 identities. Selection uses the
+locked pset idle/primary/recommended masks and excludes pending preemption
+ASTs. Actual extracted selector passes262144 mask combinations plus disabled,
+bound/RT, primary-mask and topology guards under ASan/UBSan; patch applies
+and reverses against exact0093 finaltree. SMP ADT regression and offline107
+patch profile staging pass. Full Xcode build/link and hardware still pending;
+no speedup or runtime activation claim. Keep0093/0092/0090 restore images,
+1984MiB and continuous touch. BOOT-only authorization remains active.
+
 ## 2026-11-18: idle follow-up verifies responsive frames without another Home
 
 Continuation audit rechecked unchanged BOOT0093 and clean worktree, with

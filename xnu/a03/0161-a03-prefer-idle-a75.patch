@@ -1,0 +1,66 @@
+--- a/osfmk/kern/sched_prim.c
++++ b/osfmk/kern/sched_prim.c
+@@ -425,6 +425,32 @@
+ 
+ uint32_t sched_debug_flags = SCHED_DEBUG_FLAG_CHOOSE_PROCESSOR_TRACEPOINTS;
+ 
++#if defined(SWEET)
++/* Opt-in idle placement only; keep all eight CPUs recommended and available. */
++static boolean_t a03_prefer_a75 = FALSE;
++
++static processor_t
++a03_choose_idle_a75(processor_set_t pset, thread_t thread)
++{
++	if (!a03_prefer_a75 || thread->bound_processor != PROCESSOR_NULL ||
++	    thread->sched_pri >= BASEPRI_RTQUEUES) {
++		return PROCESSOR_NULL;
++	}
++	const ml_topology_info_t *topology = ml_get_topology_info();
++	/* Only the validated BOOT0093 eight-node order, never a donor topology. */
++	if (topology->num_cpus != 8 || topology->cpus[6].phys_id != 0x600 ||
++	    topology->cpus[7].phys_id != 0x700) {
++		return PROCESSOR_NULL;
++	}
++	uint64_t idle = pset->cpu_state_map[PROCESSOR_IDLE] & pset->primary_map &
++	    pset->recommended_bitmask & ~pset->pending_AST_URGENT_cpu_mask &
++	    ~pset->pending_AST_PREEMPT_cpu_mask & ((1ULL << 6) | (1ULL << 7));
++	int cpuid = lsb_first(idle);
++	return cpuid >= 0 ? processor_array[cpuid] : PROCESSOR_NULL;
++}
++#endif
++
++
+ /* Global flag which indicates whether Background Stepper Context is enabled */
+ static int cpu_throttle_enabled = 1;
+ 
+@@ -437,6 +463,12 @@
+ sched_init(void)
+ {
+ 	boolean_t direct_handoff = FALSE;
++#if defined(SWEET)
++	PE_parse_boot_argn("a03_prefer_a75", &a03_prefer_a75, sizeof(a03_prefer_a75));
++	kprintf("A03 SCHED: A75 idle preference requested=%u (CPU6 then CPU7; A55 fallback)\n",
++	    a03_prefer_a75 != FALSE);
++#endif
++
+ 	kprintf("Scheduler: Default of %s\n", SCHED(sched_name));
+ 
+ 	if (!PE_parse_boot_argn("sched_pri_decay_limit", &sched_pri_decay_band_limit, sizeof(sched_pri_decay_band_limit))) {
+@@ -5032,6 +5064,17 @@
+ 
+ 	assert(thread->sched_pri <= MAXPRI);
+ 
++#if defined(SWEET)
++	/* Before last-CPU affinity: move wakeups to an idle A75 when possible.
++	 * Called with this pset and thread locked; normal dispatch/IPI follows.
++	 * Busy A75s, bound threads and RT policy retain the existing selection. */
++	processor_t a75 = a03_choose_idle_a75(pset, thread);
++	if (a75 != PROCESSOR_NULL) {
++		return a75;
++	}
++#endif
++
++
+ 	/*
+ 	 * Prefer the hinted processor, when appropriate.
+ 	 */

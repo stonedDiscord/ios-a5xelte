@@ -1,3 +1,11 @@
+ACTIVE2026-11-18 A75-FIRST candidate0161 prepared per user request.
+Opt-in a03_prefer_a75=1 prefers idle CPU6 then7 before last-CPU affinity;
+A55 fallback/all8 remain available; RT/bound work and physical A55 bootstrap
+unchanged. Exact0093 tree patch/reverse+actual selector262144 masks ASan/UBSan
+PASS; SMP ADT regression/profile107 PASS. Full CI/link then0094 same0093
+ADT/root/1984MiB/cpus8 plus new arg, BOOT-only test and cpus deltas needed.
+No runtime activation/speedup claim. Keep0093/0092/0090 restores and touchON.
+
 ACTIVE 2026-11-18 ~21:07 UTC: BOOT0093 frame-update recovery VERIFIED.
 Idle follow-up: no Home or USB swipe injected. Physical gestures resumed
 swaps7051/copies7045 ->7175/7169 ->8736/8730. User explicitly confirms
