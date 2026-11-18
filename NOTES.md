@@ -1,3 +1,12 @@
+ACTIVE2026-11-18~16:20UTC BOOT0089 flashed successfully using lowercase
+heimdall --boot. CI44192146474 SUCCESS exactfd1fc5e; artifact/checksum,
+unchanged0088ADT/1GiB/bootargs/loader-except-size PASS. Kernelb316c806...bf14,
+BOOTd897364f...c999c. Uppercase --BOOT first rejected BEFOREupload, then
+corrected. Singlecapture hostsession93357 waitingCDC, log
+shim/a03/out/boot0089-usb-initial.log, host log boot0089-capture-host.log.
+Need UTC/privatefwstage+load/inputstatus -> actualWIflags/error/kr on swipe,
+physicalvisibleUI.0156fixnotyetproven.0088restore retained. STREAMOFF.
+
 ACTIVE22:40UTC0156fullCI44192146474 exactfd1fc5e RUNNING. Package-only
 /tmp/a03-0089/package.py gatesexactSUCCESS/checksums/same0088config.
 Noautoflash. Current0088STREAMOFF; physicalswipe reachesUIKit but denied

@@ -1,5 +1,19 @@
 # A03 physical touchscreen bring-up
 
+## Current trial (2026-11-18, BOOT0089)
+
+Physical down/motion/lift are measured on BOOT0087. Forwarded physical swipes
+reach UIKit but previously aborted SpringBoard with Failed to create work
+interval. BOOT0088 captured CA_CLIENT flags30000000, EPERM/KERN_NO_ACCESS
+at the privilege check before allocation. Patch0156 permits this client type
+under the existing explicit a03_work_interval opt-in while preserving actual
+kernel creation, app-type, ownership and lifecycle checks. Full CI44192146474
+passed at fd1fc5e; BOOT0089 was flashed to lowercase PIT boot on2026-11-18
+~16:20UTC. Runtime creation and visible touch response remain to be tested.
+Private RAM firmware must be explicitly staged/loaded after each reboot;
+touch forwarding is still explicitly started/stopped through the probe.
+Older pending-trial sections below are historical, not current status.
+
 ## Latest measured state (2026-11-17, BOOT0086)
 
 Physical held-finger coordinates were aligned on0084 (332,805). Two aligned

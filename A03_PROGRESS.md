@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0089 CA-client candidate deployed
+
+Full CI44192146474 succeeded for exact fd1fc5e59b7c9f3bee377bb1fb1a7c6541c42e7e.
+Downloaded artifact checksum verified; kernel SHA256
+b316c806e65c1cf7194012f14b6e2fef7c35782de68cadb783971a225d2cbf14.
+BOOT0089 SHA256 d897364f9a6f1c9799472a3d29a816e0be890f4f45b3488eb64bbf43754c999c.
+Packaging preserves0088 ADT,1GiB geometry,bootargs and loader except image_size;
+wrapper verifies matching stock ramdisk/DT. Both work-interval host tests pass,
+including actual policy C/C++ ASan/UBSan8192flag cases.
+
+Initial uppercase --BOOT attempt was rejected because A03 PIT uses lowercase
+boot; no partition upload occurred. Synced CDC Download was repeated, then
+heimdall flash --boot completed100percent/upload successful/reboot at~16:20UTC.
+Single capture hostsession93357 waits for CDC in boot0089-usb-initial.log.
+Private firmware reload and runtime CA_CLIENT create/UI response remain pending.
+This is successful build/deployment evidence, not a proven touch repair.
+
 ## 2026-11-17: exact swipe failure is CA_CLIENT privilege denial
 
 Second aligned0088 swipe391,1597 ->431,572 produces15HIDevents. User first
