@@ -14,8 +14,8 @@ Latest:0219 read-only PHY/core failure diagnostics promoted to active profile
 for full CI; reviewed manifest now0219/14 diagnostics.0218 own expected
 manifest archived in ci-44261810052. Staged source0219. Installed BOOT still
 0218, no gadget, physical screen result pending. No USB sequence change or
-additional phone write. Full build dispatch next; older staging states below
-are superseded by this paragraph.
+additional phone write. Full build is live as identified above; older staging
+states below are superseded by this paragraph.
 
 CURRENT INSTALLED:0218 BOOT; fresh Download Mode049 accepted100%, Heimdall
 exit0/reboot. Only BOOT/sda7 written. Immediate host checker finds zero
@@ -29,8 +29,8 @@ BOOT shim/out/dreamlte-xnu-0218.img,18,448,400B,SHA256
 70f47645eb7f5c0ba40a6d9384b4c3d4654d7e82cd1b24620111a99da2cb47d4.
 Preparation12913 complete; original ramdisk/second/DTBH/header retained,
 fit/independent hash checked. Private artifacts/manifests/flash log:
-research/dreamlte/ci-44261810052. Current manifest targets0218; archived
-0217 manifest remains with its own artifacts.
+research/dreamlte/ci-44261810052. Its0218 expected manifest is archived there;
+current source manifest targets0219.0217 has its own archived manifest.
 
 0218 tests Samsung STARTCFG then resources for every implemented physical
 endpoint before SETEPCONFIG; removes repeated data STARTCFG on DREAMLTE.
@@ -70,13 +70,13 @@ Avoid blind retries. S8 UFS runtime provider unfinished; root mount unproven.
 
 Origin wardevsa/ios-a5xelte read-only; writable build remote
 stonedDiscord/ios-a5xelte. Keep Apple binaries/device dumps/backups ignored.
-Prepared0219 outside active profile in xnu/dreamlte-next adds read-only
+0219 now active in xnu/dreamlte after preparation in dreamlte-next adds read-only
 failure snapshots for DWC3 PIPE/HW3/BUS and existing mapped PHY LINK/UTMI/
 CLK/Q/SEL. No new mapping/write/reset/retry. Actual ARM64 compile, plain
 patch equality and expanded32-endpoint/wrapper/resource suites PASS. Tests
 cover missing PHY mapping and unchanged modeled PHY words; active0218 source
 restored. Pinned CAL QACT/link-reset difference is not proven root cause.
-No additional CI or phone write while0218 screen result remains pending.
+Full0219 CI now live as above; no additional phone write.0218 report pending.
 
 Next: physical0218 result, then diagnose exact failing command or check real
 USB descriptors/configuration and bidirectional network traffic if enumerated.
