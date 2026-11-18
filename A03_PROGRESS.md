@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: user requests touch remain enabled; timed stop removed
+
+User states touch appears to work when enabled and explicitly requests leaving
+it enabled. Terminated only host timed-stream PID12128 with SIGTERM, which
+does not execute its Python finally-stop; no kernel stop command was sent.
+Follow-up exact streamstatus confirms streaming1/slices974/events38. No timed
+HID helper remains. Kernel continuous forwarding is left ON for this boot.
+Firmware remains loaded; reboot still requires explicit firmware load/start.
+
+Before this request, three physical home-bar swipes were captured with true
+down/movement/up:397,1599->418,648;390,1572->493,568;388,1590->420,312.
+User reported no visible response for those swipes. Together with five earlier
+tap events this totals38events. Settings opening animation and Preferences283
+launch remain proven; Settings content was black with home bar, and successful
+home gesture/Settings scrolling are not proven. No captured CA_CLIENT create
+diagnostic or work-interval abort on0089; specific0156 runtime path unproven.
+Capture93357 continues in boot0089-usb-initial.log until its one-hour deadline.
+
 ## 2026-11-18: physical tap launches Settings on BOOT0089
 
 User explicitly reports tapping Settings and seeing its app-opening animation.

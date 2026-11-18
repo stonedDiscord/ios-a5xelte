@@ -2,6 +2,15 @@
 
 ## Current trial (2026-11-18, BOOT0089)
 
+User explicitly requests leaving touch enabled. Kernel continuous HID
+forwarding is ON; host timed-stop helper was terminated and streamstatus
+afterwards confirmed streaming1/974slices/38events. Physical tapping caused
+the visible Settings opening animation and launched Preferences283. Settings
+content remained black with home bar; physical home-bar swipes were delivered
+but had no reported visible response. Full Settings rendering/scrolling and
+the specific CA_CLIENT creation fix remain unproven. This boot still needs
+explicit private volatile firmware staging/load and touch start after reboot.
+
 Physical down/motion/lift are measured on BOOT0087. Forwarded physical swipes
 reach UIKit but previously aborted SpringBoard with Failed to create work
 interval. BOOT0088 captured CA_CLIENT flags30000000, EPERM/KERN_NO_ACCESS

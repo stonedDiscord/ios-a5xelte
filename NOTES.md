@@ -1,3 +1,12 @@
+ACTIVE2026-11-18~16:35UTC USERREQUEST LEAVE TOUCH ENABLED. BOOT0089
+STREAMON verified974slices/38events after SIGTERM hosttimedPID12128; no
+finally-stop/no kernelstop sent; no timedHIDhelperremains. Firmwareloaded.
+Do NOT stop forwarding merely to end session. Reboot stillrequiresfwload/start.
+PhysicalSettings tap->animation/Preferences283 proven; blackSettingscontent
+and3physicalhomebarswipes/noresponse alsoobserved. NoCAclientcreate/abort
+captured;0156specificpathunproven. Capture93357 onlyttyreader until~17:20UTC.
+Preserve0088restore; no newflash needed for current userrequest.
+
 ACTIVE2026-11-18~16:31UTC BOOT0089 FIRST physicaltap->Settings animation
 userconfirmed; stream5events/twotruecontacts+HIDdown/up; Preferences283
 launched, SB26alive. Settingscontentblack/homebar; scrollingnotproven.
