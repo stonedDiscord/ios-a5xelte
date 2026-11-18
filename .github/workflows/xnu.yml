@@ -232,6 +232,7 @@ jobs:
         run: |
           kernel="dxb/fakeroot/System/Library/Kernels/kernel.$(echo "$KERNEL_CONFIG" | tr A-Z a-z).$(echo "$MACHINE_CONFIG" | tr A-Z a-z)"
           test -f "$kernel"
+          python3 tools/a03-verify-smp-kernel.py "$kernel"
           if ! strings "$kernel" | grep -F 'A03 USB: AON' >/dev/null; then
             echo 'A03 USB probe was requested but its diagnostic string is absent from the kernel' >&2
             exit 1

@@ -59,7 +59,7 @@
  bool
  SweetCPU::start(IOService *provider)
  {
--	a03_startup_checkpoint("0009 CPU start entered");
+-	a03_startup_checkpoint("CPU start entered");
  	const ml_topology_info_t *topology = ml_get_topology_info();
 -	const ml_topology_cpu_t *cpu = topology->boot_cpu;
  	OSNumber *logical = OSDynamicCast(OSNumber, provider->getProperty("logical-cpu-id"));
@@ -68,7 +68,7 @@
  	if (logical == NULL || reg == NULL || reg->getLength() != sizeof(uint32_t) ||
 -	    logical->unsigned32BitValue() != cpu->cpu_id ||
 -	    *(const uint32_t *)reg->getBytesNoCopy() != cpu->phys_id) {
--		a03_startup_checkpoint("0009 CPU DT identity rejected");
+-		a03_startup_checkpoint("CPU DT identity rejected");
 -		return false;
 -	}
 -	if (topology->num_cpus != 1) {
@@ -95,7 +95,7 @@
  	}
  	setCPUNumber(cpu->cpu_id);
  
--	a03_startup_checkpoint("0009 CPU before registration");
+-	a03_startup_checkpoint("CPU before registration");
  	ml_processor_info_t info = {};
  	info.cpu_id = reinterpret_cast<cpu_id_t>(this);
  	info.phys_id = cpu->phys_id;
@@ -103,7 +103,7 @@
  	info.l3_cache_size = cpu->l3_cache_size;
  	perfmon_interrupt_handler_func pmi_handler = NULL;
  	kern_return_t result = ml_processor_register(&info, &machProcessor, &ipi_handler, &pmi_handler);
--	a03_startup_checkpoint("0009 CPU registration returned");
+-	a03_startup_checkpoint("CPU registration returned");
  	if (result != KERN_SUCCESS) {
 -		panic("SWEET CPU: ml_processor_register failed: %d", result);
 +		panic("A03 CPU: ml_processor_register failed: %d", result);
@@ -113,9 +113,9 @@
 -	}
 -
 -	/* Re-enter the boot CPU through cpu_machine_init -> PE_cpu_machine_init. */
--	a03_startup_checkpoint("0009 CPU before processor_start");
+-	a03_startup_checkpoint("CPU before processor_start");
 -	result = processor_start(machProcessor);
--	a03_startup_checkpoint("0009 CPU after processor_start");
+-	a03_startup_checkpoint("CPU after processor_start");
 -	if (result != KERN_SUCCESS || getCPUState() != kIOCPUStateRunning) {
 -		panic("SWEET CPU: processor_start failed: %d", result);
 -	}
@@ -191,9 +191,9 @@
  	IOService::publishResource(gIOAllCPUInitializedKey, kOSBooleanTrue);
 -
 -	/* Announce completion only after registration, startup and SGI validation. */
--	a03_startup_checkpoint("0009 CPU publishing max CPUs");
+-	a03_startup_checkpoint("CPU publishing max CPUs");
  	ml_set_max_cpus(topology->max_cpu_id + 1);
--	a03_startup_checkpoint("0009 CPU initialization complete");
+-	a03_startup_checkpoint("CPU initialization complete");
 -	IOLog("SWEET CPU: boot CPU %u registered, SGI1 verified, initialization complete\n",
 -	    getCPUNumber());
 -	return true;
@@ -207,7 +207,7 @@
  void
  SweetCPU::initCPU(bool boot)
  {
--	a03_startup_checkpoint("0009 CPU initCPU entered");
+-	a03_startup_checkpoint("CPU initCPU entered");
  	if (!boot) {
 -		panic("SWEET CPU: resume is not implemented");
 +		panic("A03 CPU: cpu=%u resume is not implemented", getCPUNumber());
@@ -220,7 +220,7 @@
 -	/* A real GIC interrupt clears SIGPdisabled in cpu_signal_handler. */
 -	uint64_t deadline;
 -	nanoseconds_to_deadline(NSEC_PER_SEC, &deadline);
--	a03_startup_checkpoint("0009 CPU before SGI self-test");
+-	a03_startup_checkpoint("CPU before SGI self-test");
 +	/* Secondary startup runs at splsched: queue the self-IPI and return.
 +	 * startAll waits for its delivery after the startup thread unmasks IRQs.
 +	 * Waiting here with DAIF.I set would deadlock every secondary. */
@@ -231,7 +231,7 @@
 -		}
 -		__asm__ volatile("yield");
 -	}
--	a03_startup_checkpoint("0009 CPU SGI self-test passed");
+-	a03_startup_checkpoint("CPU SGI self-test passed");
  	setCPUState(kIOCPUStateRunning);
 +	kprintf("A03 CPU: cpu=%u entered initCPU mpidr=0x%llx EL%llu IRQs=%u\n",
 +	    getCPUNumber(), __builtin_arm_rsr64("MPIDR_EL1") & 0xffffULL,

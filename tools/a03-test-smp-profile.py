@@ -5,6 +5,15 @@ import argparse, importlib.util, struct, subprocess, sys, tempfile
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 import adt, mkadt_a03
 ROOT=Path(__file__).resolve().parent.parent
+sp=importlib.util.spec_from_file_location('smp_verify',ROOT/'tools/a03-verify-smp-kernel.py')
+verifier=importlib.util.module_from_spec(sp);sp.loader.exec_module(verifier)
+linked=bytes(1).join(verifier.MARKERS)
+verifier.verify(linked)
+for marker in verifier.MARKERS:
+    try:verifier.verify(linked.replace(marker,b''))
+    except ValueError:pass
+    else:raise AssertionError('missing SMP marker accepted')
+
 p=argparse.ArgumentParser();p.add_argument('--source',type=Path);a=p.parse_args()
 for count in (1,2,6):
     tree=mkadt_a03.build(memory_mib=1984,cpu_count=count)

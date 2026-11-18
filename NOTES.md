@@ -1,3 +1,12 @@
+ACTIVE2026-11-18~18:15UTC green44357697720 REJECTED:0157skipped!
+Artifactkernel1ef6b6b4...6254 checksumPASS but noSMPmarkers; actualsource
+singleCPU. BuildwarnedSweetCPU.cpp37 patchnotapply; no0091image/no flash.
+Rootcause localbaseline0009 CPU diagnosticprefix vs CI CPU.0157 corrected
+againstactualuploadedsource/gitapply+reverse+structuralPASS. NewlinkedSMP
+validator+CIgate rejectsactualbadkernel/missingmarkers. FreshfullCI next.
+Pretestttycapture ended, EP0reportednotconnected; no touchstop/reset/write.
+Lastverified0090=1984MiB/cpus1/TOUCHON; preserve restore.
+
 ACTIVE2026-11-18 17:21UTC SMPbuild44352036471 failedRUNNERALLOCATION.
 Checkannotation: jobnotacquiredbyhostedrunner; zero steps/no compilation.
 Replacement44357697720 dispatchedmacos-26-intel/a03/SWEET/userspacetrue/

@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: green SMP build rejected;0157 context corrected against CI source
+
+Run44357697720 completed SUCCESS exact73b554a. Downloaded kernel checksum
+1ef6b6b488cc6d193300aad98244491be301339c4d4053553ef5389079eb6254 passes,
+but required A03 CPU startup/PSCI/completion strings are absent. Actual
+uploaded source remains singleCPU. Build log explicitly warns0157 skipped:
+SweetCPU.cpp:37 patch does not apply. Upstream build.sh warns and continues
+on patch-check failure, so green build did not contain requested SMP code.
+DO NOT flash this artifact or pair it with cpus2; no0091 image was created.
+
+Root cause: earlier local baseline contained uncommitted diagnostic strings
+prefixed0009 CPU while actual staged0085 source uses CPU. Prior local patch
+application check therefore did not represent CI source. Corrected22 removed
+lines in0157 to match actual uploaded source (11 prefix changes). Plain git
+apply, structural assertions and reverse check now pass on actual44357697720
+source. Added linked-SMP marker validator and CI gate; regression rejects each
+missing marker and the actual incorrect green kernel. No compiler/runtime
+success claimed for corrected0157 until fresh fullCI.
+
+Read-only pretest CDC capture attempted; tty opened but EP0 serial discovery
+reported console not connected; USB VID/PID remains visible. No reset/flash,
+no touch start/stop or firmware load sent. Last verified0090 RAM/touch state
+is historical; no fresh runtime status established this turn. Capture ended.
+
 ## 2026-11-18: SMP CI failed before runner acquisition; alternate pool dispatched
 
 User reports failed build44352036471. GitHub check annotation says:
