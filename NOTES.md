@@ -1,3 +1,8 @@
+ACTIVE19:29UTC displaydiagnosticfullCI44381013070 exactc6b9a55 RUNNING,
+macos26intel/a03/SWEET/userspacetrue/buildtreetrue.0159probesvsync/notify/
+swap/copy, notfix. Same0092stillrunning/frozenimage/touchON. Nextexactsuccess
+artifacts/source/markers->0093same2A55/1984MiB/lowtrampoline. Noautoflash.
+
 ACTIVE2026-11-18~19:30UTC0092IMAGEFROZEN peruser, kernelUTCadvances,
 SB26/backboardd56CPUadvances/mainCFRunLoop, HIDONevents138->201. NoSBcrash/
 OOM/compressor; storagehealthy. DoNOTcallstableGUI. No reboot/touchstop.

@@ -32,6 +32,10 @@ MandatoryCI stringsadded. FreshfullCI needed before BOOT0093same2A55/1984MiB/
 trampoline test. This is diagnostics, not a freeze fix. Singlecapture83709/
 58347expires~19:33UTC; checkreaderownerbeforecontinuation. Preserve0090restore.
 
+0159fullCI44381013070 exactc6b9a554e6bef22557909586d139a7bfd2b7ecfa
+dispatched19:29UTCmacos26intel/a03/SWEET/userspacetrue/buildtreetrue; running.
+
+
 ## 2026-11-18: user confirms SpringBoard visible on two-core BOOT0092
 
 User reports "springboard is up" at~19:23UTC. This adds physical visibleGUI
