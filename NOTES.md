@@ -1,3 +1,11 @@
+ACTIVE2026-11-18 18:54UTC0091 BOOTflashSUCCESS, noCDC after120s.
+Heimdall95543 upload100/success/reboot~18:51; singlecapture7441 exited
+noenumeration. Usersees BOOTTEXT/ERROR; exactlastlines requested/pending.
+DO NOTCLAIMSMP: noCPU_ON/coreinit/SGI/timerlog. No newreset/reflash since.
+Touch/fw notrestored on0091 (USB unavailable), no touchstop command sent.
+Need exactscreenerror before fix.0090 oneCPU/1984MiB restore retained.
+0091BOOT14b9de7c...ca26a7a/kernelc133c3ea...4e698c6/fullCI44367277857.
+
 ACTIVE2026-11-18~18:52UTC0091-smp2 BOOT-onlyflash95543 INPROGRESS.
 44367277857 SUCCESS/exact91ca41a; checksum/4SMPmarkers/actualsource PASS.
 BOOT14b9de7c...ca26a7a kernelc133c3ea...4e698c6.2A55/cpus2/1984MiB,

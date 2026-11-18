@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0091 flashed; boot text visible but no CDC, exact error pending
+
+User confirms manualDownload; host04e8685d/detect and0091 imagehash match.
+Heimdall95543 BOOT-onlyupload100percent/success/reboot~18:51UTC. No other
+partition selected. Singlecapture7441 waited120seconds for exactCDC identity,
+then exited "A03 XNU CDC console did not enumerate"; no kernel log captured.
+User reports boottext or error on screen. Asked exactlastlines (panic/assert/
+CPU/timeout/PSCI); replypending. This establishes visibleboottext, not secondary
+CPU execution, successfulCPU_ON or SMP. Do not infer stage or root cause
+without text. No subsequentflash/reboot/touchfirmwareload/start/stop sent.
+Touch is not restored on0091 because execution has not reached accessibleUSB.
+0090 oneCPU/1984MiB restore remains available. Next inspect exactscreenerror;
+if diagnostic reflash needed, use onlyBOOT and retain current config/checkpoint.
+
 ## 2026-11-18: corrected SMP build verified; BOOT0091 two-core trial
 
 FullCI44367277857 SUCCESS exact91ca41ad5769bc434e47200c9346e3c1777a0a32.
