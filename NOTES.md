@@ -2,6 +2,11 @@
 
 ## Active S8 handoff — 2026-11-18
 
+0222 CI44285281557 at b4062f27e271a9b60f6c3d317868f27c51ef4012 dispatched.
+Preparation24221/script research/dreamlte/prepare-0222.py waits exact run,
+retries transient API polling, verifies9 sources/6 symbols/16 strings and
+packages; never flashes. Log alongside. Installed0221, Download Mode053.
+
 Latest0221 physical: USB2 remains40102400/Q7e00 but first resource cmd2
 still402; soft reset done1ms GCTL30c12004/DCFG4. LINK08000000/UTMI60
 lack session-valid; existing helper was after failed endpoint setup.

@@ -21,6 +21,12 @@
   manifest; promoted0222/current manifest16 strings.0221 remains installed,
   fresh Download Mode053 ready, no new flash. Full CI next.
 
+- Full0222 CI44285281557 at b4062f27e271a9b60f6c3d317868f27c51ef4012
+  dispatched. Preparation24221/script research/dreamlte/prepare-0222.py
+  waits exact run, retries transient API poll failures, verifies nine sources/
+  six symbols/sixteen linked diagnostics and packages BOOT; never flashes.
+  Keep Download Mode053 fresh, no new write before verification.
+
 ## 2026-11-18:0221 verified and flashed; physical reset-wake test pending
 
 - Exact CI44276126788 SUCCESS at3e18153bae65d8386c824e42cbb66a32b8968084.

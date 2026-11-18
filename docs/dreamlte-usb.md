@@ -1,5 +1,16 @@
 # DREAMLTE USB bring-up evidence
 
+##0221 physical result;0222 session-valid ordering
+
+Physical0221 USB2CFG40102400/Q7e00 retained, reset1ms/GCTL30c12004/DCFG4,
+but first SETTRANSFRESOURCE cmd2 reg402 still times out. PHY LINK08000000
+UTMI60 lacks session-valid bits: current helper ran only after failed setup.
+Pinned CAL sets FORCE_BVALID/VBUSVALID and VBUSVLDEXTSEL/EXT during PHY init
+before device reset/endpoints.0222 moves existing helper before DCTL reset,
+reasserts after reset and prints LINK/UTMI before commands. No new PLL/power
+sequence; root cause remains a hypothesis. Actual ARM64/three host suites
+PASS, full CI44285281557 dispatched. Download Mode053 ready;0221 installed.
+
 ##0221 hardware trial (2026-11-18)
 
 Exact CI44276126788 SUCCESS,9 sources/6 symbols/15 diagnostics and BOOT
