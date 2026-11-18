@@ -7,7 +7,7 @@ import struct
 import subprocess
 import importlib.util
 import adt
-from a03_memory import PHYS_BASE, memory_size, validate_live_fdt
+from a03_memory import PHYS_BASE, MEMORY_MIB, memory_size, validate_live_fdt
 
 ROOT = Path(__file__).resolve().parent.parent
 spec = importlib.util.spec_from_file_location('probe', ROOT/'tools/a03-probe-image.py')
@@ -32,7 +32,7 @@ def main():
     version, count = struct.unpack_from('<II', payload, 8)
     base, entry, ao, al, end, phys, mem = struct.unpack_from('<7Q', payload, 16)
     assert version == 1 and 0 < count <= 32
-    assert phys == PHYS_BASE and mem in (memory_size(256), memory_size(1024))
+    assert phys == PHYS_BASE and mem in tuple(memory_size(m) for m in MEMORY_MIB)
     if mem != memory_size(256) and a.memory_dtb is None:
         ap.error('expanded RAM requires --memory-dtb live A03 DTB')
     if a.memory_dtb:

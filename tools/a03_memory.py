@@ -2,11 +2,11 @@
 import subprocess
 import struct
 PHYS_BASE = 0x102000000
-MEMORY_MIB = (256, 1024)
+MEMORY_MIB = (256, 1024, 1984)
 
 def memory_size(mib):
     if mib not in MEMORY_MIB:
-        raise ValueError('A03 RAM profile must be 256 or 1024 MiB')
+        raise ValueError('A03 RAM profile must be 256, 1024 or 1984 MiB')
     return mib << 20
 
 def validate_live_fdt(path, size):

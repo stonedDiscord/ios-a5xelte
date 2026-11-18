@@ -1,3 +1,12 @@
+ACTIVE2026-11-18~16:45UTC BOOT0090 1984MiB RAM hardware boot/VM PASS.
+Exact0089 kernel+args; BOOT293de28b...90f1a; cpus1. VM free117024 then94424
+16KiBpages/compressor0; storage ready1 poisoned0. Singlecapture21134
+boot0090-usb-initial.log600s (~16:50UTC deadline). Privatefw79104 stagedvalid0/
+load0/A55A; bothHIDopen; TOUCHSTREAMON verified1/slices2/events0. LeaveON.
+Prior0089 freshly rebooted beforetest; causeunknown.0089/0088restorekept.
+Multicore0157 candidate being validated separately; noSMPsuccessclaim.
+FullRAM requires lowerbank reservationholes;1984MiB is safeupperwindow.
+
 ACTIVE2026-11-18~16:35UTC USERREQUEST LEAVE TOUCH ENABLED. BOOT0089
 STREAMON verified974slices/38events after SIGTERM hosttimedPID12128; no
 finally-stop/no kernelstop sent; no timedHIDhelperremains. Firmwareloaded.

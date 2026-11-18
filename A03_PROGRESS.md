@@ -1,5 +1,32 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0090 expands managed RAM to1984MiB
+
+User requests multicore/full RAM to address severe lag. Current BOOT0089
+was cpus=1/1024MiB. Live DTB bank is0x80000000+0xfffff000; checked all23
+reservations. Added bounded1984MiB profile at0x102000000..0x17e000000,
+retaining about32MiB before live bank end. This is NOT full4GiB: lower
+memory contains secure/modem/framebuffer reservations and requires VM holes.
+Actual loader predicate/synthetic last-page/bank/header reservation tests and
+live-DTB validation PASS; freestanding loader Clang warnings-as-errors/link PASS.
+
+BOOT0090 reuses exact0089 kernel b316c806...bf14 and command line. Payload
+changes only header mem_size and chosen dram-size; stock ramdisk/DT preserved.
+BOOT SHA256293de28bcf5a6f0c89f66873b5df112abb1ef9e10f0bcddc9604439210990f1a.
+Synchronized CDC Download followed by BOOT-only Heimdall upload100percent/
+success/reboot at~16:40UTC. No other partition selected. CDC returns; single
+capture hostsession21134 writes boot0090-usb-initial.log for600s.
+VM117024free/4796active/161inactive/4903wired pages, page-size16384;
+later94424free/24725active/1455inactive/6364wired, compressor0/compressions0.
+Storage ready1/poisoned0; SpringBoard25 and other iOS processes execute.
+This proves increased usable memory, not a measured GUI speedup.
+
+Initially noUSB then freshly enumerated0089 showed startup and touchstream0;
+reason for prior reboot unknown. After0090 explicit private79104byte firmware
+stage valid0/load0/readyA55A and both HID clients open; touch start restored
+continuous HID forwarding, streamstatus1/slices2/events0. Leave enabled per
+user request.0089/0088 restore images remain private. SMP candidate separate.
+
 ## 2026-11-18: user requests touch remain enabled; timed stop removed
 
 User states touch appears to work when enabled and explicitly requests leaving
