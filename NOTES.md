@@ -1,3 +1,13 @@
+ACTIVE2026-11-18~21:29UTC0094A75PREFERENCE RUNNING.
+BOOT-onlyflash57520success; policyrequested1/all8initSGI/CPU_ONrc0PASS.
+Real~10sdelta A756user5/sys577,A757user7/sys532;90.7%busy onA75s,
+all8positiveuser/system. A55physicalbootstrap unchanged; no speedupbenchmark.
+UTCsynced/privatefw79104valid0/load0/A55A; TOUCHON1/56slices/events0.
+VM97823free/compressor0/ioReady1poisoned0; SB26+backboardd56 present,
+initialswap0/copy0 startup. Physicalscreenquestionpending; noGUIclaimyet.
+SinglecapturePID135205/session56612 live boot0094-usb-initial.log3600s.
+CI44398834193/exact661d5bb;BOOTddb03bf3...33047aa7. Keep0093/0092/0090.
+
 ACTIVE2026-11-18~21:26UTC0094A75BOOT-onlyflash57520 INPROGRESS.
 CI44398834193SUCCESS/exact661d5bb/source/checksum/markersPASS.
 BOOTddb03bf3...33047aa7/kernelabfaf10a...5533c382. Exact0093ADT/all8/1984MiB,

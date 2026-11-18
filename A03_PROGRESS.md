@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0094 A75 preference active; A75s carry most measured work
+
+Heimdall57520 BOOT-only upload100percent/success/reboot ~21:26UTC. CDC returns
+~21:27UTC. Exact bootlog policyrequested1; all8 selected/initCPU/SGI1PASS,
+PSCIrc0 for1..7 including A75MPIDR600/700. Physicalbootstrap remains A55CPU0.
+First ~10second usage delta: CPU0 user13/system63; CPU1 4/14; CPU2 1/7;
+CPU3 2/3; CPU4 1/3; CPU5 2/2; A75CPU6 5/577; A75CPU7 7/532. Both A75s
+carry1121/1236=90.7percent of measured busy ticks; all8 have positive user
+and system deltas. This verifies actual changed placement/work distribution,
+not an equivalent-workload speedup benchmark, fullAMP policy or bootCPU switch.
+
+UTC1795037261 synced at21:27:41UTC. Private79104byte firmware stagedvalid0,
+explicitloadresult0/readyA55A, continuousHIDtouchstart restored and leftON.
+Streaming1/slices56/events0 at21:28:49; no timedstop helper used. VM97823free
+16KiBpages/compressor0, ioReady1/poisoned0/7451requests. SpringBoard26 and
+backboardd56 present; initialdisplay swap0/copies0 while userspace starts.
+PhysicalUI/speedup/stability remain unverified; screen question pending.
+SinglecapturePID135205/session56612 boot0094-usb-initial.log runs3600seconds
+from~21:27UTC. Preserve0093/0092/0090restores. No other partition flashed.
+
 ## 2026-11-18: A75-preferred BOOT0094 built and verified; BOOT-only trial
 
 FullCI44398834193 SUCCESS exact661d5bb18ba35bddecbdd6c125852e08756f5bbc.
