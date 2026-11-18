@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: user confirms SpringBoard visible on two-core BOOT0092
+
+User reports "springboard is up" at~19:23UTC. This adds physical visibleGUI
+evidence to proven CPU0/CPU1 A55 init/SGI and1984MiB RAM; no measuredspeedup,
+A75 use or successfultouchgesture claimed. Freshread-only EP0 confirms current
+SpringBoard26/19threads andchangedmainstack; touchstreaming1/757slices/events0,
+bothHIDclientsopened. LeaveforwardingON; no touchstop/fwreload/reboot/flash.
+VM37237free/57668active/22099inactive/9964wired pages16KiB, compressor0,
+compressions0/decompressions0. StorageReady1/poisoned0/23302requests.
+No capturedSpringBoardcrash/panic in thisboundedlog; not a longstabilityclaim.
+Singlecapture83709/host58347 continues boot0092-usb-initial.log until~19:33UTC.
+Current0092 remains2A55/1984MiB; preserveasfirstmulticorevisibleGUI checkpoint.
+0090singlecore restore retained. Nextuserresponsiveness/physicalgesturecheck;
+A75trial separate after thischeckpoint, no automaticflash started.
+
 ## 2026-11-18: BOOT0092 touch restored; two-core userspace startup ongoing
 
 Private79104bytefw stage valid0 and explicitload result0/readyA55A pass.

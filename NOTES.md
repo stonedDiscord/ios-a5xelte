@@ -1,3 +1,11 @@
+ACTIVE2026-11-18~19:23UTC USERCONFIRMS SpringBoardUP on0092twoA55/1984MiB.
+FreshSB26/19threads/changedstack; TOUCHON1/757slices/events0,bothHIDopen.
+VM37237free/compressor0/ioReady1poisoned0. No capturedSBcrash/panic boundedlog.
+Preserve0092 firstmulticorevisibleGUI checkpoint; noflash/reboot/touchstop.
+Singlecapture83709/host58347 boot0092-usb-initial until~19:33UTC; preserveowner.
+Needuserresponsiveness/physicalgestureevidence; A75trialseparate/notstarted.
+0090singleCPUrestore retained. No measuredspeedup or A75/allcoreclaim.
+
 ACTIVE2026-11-18~19:20UTC BOOT0092 TWOA55init/SGIverified/1984MiB.
 Privatefw79104stagedvalid0/load0/A55A; TOUCHSTREAMON1/42slices/events0,
 leaveON/no timedstop. SB26sample1threadstillstartup, noGUIreadyclaim.
