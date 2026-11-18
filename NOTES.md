@@ -1,3 +1,10 @@
+ACTIVE2026-11-18 BOOT0092trampolineflash36454 INPROGRESS/BOOTonly.
+FullCI44375549972 SUCCESS/exact87f1b0e/checksum/5SMPmarkers/actualsourcePASS.
+BOOT9dda3af2...0639c4fc/kernelbb831647...02dabbb. Same2A55/1984MiB/args/
+ADTseed+onlychosenhandoff; lowshim ->high0x103485000. Stockramdisk/DTsame.
+HostDownload/detectPASS. Nextflashresult->singlecapture CPU_ON/coreSGItimer
+proof; UTC/privatefwload/touchstart/VMio/UI. Preserve0090restore/noSMPclaimyet.
+
 ACTIVE18:59UTC0158fullCI44375549972 exact87f1b0e RUNNING/mac26intel.
 CandidateBOOTramtrampoline+XNUconsumer/mandatorymarker included. Needexact
 success/source/markers/checksum before0092 --smp-kernel packaging/BOOTtest.

@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0092 low-shim trampoline verified; BOOT-only deployment
+
+FullCI44375549972 SUCCESS exact87f1b0ed025f69fef9ee199af70146ab3b385343.
+Downloaded checksum/all5linkedSMPmarkers and actualsource0158reversecheckPASS.
+Kernel SHA256
+bb8316472ac6b3d3afc7dea23a658e309f0da31149931571af6ba59e302dabbb.
+BOOT0092 SHA256
+9dda3af26e6af6002b69b260d7bbb0b4e74c4b0b33c6ec8aaeefb61f0639c4fc.
+
+Packaged same0091 CPU0/CPU1(2A55),1984MiB/root/exactcommandline/ADTseed.
+Onlychosen16bytehandoff appended; loader supplies retainedlowshimaddress and
+highentry0x103485000. Exactkernel/payload rebuild matchPASS; originalADT after
+removinghandoff identical; stockramdisk/DT unchanged. Parser/trampoline/loader,
+CPUADT and liveRAMreservation regressionsPASS. Host detects existingDownload
+04e8685d andHeimdall beforeauthorizedBOOT-onlyflash36454 launched. No other
+partition selected. Awaitflashresult and singleCDCcapture; nofixclaimyet.
+Preserve0090 oneCPU/1984MiBrestore. NeedCPU_ONresult/coreinitSGI/timer evidence
+thenUTC/privatefwload/touchstart/VM/io/physicalUI. A75trial stayslater.
+
 ## 2026-11-18: BOOT0091 CPU_ON rejected with INVALID_ADDRESS; low-shim candidate0158
 
 User transcribes physical screen panic exactly:
