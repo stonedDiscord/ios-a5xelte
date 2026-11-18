@@ -1,3 +1,11 @@
+ACTIVE2026-11-18~21:36UTC0094 physicalTOUCHRESPONDSbutVERYSLOW peruser.
+OneHome recoveredframes. Freshswap/copies2235/2230->2345/2340 (~10/s)
+vs37touchslices*16/~10.98s (~53.9samples/s). Noeventsinsampledinterval;
+priorphysicalevents311->427. Inputcollectionnotobviouslydead; endtoend
+latency/renderbottlenecknotyetproven. TouchON/all8/A75preference preserved.
+PosterBoardcrashloopobserved; no speculativepoll/DVFS/schedulerpatch.
+Capture135205/session56612preserve;0093restorekept; performanceissueOPEN.
+
 ACTIVE2026-11-18 21:34:34 UTC0094 TOUCHFAIL report/frame recovery.
 Streaming1/1034slices/311events,inputstatus3,physicalhid1 reports present;
 swaps52/copy47stale~77s timeralive. OneexplicitHome result0 ->58/53->116/111.

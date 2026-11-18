@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0094 physical touch responds after Home, but very slow
+
+User confirms touch responds but very slow after the single Home event.
+This verifies physical interaction recovered; do not describe0094 as smooth
+or latency-fixed. New real swap/copy2046/2041 ->2235/2230 ->2345/2340.
+Last paired ~10.98s interval:110swaps/copies(~10.0/s),37continuous touch
+slices x16samples(~53.9samples/s). No physicalevents during that particular
+interval; prior eventcount311->427 with contacts recorded. This sampling
+shows touch collection runs much faster than frame submission in this
+window, not an end-to-end latency measurement or proven sole bottleneck.
+
+A75CPU6/7 usage advances; A55s also work. SpringBoard26/17threads and
+backboardd56/19threads mainPCs in event waits; no proof this is a scheduler
+hang. Software framebuffer row copies are present; GPU acceleration and
+capacity-aware performance tuning remain unimplemented. PosterBoard crash
+loop is observed, not proven cause. No speculative poll/scheduler changes,
+firmware reload, streamstop or new flash. Leave touchON/all8/A75preference.
+Existingcapture135205 remains owner;0093restore retained. Performance issue
+remains open; Home is a recovery workaround, not permanent source repair.
+
 ## 2026-11-18: BOOT0094 user reports touch failure; frame recovery after Home
 
 At21:34:34 UTC user reports touch not working. Existing singlecapture135205
