@@ -2,6 +2,20 @@
 
 ## Active S8 handoff — 2026-11-18
 
+LATEST0224 physical: event CSR verified DMA82cad000/00000008,size80001000;
+STARTCFG completed reg9. First resource cmd2 still active402, PAR0=1,
+PAR1/2=0; session bits remain LINK08000180/UTMI660. No successful DMA,
+enumeration or data inferred from register readback. Submitted trace omits
+USB CSR and USB POWER lines; requested exact lines or explicit absence.
+Next depends on these missing readbacks; no new build/flash yet. Host no
+1209:0001 or Download Mode. Current installed0224, no live CI/preparation.
+
+Reverification0224 exact artifact PASS11sources/6symbols/33strings/profile.
+Both missing CSR/POWER lines exist in linked binary and failure helper;
+omission in report does not prove display absence. Samsung command params
+and resource-before-config order match current source. Await readbacks
+before selecting any power/reset change; no additional flash performed.
+
 CURRENT INSTALLED0224; exact CI44308837527 SUCCESS at
 2c39e75540432a9fd362c9f605543a2224c96deb.11sources/6symbols/33strings/
 profile PASS. Preparation87930 completed; no live CI/prep.

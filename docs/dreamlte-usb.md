@@ -1,5 +1,13 @@
 # DREAMLTE USB bring-up evidence
 
+##0224 physical CSR result
+
+User confirms event CSR verified DMA82cad000/00000008,size80001000 and
+STARTCFG completed reg9; first resource cmd2 remains active402, PAR0=1,
+PAR1/2=0. LINK08000180/UTMI660 retained. Event-ring register readback does
+not prove bus-master DMA. USB CSR/POWER lines omitted in submitted report;
+requested exact values or explicit absence. No USB success or new flash.
+
 ##0224 verified hardware trial
 
 CI44308837527 SUCCESS,11 compiled sources/6 symbols/33 strings/profile

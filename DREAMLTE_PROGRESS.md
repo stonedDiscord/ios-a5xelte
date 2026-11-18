@@ -1,5 +1,33 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0224 event CSR and STARTCFG physically verified
+
+- User reports0224 session LINK08000180/UTMI660 before endpoints; event
+  CSR verified DMA82cad000/00000008,size80001000. This verifies register
+  readback of owned event-ring setup, not bus-master DMA or host traffic.
+- STARTCFG completed reg00000009. First EP0 SETTRANSFRESOURCE remains
+  active00000402 with PAR0=1/PAR1=0/PAR2=0. GCTL80e92004 GSTS3e800000
+  USB2=40102400; DCTL0,DSTS00520000,EN0; PIPE010c0002 HW3=10420085
+  BUS22220001/300; PHY LINK08000180 UTMI660 CLK801b0049 Q7e00 SEL0.
+  Initial ID5533280a/GCTL30c12004/DSTS00520004, PHYversion10000,
+  CLK801b0049/UTMI60; link wake Q7e00/LINK08000000/SEL0;
+  soft reset1ms/DCFG80804. Endpoint0 setup failed; no USB success.
+- Submitted trace omits the new USB CSR and USB POWER lines between CORE
+  and PHY. Requested those exact lines or explicit absence. Their values
+  remain unknown; do not infer powered PHY from cleared sleep/reset bits.
+- Installed0224; host no gadget/Download Mode at inspection. No live CI,
+  new candidate or flash. Continue source review while awaiting missing
+  readbacks; do not repeat identical diagnostic flash or change power blindly.
+
+
+- Reverified installed0224 exact CI artifact:11 complete source hashes,
+  6 symbols/33 diagnostics/profile PASS. Linked CSR/POWER strings and staged
+  failure helper contain both requested lines. Their omission from submitted
+  text does not establish absence on screen. Source comparison confirms
+  Samsung start_config sends STARTCFG then SETTRANSFRESOURCE(param0=1,
+  param1/2=0) before SETEPCONFIG, matching this trial. No basis to revert
+  resource order or claim malformed parameters from the current trace.
+
 ## 2026-11-18:0224 verified and BOOT flashed; CSR/power trace pending
 
 - Exact CI44308837527 SUCCESS at2c39e75540432a9fd362c9f605543a2224c96deb.
