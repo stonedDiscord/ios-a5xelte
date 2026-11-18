@@ -1,3 +1,12 @@
+ACTIVE2026-11-18 BOOT0091panic exactcpu1 CPU_ON rc=-9 (INVALID_ADDRESS).
+SecondaryPA0x103481000 >4GiB; firmwareentryrange rejectionlikely/unprovenlimit.
+0158 lowtrampoline insideexistingretainedBOOTshim prepared, notarbitraryRAM.
+Packer --smp-kernel verifiesexactpayload/symbol; loaderboundedhandoff; XNU
+validateslowentry/target. Hostparser/loader/patchtestsPASS; fullCI next.
+No hardwarefixclaim; phone0091panic/noCDC, touchnotrestored. Preserve0090.
+DO NOTFLASH a03-trampoline-host-test.img (old0157kernel/packagingtestonly).
+NextfreshfullCI->0092 twoA55/1984MiB with--smp-kernel->BOOT-onlymanualDownload.
+
 ACTIVE2026-11-18 18:54UTC0091 BOOTflashSUCCESS, noCDC after120s.
 Heimdall95543 upload100/success/reboot~18:51; singlecapture7441 exited
 noenumeration. Usersees BOOTTEXT/ERROR; exactlastlines requested/pending.

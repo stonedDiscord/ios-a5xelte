@@ -159,7 +159,8 @@ def main():
                      '0154-a03-explicit-continuous-touch-poll.patch',
                      '0155-a03-unrestricted-client-work-interval.patch',
                      '0156-a03-ios16-ca-client-work-interval.patch',
-                     '0157-a03-opt-in-psci-smp.patch'):
+                     '0157-a03-opt-in-psci-smp.patch',
+                     '0158-a03-loader-owned-smp-trampoline.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

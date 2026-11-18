@@ -20,6 +20,7 @@ def main():
     ap.add_argument('base', type=Path)
     ap.add_argument('payload', type=Path)
     ap.add_argument('output', type=Path)
+    ap.add_argument('--smp-kernel', type=Path, help='exact kernel Mach-O used in payload; install loader SMP handoff')
     ap.add_argument('--memory-dtb', type=Path, help='live A03 DTB, required for expanded RAM')
     a = ap.parse_args()
     b = a.base.read_bytes()
@@ -45,6 +46,33 @@ def main():
     chosen = next(n for n in tree.children if n.name == 'chosen')
     assert chosen.prop('dram-base') == struct.pack('<Q', phys)
     assert chosen.prop('dram-size') == struct.pack('<Q', mem)
+    if a.smp_kernel:
+        from mkpayload import build
+        # Rebuilding with the exact ADT/cmdline proves kernel symbol provenance.
+        command=payload[0x48:0x2a8].split(bytes(1))[0].decode('ascii')
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            original=Path(tmp)/'original.adt';original.write_bytes(payload[ao:ao+al])
+            rebuilt,_=build(str(a.smp_kernel),str(original),command)
+        assert rebuilt==payload, 'SMP kernel does not match payload'
+        symbols=subprocess.check_output(['llvm-nm',str(a.smp_kernel)],text=True)
+        matches=[int(line.split()[0],16) for line in symbols.splitlines() if line.endswith(' _sweet_secondary_entry')]
+        assert len(matches)==1, 'missing unique SMP entry symbol'
+        target=phys+matches[0]-base
+        assert target>=phys and target<phys+mem and not target&3
+        assert chosen.prop('a03-smp-trampoline') is None
+        chosen.props.append(('a03-smp-trampoline',0,struct.pack('<QQ',0,target)))
+        replacement=adt.serialize(tree)
+        # mkpayload places ADT last; never overwrite a following object.
+        assert len(payload)-ao-al<16 and not any(payload[ao+al:])
+        payload=bytearray(payload[:ao])+replacement
+        payload.extend(bytes((-len(payload))%16))
+        al=len(replacement);struct.pack_into('<Q',payload,0x28,al)
+        assert (end-base+al+16383)//16384*16384+16384<=mem
+        print('SMP high entry',hex(target),'via loader-owned low BOOT trampoline')
+    else:
+        assert chosen.prop('a03-smp-trampoline') is None, 'SMP handoff must be generated from --smp-kernel'
+
     assert payload[0x48+607] == 0
     ranges = []
     entry_found = False

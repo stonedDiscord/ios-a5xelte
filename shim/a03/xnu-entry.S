@@ -80,3 +80,15 @@ vectors:
 .balign 16
 .space 16384
 stack_top:
+
+/* Retained low BOOT-shim entry: firmware CPU_ON jumps here with x0=context.
+ * Branch to the high XNU entry without stack, MMIO, EL assumptions or clobber x0. */
+.section .text.smp,"ax"
+.balign 16
+.global a03_smp_trampoline
+a03_smp_trampoline:
+    ldr x16,a03_smp_target
+    br x16
+.global a03_smp_target
+a03_smp_target:
+    .quad 0

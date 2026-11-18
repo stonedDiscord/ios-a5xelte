@@ -1,6 +1,7 @@
 /* Minimal bounded SWEETXNU loader for A03. Storage/peripheral drivers absent. */
 #include <stdint.h>
 #include "memory-profile.h"
+#include "smp-trampoline.h"
 #include "../font.h"
 struct segment { uint64_t va,size,off,filesize; };
 struct payload { char magic[8]; uint32_t version,count; uint64_t base,entry,adtoff,adtlen,end,phys,mem; char cmdline[608]; struct segment seg[]; };
@@ -10,7 +11,7 @@ struct handoff {uint64_t entry,args;};
 _Static_assert(sizeof(struct bootargs)==736,"boot args");
 _Static_assert(__builtin_offsetof(struct bootargs,cmdline)==108,"command line offset");
 _Static_assert(__builtin_offsetof(struct payload,seg)==0x2a8,"segment offset");
-extern char _start[],_image_end[];
+extern char _start[],_image_end[],a03_smp_trampoline[],a03_smp_target[];
 static void copy(uintptr_t d,uintptr_t s,uint64_t n) {for(uint64_t i=0;i<n;i++)((volatile unsigned char*)d)[i]=((volatile const unsigned char*)s)[i];}
 static void zero(uintptr_t d,uint64_t n) {for(uint64_t i=0;i<n;i++)((volatile unsigned char*)d)[i]=0;}
 static void clean(uintptr_t a,uintptr_t b) {uint64_t ctr;__asm__ volatile("mrs %0,ctr_el0":"=r"(ctr));uintptr_t line=4UL<<((ctr>>16)&15);for(a&=~(line-1);a<b;a+=line)__asm__ volatile("dc cvac,%0"::"r"(a):"memory");__asm__ volatile("dsb sy":::"memory");}
@@ -442,6 +443,24 @@ struct handoff a03_load_xnu(uintptr_t fdt) {
         copy(dst,src+s->off,s->filesize);zero(dst+s->filesize,s->size-s->filesize);clean(dst,dst+s->size);
     }
     copy(dt,src+p->adtoff,p->adtlen);zero(ba,16384);
+    unsigned char *smp=0;
+    if(!a03_dt_smp_handoff((unsigned char*)dt,(uint32_t)p->adtlen,&smp))return fail;
+    if(smp) {
+        uint64_t target=a03_smp_u64(smp+8);
+        uintptr_t low=(uintptr_t)a03_smp_trampoline;
+        if(a03_smp_u64(smp)!=0 || low<UINT64_C(0x80000000) || low>=UINT64_C(0x100000000) || (low&15))return fail;
+        unsigned found=0;
+        for(unsigned i=0;i<p->count;i++) {
+            const struct segment *s=&p->seg[i];
+            uint64_t begin=p->phys+s->va-p->base;
+            if(target>=begin && target-begin<s->filesize && !(target&3))found=1;
+        }
+        if(!found)return fail;
+        a03_smp_put64((unsigned char*)a03_smp_target,target);
+        a03_smp_put64(smp,low);
+        clean(low,(uintptr_t)a03_smp_target+8);
+    }
+
     volatile struct bootargs *a=(volatile struct bootargs*)ba;
     a->rev=2;a->version=2;a->virt=p->base;a->phys=p->phys;a->mem=p->mem;a->top=ba+16384;
     a->video=(struct video){0x9e000000,1,2880,720,1600,32};

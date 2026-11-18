@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 MARKERS = (
+    b'A03 CPU: high entry 0x%llx via loader trampoline 0x%llx',
     b'A03 CPU: requested=%u selected=%u (limit=%u)',
     b'A03 CPU: cpu=%u CPU_ON target=0x%x entry_pa=0x%llx context=%u',
     b'A03 CPU: cpu=%u PSCI CPU_ON rc=%d',

@@ -1,0 +1,39 @@
+--- a/iokit/Kernel/arm/SweetCPU.cpp
++++ b/iokit/Kernel/arm/SweetCPU.cpp
+@@ -17,6 +17,7 @@
+ #include <kern/thread.h>
+ #include <mach/mach_time.h>
+ #include <pexpert/pexpert.h>
++#include <pexpert/device_tree.h>
+ 
+ extern "C" void sweet_secondary_entry(void);
+ extern "C" boolean_t sweet_cpu_signal_is_enabled(unsigned int cpu);
+@@ -238,6 +239,28 @@
+ 		panic("A03 CPU: cpu=%u unsupported restart", getCPUNumber());
+ 	}
+ 	vm_offset_t entry = ml_static_vtop((vm_offset_t)&sweet_secondary_entry);
++	/* The high kernel entry was rejected with PSCI INVALID_ADDRESS (-9).
++	 * Use only the loader-owned immutable low shim, never arbitrary low RAM. */
++	if ((uint64_t)entry >> 32) {
++		DTEntry chosen;
++		const void *value = NULL;
++		unsigned int length = 0;
++		if (SecureDTLookupEntry(NULL, "/chosen", &chosen) != kSuccess ||
++			SecureDTGetProperty(chosen, "a03-smp-trampoline", &value, &length) != kSuccess ||
++			length != 2 * sizeof(uint64_t)) {
++			panic("A03 CPU: missing loader SMP trampoline");
++		}
++		uint64_t handoff[2];
++		bcopy(value, handoff, sizeof(handoff));
++		if (handoff[0] < 0x80000000ULL || handoff[0] >= 0x100000000ULL ||
++			(handoff[0] & 15) != 0 || handoff[1] != (uint64_t)entry) {
++			panic("A03 CPU: invalid loader SMP trampoline");
++		}
++		IOLog("A03 CPU: high entry 0x%llx via loader trampoline 0x%llx\n",
++			(uint64_t)entry, handoff[0]);
++		entry = (vm_offset_t)handoff[0];
++	}
++
+ 	IOLog("A03 CPU: cpu=%u CPU_ON target=0x%x entry_pa=0x%llx context=%u\n",
+ 	    getCPUNumber(), cpu->phys_id, (uint64_t)entry, getCPUNumber());
+ 	__builtin_arm_dsb(DSB_SY);

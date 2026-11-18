@@ -1,5 +1,33 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0091 CPU_ON rejected with INVALID_ADDRESS; low-shim candidate0158
+
+User transcribes physical screen panic exactly:
+panic: A03 CPU: cpu=1 NOT alive: PSCI CPU_ON rc=-9 @SweetCPU.cpp:248
+Linux PSCI ABI header identifies-9 asINVALID_ADDRESS. Verified symbol/payload
+computes secondaryentryPA0x103481000, above4GiB. Firmware entry-range rejection
+is the leading hypothesis; exact acceptance range is not measured. This is a
+real CPU_ON failure before proven secondary execution, not successful SMP or
+an SGI/timer timeout. CDC never enumerated. Currentphone remains0091panic.
+
+Prepared0158: existing BOOT-shim low-address16byte ldr/br/literal trampoline,
+no arbitrary low-RAM page or MMIO. Packer --smp-kernel checks exactkernel/
+payload equality and unique secondarysymbol then appends chosen16bytehandoff.
+Loader validates boundedADT and target withinloadedsegment before filling
+actualretainedshimPA/target and cacheclean. XNU checks length/lowPA/alignment/
+exacthighentry and sendsCPU_ON tolowshim; missingbad handoff panics. Existing
+1984MiB/root/CPUtopology unchanged. Firmware may still rejectlowentry or reveal
+anotherstartupissue; no hardwarefixclaim. Hosttestimage usesold0157 ONLY to
+exercisepackaging, mustNOTflash (no0158 kernelconsumer).
+
+ActualboundedADT parser tests everytruncation,duplicate/length/bounds and
+shimencoding/alignment PASS. Loader Clangwarnings-as-errors/linkPASS.
+0158 actualCIuploadedsource gitapply/structural/reversePASS;0157ADTs and
+memoryguardsPASS. Newrequiredlinkedtrampolinemarker gates freshfullCI.
+No phonecommands/partitionwrites this turn. NeedfullCI -> exactartifact/
+source/markers/checksum ->0092same2A55+1984MiB with --smp-kernel ->BOOT-only.
+0090 oneCPU/1984MiB restore preserved; manualDownload needed frompanic.
+
 ## 2026-11-18: BOOT0091 flashed; boot text visible but no CDC, exact error pending
 
 User confirms manualDownload; host04e8685d/detect and0091 imagehash match.
