@@ -17,6 +17,13 @@
 - Installed0222; fresh Download Mode054 remains untouched. Full0223 CI next;
   build/physical outcome and USB success remain unproven.
 
+
+- Full0223 CI44298522029 dispatched at
+  d5f6472 (exact head is checked by preparation). Preparation26124/script
+  research/dreamlte/prepare-0223.py waits exact run, verifies11 sources/
+  6 symbols/28 linked diagnostics and packages preserved-component BOOT;
+  never flashes. Log alongside; Download Mode054 still untouched.
+
 ## 2026-11-18:0222 verified and flashed; session trace pending
 
 - Exact CI44285281557 SUCCESS at b4062f27e271a9b60f6c3d317868f27c51ef4012.
