@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: final SMP candidate adds explicit EL2 CPU identity
+
+Secondary reset now copies MIDR/MPIDR into VPIDR/VMPIDR before EL1, matching
+boot shim; avoids trusting firmware's virtual identity reset value. Actual
+start.s CI-command compile and actual-patch/ADT regression PASS again.
+FullCI44352036471 exactb6a3a1582faecab02521ad5a210c580e66090b66 queued;
+replaces cancelled44351323590 (concurrency superseded). NoSMPflash scheduled.
+Last0090 runtime: VM41986free/57342active/17782inactive/9850wired16KiBpages,
+compressor0; eMMCready1/poisoned0; SpringBoard25/24threads; continuousHID
+streaming1/1243slices/events0. Physical responsiveness afterRAM change asked;
+replypending, no speedup claim. Touch remains enabled. Singlecapture16666/
+host21134 deadline~16:51UTC; check owner before next reader.0090/0089/0088
+private images retained. Next exactfullCI success -> verify artifacts and
+package2A55/cpus2 with1984MiB -> BOOT-only -> eachcore timer/SGI/runtime.
+
 ## 2026-11-18: opt-in A03 SMP candidate0157 prepared
 
 Adapted donor0065 CPU_ON/reset/per-CPU publication and targeted SGI path to

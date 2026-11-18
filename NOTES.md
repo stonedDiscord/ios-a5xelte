@@ -1,3 +1,11 @@
+ACTIVE2026-11-18~16:51UTC SMPfullCI44352036471 exactb6a3a15 QUEUED.
+Supersedes44351323590cancelled. SecondaryVPIDR/VMPIDR nowexplicit; assembly
+compile+actualpatch/ADTtestsPASS. NoSMPautoflash. Current0090=1984MiB/1CPU,
+VM41986free16KiBpages/compressor0/iohealthy/SB25alive. TOUCHON1243slices/
+0events; leaveON. Singlecapture16666/21134expires~16:51; verifyownerbefore
+nextreader. Userphysicalspeedreplypending. NextfullCI exactsuccess ->
+2A55trial/1984MiB/BOOT-only, preserve0090restore, reloadfw/starttouch.
+
 ACTIVE16:49UTC fullSMP CI44351323590 exact71436b1 QUEUED/mac15intel.
 Additionalcpu.c retargetedMachCI compilePASS, notexactperfile.
 Current0090=1984MiB/1CPU/TOUCHON. Noautoflash scheduled.
