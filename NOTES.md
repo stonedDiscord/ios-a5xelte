@@ -2,6 +2,17 @@
 
 ## Active S8 handoff — 2026-11-18
 
+New0215 runtime evidence supersedes apparent startup stop: user reads reset
+done9ms GCTL80c12004/DCFG00000004; USB2CFG40102400 GCTL80e92004; ep0 cmd1
+timeout; EP0 setup failed; Apple_HFS wait. Thus IOKit/BSD progress reaches
+USB. DEPSTARTCFG9 succeeds, first EP0 SETEPCONFIG1 times out before resources.
+Samsung gadget.c allocates transfer resources before SETEPCONFIG. Review and
+test source-derived ordering follow-up while keeping live0217 CI unchanged.
+Prepared0218 is outside profile in xnu/dreamlte-next; resource helper tested
+across324 count combinations/every failure position, actual ARM64 compile
+and existing wrapper/EP suites PASS. Not built/flashed. Staged source0217
+restored so exact live-run verification remains consistent.
+
 Target Galaxy S8 SM-G950F / Exynos8895, branch dreamlte-bringup. Read
 DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md. Donor history below is
 not S8 runtime evidence. User prohibits restoring Android. Authorized writes

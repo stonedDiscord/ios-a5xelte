@@ -1,5 +1,28 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0215 reaches USB; exact command failure identified
+
+- User now reports soft reset done after9ms, GCTL80c12004/DCFG00000004;
+  USB2CFG40102400 and post-timing GCTL80e92004; ep0 cmd0x1 timeout; EP0
+  setup failed; then Apple_HFS media wait. This supersedes the apparent
+  earlier0215 display stop: IOKit/BSD reached USB and root discovery.
+- Short-circuit EP sequence establishes DEPSTARTCFG(cmd9) completed, then
+  first OUT EP0 SETEPCONFIG(cmd1) timed out; transfer-resource commands had
+  not run. USB2 wake/timing writes are visible, not sufficient for USB.
+- Pinned Samsung gadget.c differs in resource ordering: start_config sends
+  DEPSTARTCFG then SETTRANSFRESOURCE to every implemented hardware endpoint
+  before SETEPCONFIG. Donor currently configures before resource assignment
+  and repeats STARTCFG for data endpoints. Candidate change requires actual
+  sequence tests/full build; ordering is a source difference, not proven cause.
+  Existing0217 CI44259521488 remains live; do not replace it.
+- Prepared0218 outside active profile: GHWPARAMS3-derived IN/OUT counts,
+  bounded/ECM capability guards, STARTCFG then one resource per implemented
+  physical endpoint, before EP configuration. No repeated data STARTCFG.
+  Actual resource helper tested across324 count combinations and every
+  command-failure position; existing wrapper/EP command suites PASS. Actual
+  ARM64 USB unit compiles; staged source restored to0217 hash f2420dd5...
+  No cold PHY writes or hardware success inferred; full build still needed.
+
 ## 2026-11-18: startup trace reaches PE_lockdown_iokit;0217 checkpoints
 
 - User reports last startup-trace line kernel_bootstrap: PE_lockdown_iokit.

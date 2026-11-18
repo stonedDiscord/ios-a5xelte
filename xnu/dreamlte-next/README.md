@@ -1,5 +1,14 @@
 # Prepared S8 USB follow-up
 
+0218-dreamlte-usb-resource-order.patch is pending outside active profile.
+New0215 physical trace isolates first EP0 SETEPCONFIG timeout after successful
+DEPSTARTCFG and visible USB2 timing. Pinned Samsung gadget.c assigns resources
+to every implemented OUT/IN endpoint before configuration, once per reset.
+Candidate reads GHWPARAMS3 counts, validates ECM endpoint availability, assigns
+one resource per physical endpoint and omits repeated data STARTCFG/resource
+commands. Other boards retain donor behavior. Actual ARM64 compile and three
+host suites pass; no hardware proof or inclusion in live0217 CI.
+
 Current2026-11-18:0216 promoted into active xnu/dreamlte with0217 startup
 checkpoints after user reports startup trace ending at PE_lockdown_iokit.
 Four actual ARM64 files compile; exact0215 source plus plain patches matches
