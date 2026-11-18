@@ -1,3 +1,10 @@
+ACTIVE2026-11-18 17:21UTC SMPbuild44352036471 failedRUNNERALLOCATION.
+Checkannotation: jobnotacquiredbyhostedrunner; zero steps/no compilation.
+Replacement44357697720 dispatchedmacos-26-intel/a03/SWEET/userspacetrue/
+buildtreetrue exact73b554a (same0157 asb6a3a15, docs-onlylaterchanges).
+Needfullbuild/artifacts; noSMPsuccessclaim/noautoflash. No phoneI/O thisturn;
+lastverified0090=1984MiB/cpus1/TOUCHON. Preserve0090restore.
+
 ACTIVE2026-11-18~16:51UTC SMPfullCI44352036471 exactb6a3a15 QUEUED.
 Supersedes44351323590cancelled. SecondaryVPIDR/VMPIDR nowexplicit; assembly
 compile+actualpatch/ADTtestsPASS. NoSMPautoflash. Current0090=1984MiB/1CPU,

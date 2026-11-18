@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: SMP CI failed before runner acquisition; alternate pool dispatched
+
+User reports failed build44352036471. GitHub check annotation says:
+"The job was not acquired by Runner of type hosted even after multiple attempts".
+Job134970001981 has zero steps and conclusioncancelled; overallrunfailure.
+No compiler ran, no failed-step log exists and no kernel artifact was produced.
+This is runner allocation failure, not evidence0157 compiles or fails.
+
+Dispatched44357697720 on existing workflow optionmacos-26-intel,
+boarda03/MACHINE_CONFIGSWEET/ios-userspacetrue/buildtreeuploadtrue at17:21UTC.
+Current branch73b554a contains the identical0157 patch fromb6a3a15; only
+subsequent handoff docs differ. Need runner acquisition then actual full build
+and artifact checks. No phone commands, firmware changes or flash this turn;
+last verified BOOT0090=1984MiB/oneCPU/touchforwardingON, currentstateunprobed.
+
 ## 2026-11-18: final SMP candidate adds explicit EL2 CPU identity
 
 Secondary reset now copies MIDR/MPIDR into VPIDR/VMPIDR before EL1, matching
