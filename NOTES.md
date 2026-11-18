@@ -2,6 +2,19 @@
 
 ## Active S8 handoff — 2026-11-18
 
+CURRENT INSTALLED0224; exact CI44308837527 SUCCESS at
+2c39e75540432a9fd362c9f605543a2224c96deb.11sources/6symbols/33strings/
+profile PASS. Preparation87930 completed; no live CI/prep.
+BOOT18,448,400B,SHA256973887c7ac074f6789f75bca5849865372ac3ab1400b617e00e98adbedad8c58.
+Kernel SHA256d3d0cce0dfd55ed54e5ff75b09840ee1d9a499dc4e65ba380a90984f829d019e.
+Original BOOT components/header, fit and independent hash PASS. Fresh
+Download Mode055 BOOT100%, exit0/reboot. Only BOOT written. Exact private
+artifacts/own manifest/flash log research/dreamlte/ci-44308837527.
+Requested event CSR verified/mismatch, STARTCFG completed, USB CSR and
+USB POWER lines or last3 lines. Physical0224 outcome pending; no USB pass.
+Next depends on these readbacks; no blind PHY/clock programming. No Android
+restoration or USERDATA/protected-partition writes.
+
 LATEST PHYSICAL0223 reaches USB; phase5 stop did not recur. Session-valid
 now confirmed at failure: LINK08000180 UTMI00000660, Q7e00 CLK801b0049.
 USB2=40102400/GCTL80e92004; STARTCFG returns but first EP0 resource cmd2

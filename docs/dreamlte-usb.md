@@ -1,5 +1,12 @@
 # DREAMLTE USB bring-up evidence
 
+##0224 verified hardware trial
+
+CI44308837527 SUCCESS,11 compiled sources/6 symbols/33 strings/profile
+verified. Fresh Download Mode055 accepted0224 BOOT100%, exit0/reboot.
+Only BOOT written. Event CSR/STARTCFG/CSR/POWER physical report pending;
+no USB functionality established. See active handoff for exact hashes.
+
 ##0223 physical result;0224 CSR/power diagnostic candidate
 
 0223 reaches USB; phase5 stop did not recur. Session bits now retained:

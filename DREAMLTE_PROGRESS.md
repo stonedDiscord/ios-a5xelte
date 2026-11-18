@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0224 verified and BOOT flashed; CSR/power trace pending
+
+- Exact CI44308837527 SUCCESS at2c39e75540432a9fd362c9f605543a2224c96deb.
+  Preparation87930 completed exact-run downloads, source verification and
+  packaging.11 sources/6 symbols/33 diagnostics/active profile PASS.
+  Kernel SHA256d3d0cce0dfd55ed54e5ff75b09840ee1d9a499dc4e65ba380a90984f829d019e.
+- BOOT shim/out/dreamlte-xnu-0224.img,18,448,400B,SHA256
+  973887c7ac074f6789f75bca5849865372ac3ab1400b617e00e98adbedad8c58.
+  Original ramdisk/second/DT/header preserved; fit/independent hash PASS.
+- Fresh Download Mode055 accepted BOOT100%, Heimdall exit0/reboot;0224
+  installed. Only BOOT written. Private exact artifacts/reviewed manifest/
+  flash log research/dreamlte/ci-44308837527. No live CI/preparation remains.
+- Requested event CSR verified/mismatch, STARTCFG completed, USB CSR and
+  USB POWER lines (or last3 lines on earlier stop). Physical outcome pending;
+  USB functionality unverified.0223 session-valid retained but resource
+  cmd2 stuck remains last physical USB evidence. No Android/USERDATA writes.
+
 ## 2026-11-18:0223 reaches USB; session-valid confirmed, resource still stuck
 
 - User physical0223 trace reaches USB, superseding phase5 as the current
