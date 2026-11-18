@@ -10,6 +10,10 @@
   Earlier actual ARM64 compile passed for identical prepared source. Added
   resource test to full CI and required linked resources-assigned marker.
   No new hardware write or enumeration claim;0217 remains installed.
+- Full0218 CI44261810052 live at94e4d744b76110d0f330544bc27ad6fef228a822.
+  Preparation session12913 waits for exact run then checks nine actual
+  sources/six symbols/eleven linked diagnostics and BOOT packaging. Script
+  research/dreamlte/prepare-0218.py and .log; no automatic flash.
 
 ## 2026-11-18:0217 diagnostics verified and flashed
 

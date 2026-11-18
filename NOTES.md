@@ -6,6 +6,9 @@
 and prior identical ARM64 compile PASS.0217 own manifest archived before
 update.0217 remains installed; awaiting four USB failure register lines.
 No new phone writes. Current source manifest targets0218.
+Full0218 CI44261810052 at94e4d744b76110d0f330544bc27ad6fef228a822 is live.
+Preparation session12913/script research/dreamlte/prepare-0218.py waits,
+verifies and packages without flashing; log alongside. Do not replace live CI.
 
 CURRENT INSTALLED:0217 BOOT, successfully flashed100%/exit0/reboot from
 fresh Download Mode048. Exact CI44259521488 SUCCESS at a947a49; nine source
