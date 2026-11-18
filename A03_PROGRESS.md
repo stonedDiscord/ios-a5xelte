@@ -25,6 +25,13 @@ headers (local include-dir warnings retained); display/SMP regression PASS.
 15b144586351eb9855f5cab3c9fb446139080720 queued. Need exact linked artifact,
 source/checksum validation and BOOT-only passive trial before hardware claim.
 Existing0094/0093 restore retained; continuous touch remains unchanged.
+Follow-up22:16UTC: touchON9571slices/1420events, ioReady1/poisoned0;
+VM4397free/2965compressor16KiBpages. Later10461slices, still1420events.
+Actualframes remain4370/4365 at timer179928; no latency improvement claim.
+Donor Mesa opens missing HeroGPU and falls back to softpipe; audit documents
+required scalar/buffer/job/IOSurface backend. GPU object contains no FP/SIMD
+operands; same CI compile flags include -mgeneral-regs-only. CI now building.
+
 
 ## 2026-11-18: BOOT0094 physical touch responds after Home, but very slow
 
