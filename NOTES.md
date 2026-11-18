@@ -1,3 +1,10 @@
+ACTIVE2026-11-18 22:29UTC: user reboot/datewrong.0150 WAS committed228642b,
+but volatile host sync only, no persistentRTC. LiveUTC439(1970-01-01)
+->hostsync1795040955->independentstatussame(2026-11-18 22:29:15UTC).
+KernelUTCcorrected; screen/timezone unverified. No flash/Home/touchreload.
+Rebootclearedvolatiletouch; notrestored indatefollowup. GPUtask remainsopen.
+Need realRTC or explicitautomatic boot source for persistence, notfixeddate.
+
 SCOPE UPDATE2026-11-18: user says most basic acceleration is enough.
 Target one real hardware fill/copy then framebuffer blit with CPU fallback;
 full Metal/EAGL/composition backend is not required for this milestone.

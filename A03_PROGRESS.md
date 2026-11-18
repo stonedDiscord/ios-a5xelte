@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18 22:29 UTC: reboot date regression explained; volatile UTC restored
+
+User rebooted and reports wrong date. Committed0150 is228642b (2026-11-17),
+staged in current profile; it implements an explicit RAM calendar setter,
+not a persistent hardware RTC. Fresh post-reboot time status=439 seconds,
+1970-01-01 00:07:19UTC. Explicit host sync sets1795040955 and a separate
+status reads1795040955 =2026-11-18 22:29:15UTC, matching host. This verifies
+kernel UTC correction only; physical screen refresh/local timezone pending.
+No new BOOT flash, RTC/PMIC or filesystem write, Home injection or touch
+firmware reload. Reboot also resets volatile touch state; not checked/restored
+in this date-only follow-up. GPU basic-acceleration task remains open.
+Persistent RTC/boot-time time source is still unimplemented; do not claim
+commit0150 made time survive reboot. Capturedate-reboot-20261118.log90s.
+
 ## 2026-11-18: GPU scope clarified to basic acceleration
 
 User says most basic acceleration is sufficient, then asks which existing
