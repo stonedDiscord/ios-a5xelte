@@ -10,7 +10,7 @@ has no gadget. Android was not restored; this trial wrote only BOOT.
 User subsequently reports Apple_HFS IOMedia wait and failed NVRAM boot-picker
 reason write. Source confirms missing-root-media fallback; XNU continues past
 USB failure into root discovery. No S8 UFS provider/root mount or USB success.
-USB2 wake/timing0215 is active at5439710; CI44256127913 Build in_progress,
+USB2 wake/timing0215 is active at5439710; CI44256127913 SUCCESS,
 not flashed. Root conversion verified but USERDATA deployment incomplete.
 Next: identify EP0 failure command and compare pinned Samsung gadget.c;
 poll exact0215 CI and retain0214 diagnostic artifact.
@@ -25,8 +25,9 @@ New hardware state: phone returned to Download Mode (04e8:685d). Fresh
 authorized sparse USERDATA --no-reboot retry passed protocol/session/PIT
 but failed first sequence at0%, then end-session; exit1. Latest private log:
 research/dreamlte/root/heimdall-userdata-sparse-fresh-20261118.log. USERDATA
-still potentially partial. Requested exact Download Mode error; do not
-repeat blindly.0214 BOOT remains installed.0215 CI/preparation still live.
+still potentially partial. User reports no error text; fresh Download Mode
+device046 is now visible. Do not repeat USERDATA blindly.0214 BOOT remains
+installed.0215 preparation is downloading successful exact-run artifacts.
 
 Target: Galaxy S8 SM-G950F, Exynos8895, dreamlte-bringup branch. Read
 DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md first. S7/A5/SWEET history

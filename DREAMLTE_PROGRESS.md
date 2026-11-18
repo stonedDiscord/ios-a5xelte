@@ -51,6 +51,12 @@
 - CI44256127913 at5439710 remains authoritatively in_progress/Build;
   preparation PID47387/session67425 remains live. No replacement dispatched.
 
+- User reports no new text after failed sparse upload and will re-enter
+  Download Mode. Host now sees fresh USB device046/04e8:685d. Exact0215
+  CI44256127913 SUCCESS at5439710; preparation session67425 is downloading
+  the exact kernel/buildtree, then verifying actual content before packaging.
+  No further USERDATA attempt or BOOT write until candidate checks complete.
+
 
 ## 2026-11-13: base changed to HEROLTE
 
