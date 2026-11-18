@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: GPU scope clarified to basic acceleration
+
+User says most basic acceleration is sufficient, then asks which existing
+kernel code is reusable and how it maps to iOS. Target a hardware fill/copy
+and IOSurface-to-framebuffer blit with CPU fallback; full Metal/EAGL is not
+required for this milestone. Native Linux register/power/clock knowledge and
+DMA descriptors can inform an XNU backend; Linux APIs are not an iOS ABI.
+Existing SweetSurface/AppleCLCD plumbing and donor HeroGPU/DRM/EAGL bridge
+patterns are reusable with board/generation/page-size/ownership changes.
+No percentage estimate is justified. Native A03 source d15a5ccedb590915660c321ee2002bddd463b004
+has sprd-dma.c transaction-copy support with36-bit address extension; live
+DT AP DMA20410000/4000 and clock phandle13 index3 map public DMA gate
+APAHB20400000 bit4. Merely reading source does not validate engine ownership,
+transfer completion or scanout integration. No DMA writes/test yet.
+CI44409726184 remains building; current0094/touch retained.
+
 ## 2026-11-18 22:15 UTC: GPU bring-up0162 candidate; acceleration not implemented
 
 User requests A03 iOS GPU acceleration. BOOT0094 still uses software

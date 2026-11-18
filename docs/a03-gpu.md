@@ -52,6 +52,14 @@ ASan/UBSan. Actual BSD compile commands from0094 compile a03_gpu.c and
 sweet_amfi.c with generated CI headers; no builtin substitutions. Full
 Xcode link and hardware execution remain separate gates.
 
+## Current requested milestone
+
+User clarified on2026-11-18 that the most basic acceleration is sufficient.
+Target a verified hardware fill/copy and then a framebuffer blit with CPU
+fallback. Full Metal/EAGL rendering is deferred. A diagnostic register read
+still does not meet this smaller milestone. Consider the A03 2D/DMA engines
+only with separately validated ownership, address translation and completion.
+
 ## Acceptance order
 
 1. BOOT-only passive probe; retain0094/0093 restores and continuous touch.

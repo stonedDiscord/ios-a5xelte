@@ -1,3 +1,8 @@
+SCOPE UPDATE2026-11-18: user says most basic acceleration is enough.
+Target one real hardware fill/copy then framebuffer blit with CPU fallback;
+full Metal/EAGL/composition backend is not required for this milestone.
+Still require actual job completion/pixel readback;0162 is diagnostic only.
+
 ACTIVE 2026-11-18 22:15 UTC: A03 GPU user request;0162 passive candidate built locally.
 Commit15b1445 / CI44409726184 exact15b144586351eb9855f5cab3c9fb446139080720.
 Read-only gpu live-worker command gates PMUforce+auto/core0+top/AON then
