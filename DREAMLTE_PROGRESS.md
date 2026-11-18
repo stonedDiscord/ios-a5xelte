@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0226 verified and BOOT flashed; clock trace pending
+
+- Exact CI44324136923 SUCCESS at42d14a1dc97111ef63ee395158ff48e9e3ab60b7.
+  Preparation44451 completed exact downloads/source verification/packaging.
+  11 sources/6 symbols/38 diagnostics/profile PASS. Kernel SHA256
+  b20ffad5cdf626b3166e24b46fa8214dab0b7e5539b696972f835eb3a1bbda5f.
+- BOOT shim/out/dreamlte-xnu-0226.img,18,448,400B,SHA256
+  a66f43216e55fbe89766809bcb1810cc065ee8d5c8d89e2417894274c93c2142.
+  Original BOOT components/header preserved; fit/independent image hash PASS.
+- User confirmed Download Mode; host fresh057 accepted BOOT100%, Heimdall
+  exit0/reboot. Only BOOT written;0226 installed. Exact artifact/reviewed
+  manifest/flash log research/dreamlte/ci-44324136923.
+- Requested PHY clock before/after, PHY power, first resource command and
+  failure CSR/PHY lines. Predicted CLK001b0058/PIPE10 remain unverified.
+  USB functionality unverified; no live CI/preparation. No Android restore,
+  USERDATA or protected-partition write.
+
 ## 2026-11-18:0225 power awake but cmd2 stuck;0226 common/free clock trial
 
 - User exact0225: ep0cmd2 timeout/reg402, PAR0=1/PAR1/2=0;

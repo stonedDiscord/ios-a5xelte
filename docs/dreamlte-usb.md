@@ -1,5 +1,11 @@
 # DREAMLTE USB bring-up evidence
 
+##0226 verified hardware trial
+
+CI44324136923 SUCCESS,11-source/6-symbol/38-diagnostic profile checks pass.
+Fresh Download Mode057 accepted BOOT100%,exit0/reboot; only BOOT written.
+Physical free-clock/PHY power/resource result pending. No USB success claim.
+
 ##0225 cmd2 persists;0226 common-block/free-clock candidate
 
 Physical0225 TEST0 yet first resource cmd2 active402/PAR0=1; CLK801b0049,

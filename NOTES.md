@@ -13,6 +13,13 @@ handshake or flash before0225 verification. CI44316294206 still running.
 research/dreamlte/prepare-0226.py waits exact run; verifies11sources/
 6symbols/38strings and packages; never flashes. Physical mode request pending.
 
+CURRENT0226 INSTALLED. Exact CI44324136923 SUCCESS at42d14a1dc97111ef63ee395158ff48e9e3ab60b7;11sources/6symbols/38strings/profile PASS.
+Preparation44451 complete; no live CI/prep. Kernel SHA256b20ffad5cdf626b3166e24b46fa8214dab0b7e5539b696972f835eb3a1bbda5f.
+BOOT18,448,400B SHA256a66f43216e55fbe89766809bcb1810cc065ee8d5c8d89e2417894274c93c2142.
+Fresh Download Mode057 BOOT100%,exit0/reboot; only BOOT written. Private
+artifacts/manifest/flash log research/dreamlte/ci-44324136923. Requested
+clock/power/resource/FAIL readbacks; actual values pending. No USB success.
+
 LATEST0225 full fault confirms resource cmd2 still402/PAR0=1 despite
 TEST0. CLK801b0049/PHYPIPE0; other core/session readbacks unchanged.
 0226 candidate follows Samsung8895 common block awake/free UTMI clock
