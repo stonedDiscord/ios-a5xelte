@@ -20,6 +20,12 @@
 - Installed0224; no host gadget or Download Mode. Asked user to return to
   Download Mode while full0225 CI builds. No new phone write yet.
 
+
+- Full0225 CI44316294206 at6943dd9 dispatched. Preparation14190/script
+  research/dreamlte/prepare-0225.py waits exact head/run, downloads,
+  verifies11 sources/6 symbols/36 strings and packages; never flashes.
+  Keep current physical evidence separate from predicted TESTc->0.
+
 ## 2026-11-18:0224 event CSR and STARTCFG physically verified
 
 - User reports0224 session LINK08000180/UTMI660 before endpoints; event

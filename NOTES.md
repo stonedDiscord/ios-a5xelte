@@ -2,6 +2,10 @@
 
 ## Active S8 handoff — 2026-11-18
 
+0225 CI44316294206 at6943dd9 dispatched. Preparation14190/script
+research/dreamlte/prepare-0225.py waits exact run, verifies11sources/
+6symbols/36strings, packages; never flashes. Physical Download Mode asked.
+
 LATEST0224 missing readbacks received: DCFG80800/HW1=0160c93b;
 EVT82cad000/8/80001000/0; PHY TEST=c PIPE=0. Header identifies TEST bits2/3
 as HSP/SSP power-down, both asserted.0225 clears only those bits on strict
