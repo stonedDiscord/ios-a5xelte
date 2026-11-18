@@ -16,6 +16,11 @@ clock/power writes. ARM64 plus wrapper/EP/resource/CSR modeled tests and
 plain patch equality PASS. Current manifest11 sources/33 diagnostics.
 Next full CI;0223 remains installed, fresh Download Mode055 untouched.
 
+0224 CI44308837527 at2c39e75 dispatched. Preparation87930/script
+research/dreamlte/prepare-0224.py waits exact run then verifies/packages;
+never flashes. Per-artifact terminal-error retries preserve partial files
+in private directories. Current installed0223; Download Mode055 untouched.
+
 CURRENT:0223 installed, exact CI44298522029 SUCCESS at
  d5f6472b35b456acbaa95c0716be23533066a2ea.11 sources/6 symbols/28 strings/
 profile PASS. Kernel SHA25632291c02b546143bfc39bb61c09170afb2fbe9c94a44f14ab014282de659550f.

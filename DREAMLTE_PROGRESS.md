@@ -26,6 +26,13 @@
   CSR tests cover32/64-bit addresses and each mismatch. Manifest11 sources/
   33 diagnostics;0223 own reviewed manifest already archived. Full CI next.
 
+
+- Full0224 CI44308837527 at2c39e75 dispatched. Preparation87930/script
+  research/dreamlte/prepare-0224.py checks exact head, waits same run,
+  downloads each artifact into clean transfer destination on terminal
+  errors, verifies11 sources/6 symbols/33 strings and packages; never
+  flashes. Fresh Download Mode055 untouched. No USB success claimed.
+
 ## 2026-11-18:0223 verified and BOOT flashed; VM trace pending
 
 - Exact CI44298522029 SUCCESS at d5f6472b35b456acbaa95c0716be23533066a2ea.
