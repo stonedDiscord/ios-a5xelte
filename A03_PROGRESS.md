@@ -28,6 +28,10 @@ No phonecommands/partitionwrites this turn. NeedfullCI -> exactartifact/
 source/markers/checksum ->0092same2A55+1984MiB with --smp-kernel ->BOOT-only.
 0090 oneCPU/1984MiB restore preserved; manualDownload needed frompanic.
 
+FullCI44375549972 exact87f1b0ed025f69fef9ee199af70146ab3b385343
+dispatchedmacos26intel/a03/SWEET/userspacetrue/buildtreetrue18:59UTC; running.
+
+
 ## 2026-11-18: BOOT0091 flashed; boot text visible but no CDC, exact error pending
 
 User confirms manualDownload; host04e8685d/detect and0091 imagehash match.

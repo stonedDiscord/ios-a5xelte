@@ -1,3 +1,8 @@
+ACTIVE18:59UTC0158fullCI44375549972 exact87f1b0e RUNNING/mac26intel.
+CandidateBOOTramtrampoline+XNUconsumer/mandatorymarker included. Needexact
+success/source/markers/checksum before0092 --smp-kernel packaging/BOOTtest.
+Phone0091panicrc-9; preserve0090restore; noadditionalphoneI/O thisturn.
+
 ACTIVE2026-11-18 BOOT0091panic exactcpu1 CPU_ON rc=-9 (INVALID_ADDRESS).
 SecondaryPA0x103481000 >4GiB; firmwareentryrange rejectionlikely/unprovenlimit.
 0158 lowtrampoline insideexistingretainedBOOTshim prepared, notarbitraryRAM.
