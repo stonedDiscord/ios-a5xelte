@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Minimal A03 single-A55 native-16K ADT; no storage/peripheral drivers."""
+"""A03 native-16K ADT; single A55 default, explicit validated SMP trials."""
 import argparse
 from pathlib import Path
 import os

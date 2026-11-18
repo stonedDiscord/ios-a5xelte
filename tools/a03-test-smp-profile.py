@@ -29,4 +29,26 @@ if a.source:
     patch=ROOT/'xnu/a03/0157-a03-opt-in-psci-smp.patch'
     # Plain git apply is the actual CI patch mechanism.
     subprocess.run(['git','apply','--check',str(patch)],cwd=a.source,check=True)
+    import shutil
+    with tempfile.TemporaryDirectory() as tmp:
+        root=Path(tmp)
+        files=('iokit/Kernel/arm/SweetCPU.cpp','osfmk/arm64/cpu.c',
+               'osfmk/arm64/machine_routines.c','osfmk/arm64/start.s',
+               'pexpert/pexpert/arm64/SWEET.h')
+        for name in files:
+            target=root/name;target.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copyfile(a.source/name,target)
+        subprocess.run(['git','apply',str(patch)],cwd=root,check=True)
+        cpu=(root/files[0]).read_text()
+        assert 'target->getCPUNumber()' in cpu
+        assert 'topology->cpus[logical].phys_id' in cpu
+        assert 'processor_start(cpu->machProcessor)' in cpu
+        assert 'cpu_start() discards' in cpu and 'if (rc != 0)' in cpu
+        assert cpu.index('ml_cpu_init_completed();')>cpu.index('startup timeout')
+        asm=(root/files[3]).read_text()
+        assert '0x33ff' in asm and 'HSTR_EL2' in asm and 'ICH_HCR_EL2' in asm
+        assert 'HAS_CLUSTER || defined(SWEET)' in asm
+        topology=(root/files[2]).read_text()
+        assert '!cpus_boot_arg_present || cpu_boot_arg == 0' in topology
+        subprocess.run(['git','apply','--reverse','--check',str(patch)],cwd=root,check=True)
 print('PASS A03 CPU identities, state, unique phandles, roundtrip/default and trial bounds')

@@ -17,7 +17,10 @@ local start.s and machine_routines.c compile PASS after refreshing exported
 SWEET.h (first try used stale export, undefined limit; corrected). CPU driver
 local C++ compile blocked by LinuxClang lacking Apple's allocation builtins;
 no fake substitutions used. Exact cpu.c compile command absent in cached log.
-Full Xcode CI required before packaging/deployment. No multicore runtime
+Additional cpu.c compile PASS with retargeted machine_routines CI flags
+(not exact per-file replay). Full Xcode CI44351323590 dispatched exact
+71436b187a5654920f7936ccea488ac0be8e97e7/mac15intel/a03/SWEET/userspace;
+queued awaiting runner16:49UTC. Full Xcode CI required before packaging/deployment. No multicore runtime
 success claimed. BOOT0090 remains1984MiB/cpus1; continuousHIDstream1
 632slices/events0 and SpringBoard25/24threads measured; VMcompressor0.
 

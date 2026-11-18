@@ -1,3 +1,7 @@
+ACTIVE16:49UTC fullSMP CI44351323590 exact71436b1 QUEUED/mac15intel.
+Additionalcpu.c retargetedMachCI compilePASS, notexactperfile.
+Current0090=1984MiB/1CPU/TOUCHON. Noautoflash scheduled.
+
 ACTIVE2026-11-18~16:48UTC0157 opt-inSMP candidate ready for fullXcodeCI.
 Localexact machine_routines/start assembly PASS; C++Applebuiltinblocked;
 actualcpu.c exactcommand missing. ADT1/2/6A55 guards+gitapply PASS.
