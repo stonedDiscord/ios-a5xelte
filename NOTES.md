@@ -1,3 +1,10 @@
+ACTIVE2026-11-18~20:08UTC0093ALL8running+realuser/kernelusageticks.
+A756user12/sys179,A757user13/sys105; allA55alsoadvance;CPU0heaviest.
+Privatefw79104stagedvalid0/load0/A55A; TOUCHON1/2slices/events0, bothHIDopen/
+inputstatus3. LeaveON. VM/iohealthy/98312free/compressor0. SB25still1thread
+startup; noGUI/speedupclaim; userphysicalreplypending. Singlecapture32555
+boot0093-usb-initialuntil~20:26UTC. Freezedeferred;noextraflash/0092+0090kept.
+
 ACTIVE2026-11-18~20:07UTC0093 ALL8CORESINIT+USAGEPROVEN. CPU1..7
 CPU_ONrc0/initSGIinclA756/7; CPU0OK.8registered/twosnapshotsall8positive
 user/systemticks(A756:+1/+14,A757:+1/+11). CPU0dominant; notcapacityaware.

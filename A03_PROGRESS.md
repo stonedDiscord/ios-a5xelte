@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0093 touch restored; all8 cumulative usage continues advancing
+
+Private79104fwstage valid0/loadresult0/readyA55A; explicitHIDtouchstart and
+streamstatus1/slices2/events0. BothHIDclientsopen/inputstatus3. LeavestreamON,
+no timedstophelper. Freshcpus all8continueuser/systemadvance: cumulativeA75
+CPU6user12/system179,CPU7user13/system105 (earlier1/14,1/11); all6A55also
+advance. CPU0stillheaviest, notcapacityaware. VM98312free/21130active/978inactive/
+6231wired16KiBpages/compressor0, ioReady1/poisoned0/7956requests. SpringBoard25
+still1thread startup at20:08UTC; nohomeUI or speedup claim. No capturedSBpanic/
+crash in currentboundedlog. Userphysicalbootreplypending. Capture32555until
+~20:26UTC. Noadditionalflash. Freezedeferred;0092/0090restoreskept.
+
 ## 2026-11-18: BOOT0093 starts all eight cores and schedules real work on both A75s
 
 BOOT-onlyHeimdall64645 upload100percent/success/reboot~20:05UTC. Singlecapture
