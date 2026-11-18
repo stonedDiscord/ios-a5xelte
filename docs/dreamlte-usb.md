@@ -13,6 +13,13 @@ succeeded and BOOT0218 is now installed; physical result pending. Prior GHWPARAM
 
 ## Current diagnostic trial (2026-11-18)
 
+Latest:0219 exact CI44265115339 at41f5575 SUCCESS; nine source hashes,
+six symbols and fourteen linked diagnostic strings verified. Fresh Download
+Mode050 accepted BOOT0219 (100%, exit0/reboot). No host1209:0001 gadget;
+physical four FAIL, one CORE and two PHY lines requested. No runtime PHY
+or USB pass. Earlier0218 trial details below remain historical context.
+
+
 0218 exact CI44261810052 at94e4d74 succeeded. Nine compiled sources,
 six linked symbols and eleven diagnostic strings verified; BOOT uploaded
 100%, Heimdall exit0/reboot. Host still sees no1209:0001 gadget; physical

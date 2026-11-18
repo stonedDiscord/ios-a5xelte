@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0219 exact build verified and BOOT flashed
+
+- Prior goal turn was a verified wait on live CI/preparation. This turn exact
+  CI44265115339 SUCCESS at41f5575831f48c6796d71024d220915ae9b14587.
+  Source/profile/symbol/string verification PASS: nine complete source hashes,
+  six linked symbols and fourteen linked diagnostics. Kernel SHA256
+  ea0a8e9d5678f4c3a39b7f92d60a750553cc73678d67b637c1e626cc0664cf40.
+- Preparation65521/PID53546 completed; original BOOT components/header kept,
+  payload/partition fit and independent prepared-manifest hash checked.
+  BOOT shim/out/dreamlte-xnu-0219.img,18,448,400B,SHA256
+  b555a272b1859e176944657ad896891be857d2cb17f4c1aaa1fbe4b6cb63c9d9.
+- Fresh Download Mode050 accepted BOOT100%, Heimdall exit0/reboot. Only BOOT
+  written. Exact artifacts/manifests/flash log research/dreamlte/ci-44265115339.
+  Current installed BOOT0219 supersedes0218. Physical0218 trace not received.
+- Immediate host no1209:0001; no physical USB success. Requested four USB FAIL
+  lines, one USB CORE and two USB PHY lines, plus resources-assigned marker
+  if present.0219 adds read-only failure snapshots, not functional PHY fix.
+  No Android restoration or USERDATA/protected-partition write this trial.
+
 ## 2026-11-18:0219 diagnostics promoted for full build
 
 - Prior goal turn progressed by preparing/test-compiling read-only PHY/core

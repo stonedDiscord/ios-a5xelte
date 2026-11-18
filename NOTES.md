@@ -2,35 +2,27 @@
 
 ## Active S8 handoff — 2026-11-18
 
-0219 CI44265115339 confirmed in_progress at41f5575831f48c6796d71024d220915ae9b14587.
-Preparation session65521/script research/dreamlte/prepare-0219.py waits for
-exact run and verifies nine sources/six symbols/fourteen linked diagnostics
-before BOOT packaging; never flashes. Log alongside.140 active patches.
-Next: inspect exact prepared-boot.json/hash after success; physical0218
-screen report and fresh Download Mode are still needed for next BOOT trial.
-Do not replace live CI due to observation timeout.
+CURRENT INSTALLED:0219 BOOT; fresh Download Mode050 accepted100%, Heimdall
+exit0/reboot. Only BOOT/sda7 written. Immediate host no1209:0001 gadget.
+Requested physical four USB FAIL lines, one USB CORE and two USB PHY lines,
+plus resources-assigned marker if present; otherwise last three lines.
+No0218 physical trace received. No enumeration/control/data pass yet.
 
-Latest:0219 read-only PHY/core failure diagnostics promoted to active profile
-for full CI; reviewed manifest now0219/14 diagnostics.0218 own expected
-manifest archived in ci-44261810052. Staged source0219. Installed BOOT still
-0218, no gadget, physical screen result pending. No USB sequence change or
-additional phone write. Full build is live as identified above; older staging
-states below are superseded by this paragraph.
+Exact0219 CI44265115339 SUCCESS at41f5575831f48c6796d71024d220915ae9b14587.
+Nine source hashes/six symbols/fourteen linked strings/active profile PASS.
+Kernel SHA256ea0a8e9d5678f4c3a39b7f92d60a750553cc73678d67b637c1e626cc0664cf40.
+BOOT shim/out/dreamlte-xnu-0219.img,18,448,400B,SHA256
+b555a272b1859e176944657ad896891be857d2cb17f4c1aaa1fbe4b6cb63c9d9.
+Preparation65521/PID53546 completed, original ramdisk/second/DTBH/header
+preserved; payload/partition fit and independent image hash PASS. Private
+artifacts/manifests/flash log research/dreamlte/ci-44265115339. Current
+source manifest0219;0218 own expected manifest archived in ci-44261810052.
+No live build/preparation remains. Next action depends on0219 physical trace.
 
-CURRENT INSTALLED:0218 BOOT; fresh Download Mode049 accepted100%, Heimdall
-exit0/reboot. Only BOOT/sda7 written. Immediate host checker finds zero
-1209:0001 gadgets. Physical screen result requested and pending: resources
-assigned and USB failure lines, or last three startup lines. No USB pass.
-
-Exact0218 CI44261810052 SUCCESS at94e4d744b76110d0f330544bc27ad6fef228a822.
-Nine complete sources/six symbols/eleven linked diagnostics/profile PASS.
-Kernel SHA256488e2b10493c7cee0643399e024222b77bd6ce506e657532741cffe823535c4f.
-BOOT shim/out/dreamlte-xnu-0218.img,18,448,400B,SHA256
-70f47645eb7f5c0ba40a6d9384b4c3d4654d7e82cd1b24620111a99da2cb47d4.
-Preparation12913 complete; original ramdisk/second/DTBH/header retained,
-fit/independent hash checked. Private artifacts/manifests/flash log:
-research/dreamlte/ci-44261810052. Its0218 expected manifest is archived there;
-current source manifest targets0219.0217 has its own archived manifest.
+0219 adds failure-only PIPE/HW3/BUS and existing PHY LINK/UTMI/CLK/Q/SEL
+readbacks. No added map/write/reset/retry or functional sequence change.
+Actual ARM64 compilation and modeled wrapper/resource/32-endpoint suites
+PASS; these do not prove physical PHY/clock readiness or USB success.
 
 0218 tests Samsung STARTCFG then resources for every implemented physical
 endpoint before SETEPCONFIG; removes repeated data STARTCFG on DREAMLTE.
@@ -70,17 +62,10 @@ Avoid blind retries. S8 UFS runtime provider unfinished; root mount unproven.
 
 Origin wardevsa/ios-a5xelte read-only; writable build remote
 stonedDiscord/ios-a5xelte. Keep Apple binaries/device dumps/backups ignored.
-0219 now active in xnu/dreamlte after preparation in dreamlte-next adds read-only
-failure snapshots for DWC3 PIPE/HW3/BUS and existing mapped PHY LINK/UTMI/
-CLK/Q/SEL. No new mapping/write/reset/retry. Actual ARM64 compile, plain
-patch equality and expanded32-endpoint/wrapper/resource suites PASS. Tests
-cover missing PHY mapping and unchanged modeled PHY words; active0218 source
-restored. Pinned CAL QACT/link-reset difference is not proven root cause.
-Full0219 CI now live as above; no additional phone write.0218 report pending.
-
-Next: physical0218 result, then diagnose exact failing command or check real
-USB descriptors/configuration and bidirectional network traffic if enumerated.
-Do not claim success from CI/model tests; existing goal remains active.
+Next: physical0219 result, then diagnose exact failing command and PHY
+state; if enumeration appears, verify real descriptors/configuration and
+bidirectional network traffic. Do not claim success from CI/model tests.
+Existing goal remains active. No new USERDATA or protected writes.
 
 ## a5xelte fork handoff (2026-10-20)
 

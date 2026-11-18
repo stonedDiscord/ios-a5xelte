@@ -1,5 +1,10 @@
 # Prepared S8 USB follow-up
 
+Latest:0219 is active and installed after exact CI44265115339 SUCCESS,
+source/symbol/14-string verification and BOOT100%/exit0/reboot. Host no
+gadget; physical failure/PHY trace pending. No functional PHY fix claimed.
+Earlier preparation/promotion statuses below are historical.
+
 Latest2026-11-18:0219 failure-only diagnostics promoted to active profile
 for full build.0218 remains installed and screen report remains pending.
 No new functional USB sequence or hardware success. Older staging statuses
