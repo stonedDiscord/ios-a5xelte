@@ -1,3 +1,8 @@
+ACTIVE18:13UTC correctedSMPfullCI44367277857 exact91ca41a RUNNING,
+macos-26-intel/a03/SWEET/userspacetrue/buildtreetrue. MandatorySMPmarkers
+nowgateartifact. No0091/no flash; verifyexactsuccess/source/markers/checksum
+before2A55trial.0090restore retained. Prior44357697720 kernelREJECTED.
+
 ACTIVE2026-11-18~18:15UTC green44357697720 REJECTED:0157skipped!
 Artifactkernel1ef6b6b4...6254 checksumPASS but noSMPmarkers; actualsource
 singleCPU. BuildwarnedSweetCPU.cpp37 patchnotapply; no0091image/no flash.

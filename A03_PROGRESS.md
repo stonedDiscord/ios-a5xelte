@@ -24,6 +24,13 @@ reported console not connected; USB VID/PID remains visible. No reset/flash,
 no touch start/stop or firmware load sent. Last verified0090 RAM/touch state
 is historical; no fresh runtime status established this turn. Capture ended.
 
+Replacement fullCI44367277857 dispatched exact91ca41ad5769bc434e47200c9346e3c1777a0a32
+onmacos-26-intel/a03/SWEET/userspacetrue/buildtreetrue at18:13UTC; running.
+It includes corrected0157 and mandatory linked-SMP markers. Next exactsuccess
+then source/marker/checksum checks before2A55 BOOT-only packaging/deployment.
+
+
+
 ## 2026-11-18: SMP CI failed before runner acquisition; alternate pool dispatched
 
 User reports failed build44352036471. GitHub check annotation says:
