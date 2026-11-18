@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: physical tap launches Settings on BOOT0089
+
+User explicitly reports tapping Settings and seeing its app-opening animation.
+The active HID stream records two physical contacts:444,1149 ->449,1152/up
+and613,946/up (five events total), with matching SweetHIDTouch down/up logs.
+ps independently confirms Preferences283 launched; SpringBoard remains26.
+This is the first correlated physical tap -> visible app-launch animation
+and actual application process evidence. User then reports black app content
+with home bar, still waiting; fully rendered Settings/scrolling is not proven.
+Preferences sample shows12threads and main CFRunLoop/GSEvent/UIApplication
+event loop. No CA_CLIENT WIcreate diagnostic or work-interval abort captured
+yet on0089; do not claim0156 hardware creation path proven merely from silence.
+
+First120s HID window completed306slices/events0 and explicit stop. A600s
+window began~16:29UTC (host11069, boot0089-physical-hid-long.log), received
+the five events above, and remains active for the requested home-bar swipe.
+Capture93357 remains the only tty reader. Firmware is loaded.
+
 ## 2026-11-18: BOOT0089 CA-client candidate deployed
 
 CDC returned; single reader93357 is active. Volatile UTC sync read back

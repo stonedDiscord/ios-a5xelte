@@ -1,3 +1,11 @@
+ACTIVE2026-11-18~16:31UTC BOOT0089 FIRST physicaltap->Settings animation
+userconfirmed; stream5events/twotruecontacts+HIDdown/up; Preferences283
+launched, SB26alive. Settingscontentblack/homebar; scrollingnotproven.
+Preferences12threads/mainCFRunLoop/GSEvent/UIApplication. NoCAclientWI
+diagnostic/abortyet, so0156specificcreationstillunproven. HID600s11069
+ONuntil~16:39UTC; useraskedphysicalhomebarswipe, replypending.
+Capture93357 boot0089-usb-initial.log active; fwloaded. No newflash.
+
 ACTIVE2026-11-18~16:24UTC BOOT0089 CDC/capture93357 ACTIVE, UTCsynced
 16:21:00. Private79104fw stagedvalid0/load0/A55A/config720x1600 PASS.
 BothHIDclientsopen/inputstatus3. Logonlyidle10s30slices/events0/stopPASS.
