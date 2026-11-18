@@ -23,6 +23,13 @@
   fifteenth linked marker after archiving verified0219 manifest privately.
   No new hardware write;0219 remains installed. Full CI next.
 
+- Full0220 CI44270585173 confirmed in_progress at
+  a1ea67a281f8009de43e974490a974927ef4a8ca. Preparation session96056
+  waits on this exact run, verifies nine sources/six symbols/fifteen linked
+  strings and packages preserved-component BOOT; never flashes. Private
+  script/log research/dreamlte/prepare-0220.py and .log. Fresh Download Mode
+  requested. Keep live run unchanged; no hardware success claim.
+
 ## 2026-11-18:0219 post-flash host observation
 
 - Rechecked actual USB devices and control-transfer checker after0219:

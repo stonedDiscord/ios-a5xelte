@@ -1,5 +1,21 @@
 # DREAMLTE USB bring-up evidence
 
+##0219 PHY evidence and0220 wake candidate (2026-11-18)
+
+Physical0219: ep0 cmd2 reg402, PAR0=1/PAR1=0/PAR2=0; PIPE010c0002,
+HW3=10420085,BUS22220001/300; PHY LINK08000000,UTMI60,CLK801b0949,
+Q7c00,SEL0. STARTCFG completes but first SETTRANSFRESOURCE stays active.
+Resource-before-config ordering did not fix command execution. FORCE_QACT
+bit9 is clear despite automatic QACT sources disabled. This is evidence
+for testing Samsung CAL enable sequence, not proof of the root cause.
+
+0220 applies exynos_cal_usbphy_q_ch(enable=1) before existing DCTL reset:
+500us waits, force QACT,10us LINK_SW_RESET pulse. Primary clock bank only;
+refuses secondary PIPE clock/preasserted link reset; retains port mux,
+reference/PLL tuning and unrelated bits. Modeled sample Q7c00 becomes7e00.
+Actual ARM64 compile and wrapper/EP/resource suites PASS. Full
+CI44270585173 live; not flashed. Existing0219 physical diagnostics retained.
+
 ##0217 endpoint command snapshot (2026-11-18)
 
 Phone reports ep0 cmd1 reg00000401; PAR0=00000200/PAR1=00000500/PAR2=0;
