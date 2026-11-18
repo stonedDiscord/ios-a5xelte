@@ -6,6 +6,20 @@
 research/dreamlte/prepare-0225.py waits exact run, verifies11sources/
 6symbols/36strings, packages; never flashes. Physical Download Mode asked.
 
+User confirms Download Mode ready; host sees fresh056/04e8:685d. No
+handshake or flash before0225 verification. CI44316294206 still running.
+
+CURRENT0225 INSTALLED: exact CI44316294206 SUCCESS at
+6943dd9061b0993cdcbd5917e9260547303e43b3.11sources/6symbols/36strings/
+profile PASS. Preparation14190 completed; no live CI/prep.
+BOOT18,448,400B,SHA2565e947432783858d583842bd83025cea68d7f3cebf30565bedddf72115aaebf79.
+Kernel SHA256a97dc9b6b188ee9467c831f53c624f8934dfbbfb07c0c2133d08ab0c376e492b.
+Original BOOT components/header, fit/independent hash PASS. Fresh Download
+Mode056 BOOT100%, Heimdall exit0/reboot. Only BOOT written. Private artifacts/
+own manifest/flash log research/dreamlte/ci-44316294206. Requested PHY
+power TEST before/after, resources/running or failure; physical effect pending.
+Next depends on screen/host results. USB goal incomplete; never Android.
+
 LATEST0224 missing readbacks received: DCFG80800/HW1=0160c93b;
 EVT82cad000/8/80001000/0; PHY TEST=c PIPE=0. Header identifies TEST bits2/3
 as HSP/SSP power-down, both asserted.0225 clears only those bits on strict

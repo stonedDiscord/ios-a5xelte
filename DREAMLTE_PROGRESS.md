@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0225 verified and BOOT flashed; PHY wake trace pending
+
+- Exact CI44316294206 SUCCESS at6943dd9061b0993cdcbd5917e9260547303e43b3.
+  Preparation14190 completed downloads/verification/packaging.11 sources,
+  6 symbols/36 diagnostic strings/active profile PASS. Kernel SHA256
+  a97dc9b6b188ee9467c831f53c624f8934dfbbfb07c0c2133d08ab0c376e492b.
+- BOOT shim/out/dreamlte-xnu-0225.img,18,448,400B,SHA256
+  5e947432783858d583842bd83025cea68d7f3cebf30565bedddf72115aaebf79.
+  Original BOOT components/header preserved; fit/independent image hash PASS.
+- User confirmed Download Mode; host fresh056 accepted BOOT100%, Heimdall
+  exit0/reboot. Only BOOT written;0225 installed. Exact artifacts/reviewed
+  source manifest/flash log research/dreamlte/ci-44316294206.
+- Requested PHY power TEST before/after plus resources/running or failure
+  lines, or last3 if earlier stop. Predicted c->0 and endpoint progress not
+  yet physically confirmed. No live CI/preparation remains; USB unverified.
+  No Android restoration, USERDATA or protected-partition write.
+
 ## 2026-11-18:0224 PHY power-down confirmed;0225 primary wake candidate
 
 - User supplies omitted0224 lines: DCFG00080800 HW1=0160c93b;
@@ -25,6 +42,9 @@
   research/dreamlte/prepare-0225.py waits exact head/run, downloads,
   verifies11 sources/6 symbols/36 strings and packages; never flashes.
   Keep current physical evidence separate from predicted TESTc->0.
+
+User confirms Download Mode ready; host sees fresh056/04e8:685d. No
+handshake or flash before0225 verification. CI44316294206 still running.
 
 ## 2026-11-18:0224 event CSR and STARTCFG physically verified
 

@@ -1,5 +1,12 @@
 # DREAMLTE USB bring-up evidence
 
+##0225 verified hardware trial
+
+CI44316294206 SUCCESS;11source/6symbol/36string/profile and original BOOT
+component/fit/hash checks PASS. Fresh Download Mode056 BOOT100%,exit0/reboot.
+Only BOOT written. Physical PHYTEST release/resource progress pending;
+no USB success inferred. Exact hashes/artifacts in active handoff.
+
 ##0224 confirmed PHY power-down;0225 targeted release
 
 Physical0224 CSR: DCFG80800/HW1=0160c93b; EVT82cad000/8/80001000/0.
