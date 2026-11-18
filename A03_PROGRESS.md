@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: corrected SMP build verified; BOOT0091 two-core trial
+
+FullCI44367277857 SUCCESS exact91ca41ad5769bc434e47200c9346e3c1777a0a32.
+Downloaded kernel checksum/all4linkedSMPmarkers and actualuploadedsource
+reverse0157 gitapplycheck PASS. Kernel SHA256
+c133c3ea30e6cac90635edc1f6ff7d526a35feedb9d6d99a9e351cf4a4e698c6.
+BOOT0091-smp2 SHA256
+14b9de7c03a1ea48bdbc6cee3b9c506175e46006a4bc28d9f402c45aaca26a7a.
+TwoA55 CPU nodes MPIDR0/100, cpus2,1984MiB. Existing0090ADT nodes/seed
+preserved; adds onlyCPU1/uniquephandle, args onlycpus1->2. Loader unchanged
+exceptimage_size; stockramdisk/DT identical. LiveDT/memoryguards PASS.
+
+Existing0090 USB enumerated1d6b0104 buttty12s0bytes/SEND_BREAKerrno110;
+noDownload. Causeunknown, nowholedevicefreezeclaim. User manually enters
+Download; hostdetect04e8685d+Heimdall succeeds. BOOT-onlyflash95543 launched;
+no otherpartition selected. Preserve0090restore. Awaitflashresult/capture
+CPU_ON+bothcoresinitSGI/timers before SMPsuccess. Then UTC/privatefwload/
+touchstart (leaveenabled), VM/io and physicalUI test. No touchstop sent.
+
 ## 2026-11-18: green SMP build rejected;0157 context corrected against CI source
 
 Run44357697720 completed SUCCESS exact73b554a. Downloaded kernel checksum

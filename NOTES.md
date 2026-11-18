@@ -1,3 +1,11 @@
+ACTIVE2026-11-18~18:52UTC0091-smp2 BOOT-onlyflash95543 INPROGRESS.
+44367277857 SUCCESS/exact91ca41a; checksum/4SMPmarkers/actualsource PASS.
+BOOT14b9de7c...ca26a7a kernelc133c3ea...4e698c6.2A55/cpus2/1984MiB,
+0090ADT+CPU1only,argscpus2only,loaderexceptsize/stockramdisk/DTsame.
+UsermanualDownload confirmedhost04e8685d/detect afterUSBtimeout.
+Nextflashresult->singlecapture/CPU_ON+2coreSGItimerproof/UTC/fwload/
+touchstart/VMio/UI. Preserve0090restore. NoSMP runtimeclaimyet.
+
 ACTIVE18:13UTC correctedSMPfullCI44367277857 exact91ca41a RUNNING,
 macos-26-intel/a03/SWEET/userspacetrue/buildtreetrue. MandatorySMPmarkers
 nowgateartifact. No0091/no flash; verifyexactsuccess/source/markers/checksum

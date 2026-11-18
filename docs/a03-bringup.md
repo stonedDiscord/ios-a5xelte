@@ -4,7 +4,8 @@
 1024MiB), at0x102000000..0x17e000000 after live-DTB reservation checks.
 This is the upper contiguous window, not all installed RAM. XNU/iOS processes
 and storage work; no measured UI speedup yet. Multicore0157 is a separate
-opt-in candidate awaiting full build/hardware checks; cpus=8 alone is unsafe.
+opt-in candidate: fullCI44367277857 linkedSMP/source/checksum verified;
+BOOT0091 twoA55/1984MiB trial pending hardware result; cpus=8 alone is unsafe.
 
 Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
 been measured on hardware. A120second log-only trial completed361slices/
