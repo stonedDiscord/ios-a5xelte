@@ -1,3 +1,12 @@
+ACTIVE2026-11-18~21:26UTC0094A75BOOT-onlyflash57520 INPROGRESS.
+CI44398834193SUCCESS/exact661d5bb/source/checksum/markersPASS.
+BOOTddb03bf3...33047aa7/kernelabfaf10a...5533c382. Exact0093ADT/all8/1984MiB,
+cmd599 remove startup_debug=1 append a03_prefer_a75=1. PhysicalbootstrapA55
+unchanged. SyncedDownload thenHeimdalldetectPASS (firstattempttooearly/no write).
+Singlecapture56612 waits120s then3600s boot0094-usb-initial.log. Needresult/
+policy1/all8initSGI then UTC/privatefwload/touchstartleaveON/usagedeltas/VMio.
+No runtime/speedupclaim; keep0093/0092/0090restores.
+
 ACTIVE2026-11-18 A75 CI44398834193 exact661d5bb RUNNING.
 Local exact-CI sched_prim.c compilePASS, selector262144mask sanitizerPASS.
 0094 private inputADT=0093 exact; cmd599bytes remove startup_debug=1 then

@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: A75-preferred BOOT0094 built and verified; BOOT-only trial
+
+FullCI44398834193 SUCCESS exact661d5bb18ba35bddecbdd6c125852e08756f5bbc.
+Artifact SHA256, SMP+usage+display+A75policy linked markers and actual uploaded
+sched_prim.c reverse-apply/exact local source comparison PASS. Kernel SHA256
+abfaf10a56f4eadf2eb358b58a045970ef6ec2539ed4ad26b10dad6f5533c382.
+BOOT0094 SHA256
+ddb03bf32f46bd2b953ec2a6740703176b83003e94658f029c9ed26e33047aa7.
+Exact0093 inputADT/all8/1984MiB/root; cmdline599bytes as documented; packer
+exactkernel/payload rebuild, unique secondaryentry0x103485000, live23RAM
+reservation validation and stockramdisk/DT preservation PASS.
+
+Explicit syncedCDC Download requested; initialHeimdalldetect was too early
+and sent no image. Subsequent04e8:685d plusHeimdalldetect PASS; BOOT-only
+flash57520 started. Singlecapture56612 waits120s for CDC, then3600s log
+boot0094-usb-initial.log. Needflash result, policyrequested1/all8initSGI,
+UTC/privatefwload/touchstartleaveON, usage deltas/display/VM/io. No runtime
+activation or UI/speedup claim until evidence.0093/0092/0090 restores retained.
+
 ## 2026-11-18: requested A75-first scheduling candidate0161
 
 User asks to make the A75 the main CPU XNU uses. BOOT0093 already runs
