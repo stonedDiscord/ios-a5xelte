@@ -1,5 +1,18 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0219 post-flash host observation
+
+- Rechecked actual USB devices and control-transfer checker after0219:
+  no1209:0001 gadget and no Download Mode. Host kernel journal over the
+  observed fifteen-minute window shows Download Mode050 disconnect at
+  09:41:44 CET, with no subsequent enumeration/descriptor failure messages.
+  This supports absence of a host-visible reconnect, not a proven PHY cause
+  or physical kernel stopping point. Current0219 screen trace is still needed.
+- CI44265115339 terminal SUCCESS; preparation53546 has exited after verified
+  packaging. There is no live job to classify as a verified wait now. Last
+  goal turn made progress via verified0219 BOOT flash. No new build, USB
+  sequence change, flash or protected-partition write in this observation.
+
 ## 2026-11-18:0219 exact build verified and BOOT flashed
 
 - Prior goal turn was a verified wait on live CI/preparation. This turn exact

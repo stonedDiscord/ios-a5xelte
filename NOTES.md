@@ -7,6 +7,10 @@ exit0/reboot. Only BOOT/sda7 written. Immediate host no1209:0001 gadget.
 Requested physical four USB FAIL lines, one USB CORE and two USB PHY lines,
 plus resources-assigned marker if present; otherwise last three lines.
 No0218 physical trace received. No enumeration/control/data pass yet.
+Post-flash host journal:050 disconnect09:41:44 CET, no subsequent reconnect
+or descriptor errors in observed fifteen-minute window. No live CI/prep now;
+current0219 physical snapshot is required before selecting a clock/reset fix.
+
 
 Exact0219 CI44265115339 SUCCESS at41f5575831f48c6796d71024d220915ae9b14587.
 Nine source hashes/six symbols/fourteen linked strings/active profile PASS.
