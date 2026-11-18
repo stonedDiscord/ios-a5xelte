@@ -2,7 +2,7 @@
 
 ## Active S8 handoff — 2026-11-18
 
-Latest evidence overrides older status paragraphs below: verified0214 BOOT
+Verified0214 BOOT
 flashed successfully (Heimdall100%, exit0, reboot). User sees framebuffer
 text `SWEET USB: endpoint 0 setup failed`: physical console and XNU gadget
 EP0 setup reached; exact failed command/status is not yet reported. Host
@@ -21,12 +21,8 @@ and converted20H392 iOS root on existing USERDATA/sda24. Preserve GPT,
 RECOVERY, bootloaders, EFS/CPEFS and all other partitions. Do not flash raw
 IPSW. Never use donor S7/A5 partition paths or restore stock for RAM logs.
 
-0213 remains installed in BOOT; user saw Samsung logo, host saw no gadget.
-CI44094150615 passed exact compiled source/linked-symbol checks. Runtime
-progress beyond the older recovered VM trace is unknown. Phone was in Download Mode with a failed session. A fresh read-only
-download-pit handshake failed; host USB reset then returned ENOENT and the
-phone is now absent from lsusb. Physical Download Mode re-entry is pending.
-No partition writes occurred during those recovery checks.
+0214 is installed in BOOT and displays XNU text. Host currently sees no USB
+gadget. Keep this screen available to read the preceding EP command failure.
 
 Framebuffer0214 now includes loader/early/serial drawing at0xcc000000,
 1440x2960/stride5760; DECON0x12860000 source-derived frame request+0x60
@@ -41,13 +37,13 @@ shim/out/dreamlte-xnu-0214.img,18,432,016 bytes, SHA256
 fa8b862c1eb4e054ca581d45cc5957f7327b8f4cfd3432375471d49aa85a14b3.
 Kernel SHA2562c76fa250cc0c9c38f17d17f75ac7b8470d74bb8580e2aebcd2760bea5bf4214.
 Stock ramdisk/second/DTBH/header fields independently match; exact appended
-payload uses dreamlteusb=2; fits BOOT/chip8895. Prepared, NOT flashed.
-Supersedes44111718665/44115872187. No physical display or USB pass yet.
+payload uses dreamlteusb=2; fits BOOT/chip8895. Successfully flashed0214.
+Supersedes44111718665/44115872187. Physical display text verified; USB fails
+EP0 setup, exact command pending.
 
-Goal hardware-blocked after repeated physical Download Mode request and
-failed host session recovery. Phone absent from USB; ready artifacts above
-need no rebuild. Resume when user returns it to Download Mode. Keep
-Android restoration prohibited.
+Goal active and incomplete. Physical Download Mode reset succeeded and0214
+flashed. Current dependencies: preceding EP command/status screen text and
+full0215 CI completion. Keep Android restoration prohibited.
 
 20H392 IPSW OS/SystemOS/AppOS were mounted read-only and converted to:
 research/dreamlte/root/ios-16.7.16-20H392-hfsx.img (32GiB)
@@ -67,19 +63,17 @@ and report phone error text. Retry sparse USERDATA with --no-reboot after
 physical reset; later BOOT flash needs --resume if same successful session.
 Do not use --repartition/--skip-size-check. USERDATA measured58,556,678,144B.
 
-USB0212/0213 currently attempts guarded awake-PHY takeover, not cold start.
+USB0214 currently attempts guarded awake-PHY takeover, not cold start.
 No real S8 gadget enumeration/control/bidirectional transfer success yet.
 Source map now resolves CMU/FSYS0 clock gates, Q-channel, PMU isolation and
-reference selector in docs/dreamlte-usb.md. Prepared follow-up0215 lives
-in xnu/dreamlte-next (excluded from active profile): USB2 sleep controls
-and post-reset66MHz GCTL timing from pinned Linux core.c. Actual wrapper
-host tests, ARM64 compile and plain apply/full-source equality pass. It is
-NOT in CI44119574729; first use0214 to locate runtime failure.
- Framebuffer should expose the
-actual failure before implementing remaining cold PHY dependencies.
+reference selector in docs/dreamlte-usb.md. Follow-up0215 lives in active
+xnu/dreamlte: USB2 sleep controls and post-reset66MHz GCTL timing from
+pinned Linux core.c. Actual wrapper host tests, ARM64 compile and plain
+apply/full-source equality pass. It is in CI44256127913, NOT the flashed
+CI44119574729 artifact. Framebuffer now locates failure at EP0 commands.
 
 Origin wardevsa/ios-a5xelte (read-only); CI remote build is
-stonedDiscord/ios-a5xelte. Latest commits9498204 (display),919d460 (root tools).
+stonedDiscord/ios-a5xelte. Code5439710 (USB0215),9498204 (display),919d460 (root tools).
 Keep Apple binaries, backups/device identifiers and converted images ignored.
 
 ## a5xelte fork handoff (2026-10-20)

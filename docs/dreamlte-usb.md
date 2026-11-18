@@ -1,5 +1,20 @@
 # DREAMLTE USB bring-up evidence
 
+## Physical framebuffer evidence (2026-11-18)
+
+Verified0214 BOOT flashed successfully and the user reads
+`SWEET USB: endpoint 0 setup failed` on the phone. This establishes normal
+XNU framebuffer output and execution past the DCTL soft-reset guard into
+the five-command EP0 configuration sequence. The preceding command/status
+or timeout line is required to isolate the failing operation. No host gadget
+is present. Do not infer a working PHY, DMA or enumeration from this message.
+
+0215 adds Samsung core.c USB2 ENBLSLPM/SUSPHY clearing and post-reset
+66MHz GCTL timing; active commit5439710, full CI44256127913 pending. Actual
+wrapper host tests pass again on2026-11-18. Reviewed gadget.c uses the same
+EP command register layout, CMDACT/status fields and EP0 configuration bits;
+the failure is not yet evidence of an incorrect register address.
+
 The target is a USB connection from the running S8 shim/XNU, with host-side
 transfer verification. Android ADB recovery of last_kmsg is diagnostic support;
 it does not meet that target.
