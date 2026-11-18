@@ -1,10 +1,10 @@
 {
-  "description": "Reviewed complete source inputs through DREAMLTE0214 framebuffer console; host compile and plain apply required before update.",
+  "description": "Reviewed complete source inputs through DREAMLTE0215 USB2 wake/timing; exact0214 artifact plus plain apply and actual wrapper checks passed.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "6cb58dc6032959bd53ba8c8e8321cbbe4240fa99d8bf56b1ec33cc8ff76f98f4",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "b2fc0e0ab19f626aaf39d6de0be9e1dded2a4c422a38aec1efc77224700064b8",
+    "bsd/dev/sweet_usb.c": "df5d49b67402780ee2b3f347197b80c407a4c81598593cb8916082cda262770b",
     "bsd/kern/bsd_init.c": "ef48ed2ff58d8a46621b0911699ab6edf068d4b3b563c8d7ceb7985a807a0402",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d"
