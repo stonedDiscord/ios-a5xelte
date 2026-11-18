@@ -1,5 +1,37 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0092 displayed image freezes; kernel and event loops progress
+
+User reports clock froze~2minutes before19:24UTC and confirms entireimage
+unchanged aftertap/swipe. LivekernelUTC1795029873->1795029924->1795029994
+(19:24:33->19:25:24->19:26:34UTC) advances. ContinuousHIDstream1 slices1031->
+1203->1441, events138->201; physicaldown/move/upcaptured. LeaveforwardingON.
+SameSpringBoard26/mainuser6.388049->6.534259->6.772551seconds and system
+30.191126->30.222465->30.274337; backboardd56CPUalsoadvances. No captured
+SpringBoardcrash/workintervalfailure. VM36961free16KiBpages/compressor0,
+storageReady1/poisoned0. This contradictswholedevicefreeze/OOMkill; no proof
+allrendering/timerpathshealthy or eventdeliverythroughUIKit. Notjustslowclock:
+userentirephysicalimageunchanged. Do notcall0092 stableGUIcheckpoint.
+
+Matchingplainarm64cache/.symbols symbolication slide5ffc000 identifiesmain
+SpringBoard/backboardd PCs mach_msg2_trap+8 ->CFRunLoopservice/run/Specific;
+SpringBoardcontinuesGSEventRunModal/UIApplication/SBSystemAppMain. MainCPU
+deltasprovewakeup/progress despite sameidlePC. QuartzCore render/IOMFBthreads
+sampleinMachwait; oneUIKit animationworker semaphorewait isnotprovenrootcause.
+Framebufferlog caps at16layers: lacklaterlogisNOTproofswapsstopped.
+Privatecaptures/symbolication remainignored. No reboot/flash/touchstop thisturn.
+
+Prepared0159 readonlydisplaycommand: relaxedatomic vsyncentry/completion/time,
+swapentry/completion/time/copycounts, notificationattempt/success/error/skip/
+lastresult. Observerneveracquiresdriverlock/readsorwritesframebuffer or forces
+present; independentfields nottransactionalsnapshot. Neededtodistinguish
+worklooptimerstop, notificationfailure, missingframes or pixelpresentation.
+Actualobserver+notifyaccounting C++ASan/UBSan/pass/reverseapplyPASS against
+uploaded0092source. Existingrendering/notificationreturnbehaviorunchanged.
+MandatoryCI stringsadded. FreshfullCI needed before BOOT0093same2A55/1984MiB/
+trampoline test. This is diagnostics, not a freeze fix. Singlecapture83709/
+58347expires~19:33UTC; checkreaderownerbeforecontinuation. Preserve0090restore.
+
 ## 2026-11-18: user confirms SpringBoard visible on two-core BOOT0092
 
 User reports "springboard is up" at~19:23UTC. This adds physical visibleGUI

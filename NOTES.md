@@ -1,3 +1,11 @@
+ACTIVE2026-11-18~19:30UTC0092IMAGEFROZEN peruser, kernelUTCadvances,
+SB26/backboardd56CPUadvances/mainCFRunLoop, HIDONevents138->201. NoSBcrash/
+OOM/compressor; storagehealthy. DoNOTcallstableGUI. No reboot/touchstop.
+0159readonlydisplayprogressprobe prepared/testPASS; fullCI next. Needvsync/
+notify/swap/copycounters tolocatestall;16cappedoldswaplogsnotconclusive.
+Singlecapture83709/58347 boot0092-usb-initial until~19:33UTC; verifyowner.
+NextfullCI->same2A55/1984MiB/trampoline0093diagnostics, noA75trialyet.
+
 ACTIVE2026-11-18~19:23UTC USERCONFIRMS SpringBoardUP on0092twoA55/1984MiB.
 FreshSB26/19threads/changedstack; TOUCHON1/757slices/events0,bothHIDopen.
 VM37237free/compressor0/ioReady1poisoned0. No capturedSBcrash/panic boundedlog.

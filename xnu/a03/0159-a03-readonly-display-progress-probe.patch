@@ -1,0 +1,122 @@
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -64,6 +64,31 @@
+ #define SWEET_FB_DOT_PITCH              270     /* A03 physical 720x1600 panel */
+ #define SWEET_FB_FORMAT_BGRA            0x42475241
+ 
++/* Independent relaxed atomic fields; this observer never takes driver locks. */
++struct A03DisplayStats {
++    uint64_t vsyncEntered, vsyncDone, vsyncAt;
++    uint64_t swapEntered, swapDone, swapAt, copies, copyAt;
++    uint64_t notifyAttempt, notifyOK, notifyError, notifySkipped, notifyAt, lastError;
++};
++static A03DisplayStats a03_display_stats;
++static inline uint64_t a03_fb_read(const uint64_t *p) { return __atomic_load_n(p, __ATOMIC_RELAXED); }
++static inline void a03_fb_inc(uint64_t *p) { __atomic_add_fetch(p, 1, __ATOMIC_RELAXED); }
++static inline void a03_fb_set(uint64_t *p, uint64_t v) { __atomic_store_n(p, v, __ATOMIC_RELAXED); }
++extern "C" void a03_display_probe(void);
++extern "C" void a03_display_probe(void) {
++    const A03DisplayStats *s = &a03_display_stats;
++    IOLog("A03 DISPLAY now=%llu independent-fields absolute-ticks\n", mach_absolute_time());
++    IOLog("A03 DISPLAY vsync entered=%llu done=%llu last=%llu\n",
++        a03_fb_read(&s->vsyncEntered), a03_fb_read(&s->vsyncDone), a03_fb_read(&s->vsyncAt));
++    IOLog("A03 DISPLAY swap entered=%llu done=%llu last=%llu copies=%llu copy-last=%llu\n",
++        a03_fb_read(&s->swapEntered), a03_fb_read(&s->swapDone), a03_fb_read(&s->swapAt),
++        a03_fb_read(&s->copies), a03_fb_read(&s->copyAt));
++    IOLog("A03 DISPLAY notify attempts=%llu ok=%llu errors=%llu skipped=%llu last=%llu error=0x%llx\n",
++        a03_fb_read(&s->notifyAttempt), a03_fb_read(&s->notifyOK), a03_fb_read(&s->notifyError),
++        a03_fb_read(&s->notifySkipped), a03_fb_read(&s->notifyAt), a03_fb_read(&s->lastError));
++}
++/* End A03 display probe helpers. */
++
+ class IOMobileFramebuffer : public IOService {
+ 	OSDeclareDefaultStructors(IOMobileFramebuffer);
+ };
+@@ -176,7 +201,9 @@
+ AppleCLCD::vsyncFired(OSObject *owner, IOTimerEventSource *sender)
+ {
+ 	AppleCLCD *fb = (AppleCLCD *)owner;
++	a03_fb_inc(&a03_display_stats.vsyncEntered);
+ 	uint64_t now = mach_absolute_time();
++	a03_fb_set(&a03_display_stats.vsyncAt, now);
+ 	uint64_t count = ++fb->fVsyncCount;
+ 	uint64_t values[6] = {
+ 		(uint32_t)count, (uint32_t)(count >> 32),
+@@ -192,6 +219,7 @@
+ 	}
+ 	IOLockUnlock(fb->fLock);
+ 	sender->setTimeoutUS(SWEET_FB_VSYNC_US);
++	a03_fb_inc(&a03_display_stats.vsyncDone);
+ }
+ 
+ void
+@@ -228,6 +256,8 @@
+ void
+ AppleCLCD::swap(const uint8_t *rec)
+ {
++	a03_fb_inc(&a03_display_stats.swapEntered);
++	a03_fb_set(&a03_display_stats.swapAt, mach_absolute_time());
+ 	uint32_t mask = get32(rec, 0x104);
+ 
+ 	if (!fConsolePaused) {
+@@ -301,9 +331,12 @@
+ 				    (const void *)(src + s->offset + (uint64_t)(sy + y) * s->bytesPerRow + (uint64_t)sx * 4),
+ 				    (size_t)w * 4);
+ 			}
++			a03_fb_inc(&a03_display_stats.copies);
++			a03_fb_set(&a03_display_stats.copyAt, mach_absolute_time());
+ 		}
+ 		s->release();
+ 	}
++	a03_fb_inc(&a03_display_stats.swapDone);
+ }
+ 
+ bool
+@@ -366,12 +399,21 @@
+ 	OSAsyncReference64 ref;
+ 
+ 	if (type >= SWEET_FB_NOTIFY_TYPES || fFunc[type] == 0 || fPort == MACH_PORT_NULL) {
++		a03_fb_inc(&a03_display_stats.notifySkipped);
+ 		return;
+ 	}
+ 	bzero(ref, sizeof(ref));
+ 	setAsyncReference64(ref, fPort, (mach_vm_address_t)fFunc[type], fRefcon[type], fTask);
+-	sendAsyncResult64WithOptions(ref, kIOReturnSuccess, (io_user_reference_t *)values, count,
++	a03_fb_inc(&a03_display_stats.notifyAttempt);
++	a03_fb_set(&a03_display_stats.notifyAt, mach_absolute_time());
++	IOReturn result = sendAsyncResult64WithOptions(ref, kIOReturnSuccess, (io_user_reference_t *)values, count,
+ 	    kIOUserNotifyOptionCanDrop);
++	if (result == kIOReturnSuccess) {
++		a03_fb_inc(&a03_display_stats.notifyOK);
++	} else {
++		a03_fb_inc(&a03_display_stats.notifyError);
++		a03_fb_set(&a03_display_stats.lastError, (uint32_t)result);
++	}
+ }
+ 
+ static uint64_t sweet_fb_logged;        /* selectors already logged (< 64) */
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -608,12 +608,13 @@
+  printf("A03 PROBE time UTC=%llu usec=%u volatile; hardware RTC not implemented\n",
+      (unsigned long long)secs,(unsigned)us);
+ }
++extern void a03_display_probe(void);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -633,6 +634,7 @@
+     v.faults,v.pageins,v.pageouts,v.reactivations,v.compressions,v.decompressions,v.swapins,v.swapouts);
+   }
+  } else if(!strcmp(command,"io"))a03_emmc_probe_stats();
++ else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

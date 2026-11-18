@@ -9,7 +9,9 @@ BOOT0091 twoA55/1984MiB panics at CPU_ON rc=-9 (invalid address), with
 secondary entry0x103481000.0158 prepares a retained low BOOT-shim trampoline;
 BOOT0092 now confirms CPU_ONrc0 via0x80081000 and both A55s initialized
 with SGI1checks. User confirms visible SpringBoard on0092 at19:23UTC;
-continuous touch forwarding remains enabled. A75s/allcores and UI speedup unproven.
+continuous touch forwarding remains enabled. User later reports frozen image;
+kernel time and process CPU counters still advance.0159 display diagnostics
+prepared; no stableGUI/freeze fix claim. A75s/allcores and UI speedup unproven.
 cpus=8 alone is unsafe.
 
 Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
