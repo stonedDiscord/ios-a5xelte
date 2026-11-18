@@ -1,3 +1,9 @@
+ACTIVE2026-11-18~19:37UTC PHONEINDOWNLOAD confirmedHeimdalldetect.
+Useraskedresetwhilewaiting;0092serial/EP0time replied1795030581 thenexplicit
+CDCDownloadrequest/disconnect; initialdetectearlyfails thenPASS. NOFLASH.
+Awaitall8CI44381915946/exact3cf8d51->0093all8/1984MiB/lowtrampoline.
+Volatiletouchfirmwareclearedbyreboot; reload/start after nextBOOT.0092/0090kept.
+
 ACTIVE19:35UTC ALL8fullCI44381915946 exact3cf8d51 submitted/mac26intel,
 a03/SWEET/userspacetrue/buildtreetrue. Supersedesfreeze-only44381013070.
 Next0093=cpus8+8realCPUADT/1984MiB/lowtrampoline; newA75match+cpususageprobe.

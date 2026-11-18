@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: user requests Download while waiting; serial reset succeeds
+
+At19:36UTC freshsingleCDCcapture and EP0time status returns1795030581UTC,
+so BOOT0092stillresponds despitefrozendisplay. Explicituserrequested CDC
+SEND_BREAK Downloadcontrol sent; XNUCDCdisconnects. Initialimmediatedetect
+fails duringtransition; subsequentHeimdalldetect succeeds~19:37UTC.
+PhoneleftinDownload awaitingall8build44381915946. No partitionupload/flash,
+no wipe. Rebootclearsvolatiletouchfirmware/forwarding; restoreafter nextBOOT.
+Privatebefore/downloadlogs retainedunderignoredshim/a03/out. Prior0092/
+0090images retained. Needexactall8CI/markers/source/checksum before0093.
+
 ## 2026-11-18: user redirects next iteration to all eight cores; freeze deferred
 
 User explicitlyrequestsremainingcores nextiteration; defersdisplayfreeze.
