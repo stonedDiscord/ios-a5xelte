@@ -69,3 +69,10 @@ Its15,409,217,756-byte file expands to the exact same32GiB image SHA256
 to begin a session, sending no payload. Physical Download Mode re-entry is
 required to clear this failed session before another upload. No successful
 USERDATA deployment has been observed yet.
+
+2026-11-18: a fresh Download Mode session passed protocol, session start and
+PIT retrieval, but sparse USERDATA --no-reboot upload also failed the first
+sequence confirmation at0%, then failed end-session (exit1). This rules out
+the previous resume-session failure as the sole obstacle. It does not prove
+a particular sparse-format, storage or bootloader-policy cause. Exact phone
+error is pending; preserve the failed-session log and avoid blind repeats.

@@ -39,6 +39,18 @@
   NVRAM failure is a secondary missing-media diagnostic, not a demonstrated
   cause of the EP0 setup failure. Host still has no gadget.
 
+- Fresh host evidence on continuation: phone returned to Download Mode
+  (04e8:685d), with no host reset required. Retried explicitly authorized
+  converted sparse USERDATA upload using --no-reboot after checking sparse
+  header, exact file size and32GiB expanded fit within measured partition.
+  Protocol/session/PIT succeeded; first sequence confirmation failed at0%,
+  then end-session failed. Heimdall exit1; log root/heimdall-userdata-sparse-
+  fresh-20261118.log under private research/dreamlte. No BOOT/protected write
+  in this retry. USERDATA may be partial; no deployment success claimed.
+  Requested exact phone-side Download Mode error before any further retry.
+- CI44256127913 at5439710 remains authoritatively in_progress/Build;
+  preparation PID47387/session67425 remains live. No replacement dispatched.
+
 
 ## 2026-11-13: base changed to HEROLTE
 
