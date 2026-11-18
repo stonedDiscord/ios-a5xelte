@@ -1,5 +1,18 @@
 # DREAMLTE USB bring-up evidence
 
+## Current diagnostic trial (2026-11-18)
+
+0215 CI44256127913 passed exact compiled-source/symbol checks and flashed.
+Normal0215 showed a version banner; the same kernel with startup_debug=1
+now reaches kernel_bootstrap: PE_lockdown_iokit. Only sweet_usb.c differs
+between all xnu/ files of exact0214/0215 source archives; ADTs match. This
+does not identify a CPU halt or establish that USB initialization ran.
+0217 CI44259521488 at a947a49 is live with checkpoints around IOKit matching,
+VM restrictions/kperf/BSD entry, existing BSD init logs and0216 failure-only
+EP register snapshots. Four actual ARM64 files and both host suites pass.
+Wait for exact full build verification and hardware trace before attributing
+the shorter output to USB2 wake/timing. Host currently has no1209:0001.
+
 ## Physical framebuffer evidence (2026-11-18)
 
 Verified0214 BOOT flashed successfully and the user reads
@@ -10,7 +23,7 @@ or timeout line is required to isolate the failing operation. No host gadget
 is present. Do not infer a working PHY, DMA or enumeration from this message.
 
 0215 adds Samsung core.c USB2 ENBLSLPM/SUSPHY clearing and post-reset
-66MHz GCTL timing; active commit5439710, full CI44256127913 pending. Actual
+66MHz GCTL timing; commit5439710, full CI44256127913 succeeded. Actual
 wrapper host tests pass again on2026-11-18. Reviewed gadget.c uses the same
 EP command register layout, CMDACT/status fields and EP0 configuration bits;
 the failure is not yet evidence of an incorrect register address.

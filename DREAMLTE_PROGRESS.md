@@ -22,6 +22,11 @@
   waits on this exact run then verifies nine sources/six symbols, preserves
   stock BOOT components and packages0217 with startup_debug=1/dreamlteusb=2.
   Private script/log research/dreamlte/prepare-0217.py and .log; never flashes.
+- Continuation verified live CI44259521488/job134649187730 in Build and
+  preparation session27807/PID49363. Phone absent from host USB; requested
+  Download Mode ahead of next trial. No new flash. Consolidated active S8
+  NOTES handoff to remove contradictory superseded statuses; byte-for-byte
+  donor tail unchanged. Goal remains active; no USB completion claim.
 
 ## 2026-11-18: framebuffer0214 boots to USB endpoint setup
 
