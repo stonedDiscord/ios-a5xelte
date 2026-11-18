@@ -1,5 +1,31 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18 22:15 UTC: GPU bring-up0162 candidate; acceleration not implemented
+
+User requests A03 iOS GPU acceleration. BOOT0094 still uses software
+IOSurface/framebuffer row copies; no A03 GPU job/backend exists. Read-only
+live baseline swap4370/copy4365 at now64239220205, lastcopy32186900935;
+timer139171 advances. This is a stale-submission observation, not evidence
+GPU work is running or that acceleration alone fixes the activity stall.
+No Home injection, reboot, firmware change or partition write during audit.
+
+LiveDT confirms sprd,mali-natt at23100000/1MiB, APB23000000,
+DVFS23014000 and shared JOB/MMU/GPU SPI60. Reviewed pinned ums9230 vendor
+source79c7c8b238a20393a78ee5f1110991bd4280e143 for power/gates/regmap;
+see docs/a03-gpu.md. Do not reuse Exynos/Adreno drivers or claim a measured
+GPU model without GPU_ID.0162 adds explicit live-worker gpu command only,
+read-only PMU/AON gate checks then APB clock checks and gated GPU_ID/status/
+core-present reads. Reject force/auto shutdown and core0/top power states.
+No MMIO writes, jobs, startup call, compositor or userspace installation.
+
+Actual probe fake-MMIO ASan/UBSan gate/map/ID/no-register-change tests PASS;
+actual CI-derived BSD compiles a03_gpu.c and sweet_amfi.c PASS with generated
+headers (local include-dir warnings retained); display/SMP regression PASS.
+108-patch profile stage PASS. Commit15b1445 pushed; fullCI44409726184 exact
+15b144586351eb9855f5cab3c9fb446139080720 queued. Need exact linked artifact,
+source/checksum validation and BOOT-only passive trial before hardware claim.
+Existing0094/0093 restore retained; continuous touch remains unchanged.
+
 ## 2026-11-18: BOOT0094 physical touch responds after Home, but very slow
 
 User confirms touch responds but very slow after the single Home event.

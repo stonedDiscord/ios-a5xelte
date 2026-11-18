@@ -1,3 +1,13 @@
+ACTIVE 2026-11-18 22:15 UTC: A03 GPU user request;0162 passive candidate built locally.
+Commit15b1445 / CI44409726184 exact15b144586351eb9855f5cab3c9fb446139080720.
+Read-only gpu live-worker command gates PMUforce+auto/core0+top/AON then
+APBcore/mem/sys before GPU_ID. NO power writes/jobs/backend/acceleration.
+ActualASanUBSan fakeMMIO+BSDcompile+display/SMP+108profile stage PASS.
+Running0094 unchanged/touch leftON; latestframe4370/copies4365 stale timeralive.
+Need exactCI/source/checksum->BOOT-only passive probe->actualGPU_ID or gate
+block evidence. Keep0094/0093 restores. docs/a03-gpu.md maps resources and
+remaining real GPU/IOSurface/EAGL integration gates. Do not call this done.
+
 ACTIVE2026-11-18~21:36UTC0094 physicalTOUCHRESPONDSbutVERYSLOW peruser.
 OneHome recoveredframes. Freshswap/copies2235/2230->2345/2340 (~10/s)
 vs37touchslices*16/~10.98s (~53.9samples/s). Noeventsinsampledinterval;
