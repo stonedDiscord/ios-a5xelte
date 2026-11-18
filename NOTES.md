@@ -1,3 +1,12 @@
+ACTIVE2026-11-18 21:34:34 UTC0094 TOUCHFAIL report/frame recovery.
+Streaming1/1034slices/311events,inputstatus3,physicalhid1 reports present;
+swaps52/copy47stale~77s timeralive. OneexplicitHome result0 ->58/53->116/111.
+Physicaltouchreports continue; no reload/stop/reboot/flash. TOUCHON; A75ON.
+Physicalswipeconfirmationpending viaasyncquestion; no permanentfixclaim.
+PosterBoardcrashloopobserved/causeunknown; SB26/backboardd56present.
+Capture135205/session56612existing boot0094-usb-initial.log preserveowner.
+Nextframe/touchfollowupanduserreply; no periodicHome;0093restorekept.
+
 FOLLOWUP21:29:38UTC0094 all8usageadvances/A75dominant; touchON1/189slices/0events.
 Display swaps/copiesstill0 in startup; nophysicalGUI/speedupclaim. Preserve
 singlecapture135205 and waitforuserphysicalscreenreply, notautomaticHome.

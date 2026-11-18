@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0094 user reports touch failure; frame recovery after Home
+
+At21:34:34 UTC user reports touch not working. Existing singlecapture135205
+remains owner. Fresh probes: continuousstream1/slices1034/events311; driver
+records physical contacts with hid1, inputstatus3 (providers present, notUI
+acknowledgement). Frame timer continues but swaps52/copies47 last ~77seconds
+earlier. VM25229free16KiBpages/compressor0; ioReady1/poisoned0; same
+SpringBoard26/backboardd56 present. PosterBoard repeated crash observed,
+not established as this incident's cause. A75 preference remains enabled.
+
+One explicit inputHome press/release dispatchresult0. Subsequent actual
+swap/copy52/47 ->58/53 ->116/111 and fresh physical contacts recorded.
+No firmware reload, streamstop, reboot or partition write. Continuoustouch
+remainsON1/1083slices before subsequentphysicalreports. This demonstrates
+frame submission recovery, not yet physicalUI acceptance or a permanent
+rootcause repair; userphysicalswipe question pending. Do not inject periodic
+Home. Preserve0094 and0093restore. Continue monitoring freshframes/touch.
+
 ## 2026-11-18: BOOT0094 A75 preference active; A75s carry most measured work
 
 Heimdall57520 BOOT-only upload100percent/success/reboot ~21:26UTC. CDC returns
