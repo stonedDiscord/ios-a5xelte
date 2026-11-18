@@ -16,6 +16,9 @@ from0214; ADTs identical. No precise CPU fault established. Same verified
 shim/out/dreamlte-xnu-0215-startup.img (18,432,016B), SHA256
 6ddd75d186a5d8881a47d65bcc9266314e48ae5907c799b8455f338c1826cacc.
 Preservation/payload checks PASS, not flashed. Download Mode request pending.
+Update: fresh Download Mode047 accepted this startup-trace BOOT100%, exit0,
+reboot successful. It is now installed; host has no gadget yet. Last three
+startup lines requested. Log ci-44256127913/heimdall-boot-0215-startup.log.
 No Android restoration. Latest write BOOT only; USERDATA remains possibly
 partial from failed upload. Exact files/logs research/dreamlte/ci-44256127913.
 Prepared0216 snapshot is still outside active profile and not flashed.

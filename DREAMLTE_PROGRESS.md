@@ -75,6 +75,13 @@
   BOOT component/header preservation and exact payload PASS; not flashed.
   Requested Download Mode re-entry.0216 remains prepared, not promoted.
 
+- Fresh Download Mode device047 arrived. Startup-trace0215 BOOT above
+  rehashed then flashed successfully:100%, Heimdall exit0/reboot. Exact log
+  ci-44256127913/heimdall-boot-0215-startup.log. Current BOOT is now0215
+  plus startup_debug=1; same verified kernel, no source/USB change in trial.
+  Immediate host check finds no gadget; requested last three startup lines.
+  BOOT only; no Android restoration or new USERDATA/protected write.
+
 - CI44256127913 SUCCESS at5439710b649202ada57dbef4fd50e061d57f18ed. Exact
   artifact verification PASS: seven complete compiled source hashes, six
   linked symbols and all active patch/profile hashes. Kernel SHA256
