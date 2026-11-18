@@ -158,10 +158,12 @@ def main():
                      '0153-a03-zero-count-reports-release-contacts.patch',
                      '0154-a03-explicit-continuous-touch-poll.patch',
                      '0155-a03-unrestricted-client-work-interval.patch',
-                     '0156-a03-ios16-ca-client-work-interval.patch'):
+                     '0156-a03-ios16-ca-client-work-interval.patch',
+                     '0157-a03-opt-in-psci-smp.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
-        'SWEET '+SHA+' through 0018; native 16K, arm64, single A55.',
+        'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
+        '0157 opts into A03 PSCI SMP with explicit CPU ADT nodes and cpus=N.' if a.ios_userspace else 'Single A55 bring-up.',
         'Portable crypto 0020/0023/0027/0032/0033 and pinned BearSSL stage script.',
         'A03 GICv3 timer INTID27; logo candidate 0x9e000000 720x1600 stride2880.',
         'Pinned libpthread and mockfs/HFS RAM-root.',

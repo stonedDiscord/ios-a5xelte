@@ -1,5 +1,11 @@
 # Galaxy A03 SM-A035G bring-up
 
+2026-11-18 BOOT0090 hardware-validated managed RAM is1984MiB (previously
+1024MiB), at0x102000000..0x17e000000 after live-DTB reservation checks.
+This is the upper contiguous window, not all installed RAM. XNU/iOS processes
+and storage work; no measured UI speedup yet. Multicore0157 is a separate
+opt-in candidate awaiting full build/hardware checks; cpus=8 alone is unsafe.
+
 Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
 been measured on hardware. A120second log-only trial completed361slices/
 341events, including28report-driven releases; stop added no events. Clean

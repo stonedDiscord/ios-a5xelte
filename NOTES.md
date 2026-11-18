@@ -1,3 +1,10 @@
+ACTIVE2026-11-18~16:48UTC0157 opt-inSMP candidate ready for fullXcodeCI.
+Localexact machine_routines/start assembly PASS; C++Applebuiltinblocked;
+actualcpu.c exactcommand missing. ADT1/2/6A55 guards+gitapply PASS.
+Firsttrial2A55, retain0090RAM config. Current0090 stillcpus1/1984MiB,
+TOUCHON632slices/events0; SB25/24threads; compressor0. Capture21134.
+NoSMPsuccessclaim. NeedfullCI thenchecksum/package/BOOTtest.
+
 ACTIVE2026-11-18~16:45UTC BOOT0090 1984MiB RAM hardware boot/VM PASS.
 Exact0089 kernel+args; BOOT293de28b...90f1a; cpus1. VM free117024 then94424
 16KiBpages/compressor0; storage ready1 poisoned0. Singlecapture21134

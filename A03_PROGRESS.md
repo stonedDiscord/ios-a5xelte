@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: opt-in A03 SMP candidate0157 prepared
+
+Adapted donor0065 CPU_ON/reset/per-CPU publication and targeted SGI path to
+actual A03 CPU source; A03 patch profile previously stopped at donor0018.
+Live DTB describes A55 MPIDR0..500 and A75 MPIDR600/700, PSCI0.2/SMC.
+Candidate has bounded8core topology, default1; ADT packer exposes only1/2/6
+A55 trials and validates selected live nodes and conduit. First hardware
+candidate must use2A55s before six or A75s. No CPU clock/DVFS changes.
+EL2 entry uses A03 boot CPTR0x33ff/HSTR0/ICH_HCR0, not donor reset defaults.
+Existing GIC redistributor lookup is local perCPU, not global perCPU state.
+
+ADT identities/state/uniquephandles/roundtrip/default/count guards PASS.
+Plain git apply --check on actual extracted A03 source PASS. Exact CI command
+local start.s and machine_routines.c compile PASS after refreshing exported
+SWEET.h (first try used stale export, undefined limit; corrected). CPU driver
+local C++ compile blocked by LinuxClang lacking Apple's allocation builtins;
+no fake substitutions used. Exact cpu.c compile command absent in cached log.
+Full Xcode CI required before packaging/deployment. No multicore runtime
+success claimed. BOOT0090 remains1984MiB/cpus1; continuousHIDstream1
+632slices/events0 and SpringBoard25/24threads measured; VMcompressor0.
+
 ## 2026-11-18: BOOT0090 expands managed RAM to1984MiB
 
 User requests multicore/full RAM to address severe lag. Current BOOT0089
