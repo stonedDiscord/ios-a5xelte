@@ -2,102 +2,62 @@
 
 ## Active S8 handoff — 2026-11-18
 
-0217 screen snapshot now received: ep0 cmd1 reg00000401; PAR0=00000200,
-PAR1=00000500,PAR2=0; GCTL80e92004 GSTS3e800000 USB2=40102400; DCTL0
-DSTS00520000 EN0. CMDACT stuck, no final command status.64-byte EP0/device
-mode/USB2 awake fields match intent; halted state precedes RUN.0218 live
-build remains the next resource-order trial. Physical clocks still unproven.
+CURRENT INSTALLED:0218 BOOT; fresh Download Mode049 accepted100%, Heimdall
+exit0/reboot. Only BOOT/sda7 written. Immediate host checker finds zero
+1209:0001 gadgets. Physical screen result requested and pending: resources
+assigned and USB failure lines, or last three startup lines. No USB pass.
 
-0218 promoted into active profile for full build; resource-order host tests
-and prior identical ARM64 compile PASS.0217 own manifest archived before
-update.0217 remains installed; awaiting four USB failure register lines.
-No new phone writes. Current source manifest targets0218.
-Full0218 CI44261810052 at94e4d744b76110d0f330544bc27ad6fef228a822 is live.
-Preparation session12913/script research/dreamlte/prepare-0218.py waits,
-verifies and packages without flashing; log alongside. Do not replace live CI.
+Exact0218 CI44261810052 SUCCESS at94e4d744b76110d0f330544bc27ad6fef228a822.
+Nine complete sources/six symbols/eleven linked diagnostics/profile PASS.
+Kernel SHA256488e2b10493c7cee0643399e024222b77bd6ce506e657532741cffe823535c4f.
+BOOT shim/out/dreamlte-xnu-0218.img,18,448,400B,SHA256
+70f47645eb7f5c0ba40a6d9384b4c3d4654d7e82cd1b24620111a99da2cb47d4.
+Preparation12913 complete; original ramdisk/second/DTBH/header retained,
+fit/independent hash checked. Private artifacts/manifests/flash log:
+research/dreamlte/ci-44261810052. Current manifest targets0218; archived
+0217 manifest remains with its own artifacts.
 
-CURRENT INSTALLED:0217 BOOT, successfully flashed100%/exit0/reboot from
-fresh Download Mode048. Exact CI44259521488 SUCCESS at a947a49; nine source
-hashes/six symbols/ten linked diagnostics/profile PASS. Kernel SHA256
-7d1766187df0abb4f3fa322e1bd1ce0dfcf38ffbd743a537cdf1d881e75be3ea.
-shim/out/dreamlte-xnu-0217.img,18,448,400B,SHA256
-9eef68eb87d3ea23b5e631a3d9e7256b7f6c6d81398eec75a642cba4aa33f0ad.
-Immediate host no gadget. Requested four DREAMLTE USB FAIL register lines
-or last three startup lines. Artifacts/logs ci-44259521488; prep27807 complete.
-Only BOOT written; USERDATA still incomplete.0218 outside profile/not flashed.
-Older candidate statuses below are history superseded by this paragraph.
+0218 tests Samsung STARTCFG then resources for every implemented physical
+endpoint before SETEPCONFIG; removes repeated data STARTCFG on DREAMLTE.
+Actual ARM64 compile and wrapper/command/resource tests PASS, not physical
+proof. No cold PMU/CMU/PHY sequence added. Source map docs/dreamlte-usb.md.
 
-New0215 runtime evidence supersedes apparent startup stop: user reads reset
-done9ms GCTL80c12004/DCFG00000004; USB2CFG40102400 GCTL80e92004; ep0 cmd1
-timeout; EP0 setup failed; Apple_HFS wait. Thus IOKit/BSD progress reaches
-USB. DEPSTARTCFG9 succeeds, first EP0 SETEPCONFIG1 times out before resources.
-Samsung gadget.c allocates transfer resources before SETEPCONFIG. Review and
-test source-derived ordering follow-up while keeping live0217 CI unchanged.
-Prepared0218 is outside profile in xnu/dreamlte-next; resource helper tested
-across324 count combinations/every failure position, actual ARM64 compile
-and existing wrapper/EP suites PASS. Not built/flashed. Staged source0217
-restored so exact live-run verification remains consistent.
+0217 physical report: ep0 cmd1 reg00000401; PAR0=00000200,PAR1=00000500,
+PAR2=0; GCTL80e92004,GSTS3e800000,USB2=40102400; DCTL0,DSTS00520000,EN0.
+CMDACT remains set: first EP0 configuration timed out after STARTCFG
+completed. Packet64/device-mode/USB2 awake fields match intent; halted
+state is before RUN. Physical clock/electrical dependencies still unproven.
+Earlier apparent version/PE_lockdown_iokit stops were superseded by reaching
+USB initialization then Apple_HFS root matching. NVRAM error is secondary
+missing-media fallback. Do not diagnose an established IOKit stall.
 
-Target Galaxy S8 SM-G950F / Exynos8895, branch dreamlte-bringup. Read
-DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md. Donor history below is
-not S8 runtime evidence. User prohibits restoring Android. Authorized writes
-are BOOT/sda7 and converted IPSW root on existing USERDATA/sda24. Preserve
-GPT, RECOVERY, bootloaders, EFS/CPEFS and every other partition.
+Target Galaxy S8 SM-G950F/Exynos8895, branch dreamlte-bringup. Read
+DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md. Never restore Android.
+BOOT/sda7 trials and converted IPSW root on existing USERDATA/sda24 authorized.
+Preserve GPT, RECOVERY, bootloaders, EFS/CPEFS and all other partitions.
+Donor history below is not S8 runtime evidence. Commit completed milestones.
 
-Installed BOOT: shim/out/dreamlte-xnu-0215-startup.img,18,432,016B,
-SHA2566ddd75d186a5d8881a47d65bcc9266314e48ae5907c799b8455f338c1826cacc.
-Heimdall100%, exit0/reboot from fresh Download Mode047. Same verified0215
-kernel with startup_debug=1/dreamlteusb=2. User's last reported line is
-kernel_bootstrap: PE_lockdown_iokit. This does not isolate a blocked call:
-following VM/kperf/BSD initialization had little logging. Host has no gadget.
-Normal0215 previously showed only Darwin Kernel Version22.6.8;0214 reached
-USB EP0 setup failure, then Apple_HFS root wait/NVRAM fallback. Physical
-framebuffer text is verified; USB enumeration/transfers and root mount are not.
-
-Next candidate0217: full CI44259521488 at exact commit
-a947a493d424c503224c594a3b9ba046b7967fc1, currently in_progress/Build.
-Adds checkpoints before/after IOKit matching, VM restrictions/kperf/BSD;
-enables existing BSD initialization logs. Includes0216 failure-only endpoint
-register snapshots. Four actual ARM64 units compile and plain patches applied
-to exact0215 artifact match reviewed sources; both USB modeled host suites
-pass. No IOKit/root bypass or USB sequence change in0216/0217.
-Preparation session27807/PID49363 waits on this exact run, verifies nine
-compiled source hashes/six linked symbols and packages separate0217 BOOT
-plus ten required linked diagnostic strings (verified against local ARM64
-objects; old0215 lacks them).
-with startup_debug=1/dreamlteusb=2. Private script/log:
-research/dreamlte/prepare-0217.py and .log. Never flashes automatically.
-Do not restart a live CI due to observation timeout. Download Mode request
-for next trial is pending. Verify prepared-boot.json and hash before flashing.
-
-Previous exact0215 CI44256127913 SUCCESS at5439710. Kernel SHA256
-d0359a2566c1c9048c17f7c9f0d107ad10c428b5bc41870abb87ad35a790080a.
-Seven compiled source/six symbol/profile checks passed. Private artifacts
-and flash logs research/dreamlte/ci-44256127913.0214 artifact/logs retained
-in ci-44119574729. Archived manifests apply to their own versions; current
-manifest targets0217 and intentionally rejects older source inputs.
-
-Framebuffer:0xcc000000,1440x2960,stride5760. DECON0x12860000 frame request
-+0x60 bit31, then HW trigger/unmask+0x70 bits12/0, clear4/8. Separate low
-bootstrap tables for framebuffer/snapshot/DECON use seven of eight pages.
-USB DWC3=0x10c00000, PHY=0x10e00000/0x10e10000; pinned Samsung source map
-in docs/dreamlte-usb.md.0215 wakes USB2 SUSPHY/ENBLSLPM and sets66MHz GCTL
-timing. Cold PMU/CMU/PHY bring-up not implemented; no electrical-state proof.
+Framebuffer0214 physically verified:0xcc000000,1440x2960,stride5760;
+DECON0x12860000 request+0x60bit31,trigger+0x70bits12/0,clear4/8. Seven of
+eight bootstrap pages. USB DWC3=0x10c00000,PHY=0x10e00000/0x10e10000,IRQ369.
+Firmware5533280a, prior Android GHWPARAMS3=10420085 (16 IN/16 OUT).
+0215 USB2 SUSPHY/ENBLSLPM clear and66MHz GCTL timing observed on screen.
+Actual enumeration/control/data success still absent. Checker:
+python3 tools/dreamlte-usb-check.py; ECM host192.168.7.1/24,phone192.168.7.2.
 
 Converted20H392 root: research/dreamlte/root/ios-16.7.16-20H392-hfsx.img,
-32GiB, SHA25635427cc9d9f40b6383afabf1b0f5370ebc4f85a42d3f079708b6548121dca3e7.
-Full fsck, launchd+43 cache content hashes,42 subcache UUIDs/dependencies pass.
-Nonjournaled; no xattrs/BSD flags/times, hardlinks copied; see conversion doc.
-Sparse image15,409,217,756B expands to the identical32GiB hash. Raw upload
-failed first sequence; resume sparse session failed to start; fresh sparse
-upload on2026-11-18 also failed first sequence at0%/end-session (exit1).
-USERDATA may be partial. User saw no error text. Do not repeat blindly.
-Latest log research/dreamlte/root/heimdall-userdata-sparse-fresh-20261118.log.
-UFS runtime provider remains unfinished; no root deployment/mount success.
+32GiB,SHA25635427cc9d9f40b6383afabf1b0f5370ebc4f85a42d3f079708b6548121dca3e7.
+Full fsck/content/cache checks PASS. Sparse15,409,217,756B expands identically.
+Raw and fresh sparse USERDATA uploads failed first sequence0%; resume failed.
+USERDATA may be partial, deployment NOT successful. User saw no error text.
+Latest log root/heimdall-userdata-sparse-fresh-20261118.log under research/dreamlte.
+Avoid blind retries. S8 UFS runtime provider unfinished; root mount unproven.
 
-Origin wardevsa/ios-a5xelte is read-only; writable build remote is
-stonedDiscord/ios-a5xelte. Keep Apple binaries, device dumps/identifiers,
-backups and converted images ignored. Commit code/evidence milestones.
+Origin wardevsa/ios-a5xelte read-only; writable build remote
+stonedDiscord/ios-a5xelte. Keep Apple binaries/device dumps/backups ignored.
+Next: physical0218 result, then diagnose exact failing command or check real
+USB descriptors/configuration and bidirectional network traffic if enumerated.
+Do not claim success from CI/model tests; existing goal remains active.
 
 ## a5xelte fork handoff (2026-10-20)
 

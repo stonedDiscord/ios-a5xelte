@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0218 verified and flashed; physical result pending
+
+- Exact CI44261810052 SUCCESS at94e4d744b76110d0f330544bc27ad6fef228a822.
+  Nine complete sources/six symbols/eleven linked diagnostics and active
+  overlay/profile hashes PASS. Kernel SHA256
+  488e2b10493c7cee0643399e024222b77bd6ce506e657532741cffe823535c4f.
+- Preparation session12913 completed. BOOT0218 size18,448,400B/SHA256
+  70f47645eb7f5c0ba40a6d9384b4c3d4654d7e82cd1b24620111a99da2cb47d4.
+  Preserved original ramdisk/second/DTBH/header fields and checked BOOT fit;
+  independent manifest/hash check PASS. Wrapper/command/resource suites PASS.
+- Fresh Download Mode049 accepted BOOT0218:100%, Heimdall exit0/reboot.
+  Flash log and manifests: research/dreamlte/ci-44261810052. Only BOOT written.
+  Immediate host checker finds zero1209:0001 devices; no enumeration or
+  transfer success. Requested resources-assigned/failure lines or final
+  startup lines. Current installed BOOT is0218;0217 is superseded.
+- This trial tests Samsung resource-before-configuration ordering. A passed
+  build/model test is not a hardware fix. Physical report remains pending.
+  USERDATA unchanged by this trial; earlier deployment remains incomplete.
+
 ## 2026-11-18:0217 physical endpoint snapshot recovered
 
 - User reports DREAMLTE USB FAIL: ep0 cmd1 reg00000401; PAR0=00000200,
