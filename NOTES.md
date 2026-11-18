@@ -2,6 +2,17 @@
 
 ## Active S8 handoff — 2026-11-18
 
+CURRENT INSTALLED:0217 BOOT, successfully flashed100%/exit0/reboot from
+fresh Download Mode048. Exact CI44259521488 SUCCESS at a947a49; nine source
+hashes/six symbols/ten linked diagnostics/profile PASS. Kernel SHA256
+7d1766187df0abb4f3fa322e1bd1ce0dfcf38ffbd743a537cdf1d881e75be3ea.
+shim/out/dreamlte-xnu-0217.img,18,448,400B,SHA256
+9eef68eb87d3ea23b5e631a3d9e7256b7f6c6d81398eec75a642cba4aa33f0ad.
+Immediate host no gadget. Requested four DREAMLTE USB FAIL register lines
+or last three startup lines. Artifacts/logs ci-44259521488; prep27807 complete.
+Only BOOT written; USERDATA still incomplete.0218 outside profile/not flashed.
+Older candidate statuses below are history superseded by this paragraph.
+
 New0215 runtime evidence supersedes apparent startup stop: user reads reset
 done9ms GCTL80c12004/DCFG00000004; USB2CFG40102400 GCTL80e92004; ep0 cmd1
 timeout; EP0 setup failed; Apple_HFS wait. Thus IOKit/BSD progress reaches

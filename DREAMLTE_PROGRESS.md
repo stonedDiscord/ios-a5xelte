@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0217 diagnostics verified and flashed
+
+- Exact CI44259521488 SUCCESS at a947a493d424c503224c594a3b9ba046b7967fc1.
+  Artifact checks PASS: nine complete sources, six symbols, ten diagnostic
+  strings and all active patch/profile hashes. Kernel SHA256
+  7d1766187df0abb4f3fa322e1bd1ce0dfcf38ffbd743a537cdf1d881e75be3ea.
+- Preparation session27807 completed. BOOT0217 size18,448,400B/SHA256
+  9eef68eb87d3ea23b5e631a3d9e7256b7f6c6d81398eec75a642cba4aa33f0ad.
+  Original BOOT components/header preserved, payload/partition fit checked.
+- Fresh Download Mode048 accepted BOOT0217:100%, Heimdall exit0/reboot.
+  Current phone now runs0217 candidate, not0215. Immediate host gadget check
+  finds zero1209:0001. Requested four DREAMLTE USB FAIL register lines or
+  last three startup lines. Runtime endpoint snapshot pending; no USB pass.
+  Only BOOT written; no new USERDATA/protected writes or Android restoration.
+  Private artifacts/manifests/flash log research/dreamlte/ci-44259521488.
+  Prepared0218 remains outside active profile and not included in this trial.
+
 ## 2026-11-18:0215 reaches USB; exact command failure identified
 
 - User now reports soft reset done after9ms, GCTL80c12004/DCFG00000004;
