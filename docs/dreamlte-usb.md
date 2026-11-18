@@ -1,5 +1,15 @@
 # DREAMLTE USB bring-up evidence
 
+##0220 physical result and0221 reset-order correction
+
+User confirms Q7e00 LINK08000000 SEL0, but ep0cmd2 still active (reg402).
+USB2=40102540 restores ENBLSLPM/SUSPHY bits8/6; prior0219 was40102400.
+PHY version00010000,CLK801b0049,UTMI60. QACT took effect without solving
+resource assignment.0221 reapplies the existing Samsung USB2 wake mask after
+link reset and again after DCTL reset, before endpoints. No new tuning/mux
+writes. Actual ARM64 compile and reset-default/bit-preservation tests PASS.
+Full CI44276126788 dispatched; installed0220, no physical0221 success yet.
+
 ##0220 hardware trial (2026-11-18)
 
 Exact CI44270585173 SUCCESS; nine source hashes/six symbols/fifteen linked

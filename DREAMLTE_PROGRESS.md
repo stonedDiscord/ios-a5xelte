@@ -19,6 +19,12 @@
  0220 exact artifact reverified, expected manifest archived before0221
   promotion/source hash update. No new flash;0220 installed, Download Mode052.
 
+- Full0221 CI44276126788 at3e18153bae65d8386c824e42cbb66a32b8968084
+  dispatched. Preparation session55332/script research/dreamlte/prepare-0221.py
+  waits exact run, verifies nine sources/six symbols/fifteen diagnostics then
+  packages preserved-component BOOT; never flashes. Log alongside. Keep
+  Download Mode052 fresh until prepared-manifest/hash checks pass.
+
 ## 2026-11-18:0220 verified and BOOT flashed
 
 - Exact CI44270585173 SUCCESS at a1ea67a281f8009de43e974490a974927ef4a8ca.

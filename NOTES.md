@@ -2,6 +2,11 @@
 
 ## Active S8 handoff — 2026-11-18
 
+0221 CI44276126788 at3e18153bae65d8386c824e42cbb66a32b8968084 dispatched.
+Preparation55332/script research/dreamlte/prepare-0221.py waits exact run,
+verifies9 sources/6 symbols/15 diagnostics then packages; never flashes.
+Log alongside. Download Mode052 ready; installed0220. Do not restart live CI.
+
 Latest0220 physical: Q7e00 confirmed after link wake, but first resource
 cmd2 reg402 still stuck. USB2=40102540 has bits8/6 restored after resets;
 0219 was40102400. PHY version00010000 CLK801b0049 UTMI60 LINK08000000
