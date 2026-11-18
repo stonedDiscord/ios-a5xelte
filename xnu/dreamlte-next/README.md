@@ -1,5 +1,8 @@
 # Prepared S8 USB follow-up
 
+Current:0218 promoted to active xnu/dreamlte for full CI. Earlier staging
+status below is historical.0217 remains installed, register report pending.
+
 0218-dreamlte-usb-resource-order.patch is pending outside active profile.
 New0215 physical trace isolates first EP0 SETEPCONFIG timeout after successful
 DEPSTARTCFG and visible USB2 timing. Pinned Samsung gadget.c assigns resources

@@ -2,6 +2,11 @@
 
 ## Active S8 handoff — 2026-11-18
 
+0218 promoted into active profile for full build; resource-order host tests
+and prior identical ARM64 compile PASS.0217 own manifest archived before
+update.0217 remains installed; awaiting four USB failure register lines.
+No new phone writes. Current source manifest targets0218.
+
 CURRENT INSTALLED:0217 BOOT, successfully flashed100%/exit0/reboot from
 fresh Download Mode048. Exact CI44259521488 SUCCESS at a947a49; nine source
 hashes/six symbols/ten linked diagnostics/profile PASS. Kernel SHA256

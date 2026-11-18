@@ -1,10 +1,10 @@
 {
-  "description": "Reviewed DREAMLTE0217 startup checkpoints and0216 failure-only USB snapshot; actual ARM64 compilation and source comparison required before trial.",
+  "description": "Reviewed DREAMLTE0218 resource-before-config sequence with0217 checkpoints; actual ARM64 compile and modeled resource/error tests passed.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "6cb58dc6032959bd53ba8c8e8321cbbe4240fa99d8bf56b1ec33cc8ff76f98f4",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "f2420dd5d2da7d46f3fa99ff82c3bd0e98917096748e05b2bd7d3da1f8d5c8e1",
+    "bsd/dev/sweet_usb.c": "0382ae5a0ca1260ea41efba3048229de2b513a6012c53eab85e6408332749250",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
@@ -21,7 +21,8 @@
     "DREAMLTE BOOT: bsd_init enter",
     "bsd_init: calling throttle_init",
     "DREAMLTE USB FAIL: ep",
-    "DREAMLTE USB FAIL: GCTL="
+    "DREAMLTE USB FAIL: GCTL=",
+    "DREAMLTE USB: resources assigned"
   ],
   "symbols": [
     "_dreamlte_log_cursor",

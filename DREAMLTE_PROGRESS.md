@@ -1,5 +1,16 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0218 resource-order candidate promoted
+
+- Reverified exact0217 artifact before changing manifest; archived its own
+  reviewed hash manifest privately.0217 physical register report pending.
+- Promoted source-derived0218 ordering into active profile: initial STARTCFG
+  followed by one resource per implemented endpoint before SETEPCONFIG.
+  Resource-count/failure-position and command tests pass on active source.
+  Earlier actual ARM64 compile passed for identical prepared source. Added
+  resource test to full CI and required linked resources-assigned marker.
+  No new hardware write or enumeration claim;0217 remains installed.
+
 ## 2026-11-18:0217 diagnostics verified and flashed
 
 - Exact CI44259521488 SUCCESS at a947a493d424c503224c594a3b9ba046b7967fc1.
