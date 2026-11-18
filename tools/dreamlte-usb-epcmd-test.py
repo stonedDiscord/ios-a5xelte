@@ -31,6 +31,11 @@ code = r'''
 #define DCTL 0xc704
 #define DSTS 0xc70c
 #define DALEPENA 0xc720
+#define DCFG 0xc700
+#define GEVNTADRLO 0xc400
+#define GEVNTADRHI 0xc404
+#define GEVNTSIZ 0xc408
+#define GEVNTCOUNT 0xc40c
 #define DEPCMDPAR0(n) (0xc808 + 0x10*(n))
 #define DEPCMDPAR1(n) (0xc804 + 0x10*(n))
 #define DEPCMDPAR2(n) (0xc800 + 0x10*(n))
@@ -101,8 +106,10 @@ int main(void) {
         assert(writes == 4 && delays == 2 && strstr(output, "status 1"));
 #ifdef HAS_SNAPSHOT
         assert(strstr(output, "PAR0=00000044"));
+        assert(strstr(output, "DREAMLTE USB CSR: DCFG="));
+        assert(strstr(output, "DREAMLTE USB POWER: TEST=a500000a PIPE=a5000003"));
 #ifdef HAS_PHY_SNAPSHOT
-        assert(logs == 8 && strstr(output, "Q=a500000d SEL=a500001b"));
+        assert(logs == 10 && strstr(output, "Q=a500000d SEL=a500001b"));
 #else
         assert(logs == 5);
 #endif
@@ -113,12 +120,12 @@ int main(void) {
 #ifdef HAS_SNAPSHOT
         assert(strstr(output, "DREAMLTE USB FAIL:"));
 #ifdef HAS_PHY_SNAPSHOT
-        assert(logs == 8 && strstr(output, "DREAMLTE USB PHY:"));
+        assert(logs == 10 && strstr(output, "DREAMLTE USB PHY:"));
         for (unsigned i = 0; i < sizeof(phyregs)/sizeof(phyregs[0]); i++)
             assert(phyregs[i] == (0xa5000000u | i));
         reset(2); dreamlte_phy = 0;
         assert(ud_epcmd(ep, 1, 0, 0, 0) == -1);
-        assert(writes == 4 && logs == 6 && !strstr(output, "DREAMLTE USB PHY:"));
+        assert(writes == 4 && logs == 7 && !strstr(output, "DREAMLTE USB PHY:"));
 #else
         assert(logs == 5);
 #endif

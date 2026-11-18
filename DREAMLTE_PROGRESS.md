@@ -1,5 +1,31 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0223 reaches USB; session-valid confirmed, resource still stuck
+
+- User physical0223 trace reaches USB, superseding phase5 as the current
+  visible stopping point. This does not explain0222's earlier phase5 report.
+- ID5533280a GCTL30c12004 DSTS00520004; PHYversion00010000 CLK801b0049
+  UTMI60; link wake Q7e00 LINK08000000 SEL0. Reset1ms/DCFG00080804.
+  USB2CFG40102400/GCTL80e92004; EP0 resource cmd2 times out reg402,
+  PAR0=1/PAR1=0/PAR2=0; GSTS3e800000 DCTL0 DSTS00520000 EN0.
+  CORE PIPE010c0002 HW3=10420085 BUS22220001/00000300.
+  Failure PHY LINK08000180 UTMI00000660 CLK801b0049 Q7e00 SEL0.
+- Session-valid override bits physically retained through failure, unlike
+  earlier LINK08000000/UTMI60. That ordering change alone does not resolve
+  first transfer-resource command. STARTCFG returns; resource CMDACT stays
+  set. No enumeration/control/data success. Installed0223; no new writes.
+- Next compare remaining controller configuration/reset/clock prerequisites
+  with pinned Samsung sources before selecting another narrowly tested trial.
+
+
+-0224 diagnostic candidate verifies real event-ring address/size CSR
+  readback before endpoint commands, stopping on mismatch without retry.
+  Adds failure DCFG/HW1/event ring plus PHYTEST/PHYPIPE reads and completed
+  STARTCFG register. No new clock/power/reset programming. Actual ARM64,
+  wrapper, EP/resource/CSR guard suites PASS; plain patch/full source PASS.
+  CSR tests cover32/64-bit addresses and each mismatch. Manifest11 sources/
+  33 diagnostics;0223 own reviewed manifest already archived. Full CI next.
+
 ## 2026-11-18:0223 verified and BOOT flashed; VM trace pending
 
 - Exact CI44298522029 SUCCESS at d5f6472b35b456acbaa95c0716be23533066a2ea.

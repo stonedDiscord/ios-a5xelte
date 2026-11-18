@@ -1,5 +1,21 @@
 # DREAMLTE USB bring-up evidence
 
+##0223 physical result;0224 CSR/power diagnostic candidate
+
+0223 reaches USB; phase5 stop did not recur. Session bits now retained:
+LINK08000180/UTMI660, Q7e00,CLK801b0049. Still first EP0 resource cmd2
+active402, PAR0=1, others0; GCTL80e92004/GSTS3e800000/USB2=40102400,
+DCTL0,DSTS00520000,EN0. DCFG after reset80804. No USB success.
+
+0224 checks the actual event ring address/size readbacks before endpoint
+commands (Samsung core.c reset_check checks event-address CSR access).
+On mismatch it stops without a new reset or endpoint write. Adds failure
+DCFG/HW1/event-ring and already-mapped PHYTEST/PHYPIPE readbacks to check
+unmeasured power-down and CSR state; logs completed STARTCFG register.
+No new power/clock/reset programming. Actual ARM64 compile, wrapper,
+EP-command/resource tests and plain-patch/full-source equality PASS.
+Physical effect untested; this is diagnostic, not a claimed USB fix.
+
 ##0222 hardware trial (2026-11-18)
 
 Exact CI44285281557 SUCCESS with9 sources/6 symbols/16 diagnostics and

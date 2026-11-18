@@ -2,6 +2,20 @@
 
 ## Active S8 handoff — 2026-11-18
 
+LATEST PHYSICAL0223 reaches USB; phase5 stop did not recur. Session-valid
+now confirmed at failure: LINK08000180 UTMI00000660, Q7e00 CLK801b0049.
+USB2=40102400/GCTL80e92004; STARTCFG returns but first EP0 resource cmd2
+stays402, PAR0=1/PAR1=0/PAR2=0. GSTS3e800000,DCTL0,DSTS00520000,EN0;
+PIPE010c0002,HW3=10420085,BUS22220001/300. Soft reset1ms,DCFG00080804.
+No working USB. Investigate remaining Samsung core prerequisites; no new
+flash yet.0222 persistent phase5 report remains separate historical evidence.
+
+0224 prepared: verify event address/size CSR before endpoints; failure-only
+DCFG/HW1/event and PHYTEST/PIPE reads, STARTCFG completion. No new reset/
+clock/power writes. ARM64 plus wrapper/EP/resource/CSR modeled tests and
+plain patch equality PASS. Current manifest11 sources/33 diagnostics.
+Next full CI;0223 remains installed, fresh Download Mode055 untouched.
+
 CURRENT:0223 installed, exact CI44298522029 SUCCESS at
  d5f6472b35b456acbaa95c0716be23533066a2ea.11 sources/6 symbols/28 strings/
 profile PASS. Kernel SHA25632291c02b546143bfc39bb61c09170afb2fbe9c94a44f14ab014282de659550f.

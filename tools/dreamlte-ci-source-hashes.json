@@ -1,10 +1,10 @@
 {
-  "description": "Reviewed DREAMLTE0223 adds bounded VM bootstrap checkpoints after persistent physical phase5 stop; USB0222 retained and untested on hardware. ARM64 units compile; no memory allocation or startup bypass changes.",
+  "description": "DREAMLTE0224 verifies event-ring CSR readbacks before endpoint commands and adds failure-only CSR/PHY power reads plus STARTCFG completion marker. No new power, clock or reset programming; hardware untested.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "6cb58dc6032959bd53ba8c8e8321cbbe4240fa99d8bf56b1ec33cc8ff76f98f4",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "43895a40fb940c9cc639cce7f6c5cfcea14aba8efd7683a2c0c4c93e79e4edf7",
+    "bsd/dev/sweet_usb.c": "3176f38f52e18950c0750ceff1e94cc52c2f92fc657d5a53bcc86aab1e8288bf",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
@@ -41,7 +41,12 @@
     "DREAMLTE VM: vm_tag_init returned",
     "DREAMLTE VM: pmap_startup enter",
     "DREAMLTE VM: pmap_startup returned start=%p end=%p",
-    "DREAMLTE VM: %s"
+    "DREAMLTE VM: %s",
+    "DREAMLTE USB CSR: DCFG=",
+    "DREAMLTE USB POWER: TEST=",
+    "DREAMLTE USB: STARTCFG completed",
+    "DREAMLTE USB: event CSR mismatch",
+    "DREAMLTE USB: event CSR verified"
   ],
   "symbols": [
     "_dreamlte_log_cursor",

@@ -1,0 +1,52 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -428,7 +428,12 @@
+ 	 */
+ 	printf("DREAMLTE USB CORE: PIPE=%08x HW3=%08x BUS=%08x/%08x\n",
+ 	    dwc_rd(0xc2c0), dwc_rd(0xc14c), dwc_rd(0xc100), dwc_rd(0xc104));
++	printf("DREAMLTE USB CSR: DCFG=%08x HW1=%08x EVT=%08x/%08x/%08x/%08x\n",
++	    dwc_rd(DCFG), dwc_rd(0xc144), dwc_rd(GEVNTADRLO),
++	    dwc_rd(GEVNTADRHI), dwc_rd(GEVNTSIZ), dwc_rd(GEVNTCOUNT));
+ 	if (dreamlte_phy) {
++		printf("DREAMLTE USB POWER: TEST=%08x PIPE=%08x\n",
++		    usb_rd(dreamlte_phy, 0x28), usb_rd(dreamlte_phy, 0x0c));
+ 		printf("DREAMLTE USB PHY: LINK=%08x UTMI=%08x CLK=%08x\n",
+ 		    usb_rd(dreamlte_phy, 0x04), usb_rd(dreamlte_phy, 0x08),
+ 		    usb_rd(dreamlte_phy, 0x10));
+@@ -484,6 +489,7 @@
+ 		return -1;
+ 	}
+ 	if (ud_epcmd(0, DEPCMD_DEPSTARTCFG, 0, 0, 0)) return -1;
++	printf("DREAMLTE USB: STARTCFG completed reg=%08x\n", dwc_rd(DEPCMD(0)));
+ 	for (unsigned n = 0; n < out; n++) {
+ 		if (ud_epcmd(2 * n, DEPCMD_SETTRANSFRESOURCE, 1, 0, 0)) return -1;
+ 	}
+@@ -1124,6 +1130,28 @@
+ 	dwc_wr(GEVNTSIZ, (1u << 31) | UD_EVT_SIZE);     /* interrupt masked: polled */
+ 	dwc_wr(GEVNTCOUNT, dwc_rd(GEVNTCOUNT) & 0xffff);
+ 	ud.evt_pos = 0;
++#if defined(DREAMLTE)
++	/* Samsung core.c reset_check verifies GEVNTADRLO write/read before
++	 * proceeding. Verify our real event ring rather than a magic address;
++	 * do not retry reset or issue endpoints against mismatched CSR state.
++	 */
++	uint32_t event_lo = dwc_rd(GEVNTADRLO);
++	uint32_t event_hi = dwc_rd(GEVNTADRHI);
++	uint32_t event_size = dwc_rd(GEVNTSIZ);
++	if (event_lo != (uint32_t)(ud.dma_pa + UD_EVT) ||
++	    event_hi != (uint32_t)((ud.dma_pa + UD_EVT) >> 32) ||
++	    event_size != ((1u << 31) | UD_EVT_SIZE)) {
++		printf("DREAMLTE USB: event CSR mismatch expected=%08x/%08x/%08x\n",
++		    (uint32_t)(ud.dma_pa + UD_EVT),
++		    (uint32_t)((ud.dma_pa + UD_EVT) >> 32),
++		    (1u << 31) | UD_EVT_SIZE);
++		dreamlte_usb_ep_failure(0, 0);
++		return;
++	}
++	printf("DREAMLTE USB: event CSR verified DMA=%08x/%08x size=%08x\n",
++	    event_lo, event_hi, event_size);
++#endif
++
+ 
+ 	/* High speed, address 0 */
+ 	uint32_t dcfg = dwc_rd(DCFG) & ~(7u | (0x7fu << 3));

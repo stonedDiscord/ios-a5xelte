@@ -20,10 +20,12 @@ code = r'''
 #include <stdint.h>
 #include <stdio.h>
 #define DEPCMD_DEPSTARTCFG 9
+#define DEPCMD(n) (0xc80c + 0x10*(n))
 #define DEPCMD_SETTRANSFRESOURCE 2
 static unsigned in_count, out_count, calls, fail_at;
 static unsigned eps[33], cmds[33];
 static uint32_t dwc_rd(unsigned off) {
+    if (off == DEPCMD(0)) return 9;
     assert(off == 0xc14c);
     return (in_count << 18) | ((in_count + out_count) << 12);
 }
