@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18: prepared read-only PHY failure diagnostics after0218
+
+- Rechecked host after0218 flash: no1209:0001, so physical USB is still
+  unverified. Screen report requested in prior turn remains pending. Prior
+  turn made progress through verified full build/package/BOOT flash.
+- Pinned Samsung CAL forces QACT and pulses LINK_SW_RESET during PHY enable;
+  current firmware takeover does neither. This is a source difference only,
+  not established cause. Prepared0219 outside active profile adds failure-only
+  PIPE/HW3/BUS and already-mapped PHY LINK/UTMI/CLK/Q/SEL readbacks. No new
+  mappings, writes, resets or retries. No replacement build/flash started.
+- Actual0219 ARM64 USB translation unit PASS; active0218 source restored
+  SHA2560382ae5a0ca1260ea41efba3048229de2b513a6012c53eab85e6408332749250.
+  Plain patch equals reviewed full source; wrapper/resource tests PASS.
+  Expanded EP command suite covers all32 physical endpoints, parameter
+  writes/completion/status/timeout, missing PHY map and unchanged PHY words.
+  Both active0218 and prepared0219 pass. Physical PHY state is not measured.
+
 ## 2026-11-18:0218 verified and flashed; physical result pending
 
 - Exact CI44261810052 SUCCESS at94e4d744b76110d0f330544bc27ad6fef228a822.

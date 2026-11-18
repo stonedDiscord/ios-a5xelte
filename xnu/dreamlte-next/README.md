@@ -1,5 +1,19 @@
 # Prepared S8 USB follow-up
 
+Current2026-11-18:0218 is installed following exact CI44261810052 success
+and verified BOOT flash. Host still sees no1209:0001; physical report pending.
+The older staging/installed statuses below are historical.
+
+Prepared0219-dreamlte-usb-phy-failure-snapshot.patch remains outside active
+profile. It adds failure-only core PIPE/HW3/BUS and already-mapped PHY
+LINK/UTMI/CLK/Q/SEL readbacks. Offsets follow pinned Samsung core.h and
+phy-samsung-usb3-cal.h, including the existing version-dependent base+4.
+No new mappings, clock/reset writes, retries or automatic promotion/flash.
+Actual ARM64 translation-unit compile, plain patch/full-source equality,
+wrapper/resource suites and expanded32-endpoint command suite PASS. Tests
+also cover a missing PHY mapping and unchanged modeled PHY words. This is
+prepared diagnostic code, not evidence of a physical PHY or USB fix.
+
 Current:0218 promoted to active xnu/dreamlte for full CI. Earlier staging
 status below is historical.0217 remains installed, register report pending.
 

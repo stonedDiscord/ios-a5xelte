@@ -55,6 +55,14 @@ Avoid blind retries. S8 UFS runtime provider unfinished; root mount unproven.
 
 Origin wardevsa/ios-a5xelte read-only; writable build remote
 stonedDiscord/ios-a5xelte. Keep Apple binaries/device dumps/backups ignored.
+Prepared0219 outside active profile in xnu/dreamlte-next adds read-only
+failure snapshots for DWC3 PIPE/HW3/BUS and existing mapped PHY LINK/UTMI/
+CLK/Q/SEL. No new mapping/write/reset/retry. Actual ARM64 compile, plain
+patch equality and expanded32-endpoint/wrapper/resource suites PASS. Tests
+cover missing PHY mapping and unchanged modeled PHY words; active0218 source
+restored. Pinned CAL QACT/link-reset difference is not proven root cause.
+No additional CI or phone write while0218 screen result remains pending.
+
 Next: physical0218 result, then diagnose exact failing command or check real
 USB descriptors/configuration and bidirectional network traffic if enumerated.
 Do not claim success from CI/model tests; existing goal remains active.

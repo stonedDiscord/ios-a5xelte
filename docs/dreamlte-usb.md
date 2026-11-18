@@ -9,20 +9,25 @@ Parameters encode64-byte OUT EP0 with expected events. Device mode is2;
 USB2 reset/SUSPHY/ENBLSLPM and GSTS CSR timeout are clear. Stopped/halted
 state is expected before the later RUN request. No USB enumeration proof.
 0218 follows Samsung resource-before-config ordering; full CI44261810052
-is live. Prior GHWPARAMS3=10420085 has16 IN/16 OUT, within candidate bounds.
+succeeded and BOOT0218 is now installed; physical result pending. Prior GHWPARAMS3=10420085 has16 IN/16 OUT, within candidate bounds.
 
 ## Current diagnostic trial (2026-11-18)
 
-0215 CI44256127913 passed exact compiled-source/symbol checks and flashed.
-Normal0215 showed a version banner; the same kernel with startup_debug=1
-now reaches kernel_bootstrap: PE_lockdown_iokit. Only sweet_usb.c differs
-between all xnu/ files of exact0214/0215 source archives; ADTs match. This
-does not identify a CPU halt or establish that USB initialization ran.
-0217 CI44259521488 at a947a49 is live with checkpoints around IOKit matching,
-VM restrictions/kperf/BSD entry, existing BSD init logs and0216 failure-only
-EP register snapshots. Four actual ARM64 files and both host suites pass.
-Wait for exact full build verification and hardware trace before attributing
-the shorter output to USB2 wake/timing. Host currently has no1209:0001.
+0218 exact CI44261810052 at94e4d74 succeeded. Nine compiled sources,
+six linked symbols and eleven diagnostic strings verified; BOOT uploaded
+100%, Heimdall exit0/reboot. Host still sees no1209:0001 gadget; physical
+resource-assigned or endpoint-failure report is pending. The resource-order
+change follows Samsung gadget.c but has no demonstrated hardware success.
+Earlier version/PE_lockdown_iokit apparent stops are superseded by physical
+0215/0217 output reaching USB setup and Apple_HFS root discovery.
+
+Prepared0219 outside active profile adds failure-only reads of DWC3 PIPE,
+GHWPARAMS3 and bus config, plus the already-mapped PHY bank LINK/UTMI/CLK,
+PHYRESUME(Q) and PHYSELECTION. Pinned Samsung CAL forces QACT and pulses
+link reset before endpoint setup; the current takeover path does neither.
+This source difference is a hypothesis, not proof of a clock fault. Read
+those fields before changing Q-channel/port/reset behavior. No additional
+MMIO writes or mappings in0219; actual ARM64 compile and modeled suites pass.
 
 ## Physical framebuffer evidence (2026-11-18)
 

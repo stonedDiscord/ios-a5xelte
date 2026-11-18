@@ -1,0 +1,22 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -376,6 +376,19 @@
+ 	    dwc_rd(GCTL), dwc_rd(0xc118), dwc_rd(0xc200));
+ 	printf("DREAMLTE USB FAIL: DCTL=%08x DSTS=%08x EN=%08x\n",
+ 	    dwc_rd(DCTL), dwc_rd(DSTS), dwc_rd(DALEPENA));
++	/* core.h and phy-samsung-usb3-cal.h at pinned Samsung revision.
++	 * dreamlte_phy already includes the version-dependent +4 adjustment.
++	 * Read only the bank already mapped/probed during firmware takeover.
++	 */
++	printf("DREAMLTE USB CORE: PIPE=%08x HW3=%08x BUS=%08x/%08x\n",
++	    dwc_rd(0xc2c0), dwc_rd(0xc14c), dwc_rd(0xc100), dwc_rd(0xc104));
++	if (dreamlte_phy) {
++		printf("DREAMLTE USB PHY: LINK=%08x UTMI=%08x CLK=%08x\n",
++		    usb_rd(dreamlte_phy, 0x04), usb_rd(dreamlte_phy, 0x08),
++		    usb_rd(dreamlte_phy, 0x10));
++		printf("DREAMLTE USB PHY: Q=%08x SEL=%08x\n",
++		    usb_rd(dreamlte_phy, 0x34), usb_rd(dreamlte_phy, 0x6c));
++	}
+ }
+ #endif
+ 
