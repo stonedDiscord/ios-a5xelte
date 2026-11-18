@@ -19,6 +19,16 @@ and reverses against exact0093 finaltree. SMP ADT regression and offline107
 patch profile staging pass. Full Xcode build/link and hardware still pending;
 no speedup or runtime activation claim. Keep0093/0092/0090 restore images,
 1984MiB and continuous touch. BOOT-only authorization remains active.
+Local sched_prim.c cross-compile PASS using exact0093 CI compiler command,
+include order/defines and generated headers; no builtin substitutions.
+Committed661d5bb; fullCI44398834193 exact661d5bb18ba35bddecbdd6c125852e08756f5bbc
+running macos26intel/a03/SWEET/userspacetrue/buildtreetrue. Private0094 input
+ADT equals0093; commandline599bytes: remove startup_debug=1 verbosity flag
+from prior598bytes and append a03_prefer_a75=1 (otherwise615 exceeds607).
+Fresh0093 read-only cpus shows8 registered with substantial work on all8;
+frame swaps27394/copies27388. Existing bounded capture had expired; single
+new reader writes ignored boot0093-before-a75.log. No reboot/flash yet.
+
 
 ## 2026-11-18: idle follow-up verifies responsive frames without another Home
 

@@ -1,3 +1,12 @@
+ACTIVE2026-11-18 A75 CI44398834193 exact661d5bb RUNNING.
+Local exact-CI sched_prim.c compilePASS, selector262144mask sanitizerPASS.
+0094 private inputADT=0093 exact; cmd599bytes remove startup_debug=1 then
+append a03_prefer_a75=1 (naive append overflows608 ABI). Sameall8/1984MiB.
+Fresh0093 all8usage and swaps27394/copies27388; no reboot/flash yet.
+Singlecapture session87084 writes boot0093-before-a75.log for3600seconds.
+Next exactCI/checksum/linkedmarker/source->0094BOOT-only->restore touchON,
+cpus deltas/display/VM/io and userphysical response. Keep0093/0092/0090.
+
 ACTIVE2026-11-18 A75-FIRST candidate0161 prepared per user request.
 Opt-in a03_prefer_a75=1 prefers idle CPU6 then7 before last-CPU affinity;
 A55 fallback/all8 remain available; RT/bound work and physical A55 bootstrap
