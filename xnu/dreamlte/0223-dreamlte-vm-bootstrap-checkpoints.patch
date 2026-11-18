@@ -1,0 +1,134 @@
+--- a/osfmk/vm/vm_resident.c
++++ b/osfmk/vm/vm_resident.c
+@@ -90,6 +90,9 @@
+ #include <mach_debug/zone_info.h>
+ #include <vm/cpm.h>
+ #include <pexpert/pexpert.h>
++#if defined(__arm64__)
++#include <pexpert/arm64/board_config.h>
++#endif
+ #include <pexpert/device_tree.h>
+ #include <san/kasan.h>
+ 
+@@ -1079,6 +1082,10 @@
+ 	 *	Steal memory for the map and zone subsystems.
+ 	 */
+ 	kernel_startup_initialize_upto(STARTUP_SUB_PMAP_STEAL);
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: phase5 returned buckets=%u\n", vm_page_bucket_count);
++#endif
++
+ 
+ 	/*
+ 	 *	Allocate (and initialize) the virtual-to-physical
+@@ -1091,7 +1098,14 @@
+ 	 */
+ 
+ 	if (vm_page_bucket_count == 0) {
++#if defined(DREAMLTE)
++		kprintf("DREAMLTE VM: pmap_free_pages enter\n");
++#endif
+ 		unsigned int npages = pmap_free_pages();
++#if defined(DREAMLTE)
++		kprintf("DREAMLTE VM: pmap_free_pages returned %u\n", npages);
++#endif
++
+ 
+ 		vm_page_bucket_count = 1;
+ 		while (vm_page_bucket_count < npages) {
+@@ -1151,16 +1165,26 @@
+ #endif /* VM_PAGE_FAKE_BUCKETS */
+ #endif /* VM_PAGE_BUCKETS_CHECK */
+ 
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: buckets allocate count=%u locks=%u\n",
++	    vm_page_bucket_count, vm_page_bucket_lock_count);
++#endif
+ 	kernel_debug_string_early("vm_page_buckets");
+ 	vm_page_buckets = (vm_page_bucket_t *)
+ 	    pmap_steal_memory(vm_page_bucket_count *
+ 	    sizeof(vm_page_bucket_t), 0);
+ 
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: buckets allocated %p; locks allocate\n", vm_page_buckets);
++#endif
+ 	kernel_debug_string_early("vm_page_bucket_locks");
+ 	vm_page_bucket_locks = (lck_spin_t *)
+ 	    pmap_steal_memory(vm_page_bucket_lock_count *
+ 	    sizeof(lck_spin_t), 0);
+ 
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: locks allocated %p; buckets initialize\n", vm_page_bucket_locks);
++#endif
+ 	for (i = 0; i < vm_page_bucket_count; i++) {
+ 		vm_page_bucket_t *bucket = &vm_page_buckets[i];
+ 
+@@ -1171,11 +1195,21 @@
+ #endif /* MACH_PAGE_HASH_STATS */
+ 	}
+ 
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: buckets initialized; locks initialize\n");
++#endif
+ 	for (i = 0; i < vm_page_bucket_lock_count; i++) {
+ 		lck_spin_init(&vm_page_bucket_locks[i], &vm_page_lck_grp_bucket, &vm_page_lck_attr);
+ 	}
+ 
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: locks initialized; vm_tag_init enter\n");
++#endif
+ 	vm_tag_init();
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: vm_tag_init returned\n");
++#endif
++
+ 
+ #if VM_PAGE_BUCKETS_CHECK
+ 	vm_page_buckets_check_ready = TRUE;
+@@ -1190,7 +1224,15 @@
+ 	 */
+ 
+ 	kernel_debug_string_early("pmap_startup");
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: pmap_startup enter\n");
++#endif
+ 	pmap_startup(&virtual_space_start, &virtual_space_end);
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: pmap_startup returned start=%p end=%p\n",
++	    (void *)virtual_space_start, (void *)virtual_space_end);
++#endif
++
+ 	virtual_space_start = round_page(virtual_space_start);
+ 	virtual_space_end = trunc_page(virtual_space_end);
+ 
+--- a/osfmk/vm/vm_init.c
++++ b/osfmk/vm/vm_init.c
+@@ -78,6 +78,9 @@
+ #include <vm/vm_init.h>
+ 
+ #include <pexpert/pexpert.h>
++#if defined(__arm64__)
++#include <pexpert/arm64/board_config.h>
++#endif
+ 
+ #include <vm/vm_protos.h>
+ 
+@@ -90,7 +93,9 @@
+ static inline void
+ vm_mem_bootstrap_log(const char *message)
+ {
+-//	kprintf("vm_mem_bootstrap: %s\n", message);
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: %s\n", message);
++#endif
+ 	kernel_debug_string_early(message);
+ }
+ 
+@@ -122,6 +127,7 @@
+ 	vm_mem_bootstrap_log("vm_object_bootstrap");
+ 	vm_object_bootstrap();
+ 
++	vm_mem_bootstrap_log("vm_retire_boot_pages");
+ 	vm_retire_boot_pages();
+ 
+ 	vm_mem_bootstrap_log("vm_map_init");

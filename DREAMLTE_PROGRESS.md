@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0222 persistent phase5 stop;0223 VM checkpoints
+
+- User explicitly confirms last persistent line on0222 was
+  kernel_startup_initialize_upto: reached phase 5, with no later text.
+  Source marks completion of STARTUP_SUB_PMAP_STEAL within vm_page_bootstrap,
+  before BSD/USB.0222 session-order change has no physical execution evidence.
+-0223 adds bounded DREAMLTE-only kprintf checkpoints after phase5, around
+  pmap_free_pages, bucket/lock allocation and initialization, vm_tag_init and
+  pmap_startup. Enables existing VM stage logger, including boot-page retire.
+  No allocator, memory-map, startup bypass or USB programming change.
+- Both actual ARM64 translation units compile; all12 diagnostics present in
+  objects. Plain overlay application equals reviewed complete sources.
+  Reverified0222 artifact before archiving own reviewed-source manifest.
+  Current verifier extends to11 complete sources/28 linked diagnostics.
+- Installed0222; fresh Download Mode054 remains untouched. Full0223 CI next;
+  build/physical outcome and USB success remain unproven.
+
 ## 2026-11-18:0222 verified and flashed; session trace pending
 
 - Exact CI44285281557 SUCCESS at b4062f27e271a9b60f6c3d317868f27c51ef4012.

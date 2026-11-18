@@ -2,18 +2,17 @@
 
 ## Active S8 handoff — 2026-11-18
 
-CURRENT0222 overrides older installed/build statuses below. Exact
-CI44285281557 SUCCESS at b4062f27e271a9b60f6c3d317868f27c51ef4012.
-9 sources/6 symbols/16 strings/profile PASS; preparation24221/PID61310 and
-download62796 complete. No live CI/prep. BOOT0222 size18,448,400B,SHA256
-46d86841ccadddafc0c5da984b5fd73c6c696456641c847d7c6bef12e46eb57f.
-Kernel SHA256070715aeb2c711e17e516bbb2fc5c852df15bdb71e5faa58d34688c2416b39ab.
-Original BOOT components/header and fit/independent hash verified. Fresh
-Download Mode053 accepted BOOT100%/exit0/reboot; only BOOT written.
-Private artifacts/manifests/flash log research/dreamlte/ci-44285281557.
-Host no1209:0001/no ECM. Requested physical session LINK/UTMI readback
-before endpoints, then resource/FAIL/CORE/PHY or events. Next depends on
-this0222 physical trace; goal not complete. No new Android/USERDATA writes.
+CURRENT:0222 installed. User confirms persistent final visible phase5 with
+no later text. This is PMAP_STEAL completion inside vm_page_bootstrap before
+USB;0222 session-valid sequence is physically untested.0223 adds bounded
+DREAMLTE-only VM checkpoints (free pages, hash/lock allocation/init, tags,
+pmap_startup and VM stages), with no memory/startup/USB behavior changes.
+Both actual ARM64 units compile;12 diagnostic strings linked into objects;
+plain patch/full-source equality PASS. Current manifest11 sources/28 strings.
+0222 manifest archived with exact artifacts after successful reverification.
+Fresh Download Mode054 untouched. Next full0223 CI, content verification,
+package and authorized BOOT-only trial, then recover last VM lines. No
+Android restoration or other partition writes. USB goal remains incomplete.
 
 
 0222 CI44285281557 at b4062f27e271a9b60f6c3d317868f27c51ef4012 dispatched.

@@ -1,5 +1,5 @@
 {
-  "description": "Reviewed DREAMLTE0222 moves existing Exynos session-valid before reset/endpoints, reasserts and logs after reset. ARM64/model tests PASS; hardware USB unverified.",
+  "description": "Reviewed DREAMLTE0223 adds bounded VM bootstrap checkpoints after persistent physical phase5 stop; USB0222 retained and untested on hardware. ARM64 units compile; no memory allocation or startup bypass changes.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "6cb58dc6032959bd53ba8c8e8321cbbe4240fa99d8bf56b1ec33cc8ff76f98f4",
@@ -9,7 +9,9 @@
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
     "pexpert/arm/pe_init.c": "55d5b55ebc537818d7192f5b6fc0f9fe3db5556fa212e4ba45a0115bd9ffb997",
-    "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469"
+    "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469",
+    "osfmk/vm/vm_resident.c": "e4249e31297b7a437fae6d71c1cf558940e65b2a469eef2a77c42179fd75f186",
+    "osfmk/vm/vm_init.c": "c3b729b905ac311814707a8ce3fdfa26edee831ad2ef414de18d59e77c730c12"
   },
   "strings": [
     "DREAMLTE IOKIT: zalloc lockdown enter",
@@ -27,7 +29,19 @@
     "DREAMLTE USB PHY: LINK=",
     "DREAMLTE USB PHY: Q=",
     "DREAMLTE USB: link wake Q=",
-    "DREAMLTE USB: session LINK="
+    "DREAMLTE USB: session LINK=",
+    "DREAMLTE VM: phase5 returned buckets=%u",
+    "DREAMLTE VM: pmap_free_pages enter",
+    "DREAMLTE VM: pmap_free_pages returned %u",
+    "DREAMLTE VM: buckets allocate count=%u locks=%u",
+    "DREAMLTE VM: buckets allocated %p; locks allocate",
+    "DREAMLTE VM: locks allocated %p; buckets initialize",
+    "DREAMLTE VM: buckets initialized; locks initialize",
+    "DREAMLTE VM: locks initialized; vm_tag_init enter",
+    "DREAMLTE VM: vm_tag_init returned",
+    "DREAMLTE VM: pmap_startup enter",
+    "DREAMLTE VM: pmap_startup returned start=%p end=%p",
+    "DREAMLTE VM: %s"
   ],
   "symbols": [
     "_dreamlte_log_cursor",
