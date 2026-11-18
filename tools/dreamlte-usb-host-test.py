@@ -48,7 +48,7 @@ typedef uintptr_t vm_offset_t;
 static uint32_t core[0x10000 / 4], phy[0x100 / 4];
 static vm_offset_t dreamlte_phy;
 static unsigned maps, starts, phy_reads;
-static unsigned delays;
+static unsigned delays, ignore_retention;
 static int mode;
 static vm_offset_t ml_io_map(uintptr_t pa, unsigned size) {
     maps++;
@@ -62,7 +62,9 @@ static uint32_t usb_rd(vm_offset_t base, uint32_t off) {
         return *(uint32_t *)addr;
     assert(addr >= (uintptr_t)phy && addr < (uintptr_t)(phy + 0x100/4));
     phy_reads++;
-    return *(uint32_t *)addr;
+    uint32_t value = *(uint32_t *)addr;
+    if (off == 0x10 && ignore_retention) value &= ~(1u << 4);
+    return value;
 }
 static void PE_parse_boot_argn(const char *key, int *out, unsigned size) {
     assert(!strcmp(key, "dreamlteusb") && size == sizeof(mode)); *out = mode;
@@ -90,7 +92,7 @@ code += 'static void\n' + function('sweet_usb_probe') + '\n'
 code += r'''
 static void reset(void) {
     memset(core, 0, sizeof(core)); memset(phy, 0, sizeof(phy));
-    maps = starts = phy_reads = delays = 0; dreamlte_phy = 0;
+    maps = starts = phy_reads = delays = ignore_retention = 0; dreamlte_phy = 0;
     core[0xc120/4] = 0x5533280a;
     core[0xc110/4] = 0x30c11004;
 }
@@ -211,6 +213,15 @@ int main(void) {
         assert(dreamlte_usb_phy_clock_up((uintptr_t)phy+off) == 0);
         assert(phy[(off+0x10)/4] == 0x001b0058);
         assert(phy[(off+0x0c)/4] == 0x10);
+        reset(); off = shifted ? 4 : 0;
+        phy[0] = shifted ? 0x010101 : 0;
+        phy[(off+0x10)/4] = 0x801b0049;
+        phy[(off+0x0c)/4] = 0;
+        ignore_retention = 1;
+        assert(dreamlte_usb_phy_clock_up((uintptr_t)phy+off) == 0);
+        assert((usb_rd((uintptr_t)phy+off, 0x10) & 0x10) == 0);
+        assert(phy[(off+0x0c)/4] == 0x10);
+        ignore_retention = 0;
         for (unsigned ref = 0; ref < 4; ref++) {
             if (ref == 2) continue;
             phy[(off+0x10)/4] = ref << 2;

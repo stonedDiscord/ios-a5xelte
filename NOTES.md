@@ -13,6 +13,15 @@ handshake or flash before0225 verification. CI44316294206 still running.
 research/dreamlte/prepare-0226.py waits exact run; verifies11sources/
 6symbols/38strings and packages; never flashes. Physical mode request pending.
 
+0226 physical: only PHY clock CLK=801b0049->001b0048
+PIPE=0->10, then silence. Source guard rejects expected bit4 RETENABLEN
+readback, so it returns before PHY power-up and EP0; no cmd2 result from0226.
+0227 tolerates only bit4 mismatch while retaining reset/ref/common/PIPE
+checks and the bit4 write. ARM64 object/model verifies ignored-bit4
+continuation plus refusal paths; EP/resource/CSR tests and patch equality
+PASS. Manifest11sources/6symbols/38strings. Current0226 remains installed;
+request Download Mode then full CI. No new flash or USB success claim.
+
 CURRENT0226 INSTALLED. Exact CI44324136923 SUCCESS at42d14a1dc97111ef63ee395158ff48e9e3ab60b7;11sources/6symbols/38strings/profile PASS.
 Preparation44451 complete; no live CI/prep. Kernel SHA256b20ffad5cdf626b3166e24b46fa8214dab0b7e5539b696972f835eb3a1bbda5f.
 BOOT18,448,400B SHA256a66f43216e55fbe89766809bcb1810cc065ee8d5c8d89e2417894274c93c2142.

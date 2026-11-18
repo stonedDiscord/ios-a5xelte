@@ -1,0 +1,16 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -181,7 +181,12 @@
+ 	uint32_t pipe_after = usb_rd(phy, 0x0c);
+ 	printf("DREAMLTE USB: PHY clock CLK=%08x->%08x PIPE=%08x->%08x\n",
+ 	    before, after, pipe, pipe_after);
+-	if (after != awake || pipe_after != (pipe | (1u << 4))) return -1;
++	/* RETENABLEN is requested by Samsung CAL but did not latch on this
++	 * measured revision. Keep logging it, while requiring reset/common/ref
++	 * controls and free-clock selection to read back correctly.
++	 */
++	if ((after & ~(1u << 4)) != (awake & ~(1u << 4)) ||
++	    pipe_after != (pipe | (1u << 4))) return -1;
+ 	return 0;
+ }
+ 

@@ -1,5 +1,16 @@
 # DREAMLTE USB bring-up evidence
 
+##0226 RETENABLEN readback;0227 guard correction
+
+User's last0226 USB line: CLK801b0049->001b0048, PIPE0->10. The exact
+source guard compares all CLK bits and therefore returns because requested
+RETENABLEN bit4 did not latch. It exits before PHY power-up, so there is no
+0226 endpoint-command result.0227 keeps the bit4 write/log but masks only
+that readback bit; continues to require reset/common/ref controls and PIPE
+free-clock readback. This probes further sequence progress without relaxing
+the measured reset/clock routing checks. ARM64 and modeled ignored-bit4/
+refusal tests PASS; runtime pending.
+
 ##0226 verified hardware trial
 
 CI44324136923 SUCCESS,11-source/6-symbol/38-diagnostic profile checks pass.

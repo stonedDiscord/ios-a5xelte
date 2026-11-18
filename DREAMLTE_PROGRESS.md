@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0226 clock trial stopped at RETENABLEN readback;0227 continuation
+
+- User reports only line PHY clock CLK=801b0049->001b0048
+  PIPE=00000000->00000010, then no later USB output. The0226 function's
+  exact after != awake guard rejects solely bit4 (RETENABLEN) not latching,
+  so it returns before PHYTEST power-up/DWC3 endpoint setup. This report is
+  not evidence of a cmd failure in0226.
+-0227 retains all0226 writes and strict checks of port reset, common/ref SSP
+  controls and free UTMI clock. It tolerates bit4 readback difference while
+  logging it; preserves source-requested bit4 write. Thus tests whether the
+  hardware can proceed through measured power-up/resource setup without
+  weakening reset/PIPE checks. No additional clock/PHY register writes.
+- Actual ARM64 object recompile PASS; wrapper models now explicitly simulate
+  ignored bit4 and assert continuation, as well as the exact observed sample
+  and existing refusal paths; EP/resource/CSR suites PASS. Plain patch/full
+  source equality PASS. Manifest11 sources/6 symbols/38 strings.0226 own
+  manifest already archived. Installed0226; request fresh Download Mode;
+  no0227 CI/flash yet, no USB functionality claim.
+
 ## 2026-11-18:0226 verified and BOOT flashed; clock trace pending
 
 - Exact CI44324136923 SUCCESS at42d14a1dc97111ef63ee395158ff48e9e3ab60b7.
