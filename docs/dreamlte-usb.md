@@ -1,5 +1,16 @@
 # DREAMLTE USB bring-up evidence
 
+##0217 endpoint command snapshot (2026-11-18)
+
+Phone reports ep0 cmd1 reg00000401; PAR0=00000200/PAR1=00000500/PAR2=0;
+GCTL80e92004/GSTS3e800000/USB2=40102400; DCTL0/DSTS00520000/DALEPENA0.
+CMDACT remains set, so this is incomplete SETEPCONFIG, not status0 success.
+Parameters encode64-byte OUT EP0 with expected events. Device mode is2;
+USB2 reset/SUSPHY/ENBLSLPM and GSTS CSR timeout are clear. Stopped/halted
+state is expected before the later RUN request. No USB enumeration proof.
+0218 follows Samsung resource-before-config ordering; full CI44261810052
+is live. Prior GHWPARAMS3=10420085 has16 IN/16 OUT, within candidate bounds.
+
 ## Current diagnostic trial (2026-11-18)
 
 0215 CI44256127913 passed exact compiled-source/symbol checks and flashed.

@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0217 physical endpoint snapshot recovered
+
+- User reports DREAMLTE USB FAIL: ep0 cmd1 reg00000401; PAR0=00000200,
+  PAR1=00000500,PAR2=00000000; GCTL80e92004,GSTS3e800000,USB2=40102400;
+  DCTL00000000,DSTS00520000,EN00000000. Exact values are physical reports,
+  not readback through a working gadget. Host still sees no USB device.
+- DEPCMD.CMDACT(bit10) remains set, so zero status bits are not a successful
+  completion. PAR0 decodes64-byte packets; PAR1 enables expected completion/
+  not-ready events for OUT EP0. GCTL device mode2, USB2 reset/SUSPHY/ENBLSLPM
+  clear, GSTS CSR_TIMEOUT(bit5) clear. This excludes none of the unmeasured
+  PHY clock/electrical dependencies. DCTL stopped/DSTS halted and no enabled
+  endpoints are expected at this pre-RUN failed-configuration stage.
+- Prior Android GHWPARAMS3=10420085 decodes16 IN/16 OUT endpoints;0218's
+  bounded allocation covers that layout. Source review confirms Samsung
+  clears RAMCLKSEL before setup; PIPE selection is later on SS connect,
+  not evidence for changing the current USB2 pre-configuration clock mux.
+- Keep live0218 CI44261810052 unchanged. Next hardware test is the already
+  reviewed resource-before-config sequence, with0217 snapshots retained.
+
 ## 2026-11-18:0218 resource-order candidate promoted
 
 - Reverified exact0217 artifact before changing manifest; archived its own

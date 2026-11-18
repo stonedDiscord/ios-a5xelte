@@ -2,6 +2,12 @@
 
 ## Active S8 handoff — 2026-11-18
 
+0217 screen snapshot now received: ep0 cmd1 reg00000401; PAR0=00000200,
+PAR1=00000500,PAR2=0; GCTL80e92004 GSTS3e800000 USB2=40102400; DCTL0
+DSTS00520000 EN0. CMDACT stuck, no final command status.64-byte EP0/device
+mode/USB2 awake fields match intent; halted state precedes RUN.0218 live
+build remains the next resource-order trial. Physical clocks still unproven.
+
 0218 promoted into active profile for full build; resource-order host tests
 and prior identical ARM64 compile PASS.0217 own manifest archived before
 update.0217 remains installed; awaiting four USB failure register lines.
