@@ -1,5 +1,23 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0222 verified and flashed; session trace pending
+
+- Exact CI44285281557 SUCCESS at b4062f27e271a9b60f6c3d317868f27c51ef4012.
+  Preparation24221/PID61310 handled transient GitHub TLS poll errors;
+  download62796 and verification/packaging completed, no replacement CI.
+- Nine complete source hashes/six symbols/sixteen linked diagnostics and
+  active profile PASS. Kernel SHA256
+  070715aeb2c711e17e516bbb2fc5c852df15bdb71e5faa58d34688c2416b39ab.
+  BOOT shim/out/dreamlte-xnu-0222.img,18,448,400B,SHA256
+  46d86841ccadddafc0c5da984b5fd73c6c696456641c847d7c6bef12e46eb57f.
+  Original BOOT components/header retained; fit/independent image hash PASS.
+- Fresh Download Mode053 accepted BOOT100%, Heimdall exit0/reboot. Installed
+  BOOT0222; only BOOT written. Artifacts/manifests/flash log under
+  research/dreamlte/ci-44285281557. Immediate host no1209:0001/no ECM.
+- Requested session LINK/UTMI before endpoints, then resources/FAIL/CORE/PHY
+  or running/events. Physical session-bit effect and USB success unproven.
+  No live CI/preparation; no Android restoration or other partition writes.
+
 ## 2026-11-18:0221 wake retained;0222 corrects session-valid ordering
 
 - User0221 physical report: ID5533280a/GCTL30c12004/DSTS00520004;

@@ -1,5 +1,13 @@
 # DREAMLTE USB bring-up evidence
 
+##0222 hardware trial (2026-11-18)
+
+Exact CI44285281557 SUCCESS with9 sources/6 symbols/16 diagnostics and
+BOOT packaging verified. Download Mode053 accepted0222 BOOT100%/exit0/
+reboot. Only BOOT written. Host no1209:0001/no ECM. Physical session
+LINK/UTMI before endpoints and later commands/events requested. No physical
+USB success established; session-order change remains a hypothesis.
+
 ##0221 physical result;0222 session-valid ordering
 
 Physical0221 USB2CFG40102400/Q7e00 retained, reset1ms/GCTL30c12004/DCFG4,
