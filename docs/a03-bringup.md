@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G bring-up
 
+2026-11-18 BOOT0094 hardware follow-up supersedes candidate status below:
+fullCI44398834193 succeeded; BOOT-only flash succeeded. Policyrequested1
+and all8 init/SGI verified; first measured interval puts90.7percent of busy
+ticks on A75CPU6/7, with user+system deltas positive on every core. Private
+volatile touch firmware restored/load0/A55A and continuous forwarding leftON.
+PhysicalUI and measured speedup remain pending; see active progress/handoff.
+
 2026-11-18 A75 scheduling candidate0161: add a03_prefer_a75=1 to the
 validated eight-core profile to prefer idle CPU6, then CPU7, for unbound
 non-realtime wakeups before last-CPU affinity. A55s remain available when

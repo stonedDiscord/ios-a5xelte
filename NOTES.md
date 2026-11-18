@@ -1,3 +1,7 @@
+FOLLOWUP21:29:38UTC0094 all8usageadvances/A75dominant; touchON1/189slices/0events.
+Display swaps/copiesstill0 in startup; nophysicalGUI/speedupclaim. Preserve
+singlecapture135205 and waitforuserphysicalscreenreply, notautomaticHome.
+
 ACTIVE2026-11-18~21:29UTC0094A75PREFERENCE RUNNING.
 BOOT-onlyflash57520success; policyrequested1/all8initSGI/CPU_ONrc0PASS.
 Real~10sdelta A756user5/sys577,A757user7/sys532;90.7%busy onA75s,
