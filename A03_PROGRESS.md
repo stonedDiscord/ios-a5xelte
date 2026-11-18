@@ -1,5 +1,54 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0093 physical UI recovers after one Home event
+
+On unchanged all-eight-core BOOT0093, one explicit USB HID Home press/release
+returned dispatch result 0. Real display work resumed: swaps 40 -> 44 ->
+1026 -> 1373 -> 2777 -> 3785 -> 4878 -> 5667 -> 5872; copied layers
+34 -> 38 -> 1020 -> 1367 -> 2770 -> 3779 -> 4872 -> 5661 -> 5866.
+Independent snapshots may catch entry one ahead of completion. User first
+confirmed screen/clock changed, then confirmed "Touch responds and clock
+advances" after a physical gesture. A subsequent explicit USB swipe-up also
+returned dispatch result 0. These are actual new frame-copy and physical
+interactive UI observations, without a kernel rebuild, reboot or flash.
+All eight cores/1984 MiB and continuous physical touch forwarding remain
+enabled. No partition writes. BOOT0092/0090 restores remain available.
+
+Notification attempts stay zero while frames advance, disproving missing
+VBL registration as a sufficient diagnosis. Exact iOS 16 disassembly and
+read-only live state identify the primary display server as an EAGLServer
+subclass of IOMFBServer. Its CADisplayTimer pointer was null during the
+stall and non-null after Home. Alternative render-server callbacks exist,
+so null alone does not establish a kernel timer defect. Sleep/wake/activity
+state mismatch is a hypothesis, not proven cause or permanent repair. The
+panel retains the last framebuffer; an illuminated old clock is not alone
+proof of kernel hang. Do not force notifications/fake selectors or inject
+periodic Home as a purported fix. Monitor sustained updates and idle/wake.
+
+Follow-up through ~21:03:43 UTC: swaps/copies advanced to6044/6038,
+paused for roughly50seconds, then resumed to6095/6089 and6312/6306 before
+a second USB swipe; after that swipe6428/6422. User had already confirmed
+responsive physical touch and advancing clock. This verifies recovery across
+several minutes, not guaranteed idle/wake reliability. No persistent code
+fix applied. Incident recovered; investigate activity/sleep if it recurs.
+Touch remains ON (11169slices/3690events at21:03:20); io ready1/poisoned0.
+
+Private evidence stays ignored: boot0093-frame-repair-live.log and
+/tmp/a03-frame-watch.log; shared-cache disassembly and memory under /tmp.
+
+## 2026-11-18: frame-update investigation; notification hypothesis revised
+
+User activates the frame-update goal. BOOT0093 retains live USB; single
+capture host1272 starts at 20:44 UTC for 3600 seconds after prior reader
+expires. Display timer continues while swaps40/copies34 remain stale.
+Matching UUID-checked iOS16 20A362 cache shows selector72 notification ABI
+matches current kernel, but live backboardd CADeviceUseVBL is0. QuartzCore
+selects a software display-timer path, so no registered kernel notifications
+alone does not prove cause. No forced-present/blanket-success patch justified.
+All eight cores and continuous touch remain enabled; no reboot/flash.
+Private read-only disassembly and memory snapshots stay ignored under /tmp
+or shim output. Actual frames and physical UI verification are required.
+
 ## 2026-11-18: BOOT0093 lock screen frozen at12:11; live display counters narrow stall
 
 User reports stillonlockscreen/clock12:11. At20:15:26->20:15:45UTC livekernel

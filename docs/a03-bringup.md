@@ -1,5 +1,13 @@
 # Galaxy A03 SM-A035G bring-up
 
+2026-11-18 BOOT0093 follow-up: one explicit HID Home resumed actual frame
+copies after the frozen 12:11 image. User confirms physical touch responds
+and clock advances. No kernel change/reboot/flash. All eight cores/1984 MiB
+and continuous touch forwarding remain enabled. Sustained/idle-wake
+reliability and original cause remain under investigation. Notification
+attempts remain zero while frames advance; that is not the sole cause.
+See newest A03_PROGRESS.md and NOTES.md; deferred status below is historical.
+
 2026-11-18 BOOT0090 hardware-validated managed RAM is1984MiB (previously
 1024MiB), at0x102000000..0x17e000000 after live-DTB reservation checks.
 This is the upper contiguous window, not all installed RAM. XNU/iOS processes

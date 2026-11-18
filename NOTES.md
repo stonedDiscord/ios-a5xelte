@@ -1,3 +1,23 @@
+ACTIVE 2026-11-18 ~21:02 UTC: BOOT0093 physical UI recovered, no flash.
+One explicit HID Home restarted swaps/copies (40/34 -> 6428/6422).
+User confirms screen changed, then physical touch responds and clock advances.
+All eight cores/1984 MiB and continuous touch forwarding stay enabled.
+No rebuild/reboot/partition write. Notification attempts remain 0 while real
+frames advance; missing VBL registration is not a sufficient root cause.
+Primary EAGLServer CADisplayTimer null during stall, non-null after Home;
+sleep/wake/activity mismatch is a hypothesis, no permanent repair claim.
+Capture PID109369/host1272 expires ~21:44 UTC; bounded watch host14536
+records /tmp/a03-frame-watch.log. Bounded check done: frames resumed after
+a ~50second quiet interval, then another swipe produced frames. Physical
+touch/clock confirmed. Incident recovered; no persistent kernel fix or
+guaranteed idle/wake reliability. Investigate activity/sleep if it recurs.
+
+ACTIVEFRAMEGOAL2026-11-18~20:50UTC0093sameall8/touchON/no reset.
+Singlecapture1272 boot0093-frame-repair-live3600s. Importantcorrection:
+CADeviceUseVBL=0 livebackboardd =>CADisplayTimer fallback. Kernelnotif0not
+alonecause.72ABI matches20A362. Tracefallbacktimers/actualserverstate next;
+no speculativeforcedpresent. Goalactive fixactualnewframes+physicalUI.
+
 ACTIVE2026-11-18~20:16UTC0093userLOCKSCREENclock12:11FROZEN.
 KernelUTC20:15:26->45advances/all8usagepositive/SB25+backboardd56alive.
 DISPLAYvsync33647->34662done, swap40/copies34STUCK~3.5min; notifyattempts0,
