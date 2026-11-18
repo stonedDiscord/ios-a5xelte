@@ -1,5 +1,28 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0225 power awake but cmd2 stuck;0226 common/free clock trial
+
+- User exact0225: ep0cmd2 timeout/reg402, PAR0=1/PAR1/2=0;
+  GCTL80e92004 GSTS3e800000 USB2=40102400 DCTL0 DSTS00520000 EN0;
+  PIPE010c0002 HW3=10420085 BUS22220001/300; DCFG80800 HW1=0160c93b;
+  EVT82cad000/000000008/80001000/0 as transcribed (extra high-word zero
+  retained as text, numerically8); TEST0/PHYPIPE0; LINK08000180 UTMI660
+  CLK801b0049 Q7e00 SEL0. Power clear alone did not advance first resource.
+- Pinned Samsung8895 get_phyinfo selects version01.1.1,CLKCORE and
+  common_block_disable=false. CAL ss_enable clears CLK bits31/0, sets
+  RETENABLEN4/REF_SSP_EN19 and PHYPIPE free-clock bit4 under PORTRESET;
+  outer enable waits10us then releases reset before power release.
+-0226 applies these controls on strict observed primary mux/CLKCORE only,
+  preserving reference selector/frequency, divider, PLL and SSC tuning.
+  Adds500us settle and exact readbacks; predicts CLK801b0049->001b0058,
+  PHYPIPE0->10. Does not map/write secondary banks/CMU/PMU or change mux.
+  This is a source-supported hypothesis, not demonstrated clock readiness.
+- Actual ARM64 compile; wrapper/EP/resource/CSR suites; plain patch equality
+  PASS. Wrapper covers both layouts, unrelated bit preservation, physical
+  sample, wrong reference/reset/mux/all-ones refusal. Manifest11sources/
+  6symbols/38strings.0225 own reviewed manifest archived. Full CI next;
+ 0225 installed, physical Download Mode request sent, no new flash.
+
 ## 2026-11-18:0225 PHY power release confirmed; exact endpoint fault pending
 
 - User reports PHY power TEST0000000c->00000000 SEL00000000 and

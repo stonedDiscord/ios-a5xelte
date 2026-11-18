@@ -9,6 +9,16 @@ research/dreamlte/prepare-0225.py waits exact run, verifies11sources/
 User confirms Download Mode ready; host sees fresh056/04e8:685d. No
 handshake or flash before0225 verification. CI44316294206 still running.
 
+LATEST0225 full fault confirms resource cmd2 still402/PAR0=1 despite
+TEST0. CLK801b0049/PHYPIPE0; other core/session readbacks unchanged.
+0226 candidate follows Samsung8895 common block awake/free UTMI clock
+under PORTRESET: CLK clear31/0,set4/19; PHYPIPE set4;10us reset hold,
+500us settle, exact readback; strict primary/CLKCORE guard. Retains all
+reference/PLL/SSC tuning, no secondary/PMU/CMU/mux changes. Hypothesis only.
+ARM64/USB wrapper+EP+resource+CSR tests/patch equality PASS. Current
+manifest11sources/6symbols/38strings; full CI next. Asked Download Mode;
+0225 remains installed; no new flash. Next verify build then BOOT trial.
+
 LATEST0225 physical: PHY power TEST=c->0 SEL0; later power snapshot
 TEST0/PIPE0, then endpoint0 setup failed. Power-bit release confirmed,
 endpoint functionality not established. Current failed command/PAR/core

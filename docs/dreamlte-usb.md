@@ -1,5 +1,16 @@
 # DREAMLTE USB bring-up evidence
 
+##0225 cmd2 persists;0226 common-block/free-clock candidate
+
+Physical0225 TEST0 yet first resource cmd2 active402/PAR0=1; CLK801b0049,
+PHYPIPE0. Samsung8895 CAL uses common_block_disable=false/CLKCORE and
+under PORTRESET clears CLK31/0,sets4/19,selects PHYPIPE free UTMI clock4,
+waits10us,releases reset then powers PHY.0226 preserves measured reference/
+PLL/SSC/divider fields while applying these controls on primary/CLKCORE
+only. Exact readback after500us; predicts CLK001b0058/PHYPIPE10. No
+secondary bank/CMU/PMU/mux changes. ARM64 and modeled suites PASS;
+physical clock/endpoint result remains unverified.
+
 ##0225 physical power-bit result
 
 User confirms TEST0000000c->00000000/SEL0 and later TEST0/PIPE0, followed

@@ -1,0 +1,53 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -149,6 +149,42 @@
+ 	return 0;
+ }
+ 
++/* Samsung8895 get_phyinfo selects CLKCORE/common_block_disable=false.
++ * CAL ss_enable configures the common block and free UTMI clock while
++ * PORTRESET is asserted, then releases reset before PHY power-up.
++ * Preserve the measured reference selector, divider, PLL and SSC tuning.
++ */
++static int
++dreamlte_usb_phy_clock_up(vm_offset_t phy)
++{
++	uint32_t sel = usb_rd(phy, 0x6c);
++	uint32_t before = usb_rd(phy, 0x10);
++	uint32_t pipe = usb_rd(phy, 0x0c);
++	if ((sel & 0x3fu) || before == 0xffffffffu || pipe == 0xffffffffu ||
++	    (before & (1u << 1)) || (before & (3u << 2)) != (2u << 2)) {
++		printf("DREAMLTE USB: unsupported PHY clock state CLK=%08x PIPE=%08x SEL=%08x\n",
++		    before, pipe, sel);
++		return -1;
++	}
++	uint32_t awake = (before & ~((1u << 31) | 1u)) |
++	    (1u << 4) | (1u << 19);
++	*(volatile uint32_t *)(phy + 0x10) = awake | (1u << 1);
++	__asm__ volatile("dsb sy" ::: "memory");
++	/* PHYPIPE bit4: 0=PHY clock, 1=free UTMI clock, per Samsung CAL. */
++	*(volatile uint32_t *)(phy + 0x0c) = pipe | (1u << 4);
++	__asm__ volatile("dsb sy" ::: "memory");
++	delay(10);
++	*(volatile uint32_t *)(phy + 0x10) = awake;
++	__asm__ volatile("dsb sy" ::: "memory");
++	delay(500);
++	uint32_t after = usb_rd(phy, 0x10);
++	uint32_t pipe_after = usb_rd(phy, 0x0c);
++	printf("DREAMLTE USB: PHY clock CLK=%08x->%08x PIPE=%08x->%08x\n",
++	    before, after, pipe, pipe_after);
++	if (after != awake || pipe_after != (pipe | (1u << 4))) return -1;
++	return 0;
++}
++
+ static int
+ dreamlte_usb_prepare(vm_offset_t dwc)
+ {
+@@ -174,6 +210,7 @@
+ 	 */
+ 	*(volatile uint32_t *)(dwc + 0xc200) = usb2 & ~((1u << 8) | (1u << 6));
+ 	if (dreamlte_usb_link_wake(phy)) return -1;
++	if (dreamlte_usb_phy_clock_up(phy)) return -1;
+ 	if (dreamlte_usb_phy_power_up(phy)) return -1;
+ 	/* LINK_SW_RESET restores USB2 low-power defaults on measured0220. */
+ 	usb2 = usb_rd(dwc, 0xc200);

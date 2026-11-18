@@ -1,10 +1,10 @@
 {
-  "description": "DREAMLTE0225 clears physically observed primary PHYTEST HSP/SSP power-down bits following Samsung CAL; strict primary mux guard, settle/readback and post-reset guard. ARM64/model checks pass; hardware effect untested.",
+  "description": "DREAMLTE0226 tests Samsung8895 common-block awake/free UTMI clock controls under port reset before primary PHY power release, preserving measured CLKCORE reference/PLL/SSC tuning. ARM64/models pass; hardware unverified.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "6cb58dc6032959bd53ba8c8e8321cbbe4240fa99d8bf56b1ec33cc8ff76f98f4",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "f12871fe8c05b43f52527054d656634ff845e5c5efee0add9d2171169f531659",
+    "bsd/dev/sweet_usb.c": "f12f2bc5865139a2ebe8a50471419aa133ce2165a0bb20921944db93cc2c8fda",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
@@ -49,7 +49,9 @@
     "DREAMLTE USB: event CSR verified",
     "DREAMLTE USB: PHY power TEST=",
     "DREAMLTE USB: PHY powered down after reset",
-    "DREAMLTE USB: unsupported PHY power mux"
+    "DREAMLTE USB: unsupported PHY power mux",
+    "DREAMLTE USB: PHY clock CLK=",
+    "DREAMLTE USB: unsupported PHY clock state"
   ],
   "symbols": [
     "_dreamlte_log_cursor",
