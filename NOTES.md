@@ -1,3 +1,10 @@
+ACTIVE2026-11-18~16:24UTC BOOT0089 CDC/capture93357 ACTIVE, UTCsynced
+16:21:00. Private79104fw stagedvalid0/load0/A55A/config720x1600 PASS.
+BothHIDclientsopen/inputstatus3. Logonlyidle10s30slices/events0/stopPASS.
+SB26 stillstartup1thread dyld/libobjc/libdispatch; normalbackboarddWI0/0.
+STREAMOFF, noHIDgestureyet. AwaitUI/startupeventloop then CAclient/result
+and visiblegesturetest. Userpostflashscreenquestionpending.
+
 ACTIVE2026-11-18~16:20UTC BOOT0089 flashed successfully using lowercase
 heimdall --boot. CI44192146474 SUCCESS exactfd1fc5e; artifact/checksum,
 unchanged0088ADT/1GiB/bootargs/loader-except-size PASS. Kernelb316c806...bf14,

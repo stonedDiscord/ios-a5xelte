@@ -2,6 +2,15 @@
 
 ## 2026-11-18: BOOT0089 CA-client candidate deployed
 
+CDC returned; single reader93357 is active. Volatile UTC sync read back
+1795018860=2026-11-18 16:21:00UTC. Private79104-byte firmware staging valid0
+and explicit RAM load result0, readyA55A/config20002AD4/1028/report20011580/60,
+geometry720x1600 sensors18/32 all pass. Ten-second log-only idle trial completed
+30slices/events0 and explicit stop. Both HID user clients opened; inputstatus3.
+SpringBoard26 samples still show startup (one thread, dyld/libobjc/libdispatch
+initialization); no HID gesture sent yet. Normal backboardd WIcreate flags
+20000000/20000002 return error0/kr0. Actual CA_CLIENT path remains untested.
+
 Full CI44192146474 succeeded for exact fd1fc5e59b7c9f3bee377bb1fb1a7c6541c42e7e.
 Downloaded artifact checksum verified; kernel SHA256
 b316c806e65c1cf7194012f14b6e2fef7c35782de68cadb783971a225d2cbf14.
