@@ -1,5 +1,12 @@
 # DREAMLTE USB bring-up evidence
 
+##0225 physical power-bit result
+
+User confirms TEST0000000c->00000000/SEL0 and later TEST0/PIPE0, followed
+by endpoint0 setup failed. Primary power-bit release works; no endpoint or
+USB traffic success. Exact failed command from0225 requested;0224 cmd2
+must not be treated as a measured0225 result. Clock/PLL readiness unproven.
+
 ##0225 verified hardware trial
 
 CI44316294206 SUCCESS;11source/6symbol/36string/profile and original BOOT

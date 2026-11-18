@@ -9,6 +9,13 @@ research/dreamlte/prepare-0225.py waits exact run, verifies11sources/
 User confirms Download Mode ready; host sees fresh056/04e8:685d. No
 handshake or flash before0225 verification. CI44316294206 still running.
 
+LATEST0225 physical: PHY power TEST=c->0 SEL0; later power snapshot
+TEST0/PIPE0, then endpoint0 setup failed. Power-bit release confirmed,
+endpoint functionality not established. Current failed command/PAR/core
+trace requested; do not assume0224 cmd2 still identifies0225 failure.
+Host no gadget/Download Mode; no live CI/prep/flash.0225 remains installed.
+Next exact same-boot command trace, then select source-supported change.
+
 CURRENT0225 INSTALLED: exact CI44316294206 SUCCESS at
 6943dd9061b0993cdcbd5917e9260547303e43b3.11sources/6symbols/36strings/
 profile PASS. Preparation14190 completed; no live CI/prep.

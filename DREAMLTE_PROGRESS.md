@@ -1,5 +1,29 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0225 PHY power release confirmed; exact endpoint fault pending
+
+- User reports PHY power TEST0000000c->00000000 SEL00000000 and
+  subsequent power snapshot TEST00000000 PIPE00000000, followed by
+  endpoint0 setup failed. Thus targeted power-bit release physically
+  succeeded and stayed clear through the reported failure snapshot.
+- This does not establish PHY clock/PLL readiness or working endpoints.
+  Current0225 failed command/status/PAR/core snapshot not yet supplied;
+  requested exact ep0 command and USB FAIL lines from this same boot.
+  Do not carry0224 cmd2 failure forward as an observed0225 command.
+- Host currently no1209:0001/no Download Mode. No live build/preparation/
+  flashing processes, new candidate or phone write. Installed0225.
+  Continue pinned-source clock/reset review while awaiting exact fault.
+
+
+- Reverified installed0225 exact artifact PASS:11 source hashes/6 symbols/
+  36 diagnostics/active profile. Source review finds further CAL setup
+  differences: ss_enable clears PHYCLKRST EN_UTMISUSPEND(bit31), applies
+  version-dependent COMMONONN(bit0), enables RETENABLEN(bit4), and sets
+  PHYPIPE PHY_CLOCK_SEL(bit4). Last measured CLK801b0049/PIPE0 differ, but
+  these are coupled reference/reset-path controls, not proof of next cause.
+  Do not apply an isolated clock-selection write before current command
+  trace and required reference/reset sequencing are established.
+
 ## 2026-11-18:0225 verified and BOOT flashed; PHY wake trace pending
 
 - Exact CI44316294206 SUCCESS at6943dd9061b0993cdcbd5917e9260547303e43b3.
