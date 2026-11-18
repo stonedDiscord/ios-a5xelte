@@ -1,3 +1,11 @@
+ACTIVE2026-11-18~20:16UTC0093userLOCKSCREENclock12:11FROZEN.
+KernelUTC20:15:26->45advances/all8usagepositive/SB25+backboardd56alive.
+DISPLAYvsync33647->34662done, swap40/copies34STUCK~3.5min; notifyattempts0,
+skips24859->25875 => callbackunset OR portnull, exactwhichunknown.
+Timerworks/no newframes; notfixproof. FreezeDEFERRED, no newbuild/flash.
+TOUCHON1592slices/434events; vmcompressor0/iohealthy. No touchstop/reboot.
+Capture97574/32555until~20:26UTC. Keepall8/1984MiB;0092/0090restorekept.
+
 ACTIVE2026-11-18~20:08UTC0093ALL8running+realuser/kernelusageticks.
 A756user12/sys179,A757user13/sys105; allA55alsoadvance;CPU0heaviest.
 Privatefw79104stagedvalid0/load0/A55A; TOUCHON1/2slices/events0, bothHIDopen/

@@ -17,7 +17,10 @@ validated eight-node ADT plus0160 A75 driver match and per-CPU usage probe.
 BOOT0093 now confirms all eight cores initialized with SGI checks. Per-core
 user/system tick deltas prove real work on every core, including both A75s.
 CPU0 remains busiest; capacity-aware scheduling and UI speedup are unproven.
-Freeze investigation remains deferred.
+BOOT0093 user reports frozen lock screen at12:11. Kernel time advances;
+display timer callbacks continue while swap/copy counts stop and notification
+attempts remain zero (missing callback or port). Cause/fix unproven.
+Freeze investigation remains deferred; all eight cores stay enabled.
 
 Latest2026-11-17 BOOT0087: continuous physical down/movement/lift have
 been measured on hardware. A120second log-only trial completed361slices/

@@ -1,5 +1,32 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: BOOT0093 lock screen frozen at12:11; live display counters narrow stall
+
+User reports stillonlockscreen/clock12:11. At20:15:26->20:15:45UTC livekernel
+returns1795032926->1795032945; timezone/displayoffset unestablished, so do not
+interpret12:11as actualUTC. All8perCPUuser/systemticks substantial: A75CPU6
+user1504/system3856,CPU7user1538/system3431. SameSpringBoard25/17threads and
+backboardd56/13threads mainCPU counters advance; sampledmainPCs eventloop.
+No capturedSpringBoardpanic/crash. VM14604free16KiBpages/compressor0,
+ioReady1/poisoned0; HIDstreamON1532->1592slices/434events. No touchstop,
+firmwareload,reboot or flash thisturn. Earlierstartupclaimupdated: physical
+lockscreenconfirmed, unlock/homeScreen notconfirmed on0093.
+
+Readonly0159display snapshots now give specificprogress:
+vsyncentry/done33647/33647 ->34662/34662;
+swapentry/done40/40 unchanged; copiedlayers34 unchanged;
+notifyattempts0/errors0/success0, skipped24859->25875.
+Lastswap10964001995ticks, copy10730482751ticks; snapshotnow16228702068ticks
+at26MHz =>~202.5seconds since submission/~211.5seconds since pixelcopy.
+Timeranditscompletioncontinue, but no newframes arrive. Actualnotifyhelper
+skipsif callbackzero OR portnull (type5isvalid); currentcounters cannot tell
+which missingfield/client. No notifications-type registrationlogcaptured.
+This doesNOTprove callbackregistration alonecausestall or abi fix; mayneed
+exactuserspaceAPI investigation. Kernelclock/coreavailability notwholefreeze.
+Freezeinvestigation remainsdeferred perprioruserinstruction; recordfinding,
+no speculative renderingchange/build/flash. Leaveall8/1984MiB/touchON.
+Singlecapture97574/host32555 until~20:26UTC; preserveowner.0092/0090kept.
+
 ## 2026-11-18: BOOT0093 touch restored; all8 cumulative usage continues advancing
 
 Private79104fwstage valid0/loadresult0/readyA55A; explicitHIDtouchstart and
