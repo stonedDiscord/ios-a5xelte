@@ -19,7 +19,12 @@
   manifest already archived. Installed0226; request fresh Download Mode;
   no0227 CI/flash yet, no USB functionality claim.
 
-## 2026-11-18:0226 verified and BOOT flashed; clock trace pending
+
+- Full0227 CI44331761587 atb11e4f6 dispatched. Preparation15325/script
+  research/dreamlte/prepare-0227.py waits exact head/run, downloads,
+  verifies11sources/6symbols/38strings and packages; never flashes.
+  Request fresh Download Mode; do not overwrite current physical evidence.
+\n## 2026-11-18:0226 verified and BOOT flashed; clock trace pending
 
 - Exact CI44324136923 SUCCESS at42d14a1dc97111ef63ee395158ff48e9e3ab60b7.
   Preparation44451 completed exact downloads/source verification/packaging.

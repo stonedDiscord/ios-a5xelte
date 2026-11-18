@@ -13,6 +13,10 @@ handshake or flash before0225 verification. CI44316294206 still running.
 research/dreamlte/prepare-0226.py waits exact run; verifies11sources/
 6symbols/38strings and packages; never flashes. Physical mode request pending.
 
+0227 CI44331761587 atb11e4f6 dispatched. Preparation15325 waits exact
+run/head and verifies/packages, never flashes; private script/log
+research/dreamlte/prepare-0227.py/.log. Fresh Download Mode request pending.
+
 0226 physical: only PHY clock CLK=801b0049->001b0048
 PIPE=0->10, then silence. Source guard rejects expected bit4 RETENABLEN
 readback, so it returns before PHY power-up and EP0; no cmd2 result from0226.
