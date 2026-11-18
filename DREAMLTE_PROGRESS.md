@@ -57,6 +57,22 @@
   the exact kernel/buildtree, then verifying actual content before packaging.
   No further USERDATA attempt or BOOT write until candidate checks complete.
 
+## 2026-11-18: USB0215 verified, flashed; runtime report pending
+
+- CI44256127913 SUCCESS at5439710b649202ada57dbef4fd50e061d57f18ed. Exact
+  artifact verification PASS: seven complete compiled source hashes, six
+  linked symbols and all active patch/profile hashes. Kernel SHA256
+  d0359a2566c1c9048c17f7c9f0d107ad10c428b5bc41870abb87ad35a790080a.
+- Preparation session67425 completed0. Separate BOOT0215 is18,432,016B,
+  SHA2565a484fa65b5e4ba3039562cd1bde43cea68faba732e19d4b7ba8391dd4fff17f.
+  Original ramdisk/second/DTBH/header fields preserved and payload/BOOT fit
+  verified; dreamlteusb=2. Exact manifests/logs in private ci-44256127913.
+- Fresh Download Mode device046 accepted BOOT-only0215: Heimdall100%, exit0,
+  upload/reboot successful.0215 now replaces0214. No USERDATA or protected
+  write in this flash; no Android restoration. Host immediate check finds
+  zero1209:0001; asked user for USB2CFG/reset/EP command and last screen line.
+  Physical enumeration/transfers remain unproven; root deployment incomplete.
+
 
 ## 2026-11-13: base changed to HEROLTE
 

@@ -2,6 +2,18 @@
 
 ## Active S8 handoff — 2026-11-18
 
+Latest:0215 is now installed. CI44256127913 SUCCESS at5439710; seven actual
+source/six symbol/profile checks PASS. Kernel SHA256
+d0359a2566c1c9048c17f7c9f0d107ad10c428b5bc41870abb87ad35a790080a.
+BOOT shim/out/dreamlte-xnu-0215.img,18,432,016B, SHA256
+5a484fa65b5e4ba3039562cd1bde43cea68faba732e19d4b7ba8391dd4fff17f.
+Heimdall BOOT100%, exit0, reboot successful from fresh Download Mode046.
+Immediate host check sees no1209:0001; user framebuffer report pending.
+No Android restoration. Latest write BOOT only; USERDATA remains possibly
+partial from failed upload. Exact files/logs research/dreamlte/ci-44256127913.
+Prepared0216 snapshot is still outside active profile and not flashed.
+The0214 screen reports below are historical; next diagnose0215 USB output.
+
 Verified0214 BOOT
 flashed successfully (Heimdall100%, exit0, reboot). User sees framebuffer
 text `SWEET USB: endpoint 0 setup failed`: physical console and XNU gadget
