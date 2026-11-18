@@ -17,6 +17,18 @@
   source hash updated. Full CI44256127913 at5439710 is in_progress (Build).
   Do not replace that run merely due to polling timeout.0215 is not flashed.
 
+- Continuation classified as progress: added prepared0216 failure-only EP
+  register snapshots outside active profile and actual-function EP command
+  tests.0215/0216 command parameter writes, delayed completion, status error
+  and bounded timeout pass across six physical endpoints; diagnostics add no
+  MMIO writes.0216 USB translation-unit ARM64 compile PASS; staged0215 source
+  restored and its df5d49b... hash rechecked. No new hardware trial claimed.
+- Exact0215 CI44256127913 remains live/in_progress. Preparation session67425
+  waits for that exact5439710 run, then downloads and verifies seven compiled
+  sources/six linked symbols before packaging a separate0215 BOOT. Script
+  research/dreamlte/prepare-0215.py; log prepare-0215.log; it never flashes.
+  User's preceding EP command/status screen line remains pending.
+
 
 ## 2026-11-13: base changed to HEROLTE
 

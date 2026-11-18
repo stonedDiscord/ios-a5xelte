@@ -1,0 +1,47 @@
+diff --git a/bsd/dev/sweet_usb.c b/bsd/dev/sweet_usb.c
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -361,5 +361,23 @@
+ }
+ 
++/* Failure-only snapshot; offsets from pinned Samsung DWC3 core.h.
++ * Preserve the first fault: no controller writes or recovery retries.
++ */
++#if defined(DREAMLTE)
++static void
++dreamlte_usb_ep_failure(unsigned ep, uint32_t cmd)
++{
++	printf("DREAMLTE USB FAIL: ep%u cmd%x reg=%08x\n",
++	    ep, cmd & 0xf, dwc_rd(DEPCMD(ep)));
++	printf("DREAMLTE USB FAIL: PAR0=%08x PAR1=%08x PAR2=%08x\n",
++	    dwc_rd(DEPCMDPAR0(ep)), dwc_rd(DEPCMDPAR1(ep)), dwc_rd(DEPCMDPAR2(ep)));
++	printf("DREAMLTE USB FAIL: GCTL=%08x GSTS=%08x USB2=%08x\n",
++	    dwc_rd(GCTL), dwc_rd(0xc118), dwc_rd(0xc200));
++	printf("DREAMLTE USB FAIL: DCTL=%08x DSTS=%08x EN=%08x\n",
++	    dwc_rd(DCTL), dwc_rd(DSTS), dwc_rd(DALEPENA));
++}
++#endif
++
+ static int
+ ud_epcmd(unsigned ep, uint32_t cmd, uint32_t p0, uint32_t p1, uint32_t p2)
+ {
+@@ -375,6 +393,9 @@
+ 			uint32_t status = (v >> 12) & 0xf;
+ 			if (status) {
+ 				printf("SWEET USB: ep%u cmd 0x%x status %u\n", ep, cmd & 0xf, status);
++#if defined(DREAMLTE)
++				dreamlte_usb_ep_failure(ep, cmd);
++#endif
+ 				return -1;
+ 			}
+ 			return 0;
+@@ -382,6 +403,9 @@
+ 		delay(1);
+ 	}
+ 	printf("SWEET USB: ep%u cmd 0x%x timeout\n", ep, cmd & 0xf);
++#if defined(DREAMLTE)
++	dreamlte_usb_ep_failure(ep, cmd);
++#endif
+ 	return -1;
+ }
+ 

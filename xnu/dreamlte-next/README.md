@@ -1,5 +1,15 @@
 # Prepared S8 USB follow-up
 
+0216-dreamlte-usb-ep-failure-snapshot.patch stays outside the active profile.
+It adds failure-only readbacks of the endpoint command/parameters, GCTL,
+GSTS, USB2PHYCFG, DCTL, DSTS and DALEPENA. No retries or recovery writes.
+Plain patch application, actual ARM64 USB translation-unit compilation and
+actual-function modeled completion/status/timeout tests pass. Not built into
+CI44256127913 and not flashed; only promote if0215 still needs diagnosis.
+
+Run tools/dreamlte-usb-epcmd-test.py against a staged sweet_usb.c to check
+the command flow and failure snapshot's absence of additional MMIO writes.
+
 2026-11-18 update:0215 moved to active xnu/dreamlte at5439710. Full build
 CI44256127913 is pending;0214 has now flashed and displays the XNU message
 `SWEET USB: endpoint 0 setup failed`. The preparation history below describes

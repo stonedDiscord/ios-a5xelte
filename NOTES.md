@@ -12,6 +12,12 @@ not flashed. Root conversion verified but USERDATA deployment incomplete.
 Next: identify EP0 failure command and compare pinned Samsung gadget.c;
 poll exact0215 CI and retain0214 diagnostic artifact.
 
+Preparation session67425 waits on exact44256127913 and will verify/package
+0215 without flashing (research/dreamlte/prepare-0215.py and .log). Pending
+0216 failure-only register snapshot is in xnu/dreamlte-next, outside profile;
+actual ARM64 compile and EP command host tests pass. Staged source restored
+to0215; no replacement CI or new flash. User's EP command line is pending.
+
 Target: Galaxy S8 SM-G950F, Exynos8895, dreamlte-bringup branch. Read
 DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md first. S7/A5/SWEET history
 below is donor evidence, not S8 behavior.
