@@ -1,5 +1,23 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18: framebuffer0214 boots to USB endpoint setup
+
+- Fresh Download Mode session accepted verified framebuffer0214 BOOT:
+  Heimdall upload reached100%, exited0 and rebooted. Log archived privately
+  at research/dreamlte/ci-44119574729/heimdall-boot-0214.log. Installed BOOT
+  SHA256 fa8b862c1eb4e054ca581d45cc5957f7327b8f4cfd3432375471d49aa85a14b3.
+- User reports visible `SWEET USB: endpoint 0 setup failed`. This verifies
+  physical framebuffer text and XNU reaching gadget EP0 setup, after DCTL
+  reset. The combined failure message does not identify which EP command
+  failed; preceding command/status or timeout line is still needed. Host
+  sees no gadget. No USB enumeration/transfer or userspace success claimed.
+- Android was not restored. Latest trial wrote only BOOT; converted USERDATA
+  deployment remains unsuccessful as documented below.
+- USB2 wake/timing0215 promoted into xnu/dreamlte at5439710; actual reviewed
+  source hash updated. Full CI44256127913 at5439710 is in_progress (Build).
+  Do not replace that run merely due to polling timeout.0215 is not flashed.
+
+
 ## 2026-11-13: base changed to HEROLTE
 
 - User requested origin https://github.com/wardevsa/ios-a5xelte.git,

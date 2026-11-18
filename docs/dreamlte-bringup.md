@@ -31,7 +31,8 @@ Package only after a successful S8-profile kernel build:
 A loader-only packaging smoke test exists in shim/out but has no XNU
 payload; never flash it. The loader halts on failure and logs in RAM.
 Candidate0214 adds loader, early XNU and normal serial framebuffer output;
-its physical scanout remains unverified. Do not restore Android for RAM-log
+its physical scanout is verified by the user's0214 XNU EP0 error text.
+USB enumeration remains unverified. Do not restore Android for RAM-log
 recovery. A live USB connection still requires verification of Exynos PHY
 initialization and DWC3 endpoint/DMA operation. See dreamlte-usb.md.
 

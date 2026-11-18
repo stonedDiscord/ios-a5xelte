@@ -1,6 +1,16 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
-## Active S8 handoff — 2026-11-17
+## Active S8 handoff — 2026-11-18
+
+Latest evidence overrides older status paragraphs below: verified0214 BOOT
+flashed successfully (Heimdall100%, exit0, reboot). User sees framebuffer
+text `SWEET USB: endpoint 0 setup failed`: physical console and XNU gadget
+EP0 setup reached; exact failed command/status is not yet reported. Host
+has no gadget. Android was not restored; this trial wrote only BOOT.
+USB2 wake/timing0215 is active at5439710; CI44256127913 Build in_progress,
+not flashed. Root conversion verified but USERDATA deployment incomplete.
+Next: identify EP0 failure command and compare pinned Samsung gadget.c;
+poll exact0215 CI and retain0214 diagnostic artifact.
 
 Target: Galaxy S8 SM-G950F, Exynos8895, dreamlte-bringup branch. Read
 DREAMLTE_PROGRESS.md and docs/dreamlte-bringup.md first. S7/A5/SWEET history

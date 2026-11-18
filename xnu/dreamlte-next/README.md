@@ -1,5 +1,10 @@
 # Prepared S8 USB follow-up
 
+2026-11-18 update:0215 moved to active xnu/dreamlte at5439710. Full build
+CI44256127913 is pending;0214 has now flashed and displays the XNU message
+`SWEET USB: endpoint 0 setup failed`. The preparation history below describes
+the earlier staging state, not current patch location or runtime success.
+
 0215-dreamlte-usb2-link-clock.patch is intentionally outside the active
 dreamlte profile. CI44119574729 builds0214 for the framebuffer trial; do not
 claim that artifact includes0215 or restart it merely because it is queued.
