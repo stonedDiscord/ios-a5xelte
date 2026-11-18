@@ -2,6 +2,13 @@
 
 ## Active S8 handoff — 2026-11-18
 
+Latest0220 CI44270585173 SUCCESS at a1ea67a281f8009de43e974490a974927ef4a8ca.
+Preparation96056/PID56313 and download57495 live; artifact read bytes
+increasing (19.2->22.1MB observed), not failed. Phone fresh Download Mode051
+ready, no handshake yet. Wait for prepared-boot.json plus independent hash,
+then BOOT-only trial. Installed still0219; no0220 flash/runtime proof yet.
+Older in-progress-CI wording below superseded; preparation remains active.
+
 0220 CI44270585173 confirmed in_progress at a1ea67a281f8009de43e974490a974927ef4a8ca.
 Preparation session96056/script research/dreamlte/prepare-0220.py waits,
 verifies nine sources/six symbols/fifteen strings then packages; never flashes.

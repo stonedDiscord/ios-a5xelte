@@ -1,5 +1,16 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-18:0220 CI success; artifact transfer live
+
+- Exact CI44270585173 at a1ea67a281f8009de43e974490a974927ef4a8ca
+  terminal SUCCESS. Preparation session96056/PID56313 remains live, child
+  gh download57495 transferring artifacts. Observed rchar increased from
+  19,208,157 to22,121,664 bytes; slow transfer is not a terminal failure.
+- Phone remains fresh Download Mode051/04e8:685d. No handshake/flash yet.
+  Installed BOOT still0219;0220 prepared-boot.json not yet produced. Wait
+  for exact-source/symbol/15-string/package and independent hash checks
+  before authorized BOOT-only flash. No replacement CI/download started.
+
 ## 2026-11-18:0219 physical PHY snapshot;0220 source-derived wake
 
 - User physical0219 dump: ep0 cmd2 reg00000402; PAR0=1/PAR1=0/PAR2=0;
