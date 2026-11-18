@@ -7,6 +7,9 @@ flashed successfully (Heimdall100%, exit0, reboot). User sees framebuffer
 text `SWEET USB: endpoint 0 setup failed`: physical console and XNU gadget
 EP0 setup reached; exact failed command/status is not yet reported. Host
 has no gadget. Android was not restored; this trial wrote only BOOT.
+User subsequently reports Apple_HFS IOMedia wait and failed NVRAM boot-picker
+reason write. Source confirms missing-root-media fallback; XNU continues past
+USB failure into root discovery. No S8 UFS provider/root mount or USB success.
 USB2 wake/timing0215 is active at5439710; CI44256127913 Build in_progress,
 not flashed. Root conversion verified but USERDATA deployment incomplete.
 Next: identify EP0 failure command and compare pinned Samsung gadget.c;

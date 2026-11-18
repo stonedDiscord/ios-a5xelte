@@ -29,6 +29,16 @@
   research/dreamlte/prepare-0215.py; log prepare-0215.log; it never flashes.
   User's preceding EP command/status screen line remains pending.
 
+- Additional physical report: Waiting on IOProviderClass IOMedia Content
+  Apple_HFS, then Failed to write boot-picker-bringup-reason to NVRAM.
+  Actual IOKitBSDInit.cpp confirms default Apple_HFS media matching and the
+  latter message in BSD_BOOTFAIL_MEDIA_MISSING handling. This establishes
+  execution beyond synchronous USB setup into root discovery, not a mounted
+  filesystem. USB setup returns on error; root progress does not prove USB.
+  No S8 UFS root provider exists yet and USERDATA deployment is incomplete.
+  NVRAM failure is a secondary missing-media diagnostic, not a demonstrated
+  cause of the EP0 setup failure. Host still has no gadget.
+
 
 ## 2026-11-13: base changed to HEROLTE
 
