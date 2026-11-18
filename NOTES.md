@@ -1,3 +1,14 @@
+ACTIVE 2026-11-18 ~21:07 UTC: BOOT0093 frame-update recovery VERIFIED.
+Idle follow-up: no Home or USB swipe injected. Physical gestures resumed
+swaps7051/copies7045 ->7175/7169 ->8736/8730. User explicitly confirms
+"Swipe responds and clock is current" after idle without pressing a button.
+Earlier one Home event recovered original incident. No permanent code fix
+or original cause claimed; no build/reboot/flash needed. All8/1984MiB/touchON
+preserved; final streaming1/11849slices/4728events, io ready1/poisoned0.
+Single capture PID109369 remains live, expires~21:44UTC; bounded watch done.
+Goal runtime/physical acceptance met. If recurrence, inspect activity/timers
+and stale scanout; do not use periodic synthetic Home as a purported fix.
+
 ACTIVE 2026-11-18 ~21:02 UTC: BOOT0093 physical UI recovered, no flash.
 One explicit HID Home restarted swaps/copies (40/34 -> 6428/6422).
 User confirms screen changed, then physical touch responds and clock advances.

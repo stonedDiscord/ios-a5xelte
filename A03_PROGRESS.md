@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-18: idle follow-up verifies responsive frames without another Home
+
+Continuation audit rechecked unchanged BOOT0093 and clean worktree, with
+single capture PID109369 still live. No rebuild/reboot/flash or input
+injection during this check. At21:04:49UTC swaps7051/copies7045; counters
+remained there through21:05:55 while physical event count4343 was unchanged.
+At21:06:09 physical down/move/up events arrived and swaps7175/copies7169
+advanced, without any new USB Home/swipe between those snapshots. User
+explicitly confirms "Swipe responds and clock is current" without pressing
+a button. At~21:06:42 swaps8736/copies8730, touch streaming1/slices11849/
+events4728; io ready1/poisoned0. Real frame copies and physical interaction
+are therefore verified after idle as well as immediately after recovery.
+
+The active frame-update incident is resolved by the one earlier Home event;
+current interactive behavior passes the requested goal's runtime check.
+This is not evidence of a permanent source-level repair or a proven original
+root cause. No new kernel image is needed for the observed working state.
+All eight cores/1984MiB and continuous touch remain enabled. If the symptom
+recurs, compare display activity/timer state and retained scanout before
+assuming a global kernel freeze. Do not introduce periodic Home injection.
+
 ## 2026-11-18: BOOT0093 physical UI recovers after one Home event
 
 On unchanged all-eight-core BOOT0093, one explicit USB HID Home press/release

@@ -4,7 +4,9 @@
 copies after the frozen 12:11 image. User confirms physical touch responds
 and clock advances. No kernel change/reboot/flash. All eight cores/1984 MiB
 and continuous touch forwarding remain enabled. Sustained/idle-wake
-reliability and original cause remain under investigation. Notification
+reliability beyond the tested interval and original cause remain unproven.
+Idle follow-up confirms physical gestures resume new frame copies without
+another Home; user confirms swipe responds and clock is current. Notification
 attempts remain zero while frames advance; that is not the sole cause.
 See newest A03_PROGRESS.md and NOTES.md; deferred status below is historical.
 
