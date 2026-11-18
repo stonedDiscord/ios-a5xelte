@@ -9,6 +9,10 @@ research/dreamlte/prepare-0225.py waits exact run, verifies11sources/
 User confirms Download Mode ready; host sees fresh056/04e8:685d. No
 handshake or flash before0225 verification. CI44316294206 still running.
 
+0226 CI44324136923 at42d14a1 dispatched. Preparation44451/script
+research/dreamlte/prepare-0226.py waits exact run; verifies11sources/
+6symbols/38strings and packages; never flashes. Physical mode request pending.
+
 LATEST0225 full fault confirms resource cmd2 still402/PAR0=1 despite
 TEST0. CLK801b0049/PHYPIPE0; other core/session readbacks unchanged.
 0226 candidate follows Samsung8895 common block awake/free UTMI clock

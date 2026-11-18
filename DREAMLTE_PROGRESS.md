@@ -23,6 +23,12 @@
   6symbols/38strings.0225 own reviewed manifest archived. Full CI next;
  0225 installed, physical Download Mode request sent, no new flash.
 
+
+- Full0226 CI44324136923 at42d14a1 dispatched. Preparation44451/script
+  research/dreamlte/prepare-0226.py waits exact head/run, downloads,
+  verifies11sources/6symbols/38strings and packages; never flashes.
+  Download Mode request pending. No physical0226 effect claimed.
+
 ## 2026-11-18:0225 PHY power release confirmed; exact endpoint fault pending
 
 - User reports PHY power TEST0000000c->00000000 SEL00000000 and
