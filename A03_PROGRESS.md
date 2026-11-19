@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0165 CI success; BOOT0098 flashed for core readiness
+
+CI44610344415 SUCCESS exact134902f50941015d3390dd94aa54b5d9894d5963.
+Artifactchecksum/exactuploadedGPU+AMFI/0165reversecheck/linkedmarkers/
+actualsourceASanUBSanPASS. KernelSHA256
+400e7df63ab9d69756404a021008eae4d30ab765a2fa12d5eead500b047be1c7.
+BOOT0098SHA256b26ed916c36c5fff7ed7e3ad1335c74e358529ce2dee23547d336fb554fdb523.
+Exact0094ADT/cmd599/all8/1984MiB/23reservations/SMP103485000/stockramdiskDT
+PASS. SyncedCDCDownload->Heimdalldetect->boot-onlyflashsuccess/reboot.
+Singlecapture30907 awaitsCDCthen1800s boot0098-gpu-cores-live.log. Need
+passivegpu/clockenable then explicitgpu cores, UTC/privateFW/touchrestore.
+Nohardwarecorecycle/jobclaimyet.0097/0096/0095 restoresretained.
+
 ## 2026-11-19: core-power CI live; private job format prepared
 
 CI44610344415 exact134902f remainsBuild/in_progress. Existingwatch34005;

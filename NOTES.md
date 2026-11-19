@@ -1,3 +1,9 @@
+ACTIVEBOOT0098 flashedboot-onlySUCCESS; capture30907 waitingCDC.
+CI44610344415/134902f source/checksum/markers/testsPASS. Kernel400e7df6...
+047be1c7;BOOTb26ed916...54fdb523;all8/1984MiB/ADT0094/cmd599/SMPPASS.
+Nextpassivegpu->gpu clocks->gpu cores exacttx; thenUTC/FWload/touchON.
+Noactualcorepower/jobyet.0097clockcheckpoint+0096/0095restoreskept.
+
 FOLLOWUP20:45UTC44610344415 stillBuild/in_progress; watcher34005live.
 Private0098pack+sourceverifier gpu-cores-work ready. Sharedjoblayouthosttests
 317329d/dd568aa PASS(includingprimaryMesaXML);notstagedinrunningkernel.
