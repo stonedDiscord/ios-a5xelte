@@ -85,6 +85,12 @@ static uint32_t usb_rd(uintptr_t base, unsigned off) {
 has_snapshot = 'dreamlte_usb_ep_failure' in source
 if has_snapshot:
     code += 'static void\n' + function('dreamlte_usb_ep_failure') + '\n'
+if 'dreamlte_usb_clocks_capture' in source:
+    code += r'''
+struct dreamlte_usb_clocks { unsigned unused; };
+static void dreamlte_usb_clocks_capture(struct dreamlte_usb_clocks *v) { v->unused = 0; }
+static void dreamlte_usb_clocks_print(const char *s, const struct dreamlte_usb_clocks *v) { (void)s; (void)v; }
+'''
 code += 'static int dreamlte_usb_post_reset_wake(uintptr_t phy) { (void)phy; assert(0); return -1; }\n'
 code += 'static int\n' + function('ud_epcmd') + '\n'
 code += r'''

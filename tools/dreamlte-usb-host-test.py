@@ -49,11 +49,12 @@ typedef uintptr_t vm_offset_t;
 #define DWC3_PA 0x10c00000
 #define DWC3_SIZE 0x10000
 static uint32_t core[0x10000 / 4], phy[0x100 / 4];
-static vm_offset_t dreamlte_phy;
+static vm_offset_t dreamlte_phy, dreamlte_fsys_cmu, dreamlte_top_cmu;
 static unsigned maps, starts, phy_reads;
 static unsigned delays, ignore_retention, force_suspend_readback;
 static int mode;
 static vm_offset_t ml_io_map(uintptr_t pa, unsigned size) {
+    if ((pa == 0x11000000 && size == 0x4000) || (pa == 0x15a80000 && size == 0x3000)) return (uintptr_t)core;
     maps++;
     if (pa == DWC3_PA && size == DWC3_SIZE) return (uintptr_t)core;
     assert(pa == 0x10e00000 && size == 0x100);

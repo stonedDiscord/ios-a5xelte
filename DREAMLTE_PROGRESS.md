@@ -1,5 +1,32 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+0232 adds read-only nine-register USB clock-tree snapshots from pinned
+cmucal-sfr.c: FSYS0 BUS/USB user mux, USB ACLK/reference/suspend gates,
+USB link Q-channel; top USB mux/divider/gate. Only after opt-in2, correct
+DWC3 ID and stopped-core check are CMU windows mapped. Capture at resource
+entry and before any timeout console printing; print saved values only.
+No new clock/gate/PHY/PMU/reset writes or endpoint reissue. New CMU mapped
+reads are source-supported but not yet tested on the phone.
+Actual ARM64 object and new source-derived CMU offset/base/order/read-only
+model PASS; existing wrapper/EP/resource/CSR/wake/console models PASS.
+Plain overlay from exact0231 source matches reviewed source. Manifest
+11sources/9symbols/50strings.0231 installed. Next full CI, then verified
+BOOT-only trial; physical0232 snapshots/USB functionality untested.
+
+
+## 0231 physical bus match; first resource cmd2 still times out — 2026-11-19
+
+User confirms bus bursts22220001->22220009, then ep0cmd0x2 timeout.
+POLL first=001b0048 last=001b0048 exit=001b0048 n=1000 wake=0.
+The Samsung INCR16 setting latches but does not resolve first resource.
+CLK31 stays clear across all1000 sampled polls and pre-log exit; no wake
+was triggered. Stop treating later failure-dump bit31 as the sampled cause.
+No1209:0001/ECM interface or working console.0231 remains installed.
+Next read the pinned FSYS0/upstream USB clock mux/gate/Q-channel state
+at resource entry and timeout before console output; no blind gate writes.
+Do not request another identical full DWC3/PHY dump.
+
+
 ## 0231 exact CI passed; BOOT flashed; USB still absent — 2026-11-19
 
 CI44493674078 SUCCESS at5b94db771f4c1404e3400cded1796cabd85466d9.
