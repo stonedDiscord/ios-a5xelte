@@ -1,3 +1,10 @@
+ACTIVECI44629497398 exact44b6f27 optimized2Dblit0169 running. Native256byte
+shaderpreloadR60R61; selectableverify(defaultON)+CPU/GPUtiming. Private
+exactfetch/sourceverifier/pack0102ready. NeedfullCIartifact/source/checksum
+then0102BOOT-only->clocks/blitON/4verifiedframes/fastmeasure. Keep0101current
+GPU4fullframesPASS/CPUfallback28framesPASS/touchON. Physicalstatuspending.
+Capture111070/56476 until~22:50UTC,revalidateownerbeforeuse.
+
 NEXT0169 2Dnativeblit256bytes(no per-pixeldivision),fullverifydefaultON,
 explicitgpu blit fast skipsreadbackonlyafter4verifiedframes; verify restores.
 AlwaysrequireIRQ/header/MMU/retirement. AddedGPUandCPUcopytimingns/counters.
