@@ -1,8 +1,8 @@
 # A03 GPU acceleration bring-up
 
-The running BOOT0095 compositor is software. No A03 GPU ID, completed GPU
-job, rendered pixel, EAGL/Metal device or GPU-accelerated SpringBoard frame
-has been measured. An A75 scheduling preference does not supply a GPU driver.
+The BOOT0098 compositor is software. GPU_ID90910010 and a complete core
+power cycle are verified. No completed GPU job, rendered pixel, EAGL/Metal
+device or GPU-accelerated SpringBoard frame has been measured.
 
 ## Hardware passive result, 2026-11-19
 
@@ -209,3 +209,14 @@ are requiredforPASS. Unprovenretirementquarantineswiredmemory, skipscore
 offandrefusesfurtheractivecommandsuntilreboot. NoGPUreset/scanout/IOSurface
 or arbitraryaddresscommands. Actualstatefulhosttests+ARM64compilePASS;
 fullCI/actualhardwarejobpending. AWRITE_VALUEisnotframebufferacceleration.
+
+## G57 v9 header correction before hardware submission
+
+Mesa pan_arch(9091)=9. v9 WRITE_VALUE header has reservedbit0=0 and128byte
+alignment; v7 Is64b bit0=1 does not apply. The earlier v7 field check was
+insufficient. Correct jobword4 is00010004 (type2/index1), not00010005.
+Payload offsets32/40/48 remain unchanged. Actual v9 schema now required by
+host test; actual fake submission asserts correctedword. No priorjobkernel
+flashed; CI44615378050 superseded beforehardwaretrial. NativeMesa24.3
+compiler built locally (hostC11compatibilityonly), generated128byteG57
+copyshader TLS/WLS0/preloadr60. Hostpreparation, nothardwarecopyexecution.

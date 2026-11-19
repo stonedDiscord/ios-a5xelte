@@ -59,7 +59,7 @@ static void fake_write(unsigned o,uint32_t v){
  if(o==0x2418){assert(v==1);updates++;return;}
  if(o==0x1004){assert(v==0x20002);bank[3][0x1000/4]&=~v;return;}
  if(o==0x18e0&&v==1){
-  starts++;assert(flushes==1&&bank[3][0x2430/4]==0x21000006);
+  starts++;assert(((uint32_t *)((uint8_t*)allocation+0x4000))[4]==0x10004);assert(flushes==1&&bank[3][0x2430/4]==0x21000006);
   assert(bank[3][0x2400/4]==0x20000000&&bank[3][0x2404/4]==1);
   assert(bank[3][0x2408/4]==0x888d8f88&&bank[3][0x240c/4]==0x4c8d);
   assert(bank[3][0x18c0/4]==0x2000000&&bank[3][0x18d8/4]==0x83300);

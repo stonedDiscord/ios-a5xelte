@@ -1,3 +1,9 @@
+CORRECTED0166 commit6c81044: G579091=arch9;v9headerbit0RESERVEDzero.
+word4now10004not10005;align128. Payload32/40/48unchanged. Earlier v7test
+insufficient. Actualv9XML+ASanUBSan+ARM64PASS;CI44615378050supersededbefore
+flash. NeedcorrectedCI.0098stillrunning/touchON. NativeMesa compilerbuilt,
+128bytecopyshaderdisassembled/TLSWLS0/preloadr60;hardwarecopypending.
+
 ACTIVECI44615378050 exactd5bc9d2 privatejob0166 queued/running.
 BOOT0098corepower powered1/shutdown1 VERIFIED;clocksID90910010;nojobyet.
 LatesttouchON839slices0events,ioReady1/poisoned0. Capture82938/30907.

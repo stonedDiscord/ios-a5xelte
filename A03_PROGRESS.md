@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: G57 v9 job header corrected before hardware trial
+
+NativeMesa24.3 compiler/disassembly generated128byteG57copyshader
+(TLS/WLS0/preloadr60),hostonly. G579091usesarch9/v9 jobheader,notv7:
+reservedbit0zero/align128. WRITE_VALUEword4corrected10005->10004;
+payloadoffsetsunchanged. Earlierprimaryv7testwasinsufficient. Actualv9XML/
+layout/submissionword/ASanUBSan/2BSDcompilePASS. Commit6c81044 supersedes
+CI44615378050 BEFOREflash; nojobkernelorjobhardwareyet. CorrectedCI next.
+Current0098corepowercheckpoint retained; noaccelerationclaim.
+
 ## 2026-11-19:0166 committed and CI44615378050 dispatched
 
 Exactd5bc9d2 fullCI44615378050 queued/running forprivateWRITE_VALUEselftest.
