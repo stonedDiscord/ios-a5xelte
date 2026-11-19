@@ -170,3 +170,22 @@ Waittiler/L2, thenSHADERon+120us. Bounded20ms polls; shutdownshaderfirst,
 thenTILER/L2; restore prioroverride only after allready/transitionsdrain.
 Timeoutstillrequests shutdown. NoMMU/jobs/IRQ configuration or startupcall.
 Actualsource statefulfakeMMIO tests and ARM64compile pass; hardware pending.
+
+## Private job layout preparation (host only)
+
+The shared host header tools/a03-gpu-job-layout.h prepares32KiB owned
+scratch: four4KiB GPU page tables, one descriptor page, one output page.
+The ARM64 host remains16KiB; physical allocations must be16KiB aligned
+and verified contiguous before this builder is used. No fixed physical
+scratch address or reserved carveout is assumed. Only GPUVA02000000 job
+and02001000 output map; page-table pages themselves are inaccessible via
+GPUVA. AArch64 descriptors useAF/RW/AttrIndex5(normalNC)/NX. Invalidentries2.
+
+Sources: pinned vendor mmu/mali_kbase_mmu_mode_aarch64.c and
+mmu/backend/mali_kbase_mmu_jm.c; Mesa mesa-24.3.0 src/panfrost/lib/genxml/v7.xml
+Job Header/Write Value Job Payload (header32bytes, type2/index1, payload
+address32,type40,immediate64value48). Header is a byte-layout builder only,
+not a driver and not staged in kernel. Hostsanitizer pagewalk verifies1024
+physical bases above4GiB, invalidneighbors, exact jobbytes/canary andbounds.
+No hardware MMU mapping or job was submitted. Core power hardware gate
+and runtime ownership/cache/completion/retirement still must be satisfied.
