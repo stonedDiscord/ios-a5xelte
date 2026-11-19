@@ -1,5 +1,23 @@
 # DREAMLTE USB bring-up evidence
 
+## 0228 verified and BOOT flashed — 2026-11-19
+
+CI44477847371 SUCCESS at b7c84d8154cf734dfdb41fbfcf1b178e144690ab.
+Preparation76070 complete;11 sources/6 symbols/42 diagnostics/profile PASS.
+Kernel SHA256 c67861458b1e82317dd95e791763010a8c71fae4bb0359c7eecf3a0eb711cda7.
+BOOT shim/out/dreamlte-xnu-0228.img,18,448,400B,SHA256
+0092510b75f8b05e7ea1fc733d1d587a7d16b9e2ccf7309bf96f32084fceedfd.
+Original BOOT components/header preserved; fit/independent hash PASS.
+Fresh Download Mode059 accepted BOOT100%; Heimdall exit0/reboot.
+Only BOOT written. Exact artifacts/reviewed source manifest/flash log:
+research/dreamlte/ci-44477847371. Private prepared manifest updated.
+Post-flash host: no1209:0001 gadget; lsusb also shows no Download Mode.
+Physical pre-reset/post-reset wake/endpoint-entry clock and first command
+trace requested, pending. No USB functionality established.0228 installed;
+no live CI/preparation/flash. Next act on same-boot physical trace.
+No Android or non-BOOT partition write.
+
+
 ##0227 bit31 restoration;0228 post-reset wake candidate
 
 0227 physical first resource cmd2 remains402/PAR0=1. TEST0/PHYPIPE10,
