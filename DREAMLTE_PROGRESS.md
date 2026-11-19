@@ -1,5 +1,13 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+
+0230 CI44486941058 dispatched at105d9746d00b514d1779bab9cecacbc89c5255f2.
+Preparation55579/script research/dreamlte/prepare-0230.py waits exact
+run/head, downloads/verifies11sources/6symbols/46strings and packages;
+never flashes. Log research/dreamlte/prepare-0230.log. Fresh Download Mode
+requested; no more0229 trace needed.0229 installed;0230 hardware untested.
+
+
 ## 0229 full fault unchanged; active-wake outcome unreported — 2026-11-19
 
 User reports cmd2 timeout/reg402/PAR0=1/PAR1/2=0; GCTL80e92004

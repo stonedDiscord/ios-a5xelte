@@ -2,6 +2,14 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0230 CI44486941058 dispatched at105d9746d00b514d1779bab9cecacbc89c5255f2.
+Preparation55579/script research/dreamlte/prepare-0230.py waits exact
+run/head, downloads/verifies11sources/6symbols/46strings and packages;
+never flashes. Log research/dreamlte/prepare-0230.log. Fresh Download Mode
+requested; no more0229 trace needed.0229 installed;0230 hardware untested.
+
+
+
 0230 local ARM64/model/patch-equality checks PASS. Adds pre-timeout-log
 first/last/exit CLK,n,wake summary; retains0229 one-shot wake policy.
 Model tests console-time bit31 change preserving captured clear samples.
