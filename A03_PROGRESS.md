@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0166 isolated WRITE_VALUE job candidate tested
+
+BOOT0098corepowercycle hardwarePASS remainscheckpoint; privateFWload0/
+readyA55A andcontinuousHIDON1/slice1restored. Nojobonhardwareyet.
+0166 adds explicitgpu job throughvalidatedcorecycle. Own32KiBcontiguous
+allocation(NULLphysicalarg avoidsbelow4GiBmask);checkevery4KiBgranule+end
+withinmanaged1984MiB, retainwiredafteranysubmission. AArch644KiBtables map
+onlyjob/outputGPUVA;normalNCpages/NX;CPUcacheflushbefore/afterownership.
+AS0/JS1/features/IRQmasks/inheritedstatechecks;boundedASupdate/jobpoll/
+ownedJS1hardstop/retirement;disableASandrestorebeforecorepoweroff.
+CompletionrequiresdoneIRQ/nofault/headerexception1/exact64bitresult.
+Unprovenretirementquarantineswiredscratch,skipscoreshutdownandrefuses
+furtheractiveGPUcommandsuntilreboot. NoIOSurface/scanout/userspaceABI.
+ActualsourceASanUBSan allocation/contiguity/ownership/ASrestore/cache/
+completion/fault/timeout/quarantine/no-freechecksPASS;primaryMesalayout
+and2BSDARM64compilesPASS;112profile stage. FullCI/hardwarejobpending.
+
 ## 2026-11-19: BOOT0098 GPU core power cycle verified
 
 Explicit gpu clocks tx1 repeats GPU_ID90910010/core11/mem11/sys31.

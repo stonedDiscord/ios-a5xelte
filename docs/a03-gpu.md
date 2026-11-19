@@ -196,3 +196,16 @@ issue list omitsTTRX3485 (r0p0 needs dummy-job workaround); do not assume
 all Valhall revisions need the private valhall-1691526 blob. Shader quirks
 and full render jobs still require their own validation. Primary XML field
 correspondence is optionally tested with --mesa-xml PRIVATE/v7.xml.
+
+##0166 private WRITE_VALUE job candidate
+
+Explicit gpu job extends the hardwarevalidated corecycle with owned32KiB
+contiguous scratch and AArch644KiBtables. Verifyeachgranule/endphysical,
+normalNCGPUdata+explicitCPUcacheflush, AS0/JS1ownership andIRQmaskszero.
+Retainwiredscratchafteranysubmission. BoundedASupdate/jobwait/JS1hardstop;
+requireJS_STATEsnapshotinactive/NEXTzero, thenASdisable/update/restore
+beforecorepoweroff. IRQdone+nofault+headerexception1+exactimmediate64output
+are requiredforPASS. Unprovenretirementquarantineswiredmemory, skipscore
+offandrefusesfurtheractivecommandsuntilreboot. NoGPUreset/scanout/IOSurface
+or arbitraryaddresscommands. Actualstatefulhosttests+ARM64compilePASS;
+fullCI/actualhardwarejobpending. AWRITE_VALUEisnotframebufferacceleration.

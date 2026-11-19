@@ -1,3 +1,11 @@
+NEXT0166privategpu job candidate tested; BOOT0098corecyclePASSretained.
+Own32KiB/check4KiBcontiguity/AS0JS1ownership/AArch64tables/cacheflush/
+exactresult+IRQ+header;boundedretirement/restoration;quarantineifuncertain,
+neverfreependingDMA;activeGPUcommandsblockedafterpoison. NoIOSurfaceyet.
+ActualASanUBSan+primaryMesaXML+2BSDARM64+112profilePASS. NeedfullCI then
+0099BOOT-only/clocks/gpu cores check/gpu job. TouchON/FWload0A55Arestored.
+Capture82938/30907 owns0098log. Preserve0098/0097restores.
+
 ACTIVE21:01UTC BOOT0098 COREPOWER VERIFIED: tx2powered1/shutdown1,
 shader1/tiler1/L2=1whileon/PMU08000000;fault0/IRQ700after. Clocks+ID90910010.
 NoGPUjob/renderingyet. iohealthy/UTCsynced. FWstaging18079 inprogress,
