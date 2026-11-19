@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0165 vendor core-power cycle candidate
+
+0097clockenable persists: repeatedpassiveGPU_ID90910010/status100/core11/
+mem11/sys31. TouchcontinuousON495slices0events after firmware restore;
+physicalUIunverified. NojobsorGPUcorepower requests onhardwareyet.
+0165 explicit gpu cores requires exact90910010/onecoretopology, inherited1V,
+topbusclocksON, allready/transitionbitszero and noGPUbusy/fault. Pinnedvendor
+mali_kbase_pm_driver.c writesPWR_KEY2968a819/OVERRIDE1f01e0078 beforepoweron;
+JMsequencepowersTILER(firstL2implicit), waittiler/L2, thenSHADER+120us.
+Allwaitsbounded20ms; shutdownshaderthen tiler/L2,restoreoverrideonlyafter
+ready/transitiondrain. Timeoutstillrequestsshutdown; doesnotpretendcancel.
+Actualsource statefulfakeMMIO ASanUBSan ordering/ownership/allfailurestages/
+shutdownandrestorePASS. GPU+AMFI2BSD ARM64MachOcompilesPASS;111profilestage.
+Nojob/MMU/IRQ/PLL/voltagewrites/startupcall. FullCI/hardwarecycle pending.
+
 ## 2026-11-19: BOOT0097 GPU clocks and actual GPU_ID verified
 
 Explicit gpu clocks transaction1 succeeds on BOOT0097. Beforecore10/mem10/

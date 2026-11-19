@@ -1,3 +1,11 @@
+NEXT0165gpu cores candidate prepared/tested; BOOT0097unchanged.
+VendorPWRKEY/OVERRIDEthenTILER+L2readythenSHADER120us;20msboundedwaits,
+shutdownreverse/overrideonlyafterdrain. ExactID/topology/ownershipguards.
+ActualstatefulMMIOASanUBSan+2BSDARM64+111profilePASS. NeedfullCI->0098BOOT
+then gpu/passive beforeexplicitgpu cores. Nojobs/accelerationyet.
+Latest0097ID90910010persists/leaf11,11,31; touchON495slices0events.
+Singlecapture75107/1149 until~21:01UTC. Preserve0097clockcheckpoint/restores.
+
 ACTIVE20:32UTC BOOT0097 GPUCLOCKS+ID VERIFIED! gpu clocks tx1 ID90910010,
 status100/shader1/tiler1/L2=1. core10/mem10/sys30->11/11/31; PLLdecode
 1535999998Hz;DVFSCGM1003/voltage0;force10102/state07000000unchanged.

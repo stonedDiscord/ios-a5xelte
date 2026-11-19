@@ -160,3 +160,13 @@ backend/gpu/mali_kbase_pm_driver.c: before each power-on PWR_KEY050 gets
 2968a819, PWR_OVERRIDE1 at058 getsF01E0078; tiler power brings firstL2,
 waittiler+L2, then shader power and120us delay. Needboundedhardwarevalidation
 and ownership/rollback before job submission. Do not reuse donor PMIC/MMIO.
+
+##0165 core-power cycle candidate
+
+Explicit gpu cores validates measuredID90910010, one-core masks, exact
+inherited1V/top/bus/clockstate, no inheritedready/transitions and noGPUfault.
+VendorPWRKEY/OVERRIDE precede TILERon; firstL2 follows tiler automatically.
+Waittiler/L2, thenSHADERon+120us. Bounded20ms polls; shutdownshaderfirst,
+thenTILER/L2; restore prioroverride only after allready/transitionsdrain.
+Timeoutstillrequests shutdown. NoMMU/jobs/IRQ configuration or startupcall.
+Actualsource statefulfakeMMIO tests and ARM64compile pass; hardware pending.

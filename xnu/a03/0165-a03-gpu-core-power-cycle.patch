@@ -1,0 +1,130 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -250,4 +250,102 @@
+     (void)a03_gpu_update(a03_gpu_apb, 4, 1, 0);
+     printf("A03 GPU clocks: owned leaf gates restored off; stop\n");
+ }
++
++/* Explicit core power cycle, pinned vendor mali_kbase_pm_driver.c.
++ * No jobs/AS mappings exist; refuse inherited ready/transitioning cores.
++ * Never copy donor PMIC or core-control addresses. */
++static void
++a03_gpu_write(unsigned offset, uint32_t value)
++{
++    *(volatile uint32_t *)(a03_gpu_regs + offset) = value;
++    __asm__ volatile("dsb sy" ::: "memory");
++}
++
++static int
++a03_gpu_wait_cores(unsigned ready, unsigned transition, uint32_t expected)
++{
++    for (unsigned i = 0; i < 2000; i++) {
++        if (a03_gpu_read(a03_gpu_regs, ready) == expected &&
++            !a03_gpu_read(a03_gpu_regs, transition)) return 1;
++        delay(10);
++    }
++    printf("A03 GPU cores: timeout ready[%x]=%08x trans[%x]=%08x expected=%x\n",
++        ready, a03_gpu_read(a03_gpu_regs, ready), transition,
++        a03_gpu_read(a03_gpu_regs, transition), expected);
++    return 0;
++}
++
++static void
++a03_gpu_core_on(unsigned offset)
++{
++    a03_gpu_write(0x50, 0x2968a819U);
++    a03_gpu_write(0x58, 0xf01e0078U);
++    a03_gpu_write(offset, 1);
++}
++
++void a03_gpu_cores(void);
++void
++a03_gpu_cores(void)
++{
++    uint32_t pd, voltage;
++    if (!a03_gpu_supply_status(&pd, &voltage) || (pd & 8U) ||
++        (voltage & 0x1ffU) != 320U || !a03_gpu_pmu || !a03_gpu_aon || !a03_gpu_apb || !a03_gpu_regs) {
++        printf("A03 GPU cores: run passive gpu after validated clocks; stop\n");
++        return;
++    }
++    if (!a03_gpu_domain_accessible(a03_gpu_read(a03_gpu_pmu, 0x2c4),
++        a03_gpu_read(a03_gpu_pmu, 0x500), a03_gpu_read(a03_gpu_aon, 0)) ||
++        a03_gpu_read(a03_gpu_regs, 0) != 0x90910010U ||
++        (a03_gpu_read(a03_gpu_apb, 4) & 0x771U) != 0x11U ||
++        (a03_gpu_read(a03_gpu_apb, 8) & 0x771U) != 0x11U ||
++        (a03_gpu_read(a03_gpu_apb, 12) & 0x71U) != 0x31U) return;
++    /* Exact one-core topology and all high/ready/transition masks off. */
++    for (unsigned i = 0; i < 3; i++) {
++        if (a03_gpu_read(a03_gpu_regs, 0x100 + i * 16) != 1 ||
++            a03_gpu_read(a03_gpu_regs, 0x104 + i * 16) ||
++            a03_gpu_read(a03_gpu_regs, 0x140 + i * 16) ||
++            a03_gpu_read(a03_gpu_regs, 0x144 + i * 16) ||
++            a03_gpu_read(a03_gpu_regs, 0x200 + i * 16) ||
++            a03_gpu_read(a03_gpu_regs, 0x204 + i * 16)) {
++            printf("A03 GPU cores: inherited core ownership or topology; stop\n");
++            return;
++        }
++    }
++    uint32_t status = a03_gpu_read(a03_gpu_regs, 0x34);
++    uint32_t fault = a03_gpu_read(a03_gpu_regs, 0x3c);
++    uint32_t irq = a03_gpu_read(a03_gpu_regs, 0x20);
++    if ((status & 0xfU) || fault || (irq & 0x81U)) {
++        printf("A03 GPU cores: busy/fault status=%08x fault=%08x irq=%08x; stop\n",status,fault,irq);
++        return;
++    }
++    uint32_t override = a03_gpu_read(a03_gpu_regs, 0x58);
++    /* JM vendor path powers tiler, which powers first L2; no extra L2 request. */
++    a03_gpu_core_on(0x190);
++    int powered = a03_gpu_wait_cores(0x150, 0x210, 1) &&
++        a03_gpu_wait_cores(0x160, 0x220, 1);
++    if (powered) {
++        a03_gpu_core_on(0x180);
++        delay(120);
++        powered = a03_gpu_wait_cores(0x140, 0x200, 1);
++    }
++    printf("A03 GPU cores: on result=%d shader=%08x tiler=%08x l2=%08x pmu=%08x; no jobs\n",
++        powered, a03_gpu_read(a03_gpu_regs, 0x140), a03_gpu_read(a03_gpu_regs, 0x150),
++        a03_gpu_read(a03_gpu_regs, 0x160), a03_gpu_read(a03_gpu_pmu, 0x500));
++    /* Request shutdown even after timeout: never assume a timed-out request
++     * was cancelled. Keep override until all pending power transitions drain. */
++    a03_gpu_write(0x1c0, 1);
++    int off = a03_gpu_wait_cores(0x140, 0x200, 0);
++    if (off) {
++        a03_gpu_write(0x1d0, 1);
++        a03_gpu_write(0x1e0, 1);
++        off = a03_gpu_wait_cores(0x150, 0x210, 0) &&
++            a03_gpu_wait_cores(0x160, 0x220, 0);
++    }
++    if (off) {
++        a03_gpu_write(0x50, 0x2968a819U);
++        a03_gpu_write(0x58, override);
++    }
++    printf("A03 GPU cores: cycle powered=%d shutdown=%d irq=%08x fault=%08x; no jobs\n",
++        powered, off, a03_gpu_read(a03_gpu_regs, 0x20), a03_gpu_read(a03_gpu_regs, 0x3c));
++}
+ #endif
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -613,12 +613,13 @@
+ extern void a03_gpu_probe(void);
+ extern void a03_gpu_power(void);
+ extern void a03_gpu_clocks(void);
++extern void a03_gpu_cores(void);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power|gpu clocks creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power|gpu clocks|gpu cores creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -643,6 +644,7 @@
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
+  else if(!strcmp(command,"gpu power"))a03_gpu_power();
+  else if(!strcmp(command,"gpu clocks"))a03_gpu_clocks();
++ else if(!strcmp(command,"gpu cores"))a03_gpu_cores();
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);
