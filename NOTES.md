@@ -1,3 +1,10 @@
+NEXT0170 acceptedcompositorframeboundedreplay1/4/8 forrepeatabletiming.
+BOOT0102actual2DfourfullframesPASS verified4/completed4;fullreadbacktotal
+836191307ns/last173059846ns. Fast+CPU20sbenchzeroFrames=>INCONCLUSIVE,
+GPUON/verify1restored. NoFPS/speedupclaim. TouchON/iohealthy/capture123073.
+ReplayhostC++ASanUBSan+GPUregression/ARM64PASS;needfullCI->0103BOOT-only.
+ReplaynotphysicalUIproof. Physicalscreenquestionstillpending. NoHome.
+
 FOLLOWUP22:47UTC BOOT0102clocksID90910010/blitON1/verify1;UTC1795128362.
 FWload0/A55A/touchONrestored. Timingparserliveallfields;frames0yet,GUIpaging
 storageadvances/iohealthy. Await4verified2Dframes->fasttiming. Capture123073/

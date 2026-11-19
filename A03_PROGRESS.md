@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0102 2D hardware PASS; repeatable replay candidate0170
+
+Actual720x1600 swaps1..4 each1152000pixels/mismatches0/done1/retired1/
+verify1/PASS1. verified4/completed4/frames4/pixels4608000/fallback0/quarantine0.
+Totalverifiedcopy836191307ns; last173059846ns. Firsttwo169.342346ms and
+325.702ms include fullreadback/cache/map/power/scheduling, NOTFPSclaim.
+Two20second fast/CPUbenchmark windows hadzeroactualcopies despitebounded
+swipes; correctlyreported inconclusive andrestoredGPUON/verify1. No fast
+hardwarecopyor speedupclaim. TouchON/restoredUTC/iohealthy.
+
+0170 adds explicit display replay1|4|8 oflastacceptedcompositorrecord.
+Replays holdexistingswaplock, takefreshsurface references viaactualswap,
+nevercreatepixels/surfaces; boundedcount1..8/quarantinebreak. Benchmark
+--replay enables same-frame CPU/verify/fast comparison without user timing.
+ActualreplaycontrolC++ ASanUBSan bounds/lock/record/quarantinePASS; existing
+GPUregressionPASS;GPU/AMFI ARM64compilePASS. NeedfullCIthen0103BOOT-only.
+Replayisdiagnosticframe resubmission, notphysicalUIanimation/acceptance.
+
 ## 2026-11-19: BOOT0102 running, touch restored, timing parser live
 
 ActualclocksID90910010/gates11,11,31; blitON1/verify1. UTC1795128362synced.

@@ -1,0 +1,79 @@
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -617,6 +617,7 @@
+ extern void a03_gpu_job(void);
+ extern void a03_gpu_copy(void);
+ extern void a03_gpu_blit_control(unsigned);
++extern void a03_display_replay(unsigned);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+@@ -653,6 +654,10 @@
+  else if(!strcmp(command,"gpu blit on"))a03_gpu_blit_control(1);
+  else if(!strcmp(command,"gpu blit off"))a03_gpu_blit_control(0);
+  else if(!strcmp(command,"gpu blit"))a03_gpu_blit_control(2);
++ else if(!strcmp(command,"display replay 1"))a03_display_replay(1);
++ else if(!strcmp(command,"display replay 4"))a03_display_replay(4);
++ else if(!strcmp(command,"display replay 8"))a03_display_replay(8);
++
+  else if(!strcmp(command,"gpu blit fast"))a03_gpu_blit_control(3);
+  else if(!strcmp(command,"gpu blit verify"))a03_gpu_blit_control(4);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -98,6 +98,8 @@
+ OSDefineMetaClassAndStructors(IOMobileFramebuffer, IOService);
+ 
+ class IOMobileFramebufferUserClient;
++class AppleCLCD;
++static AppleCLCD *a03_replay_fb;
+ 
+ class AppleCLCD : public IOMobileFramebuffer {
+ 	OSDeclareDefaultStructors(AppleCLCD);
+@@ -118,6 +120,8 @@
+ 	OSArray      *fClients;
+ 	uint32_t      fSwapID;
+ 	bool          fConsolePaused;
++    bool fReplayValid;
++    uint8_t fReplayRecord[SWEET_FB_SWAP_REC_SIZE];
+ 
+ 	bool start(IOService *provider) APPLE_KEXT_OVERRIDE;
+ 	void addClient(IOMobileFramebufferUserClient *client);
+@@ -188,6 +192,7 @@
+ 	}
+ 	fSwapID = 0;
+ 	fConsolePaused = false;
++    fReplayValid=false;a03_replay_fb=this;
+ 	fVsync->setTimeoutUS(SWEET_FB_VSYNC_US);
+ 
+ 	setProperty(kIOUserClientClassKey, "IOMobileFramebufferUserClient");
+@@ -348,12 +353,29 @@
+             uint64_t ns=0;absolutetime_to_nanoseconds(mach_absolute_time()-copyBegin,&ns);
+             if(copied){a03_fb_inc(&a03_display_stats.gpuCopies);__atomic_add_fetch(&a03_display_stats.gpuNs,ns,__ATOMIC_RELAXED);}
+             else{a03_fb_inc(&a03_display_stats.cpuCopies);__atomic_add_fetch(&a03_display_stats.cpuNs,ns,__ATOMIC_RELAXED);}
++            memcpy(fReplayRecord,rec,sizeof(fReplayRecord));fReplayValid=true;
+ 			a03_fb_inc(&a03_display_stats.copies);
+ 			a03_fb_set(&a03_display_stats.copyAt, mach_absolute_time());
+ 		}
+ 		s->release();
+ 	}
+ 	a03_fb_inc(&a03_display_stats.swapDone);
++}
++
++/* Explicit bounded measurement of a previously accepted compositor record.
++ * Retake surface references via swap; never manufacture a surface or pixel. */
++extern "C" void a03_display_replay(unsigned count);
++extern "C" void a03_display_replay(unsigned count) {
++    AppleCLCD *fb=a03_replay_fb;
++    if(!fb || !count || count>8){IOLog("A03 REPLAY: unavailable or count outside1..8\n");return;}
++    IOLockLock(fb->fLock);
++    if(!fb->fReplayValid || a03_fb_gpu_quarantined){IOLockUnlock(fb->fLock);IOLog("A03 REPLAY: no accepted frame or quarantined\n");return;}
++    uint8_t record[SWEET_FB_SWAP_REC_SIZE];memcpy(record,fb->fReplayRecord,sizeof(record));
++    uint64_t before=a03_fb_read(&a03_display_stats.copies),start=mach_absolute_time();
++    for(unsigned i=0;i<count && !a03_fb_gpu_quarantined;i++)fb->swap(record);
++    uint64_t ns=0;absolutetime_to_nanoseconds(mach_absolute_time()-start,&ns);
++    IOLog("A03 REPLAY: requested=%u copied=%llu elapsed-ns=%llu quarantined=%u\n",count,a03_fb_read(&a03_display_stats.copies)-before,ns,a03_fb_gpu_quarantined?1:0);
++    IOLockUnlock(fb->fLock);
+ }
+ 
+ bool

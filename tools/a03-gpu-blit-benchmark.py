@@ -49,7 +49,7 @@ def report(before,after,mode):
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--log',type=Path,required=True)
     p.add_argument('--mode',choices=['cpu','verify','fast'],required=True)
-    p.add_argument('--seconds',type=float,default=15);a=p.parse_args()
+    p.add_argument('--seconds',type=float,default=15);p.add_argument('--replay',type=int,choices=[1,4,8],help='0170: replay accepted compositor frame instead of waiting');a=p.parse_args()
     if not 1<=a.seconds<=60:p.error('--seconds must be1..60')
     with a.log.open('rb') as log,Probe() as probe:
         original=snapshot(probe,log)
@@ -61,8 +61,11 @@ def main():
             before=snapshot(probe,log)
             if before['enabled']!=(a.mode!='cpu'):raise RuntimeError('Mode did not take effect')
             if a.mode!='cpu' and before['verify']!=(a.mode=='verify'):raise RuntimeError('Verification policy did not take effect')
-            print('Measuring '+a.mode+' for '+str(a.seconds)+' seconds; use the phone now.',flush=True)
-            time.sleep(a.seconds)
+            if a.replay:
+                print(command(probe,log,'display replay '+str(a.replay)),end='',flush=True)
+            else:
+                print('Measuring '+a.mode+' for '+str(a.seconds)+' seconds; use the phone now.',flush=True)
+                time.sleep(a.seconds)
             after=snapshot(probe,log);print(json.dumps(report(before,after,a.mode),indent=2),flush=True)
         finally:
             command(probe,log,'gpu blit '+('verify' if original['verify'] else 'fast'))
