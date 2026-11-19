@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0164 CI success and BOOT0097 flashed
+
+CI44606600103 SUCCESS exact5e1a464a1a8698ee410b159c42c7f7a903c376b1.
+Downloaded artifacts checksumPASS; uploaded GPU/AMFI source exactmatches
+localtestedsource,0164reversecheckPASS. Linkedclock/SMP/A75markersPASS.
+KernelSHA25621f29fb5e015583a1606b8389e38a1db312f9bafdad04230ef026d2fc2bfc253.
+BOOT0097SHA256198c4b151668d11cad5d4131ee08e9a2bceb7ec14505d290492a4dbc677d812b.
+Same0094inputADT/599bytecmdline/all8/1984MiB,23reservations/SMP103485000/
+stockramdiskDTPASS. ActualASanUBSanclocktestsrepeatPASS. CDCsyncedDownload,
+Heimdalldetect and boot-onlyflash100percent/success/reboot.0096/0095restores
+retained. Singlecapture1149 awaitsCDC then1800s boot0097-gpu-clocks-live.log.
+Needboothealth/gpu clocks transaction, UTC/touchrestore. Noactualclockenable,
+GPU_ID/job/accelerationclaim until hardwarelogs. Nootherpartitionflashed.
+
 ## 2026-11-19:0164 CI44606600103 running;0096 preserved
 
 Committed5e1a464a1a8698ee410b159c42c7f7a903c376b1; fullCI44606600103

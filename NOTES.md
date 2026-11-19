@@ -1,3 +1,10 @@
+ACTIVE20:30UTC BOOT0097flashSUCCESS boot-only; capture1149 waitingCDC.
+CI44606600103 SUCCESS exact5e1a464/source/checksum/markers/hosttestsPASS.
+Kernel21f29fb5...c2bfc253;BOOT198c4b15...77d812b. Sameall8/1984MiB/cmd599/
+ADT0094/23reservations/SMPtarget103485000/stockramdiskDTPASS.
+NextCDCboothealth->gpu clocks exacttransaction->UTC/privateFW/touchON.
+Noactualclocks/GPU_ID/jobs yet;0096/0095restores kept. Nootherpartitionwrite.
+
 FOLLOWUP20:20UTC CI44606600103 exact5e1a464 stillBuild/in_progress;
 watch94270confirmedlive, noartifacts yet. Actualmux/dividerguardexhaustion
 added f6327fe PASS; codeunchangedfromCI. BOOT0096 remainsall8/touchON;
