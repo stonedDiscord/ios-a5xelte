@@ -1,5 +1,26 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0231 exact CI passed; BOOT flashed; USB still absent — 2026-11-19
+
+CI44493674078 SUCCESS at5b94db771f4c1404e3400cded1796cabd85466d9.
+Exact11-source/9-symbol/47-diagnostic/profile verification PASS, including
+linked RAM readers and UDP sender. Kernel SHA256
+2e28df029b20dc6cea6c8d867de0dddb5918a98b589ed3526beeaaf94725a202.
+BOOT shim/out/dreamlte-xnu-0231.img,18,464,784B,SHA256
+780144a38c5e180c7014a777053c81e8cbffa2ebe4350daf94162cd5518f4222.
+Original BOOT components/header/payload/fit/hash PASS. One buildtree TLS
+transfer failed, preserved privately; exact-run retry verified successfully.
+Fresh Download Mode062 accepted BOOT100%; Heimdall exit0/reboot. Only
+BOOT written. Artifacts/manifests/flash log research/dreamlte/ci-44493674078.
+0231 installed. Host post-flash no1209:0001 ECM gadget or Download Mode;
+EP0 checker fails absence. Requested physical bus-bursts readback and
+resources/running or command/POLL result. No working USB console claimed.
+Host watcher11376 is bounded20min and captures only exact ECM identity;
+its log research/dreamlte/check-0231-host.log. Assigning host IP may require
+user sudo (host sudo-n unavailable); do EP0 check first if gadget appears.
+Do not reboot current0231 before its physical result; no live CI/flash.
+
+
 0231 CI44493674078 dispatched at5b94db771f4c1404e3400cded1796cabd85466d9.
 Preparation research/dreamlte/prepare-0231.py waits exact run/head,
 verifies11sources/9symbols/47strings and packages, never flashes.
