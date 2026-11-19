@@ -1,3 +1,9 @@
+ACTIVEBOOT0102 flashedBOOT-onlySUCCESS. CI44629497398/44b6f27 verified.
+Kernel1609f9aa...5ecb0520;BOOTbe5b980f...d44ce223. Same8cores/1984MiB/cmd599.
+Solecapture123073/session98448 waitingCDC. Onceonlyclocks/blitON/UTCqueued
+session34294. NeedFWload/touchON/four2Dverifiedframes/fast+CPUtiming/physical
+acceptance. No2Dhardwareclaimyet;0101restoreretained. NoHome/otherpartition.
+
 FOLLOWUP22:36UTC physicalswipe18contactevents/downmovementrelease/HID1
 confirmed; GPUframesstill4/swaps37, soUIresponseunproven. SB26now17threads/
 BB56now13/mainmach_msgwait. CI44629497398/44b6f27stillBuild. Current0101

@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0169 CI success; BOOT0102 2D/timing trial flashed
+
+CI44629497398 SUCCESS exact44b6f27cd4c58ca43c3438a324e5fdeaeb4386c9.
+All6 uploaded sources byte-match testedcandidate;0169reversecheck/checksum/
+linked2Dverification+CPU-GPUtiming/SMP/actualsourceASanUBSanPASS.
+KernelSHA2561609f9aa1564c2690c60d8ec58b1e56607f747ada30b9ca45c87f7555ecb0520.
+BOOT0102SHA256be5b980f4e190a23eee80601be1c508ec207f32d8ebd116f0af219fcd44ce223.
+Same0094ADT/cmd599/all8/1984MiB/23reservations/SMP103485000/stockramdiskDT.
+SyncedDownload ->Heimdalldetect ->BOOT-onlyuploadsuccess/reboot. No other
+partitionflashed. Solecapture123073/session98448 boot0102-gpu-blit2-live.log
+waitsCDC. Oncequeuedclocks/blitON(defaultverify1)/UTC. NeedprivateFWload/
+touchON,actual2Dfullreadbackfourframes,fastmode+CPUtiming andphysicalacceptance.
+No actual2D/speedupclaimyet. Keep0101fullframe+fallback checkpoint.
+
 ## 2026-11-19: physical swipe delivered; optimizedCI44629497398 active
 
 BOOT0101 touchstream has18 physical contact events: down362,1598 through
