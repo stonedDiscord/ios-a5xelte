@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: compute-copy CI identified; BOOT0099 touch restored
+
+The successful job build is CI44617226681. The newly staged0167 compute
+copy build is CI44620376179, exact c6b8c85201bc11af9318780694499dc2b323784b;
+it was still in the Build step at21:38UTC. No duplicate run dispatched.
+Private0100 packer and uploaded-source verifier now pin that exact run/SHA.
+Host copy layout and actual0166+0167 lifecycle ASan/UBSan tests repeat PASS.
+No compute-copy hardware or framebuffer acceleration claim yet.
+
+BOOT0099 private firmware staging completed79104bytes/valid0. Controller
+RAM load result0/readyA55A/config720x1600. The first HID stream stopped after
+one malformed startup packet (valid15/16); one explicit restart succeeded.
+Transaction2484 confirms streaming1/slices44/events0, and2485 confirms
+ioReady1/poisoned0. Continuous touch remains ON; no Home injection.
+Existing sole capture97724/4575 remains owner of boot0099-gpu-job-live.log.
+Next exact CI artifacts/source/checksums ->0100 BOOT-only ->gpu clocks,
+one gpu copy, complete readback/retirement checks; restore UTC/touch.
+
 ## 2026-11-19: BOOT0099 first real GPU WRITE_VALUE job PASS
 
 Explicitgpu clocks tx1 ID90910010; gpu job tx2 powersall1 thenactual

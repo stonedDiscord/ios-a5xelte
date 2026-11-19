@@ -1,3 +1,11 @@
+ACTIVE21:38UTC compute CI44620376179/c6b8c852 still Build; prior44617226681
+is the completed WRITE_VALUE hardware-PASS build. No duplicateCI.
+BOOT0099 firmware nowloaded0/readyA55A; initialvalid15stopped, restart
+confirmedstreaming1/slices44. LeaveON. ioReady1/poisoned0, capture97724/4575.
+Private0100packer/sourceverifier pinned exactnewrun/SHA. HostcopytestsPASS.
+NeedCIartifact/source/checksum->0100BOOT-only gpu clocks/gpu copy ->readback
+andretirement, UTC/FW/touchrestore. Nocomputecopy/framebufferclaimyet.
+
 ACTIVEBOOT0099 WRITE_VALUEHARDWAREPASS tx2:submitted1/done1/retired1,
 IRQ2/MMU0/ASfault0/exception1/output77ccff003388aaEXACT. CoreoffPASS/fault0.
 Notframebufferaccelerationyet. iohealthy/all8/UTCsynced. FWstage15986needs
