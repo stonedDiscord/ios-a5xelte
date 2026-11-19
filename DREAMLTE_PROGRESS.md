@@ -1,5 +1,23 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0229 verified and BOOT flashed; active-command wake trace pending — 2026-11-19
+
+Exact CI44483460784 SUCCESS at168c141d7c3170de929f5f0242f2e79c7bea5d5c.
+Preparation96832 complete;11sources/6symbols/45diagnostics/profile PASS.
+Kernel SHA25692591f27bf78f4b5cef06bf57f60530391491ac61ef2f7d6020407e2d6c46ac3.
+BOOT shim/out/dreamlte-xnu-0229.img,18,464,784B,SHA256
+3057c7df5adad8230c597cd88500ffa186e549c2ae51c2a4d939775b0ebbc95f.
+Original BOOT ramdisk/second/DT/header fields, fit and independent hash PASS.
+Fresh Download Mode060 accepted BOOT100%; Heimdall exit0/reboot. Only
+BOOT written. Exact artifacts/reviewed source manifest/flash log:
+research/dreamlte/ci-44483460784. Private prepared manifest marked flashed.
+Post-flash host no1209:0001 gadget or Download Mode device. Requested
+resource-entry CLK, first suspend poll, guarded wake and resource/running
+or timeout/failure PHY lines. Physical effect pending; no USB success.
+0229 installed; no live CI/preparation/flash. Preserve current visible boot.
+No Android, USERDATA or protected-partition write.
+
+
 ## 0228 complete fault: CLK31 returns after endpoint entry — 2026-11-19
 
 User same-boot trace: STARTCFG reg9 completed; ep0cmd2 timeout/reg402;
