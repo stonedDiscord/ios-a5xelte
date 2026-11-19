@@ -1,5 +1,24 @@
 # DREAMLTE USB bring-up evidence
 
+## 0228 physical clock checkpoints — 2026-11-19
+
+User reports from installed0228:
+
+    DREAMLTE USB: pre-reset CLK=001b0048 PIPE=00000010 TEST=00000000
+    DREAMLTE USB: post-reset wake CLK=001b0048->001b0048 PIPE=00000010
+    DREAMLTE USB: endpoint-entry CLK=001b0048 PIPE=00000010 TEST=00000000
+
+CLK31 remains clear at these three checkpoints, free UTMI clock stays
+selected and TEST power-down bits stay clear at pre-reset/endpoint-entry.
+The post-reset helper performs no CLK write for this sample: before equals
+awake. Thus this report does not reproduce0227's later CLK31 reassertion
+or show that the new clear fixed an endpoint. Endpoint-entry is printed
+before STARTCFG; command completion, resources and USB remain unverified.
+Host recheck sees no1209:0001 gadget or Download Mode device. Requested
+following STARTCFG/resources/running or timeout/failure/PHY lines from this
+same boot. Keep0228 visible; no new candidate, flash or partition write.
+
+
 ## 0228 verified and BOOT flashed — 2026-11-19
 
 CI44477847371 SUCCESS at b7c84d8154cf734dfdb41fbfcf1b178e144690ab.

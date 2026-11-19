@@ -2,6 +2,16 @@
 
 ## Active S8 handoff — 2026-11-19
 
+LATEST0228 physical: pre-reset CLK001b0048/PIPE10/TEST0;
+post-reset wake001b0048->001b0048/PIPE10; endpoint-entry same CLK/PIPE/TEST.
+CLK31 clear at all three checkpoints; post-reset helper made no CLK write.
+This locates progress before STARTCFG, not command completion. No later
+0228 command result yet; requested same-boot STARTCFG/resources/running
+or timeout/FAIL/PHY lines. Host still no1209:0001 gadget or Download Mode.
+Keep installed0228 visible; no new flash or candidate until result arrives.
+
+
+
 0228 verified and BOOT flashed — 2026-11-19
 
 CI44477847371 SUCCESS at b7c84d8154cf734dfdb41fbfcf1b178e144690ab.
