@@ -4,7 +4,7 @@ from pathlib import Path
 import argparse,subprocess,tempfile,xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
 parser=argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--mesa-xml',type=Path,help='optional primary Mesa v7.xml provenance check')
+parser.add_argument('--mesa-xml',type=Path,help='optional primary Mesa job XML provenance check')
 args=parser.parse_args()
 if args.mesa_xml:
  tree=ET.parse(args.mesa_xml).getroot()
@@ -17,7 +17,9 @@ if args.mesa_xml:
  assert field('Write Value Job Payload','Immediate Value').get('start')=='4:0'
  assert next(n for n in node('enum','Write Value Type').findall('value') if n.get('name')=='Immediate 64').get('value')=='7'
  assert next(n for n in node('aggregate','Write Value Job').findall('section') if n.get('name')=='Payload').get('offset')=='32'
- print('PASS primary Mesa v7 XML header/type/index/address/immediate field correspondence')
+ assert node('struct','Job Header').get('align')=='128', 'G57 requires v9 schema'
+ assert not any(n.get('name')=='Is 64b' for n in node('struct','Job Header').findall('field'))
+ print('PASS primary Mesa v9 G57 header/reserved bit/type/index/address/immediate field correspondence')
 
 source='''
 #include <assert.h>
@@ -43,7 +45,7 @@ int main(void){
   assert(walk(mem,pa,A03_GPU_OUTPUT_VA)==pa+0x5000);
   assert(!walk(mem,pa,0)&&!walk(mem,pa,A03_GPU_JOB_VA-4096)&&!walk(mem,pa,A03_GPU_OUTPUT_VA+4096));
   uint32_t *job=(uint32_t *)(mem+0x4000);
-  assert(job[0]==0&&job[4]==0x10005&&job[5]==0&&job[6]==0&&job[7]==0);
+  assert(job[0]==0&&job[4]==0x10004&&job[5]==0&&job[6]==0&&job[7]==0);
   assert(*(uint64_t *)(job+8)==A03_GPU_OUTPUT_VA&&job[10]==7&&job[11]==0);
   assert(*(uint64_t *)(job+12)==A03_GPU_RESULT);
   assert(*(uint64_t *)(mem+0x5000)==A03_GPU_CANARY);

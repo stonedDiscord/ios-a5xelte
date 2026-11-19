@@ -243,7 +243,7 @@
 +++ b/bsd/dev/a03_gpu_job_layout.h
 @@ -0,0 +1,40 @@
 +/* A03 GPU private WRITE_VALUE layout, no MMIO or allocation.
-+ * Sources: pinned vendor AArch64 MMU and Mesa24.3 v7.xml, docs/a03-gpu.md.
++ * Sources: pinned vendor AArch64 MMU and Mesa24.3 v9.xml, docs/a03-gpu.md.
 + * Host uses16KiB pages; GPU tables use4KiB granules independently. */
 +#ifndef A03_GPU_JOB_LAYOUT_H
 +#define A03_GPU_JOB_LAYOUT_H
@@ -273,8 +273,8 @@
 +    q[0x3000 / 8] = (physical + A03_GPU_JOB_OFF) | (1ULL << 54) | 0x457ULL;
 +    q[0x3000 / 8 + 1] = (physical + A03_GPU_OUTPUT_OFF) | (1ULL << 54) | 0x457ULL;
 +    uint32_t *job = (uint32_t *)((uint8_t *)memory + A03_GPU_JOB_OFF);
-+    /* Mesa v7 header:64b/type2/index1. Payload32:VA,40:type7,48:value. */
-+    job[4] = 0x00010005U;
++    /* Mesa v9 header:type2/index1; bit0 is reserved zero. Payload32:VA,40:type7,48:value. */
++    job[4] = 0x00010004U;
 +    *(uint64_t *)(job + 8) = A03_GPU_OUTPUT_VA;
 +    job[10] = 7; /* immediate64 */
 +    *(uint64_t *)(job + 12) = A03_GPU_RESULT;
