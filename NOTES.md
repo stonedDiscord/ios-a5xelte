@@ -1,3 +1,9 @@
+FOLLOWUP20:20UTC CI44606600103 exact5e1a464 stillBuild/in_progress;
+watch94270confirmedlive, noartifacts yet. Actualmux/dividerguardexhaustion
+added f6327fe PASS; codeunchangedfromCI. BOOT0096 remainsall8/touchON;
+noGPUclockenableyet. Continueexistingrun, donotdispatchduplicate.
+Next source/checksum/markers->privatepack0097.py->BOOT-onlytrial->gpu clocks.
+
 CI44606600103 exact5e1a464 (0164clocks) dispatched; use thisrun next.
 Latest0096touchON617slices13events; display6swaps/4copies/timer16500.
 NoHome/extraGPUwrites/clockenable yet; touchcollection notphysicalUIproof.
