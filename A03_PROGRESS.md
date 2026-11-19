@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: ten actual2D GPUframes; replayCI44632519909 active
+
+BOOT0102frames10/pixels11520000/verified10/completed10/fallback0/quarantine0.
+Physicalcontact27events precedednewUIframecopies; allfirst8loggedfullreadback
+mismatches0/verify1/PASS1, subsequentcounterincrementrequires samechecks.
+GPUtotalverifiedns1971117342,last314676730ns. This is realframecopyevidence,
+notphysicalscreenacceptance or measuredfastmode speedup. Another30second
+fastwindow hadzeroactualframes=>inconclusive;GPUON/verify1restored.
+
+Exact0170 replayCI44632519909 at7e4ea5b is compiling.
+Private0103fetch/sourceverifier/packer pinsfullSHA. Replaybenchmark--replay4
+selfcheck andmode restorationPASS. NeedfullCI->0103BOOT-only->retainedframe
+CPU/verify/fast repeatedmeasurement,then restorefullverify andtouchON.
+Currentcapture123073/session98448 live untilapproximately23:15UTC.
+
 ## 2026-11-19: BOOT0102 2D hardware PASS; repeatable replay candidate0170
 
 Actual720x1600 swaps1..4 each1152000pixels/mismatches0/done1/retired1/
