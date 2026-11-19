@@ -1,0 +1,42 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -282,6 +282,31 @@
+ 	*(volatile uint32_t *)(dwc + 0xc110) = (gctl & ~(3u << 12)) | (2u << 12);
+ 	__asm__ volatile("dsb sy" ::: "memory");
+ 	return 0;
++}
++
++/* Pinned Samsung core.c dwc3_core_config applies DIS_RXDETP3 for
++ * revisions >=2.50a. Firmware PIPE010c0002 lacks it; saved Android PIPE
++ * is110c0002. Apply only this bit on the measured stopped2.80a core.
++ */
++static int
++dreamlte_usb_pipe_config(vm_offset_t dwc)
++{
++	uint32_t id = usb_rd(dwc, 0xc120);
++	uint32_t dctl = usb_rd(dwc, 0xc704);
++	uint32_t before = usb_rd(dwc, 0xc2c0);
++	if (id != 0x5533280au || (dctl & (3u << 30)) ||
++	    before == 0xffffffffu || (before & (1u << 31))) {
++		printf("DREAMLTE USB: PIPE config refused ID=%08x DCTL=%08x PIPE=%08x\n", id, dctl, before);
++		return -1;
++	}
++	uint32_t desired = before | (1u << 28);
++	if (desired != before) {
++		*(volatile uint32_t *)(dwc + 0xc2c0) = desired;
++		__asm__ volatile("dsb sy" ::: "memory");
++	}
++	uint32_t after = usb_rd(dwc, 0xc2c0);
++	printf("DREAMLTE USB: PIPE config %08x->%08x\n", before, after);
++	return after == desired ? 0 : -1;
+ }
+ 
+ /* Samsung core.c reset_check; live DT suspend_clk_freq=66000000.
+@@ -1315,6 +1340,7 @@
+ 	}
+ 
+ #if defined(DREAMLTE)
++	if (dreamlte_usb_pipe_config(dwc)) return;
+ 	dreamlte_usb_core_timing(dwc);
+ 	if (dreamlte_usb_post_reset_wake(dreamlte_phy)) return;
+ 	/* Device reset must not silently power the PHY down again. */

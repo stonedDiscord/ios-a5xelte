@@ -1,5 +1,19 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+0233 candidate matches pinned Samsung core.c dwc3_core_config:
+for revisions>=2.50a set GUSB3PIPECTL.DIS_RXDETP3(bit28). Previously
+reported firmware PIPE010c0002 lacks it; saved configured Android dump
+PIPE110c0002 has it. This is a real source/state difference, not proof of
+the cause of resource timeout. Apply only on exact measured2.80a ID with
+DCTL.RUN/CSFTRST clear and PIPE reset clear; set only28, require exact
+readback. Insert after existing device reset, before endpoint setup.
+No CMU/PMU/PHY tuning, clock-rate change, reset retry or command reissue.
+Actual ARM64 compile PASS; new source-derived PIPE preservation/refusal
+suite and wrapper/EP/resource/CSR/wake/clocks/console suites PASS. Plain
+patch from exact0232 compiled source equals reviewed source. Manifest
+11sources/9symbols/52strings.0232 installed; full0233 CI next, untested.
+
+
 ## 0232 physical CMU gates enabled; endpoint setup still fails — 2026-11-19
 
 User reports exact prelog-exit snapshot:
