@@ -3,16 +3,18 @@
 from pathlib import Path
 import argparse,subprocess,tempfile
 ROOT=Path(__file__).resolve().parents[1]
-p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source',type=Path,required=True);a=p.parse_args()
+p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source',type=Path,required=True);p.add_argument('--copy',action='store_true');a=p.parse_args()
 with tempfile.TemporaryDirectory(prefix='a03-job-') as tmp:
  t=Path(tmp)
  for name in ('bsd/dev/a03_gpu.c','bsd/kern/sweet_amfi.c'):
   f=t/name;f.parent.mkdir(parents=True,exist_ok=True);f.write_bytes((a.source/name).read_bytes())
  patch=ROOT/'xnu/a03/0166-a03-private-write-value-job.patch';subprocess.run(['git','apply',str(patch)],cwd=t,check=True)
+ if a.copy:subprocess.run(['git','apply',str(ROOT/'xnu/a03/0167-a03-private-g57-compute-copy.patch')],cwd=t,check=True)
  assert (t/'bsd/dev/a03_gpu_job_layout.h').read_bytes()==(ROOT/'tools/a03-gpu-job-layout.h').read_bytes()
  src=(t/'bsd/dev/a03_gpu.c').read_text();src=chr(10).join(l for l in src.splitlines() if not l.startswith('#include')).replace('__asm__ volatile("dsb sy" ::: "memory");','')
  src=src.replace('uint32_t value = *(volatile uint32_t *)(base + offset);','uint32_t value = fake_read(base, offset);').replace('*(volatile uint32_t *)(a03_gpu_regs + offset) = value;','fake_write(offset, value);')
  layout=(t/'bsd/dev/a03_gpu_job_layout.h').read_text()
+ if a.copy:layout+=chr(10).join(l for l in (t/'bsd/dev/a03_gpu_copy_layout.h').read_text().splitlines() if not l.startswith('#include'))
  header='''
 #include <stdint.h>
 #include <stdio.h>
@@ -107,8 +109,25 @@ int main(void){
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''
+ if a.copy:
+  header=header.replace('==0x10004);','==(mode>=10?0x10008:0x10004));')
+  header=header.replace('assert(*(uint64_t *)((uint8_t*)allocation+0x5000)==0xa5a55a5adeadbeefULL);','if(mode<10)assert(*(uint64_t *)((uint8_t*)allocation+0x5000)==0xa5a55a5adeadbeefULL);')
+  header=header.replace('*(uint64_t *)((uint8_t*)allocation+0x5000)=0x0077ccff003388aaULL;','if(mode<10)*(uint64_t *)((uint8_t*)allocation+0x5000)=0x0077ccff003388aaULL;')
+  header=header.replace('  if(mode==4||mode==6)', '''  if(mode>=10){
+   for(unsigned i=0;i<1024;i++)((uint32_t *)((uint8_t*)allocation+0x7000))[i]=((uint32_t *)((uint8_t*)allocation+0x6000))[i];
+   if(mode==11)((uint32_t *)((uint8_t*)allocation+0x7000))[500]^=1;
+   if(mode==12)((uint32_t *)((uint8_t*)allocation+0x6000))[500]^=1;
+  }
+  if(mode==4||mode==6)''')
+  tests=tests.replace('bank[3][0xc4/4]=4;','bank[3][0xc4/4]=20;')
+  tests=tests.replace(' reset(0);if(allocation)free(allocation);return 0;', ''' for(unsigned m=10;m<=12;m++){
+  reset(m);a03_gpu_copy();assert(starts==1&&offs==1&&!frees&&!a03_gpu_job_requested);
+  assert((passed>0)==(m==10));
+ }
+ reset(0);if(allocation)free(allocation);return 0;''')
  c=t/'test.c';c.write_text(header+layout+src+tests)
  subprocess.run(['clang','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',str(c),'-o',str(t/'test')],check=True)
  subprocess.run([str(t/'test')],check=True)
+ if a.copy:subprocess.run(['git','apply','--reverse',str(ROOT/'xnu/a03/0167-a03-private-g57-compute-copy.patch')],cwd=t,check=True)
  subprocess.run(['git','apply','--reverse','--check',str(patch)],cwd=t,check=True)
 print('PASS actual0166 allocation/contiguity/AS restore, job result/cache ownership, timeout/fault retirement, quarantine/no-free, ASan/UBSan')

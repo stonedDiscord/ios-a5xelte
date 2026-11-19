@@ -1,0 +1,150 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -292,6 +292,7 @@
+ extern uint64_t kvtophys(vm_offset_t);
+ #include <arm/caches_internal.h>
+ #include "a03_gpu_job_layout.h"
++#include "a03_gpu_copy_layout.h"
+ static void *a03_gpu_scratch;
+ static uint64_t a03_gpu_scratch_pa;
+ static unsigned a03_gpu_job_requested;
+@@ -337,7 +338,8 @@
+         }
+         a03_gpu_scratch_pa = pa;
+     }
+-    return a03_gpu_job_layout(a03_gpu_scratch, a03_gpu_scratch_pa);
++    return a03_gpu_job_requested == 2 ? a03_gpu_copy_layout(a03_gpu_scratch, a03_gpu_scratch_pa, 1024) :
++        a03_gpu_job_layout(a03_gpu_scratch, a03_gpu_scratch_pa);
+ }
+ 
+ /* Returns1 only when the slot is retired and AS0 restored. A failed job can
+@@ -348,7 +350,7 @@
+     if (a03_gpu_job_poisoned) return 0;
+     if (!(a03_gpu_read(a03_gpu_regs, 0x18) & 1U) ||
+         !(a03_gpu_read(a03_gpu_regs, 0x1c) & 2U) ||
+-        !(a03_gpu_read(a03_gpu_regs, 0xc4) & 4U) ||
++        !(a03_gpu_read(a03_gpu_regs, 0xc4) & (a03_gpu_job_requested == 2 ? 16U : 4U)) ||
+         a03_gpu_read(a03_gpu_regs, 0x28) ||
+         a03_gpu_read(a03_gpu_regs, 0x1008) ||
+         a03_gpu_read(a03_gpu_regs, 0x2008) ||
+@@ -434,6 +436,17 @@
+     uint32_t exception = *(volatile uint32_t *)((uint8_t *)a03_gpu_scratch + A03_GPU_JOB_OFF);
+     uint64_t output = *(volatile uint64_t *)((uint8_t *)a03_gpu_scratch + A03_GPU_OUTPUT_OFF);
+     int pass = done && exception == 1 && output == A03_GPU_RESULT && !as_fault;
++    if (a03_gpu_job_requested == 2) {
++        unsigned mismatches = 0;
++        const volatile uint32_t *source = (volatile uint32_t *)((uint8_t *)a03_gpu_scratch + 0x6000);
++        const volatile uint32_t *destination = (volatile uint32_t *)((uint8_t *)a03_gpu_scratch + 0x7000);
++        for (unsigned i = 0; i < 1024; i++) {
++            uint32_t expected = 0x10203040U ^ (i * 0x01010101U);
++            if (source[i] != expected || destination[i] != expected) mismatches++;
++        }
++        pass = done && exception == 1 && !as_fault && !mismatches;
++        printf("A03 GPU copy: hardware compute words=1024 mismatches=%u PASS=%d\n",mismatches,pass);
++    }
+     printf("A03 GPU job: submitted=%d done=%d retired=1 irq=%08x mmu=%08x gpu=%08x js=%08x asfault=%08x exception=%08x output=%llx expected=%llx PASS=%d\n",
+         submitted, done, irq, mmu, gpu, js_status, as_fault, exception,
+         (unsigned long long)output, (unsigned long long)A03_GPU_RESULT, pass);
+@@ -524,4 +537,16 @@
+     a03_gpu_cores();
+     a03_gpu_job_requested = 0;
+ }
++
++void a03_gpu_copy(void);
++void a03_gpu_copy(void)
++{
++    if (a03_gpu_job_poisoned) {
++        printf("A03 GPU copy: quarantined until reboot; stop\n");
++        return;
++    }
++    a03_gpu_job_requested = 2;
++    a03_gpu_cores();
++    a03_gpu_job_requested = 0;
++}
+ #endif
+--- /dev/null
++++ b/bsd/dev/a03_gpu_copy_layout.h
+@@ -0,0 +1,58 @@
++/* Generated from tools/a03-g57-copy-shader.c using Mesa24.3.0.
++ * Native Valhall G57/9091 copy: one aligned u32 per global invocation.
++ * Host preparation only; execution must be validated on hardware.
++ * Binary SHA256: 565e07d886d6f111fac39102242d7175f06f0ba5f6f5b52797f8537d0c6814b7 */
++#ifndef A03_GPU_COPY_LAYOUT_H
++#define A03_GPU_COPY_LAYOUT_H
++#include "a03_gpu_job_layout.h"
++static const uint64_t a03_g57_copy_code[16] = {
++    0x00b4c00119c0c87cULL,
++    0x0110c102002000c0ULL,
++    0x0110c20200200000ULL,
++    0x00f0c10400c04102ULL,
++    0x0091c30000000041ULL,
++    0x0060818218000042ULL,
++    0x0110c00200300040ULL,
++    0x0110c202003000c0ULL,
++    0x00f0c20400c04200ULL,
++    0x0091c40000000040ULL,
++    0x0891c50000000042ULL,
++    0x7861410258000044ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++};
++static int
++a03_gpu_copy_layout(void *memory, uint64_t physical, unsigned words)
++{
++    if (!words || words > 1024 || !a03_gpu_job_layout(memory, physical)) return 0;
++    uint64_t *q = (uint64_t *)memory;
++    /* Four data mappings: descriptor(NX), code(RO executable),src(RO NX),dst(RW NX).
++     * GPU AttrIndex5=normalNC; CPU transfers ownership via explicit cache flush. */
++    q[0x3000/8] = (physical + 0x4000) | (1ULL << 54) | 0x457ULL;
++    q[0x3000/8+1] = (physical + 0x5000) | 0x4d7ULL;
++    q[0x3000/8+2] = (physical + 0x6000) | (1ULL << 54) | 0x4d7ULL;
++    q[0x3000/8+3] = (physical + 0x7000) | (1ULL << 54) | 0x457ULL;
++    uint32_t *job = (uint32_t *)((uint8_t *)memory + 0x4000);
++    for (unsigned i=0;i<128/4;i++) job[i]=0;
++    job[4]=0x00010008; /* v9 compute type4, index1; reservedbit0zero */
++    job[8]=0x80000000U; /* group1x1x1, merge allowed */
++    job[9]=0x00008001U; /* taskincrement1,axisZ */
++    job[10]=words;job[11]=1;job[12]=1;
++    *(uint64_t *)(job+26)=0x02000100ULL; /* payload compute.shader */
++    *(uint64_t *)(job+28)=0x02000140ULL; /* payload compute.thread_storage */
++    uint32_t *program=(uint32_t *)((uint8_t *)memory+0x4100);
++    program[0]=0x80000018U; /* shader/compute/32regs */
++    program[1]=0x1000U; /* preloadR60 globalInvocationX */
++    *(uint64_t *)(program+2)=0x02001000ULL;
++    uint32_t *tls=(uint32_t *)((uint8_t *)memory+0x4140);
++    tls[1]=31; /* log2(NO_WORKGROUP_MEM); noTLS/WLS */
++    uint64_t *code=(uint64_t *)((uint8_t *)memory+0x5000);
++    for(unsigned i=0;i<16;i++)code[i]=a03_g57_copy_code[i];
++    uint32_t *src=(uint32_t *)((uint8_t *)memory+0x6000);
++    uint32_t *dst=(uint32_t *)((uint8_t *)memory+0x7000);
++    for(unsigned i=0;i<1024;i++){src[i]=0x10203040U^(i*0x01010101U);dst[i]=0xdeadbeefU;}
++    return 1;
++}
++#endif
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -615,12 +615,13 @@
+ extern void a03_gpu_clocks(void);
+ extern void a03_gpu_cores(void);
+ extern void a03_gpu_job(void);
++extern void a03_gpu_copy(void);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power|gpu clocks|gpu cores|gpu job creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -647,6 +648,7 @@
+  else if(!strcmp(command,"gpu clocks"))a03_gpu_clocks();
+  else if(!strcmp(command,"gpu cores"))a03_gpu_cores();
+  else if(!strcmp(command,"gpu job"))a03_gpu_job();
++ else if(!strcmp(command,"gpu copy"))a03_gpu_copy();
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

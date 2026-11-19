@@ -1,3 +1,10 @@
+FOLLOWUP21:24UTC corrected44617226681/6c81044 Build/in_progress.
+0099packer+sourceverifier NOWupdatedcorrectrun/SHA/artifactpaths; earlier
+noteaboutOLDpaths superseded. 0167privateG57compute copy PREPAREDNOTPROFILE.
+NativeMesa128bytecode/32regs/preloadR60,TLSWLS0;actualv9packermatch+ASan
+layout/runtimecorruptionchecks+ARM64PASS. Need0166actualWRITE_VALUEfirst.
+0098corecyclecheckpoint/touchON retained;capture82938/30907 until~21:30UTC.
+
 ACTIVECORRECTEDCI44617226681 exact6c810448c1f60e62cee8e8c82262a8e239d8f456.
 Supersedes44615378050(pre-v9bit0) BEFOREhardware;cancelrequestedoldrun.
 Needexactcorrectedartifact/source/0166reversecheck->0099BOOT-onlygpu job.

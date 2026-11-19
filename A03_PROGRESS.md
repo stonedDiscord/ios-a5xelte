@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: corrected job CI active; native copy prepared off-profile
+
+CorrectedCI44617226681 exact6c810448c1f60e62cee8e8c82262a8e239d8f456 is
+Build/in_progress. Prior44615378050 cancelled/supersededpreflash. Private
+0099packer/sourceverifier updated toCORRECTEDrun/SHA/artifactpaths.
+HostMesa24.3built withlocalglibcC11namecompatibility; native128byteG57copy
+shadergenerated/disassembled. Prepared0167copy test(fullpage1024u32),
+code/source/destinationpermissions,actualMesa v9packbytecomparison,
+ASanUBSanlayout+runtime mismatch tests and2BSDARM64compilesPASS.
+0167NOTstagedinprofile; nohardwarejob/compute/acceleratedframeclaim.
+Nextcorrected0166artifact/source/checksum->0099BOOT-onlyWRITE_VALUEtrial;
+onlyafterhardwarePASS stagecompute.0098/touchON kept;singlecapture82938.
+
 ## 2026-11-19: G57 v9 job header corrected before hardware trial
 
 NativeMesa24.3 compiler/disassembly generated128byteG57copyshader

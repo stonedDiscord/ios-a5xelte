@@ -14,8 +14,8 @@ int main(int argc,char **argv){
  b.shader->info.workgroup_size[0]=1;b.shader->info.workgroup_size[1]=1;b.shader->info.workgroup_size[2]=1;
  nir_def *id=nir_channel(&b,nir_load_global_invocation_id(&b,32),0);
  nir_def *offset=nir_u2u64(&b,nir_ishl_imm(&b,id,2));
- nir_def *src=nir_iadd(&b,nir_imm_int64(&b,0x02004000ULL),offset);
- nir_def *dst=nir_iadd(&b,nir_imm_int64(&b,0x02005000ULL),offset);
+ nir_def *src=nir_iadd(&b,nir_imm_int64(&b,0x02002000ULL),offset);
+ nir_def *dst=nir_iadd(&b,nir_imm_int64(&b,0x02003000ULL),offset);
  nir_def *value=nir_load_global(&b,src,4,1,32);
  nir_store_global(&b,dst,4,value,1);
  struct panfrost_compile_inputs in={.gpu_id=0x9091,.no_ubo_to_push=true};

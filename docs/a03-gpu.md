@@ -220,3 +220,15 @@ host test; actual fake submission asserts correctedword. No priorjobkernel
 flashed; CI44615378050 superseded beforehardwaretrial. NativeMesa24.3
 compiler built locally (hostC11compatibilityonly), generated128byteG57
 copyshader TLS/WLS0/preloadr60. Hostpreparation, nothardwarecopyexecution.
+
+##0167 prepared native G57 compute copy (not in build profile)
+
+HostNIRgenerator uses Mesa24.3compiler for9091,128byteValhallbinary,
+32registers/TLS0/WLS0/noFAU/preloadR60. Oneu32 perglobalinvocation copies
+GPUVA02002000->02003000. tools/a03-gpu-copy-layout.h containsderivedcode
+andSHA256; mapsdescriptorNX/codeRO-exec/sourceRO-NX/destinationRW-NX.
+Countlimited1..1024 withonepageeach. Compute/header/program/TLS descriptor
+bytes match actual Mesa-generatedv9packers. ASanUBSanallcounts/permissions/
+canaries+actualruntimefakeDMA success/sourcecorruption/destinationmismatch
+checksPASS;2BSDARM64compilesPASS. Patch0167 isPREPARED ONLY, notstagedin
+A03profile, nohardwarecomputeclaim. Corrected0166 WRITE_VALUE mustpass first.
