@@ -45,4 +45,9 @@ with tempfile.NamedTemporaryFile() as f:
  try:m.main();assert False
  except RuntimeError as error:assert str(error)=='sample interrupted'
 assert seq[-2:]==['gpu blit verify','gpu blit on']
+seq=[];snapshots=[dict(original),dict(original,enabled=0),dict(original,enabled=0,cpu_copies=4,cpu_ns=40000000),dict(original)]
+m.snapshot=lambda *args:snapshots.pop(0);m.command=lambda p,l,c:seq.append(c) or ''
+with tempfile.NamedTemporaryFile() as f:
+ sys.argv=['benchmark','--log',f.name,'--mode','cpu','--replay','4'];m.main()
+assert 'display replay 4' in seq and seq[-2:]==['gpu blit verify','gpu blit on']
 print('PASS benchmark exact transaction, counter reset/zero-frame handling, mode restoration')
