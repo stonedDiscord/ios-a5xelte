@@ -59,6 +59,11 @@ int main(void){
   reset();bank[2][reg]|=1;a03_gpu_clocks();assert(!maps[3]);
   reset();bank[2][reg]^=0x10;a03_gpu_clocks();assert(!maps[3]);
  }
+ for(unsigned reg=1;reg<=2;reg++)for(unsigned sel=0;sel<8;sel++)for(unsigned div=0;div<8;div++){
+  reset();bank[2][reg]=(sel<<4)|(div<<8);a03_gpu_clocks();
+  assert((maps[3]!=0)==(sel==1&&div==0));
+ }
+ for(unsigned div=0;div<8;div++){reset();bank[2][3]=div<<4;a03_gpu_clocks();assert((maps[3]!=0)==(div==3));}
  for(unsigned n=1;n<=7;n++){if(n==6)continue;reset();fail=n;a03_gpu_clocks();assert(bank[2][1]==0x10&&bank[2][2]==0x10&&bank[2][3]==0x30);}
  for(unsigned n=0;n<2;n++){reset();bank[3][0]=n?UINT32_MAX:0;a03_gpu_clocks();assert(bank[2][1]==0x10&&bank[2][2]==0x10&&bank[2][3]==0x30);}
  return 0;
