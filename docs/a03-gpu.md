@@ -1,8 +1,16 @@
 # A03 GPU acceleration bring-up
 
-The BOOT0098 compositor is software. GPU_ID90910010 and a complete core
-power cycle are verified. No completed GPU job, rendered pixel, EAGL/Metal
-device or GPU-accelerated SpringBoard frame has been measured.
+The BOOT0099 compositor is software. GPU_ID90910010, leaf clock enable,
+a complete core power cycle, and one real WRITE_VALUE GPU job with exact
+64-bit readback are hardware-verified. Native compute copy, framebuffer
+acceleration, EAGL/Metal and GPU-accelerated SpringBoard remain unverified.
+
+BOOT0099 uses successful CI44617226681 at6c81044. Transaction2 completed
+submitted1/done1/retired1, JOB_IRQ2/MMU0/ASfault0/headerexception1, exact
+output0077ccff003388aa and clean core shutdown. Staged0167 adds the isolated
+1024-u32 nativeG57 compute copy; CI44620376179 atc6b8c85 is its separate
+full build. A private copy PASS will still require subsequent IOSurface and
+framebuffer integration before claiming the requested video acceleration.
 
 ## Hardware passive result, 2026-11-19
 
