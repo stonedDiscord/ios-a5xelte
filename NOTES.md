@@ -1,3 +1,10 @@
+ACTIVECORRECTEDCI44617226681 exact6c810448c1f60e62cee8e8c82262a8e239d8f456.
+Supersedes44615378050(pre-v9bit0) BEFOREhardware;cancelrequestedoldrun.
+Needexactcorrectedartifact/source/0166reversecheck->0099BOOT-onlygpu job.
+Privatepack0099currentlyreferencesOLD44615378050: UPDATE run/SHA/artifact
+paths BEFOREuse. Nativecopygenerator tools/a03-g57-copy-shader.c (hostonly)
+produces128bytes/TLSWLS0/preloadr60;privateoutputresearch/a03-mesa-24.3.
+
 CORRECTED0166 commit6c81044: G579091=arch9;v9headerbit0RESERVEDzero.
 word4now10004not10005;align128. Payload32/40/48unchanged. Earlier v7test
 insufficient. Actualv9XML+ASanUBSan+ARM64PASS;CI44615378050supersededbefore
