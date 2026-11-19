@@ -4,6 +4,14 @@
 
 ## 0239 candidate matches Samsung DP pull-up sequencing — 2026-11-19
 
+0239 exact CI44550208083 dispatched at326cc843fddb6cfe059b141ffae6f1691c83a4ac.
+Preparation research/dreamlte/prepare-0239.py waits exact run/head and verifies
+sources/profile/preserved BOOT components; never flashes. Download074 ready
+from verified USB command.0238 installed; ten USB suites and RAM console
+suite PASS;0239 hardware untested. No button request or new partition write.
+
+
+
 0238 USB download mode074 is physically verified above.0239 follows pinned
 Samsung gadget_pullup/reset/conndone and CAL enable/disable_dp_pullup:
 clear PHYUTMI bit9 after endpoints and before RUN_STOP, set after USB reset
