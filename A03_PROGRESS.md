@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: corrected0166 CI success; BOOT0099 flashed
+
+CI44617226681 SUCCESS exact6c810448c1f60e62cee8e8c82262a8e239d8f456.
+UploadedGPU/header/AMFI exactmatch+0166reversecheck/checksum/markers/
+v9primaryschema+ASanUBSanPASS. KernelSHA256
+e83efc2b1b02ce851572005a044b3fc5aea1ea5aec0e5852b199a90310d62f0c.
+BOOT0099SHA256ac932ced16813eb99092a39e3147e5b573d69eee5efc23559fdcea3fd2926c17.
+Exact0094ADT/cmd599/all8/1984MiB/23reservations/SMP103485000/stockramdiskDT
+PASS. SyncedDownload/Heimdalldetect/boot-onlyuploadsuccess/reboot.
+Singlecapture4575 awaitsCDCthen1800s boot0099-gpu-job-live.log. Needclocks/
+gpu job/health andUTC/privateFW/touchrestore. Noactualjob/pixelclaimyet.
+0167computeoffprofile;0098/0097restores retained.
+
 ## 2026-11-19: corrected job CI active; native copy prepared off-profile
 
 CorrectedCI44617226681 exact6c810448c1f60e62cee8e8c82262a8e239d8f456 is
