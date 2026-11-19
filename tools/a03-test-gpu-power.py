@@ -47,7 +47,9 @@ static void reset(void){
 }
 int main(void){
  reset();a03_gpu_probe();assert(maps[3]==1); /* sleeping C0 does not block top registers */
- reset();a03_gpu_power();assert(maps[4]&&maps[5]&&maps[3]);assert(ticks==300);
+ reset();uint32_t before[4][1024];memcpy(before,banks+2,sizeof(before));
+ a03_gpu_power();assert(maps[4]&&maps[5]&&maps[3]);assert(ticks==300);
+ assert(!memcmp(before,banks+2,sizeof(before))); /* no leaf/DVFS/GPU writes */
  for(unsigned n=0;n<512;n++){
   reset();vsel=n;a03_gpu_power();
   assert((maps[0]!=0)==(n>=224&&n<=256));

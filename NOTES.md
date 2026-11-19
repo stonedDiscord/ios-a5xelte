@@ -1,3 +1,10 @@
+ACTIVE CI44591622019 exactb8f8f045548a74483757364ed66dfb68ded2f766
+is authoritative0163 build (supersedes44591419852). Need successful linked
+artifact/SHA256/uploadedsource reverseapply, pack0096 with0094inputADT and
+599bytecmdline/all8/1984MiB, stockramdiskDT/SMP/reservations validation,
+BOOT-onlytrial then gpu power snapshots. Noactualclocksetup/GPU_IDyet.
+Extra test asserts unchanged leaf/GPU/DVFS banks during successfulpreflight.
+
 FOLLOWUP0163: firstCI44591419852 superseded by topDVFS-clock guard followup.
 Source liveDT requires AONEB1bit7 before sharedtopDVFS reads. Addedguard+
 ASanUBSan coverage; never startsharedCPU/MMvoltagecontroller fordiagnostic.

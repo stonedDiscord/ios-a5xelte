@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0163 committed and full CI dispatched
+
+f3e16bd adds preflight; b8f8f04 adds liveDT AONEB1bit7 guard before
+sharedtopDVFS access (never starts sharedCPU/MM voltage controller).
+Authoritative CI44591622019 exactb8f8f045548a74483757364ed66dfb68ded2f766
+queued/running; supersedes44591419852. All3 actualBSD C ARM64MachO compiles
+and sanitizer tests repeatPASS; successfulpreflight leaves leaf/GPU/DVFS
+banks unchanged. No newBOOTflash/GPU_ID/actualclocksetup/acceleration claim.
+Read-only0095 baseline: sameforce10102/state07000000/AON2bcac1, touchON
+1842slices169events, ioReady1/poisoned0; display39swaps34copies timer49905.
+Singlecapture1745 gpu-power-baseline-20261119.log1800s from~18:45UTC.
+Need exactCI/source/checksum->0096BOOTpack/validate->BOOT-onlypowertrial.
+
 ## 2026-11-19: power/clock-first0163 preflight candidate
 
 User directs clock and power setups first. Source review identifies0162
