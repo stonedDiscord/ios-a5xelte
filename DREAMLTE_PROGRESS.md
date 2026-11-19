@@ -1,5 +1,33 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0230 physical pre-log clock awake;0231 console/bus candidate — 2026-11-19
+
+User reports exact POLL first=001b0048 last=001b0048 exit=001b0048
+n=100 wake=0. Preserve n=100 as supplied; verified0230 code loops1000
+samples, so count transcription differs and is not silently normalized.
+CLK31 is clear at all reported pre-log samples; no in-command wake fired.
+Thus later failure-dump bit31 is not evidence of suspend during the sampled
+command. This trial does not establish the remaining clock tree or DMA.
+
+0231 enables the previously excluded UDP5140 log sender using bounded S8
+RAM-trace readers, without donor UFS/disk dependencies. Reader supports
+empty/invalid/saturated cursors, bounded chunks, no printf or allocation.
+Sender commits its cursor only after a full successful send; failed/short
+sends retry the same chunk. Physical network delivery remains unverified.
+Also applies pinned Samsung core.c dwc3_core_config INCR|INCR16 burst
+setting after device reset: measured22220001 becomes22220009, matching
+saved Android regdump. All AXI cache fields preserved. This source-backed
+bus prerequisite is a hypothesis for resource progress, not a proven fix.
+No new PHY/CMU/PMU/mux policy and no repeated reset/command reissue.
+
+Actual ARM64 objects for both edited units PASS; nm confirms RAM-reader
+exports and USB sender with no sweet_log/sweet_ufs imports. Actual reader/
+sender model checks full/error/short transfers and byte equality; bus-bit
+preservation, wrapper/EP/resource/CSR/wake models PASS. Plain overlay from
+exact0230 compiled sources equals reviewed source. Manifest11sources/
+9symbols/47strings.0230 stays installed; fresh Download Mode requested.
+Full0231 CI next; no0231 flash or USB success yet.
+
 ## 0230 verified and BOOT flashed; pre-log POLL trace pending — 2026-11-19
 
 Exact CI44486941058 SUCCESS at105d9746d00b514d1779bab9cecacbc89c5255f2.
