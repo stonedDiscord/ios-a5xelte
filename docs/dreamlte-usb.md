@@ -1,5 +1,34 @@
 # DREAMLTE USB bring-up evidence
 
+## 0228 STARTCFG succeeds; first resource command times out — 2026-11-19
+
+User follows the awake-clock checkpoints with exact text:
+
+    DREAMLTE USB: STRATCFG completed reg=00000009
+    SWEET USB: ep0 cmd 0x2 timeout
+
+STRATCFG is the user's transcription; compiled marker is STARTCFG.
+STARTCFG completes with reg9, then the first EP0 SETTRANSFRESOURCE command
+still times out. CLK31 was clear at endpoint entry; the0228 failure-time
+CLK/PAR/core snapshot has not yet been supplied. This rules out a stop at
+the reset-wake guard or STARTCFG for this boot, not later clock gating.
+No resources assigned or working USB established. Review command/core
+initialization against pinned Samsung source;0228 remains installed.
+
+Source review at pinned8895 revision3cfb914658ab077aef9ed500aa4a583782971fbf:
+gadget.c dwc3_send_gadget_ep_cmd writes PAR0/PAR1/PAR2 then CMDACT and
+polls for completion (500 one-us delays); XNU uses that ordering and1000
+one-us polls. dwc3_gadget_set_xfer_resource sets PAR0=NUM_XFER_RES(1),
+PAR1/2=0. start_config issues STARTCFG(0) then transfer resources before
+SETEPCONFIG. Thus neither reordering the first two commands nor extending
+the timeout is supported by a newly identified difference here.
+core.c reset_check clears GCTL RAMCLKSEL bits7:6, as current XNU does;
+gadget.c switches RAMCLKSEL later on connection-done, so moving that
+switch before the failed resource command would depart from this source.
+Failure-time PHY snapshot is the next discriminating existing diagnostic;
+no new register change selected solely from the two command lines.
+
+
 ## 0228 physical clock checkpoints — 2026-11-19
 
 User reports from installed0228:

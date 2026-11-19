@@ -1,5 +1,21 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0228 STARTCFG succeeds; first resource command times out — 2026-11-19
+
+User follows the awake-clock checkpoints with exact text:
+
+    DREAMLTE USB: STRATCFG completed reg=00000009
+    SWEET USB: ep0 cmd 0x2 timeout
+
+STRATCFG is the user's transcription; compiled marker is STARTCFG.
+STARTCFG completes with reg9, then the first EP0 SETTRANSFRESOURCE command
+still times out. CLK31 was clear at endpoint entry; the0228 failure-time
+CLK/PAR/core snapshot has not yet been supplied. This rules out a stop at
+the reset-wake guard or STARTCFG for this boot, not later clock gating.
+No resources assigned or working USB established. Review command/core
+initialization against pinned Samsung source;0228 remains installed.
+
+
 ## 0228 physical clock checkpoints — 2026-11-19
 
 User reports from installed0228:

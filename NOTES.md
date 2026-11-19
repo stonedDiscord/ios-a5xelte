@@ -2,6 +2,14 @@
 
 ## Active S8 handoff — 2026-11-19
 
+LATEST0228 command result: user reports STRATCFG completed reg00000009
+(compiled STARTCFG marker), then ep0cmd2 timeout. First transfer-resource
+command still stalls despite CLK31 clear at endpoint entry/PIPE10/TEST0.
+Failure-time PHY/PAR/core snapshot pending; no resources or USB success.
+Review pinned Samsung command/core setup; keep0228 installed and visible.
+
+
+
 LATEST0228 physical: pre-reset CLK001b0048/PIPE10/TEST0;
 post-reset wake001b0048->001b0048/PIPE10; endpoint-entry same CLK/PIPE/TEST.
 CLK31 clear at all three checkpoints; post-reset helper made no CLK write.
