@@ -1,3 +1,8 @@
+ACTIVE21:01UTC BOOT0098 COREPOWER VERIFIED: tx2powered1/shutdown1,
+shader1/tiler1/L2=1whileon/PMU08000000;fault0/IRQ700after. Clocks+ID90910010.
+NoGPUjob/renderingyet. iohealthy/UTCsynced. FWstaging18079 inprogress,
+needload/startleaveON; capture82938/30907. Nextprivatejob0166.
+
 ACTIVEBOOT0098 flashedboot-onlySUCCESS; capture30907 waitingCDC.
 CI44610344415/134902f source/checksum/markers/testsPASS. Kernel400e7df6...
 047be1c7;BOOTb26ed916...54fdb523;all8/1984MiB/ADT0094/cmd599/SMPPASS.

@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0098 GPU core power cycle verified
+
+Explicit gpu clocks tx1 repeats GPU_ID90910010/core11/mem11/sys31.
+gpu cores tx2: onresult1 shader1/tiler1/L2=1, PMU08000000; shutdown1,
+IRQ00000700 (reset/powerchange), fault0. NoGPUjobsubmitted. This verifies
+vendorPWRKEY/OVERRIDE/TILER-L2/SHADER sequence andboundedshutdown onactual
+A03, notrendering. ioReady1/poisoned0. UTC1795122077 synced; privateFW
+staging18079 underway; needload/start/leaveON afterstaging. Capture82938/
+30907 boot0098-gpu-cores-live.log. NextownedoffscreenWRITE_VALUEjob with
+AArch644KiBtables/cachemaintenance/completion+retirement+pixelreadback.
+
 ## 2026-11-19:0165 CI success; BOOT0098 flashed for core readiness
 
 CI44610344415 SUCCESS exact134902f50941015d3390dd94aa54b5d9894d5963.
