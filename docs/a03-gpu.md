@@ -1,8 +1,18 @@
 # A03 GPU acceleration bring-up
 
-The running BOOT0094 compositor is software. No A03 GPU ID, completed GPU
+The running BOOT0095 compositor is software. No A03 GPU ID, completed GPU
 job, rendered pixel, EAGL/Metal device or GPU-accelerated SpringBoard frame
 has been measured. An A75 scheduling preference does not supply a GPU driver.
+
+## Hardware passive result, 2026-11-19
+
+BOOT0095 from successful CI44409726184/exact15b1445 passed artifact checksum,
+uploaded-source reverse-apply, linked marker and host sanitizer checks, then
+flashed to boot only. Exact live gpu transaction returns PMU force00010102,
+state07000000, AON enable002bcac1: core0 state7/top0 and bus bit11 enabled.
+The guard stops before mapping GPU/APB. GPU_ID is still unmeasured. No power
+writes, jobs, pixels or acceleration are established. Next GPU gate is a
+source-validated power/voltage/clock sequence; a DMA blit is a separate path.
 
 ## Hardware evidence and sources
 

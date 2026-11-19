@@ -1,3 +1,16 @@
+ACTIVE2026-11-19 GPU passive trial0095: CI44409726184 SUCCESS exact15b1445.
+Kernel f1cf4a5a...d9ac5e7; BOOT1946fd80...bf9f5b. Checksum/source/markers/
+ASanUBSan/SMP/RAM PASS. Lowercase boot flashed100percent; uppercase BOOT
+was rejected prewrite, earlydetect also failed.0094/0093 restores retained.
+LiveGPUforce00010102/state07000000/AON002bcac1 => core0state7; guardedSTOP,
+GPUapertureuntouched. NoGPU_ID/jobs/acceleration. Need validatedpoweron or
+separate validatedDMA copy path. All8/1984MiB/iohealthy; initial4swaps/copies.
+CapturePID29344/session52219 boot0095-gpu-live.log1800s from~18:32UTC.
+UTCsynced18:35:45UTC; private79104fw valid0/load0/A55A. Immediate first
+touchstart error-4/allFF stopped; laterstart streaming1/slices7/inputstatus3,
+leftON. PhysicalUIunverified; finaldisplay6swaps/4copies/timer18913. NoHome.
+XR828x1792 discussion only; resolution remains720x1600. See A03_PROGRESS.md.
+
 ACTIVE2026-11-18 22:29UTC: user reboot/datewrong.0150 WAS committed228642b,
 but volatile host sync only, no persistentRTC. LiveUTC439(1970-01-01)
 ->hostsync1795040955->independentstatussame(2026-11-18 22:29:15UTC).

@@ -1,5 +1,41 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0095 passive GPU trial reaches closed power-domain guard
+
+Resumed basic acceleration experiment. CI44409726184 completed SUCCESS
+2026-11-18 22:29:28UTC at exact15b144586351eb9855f5cab3c9fb446139080720.
+Downloaded kernel/buildtree; SHA256SUMS, exact0162 reverse-apply against
+uploaded source, linked GPU/SMP/A75/display markers and actual probe
+ASan/UBSan tests PASS. Kernel SHA256
+f1cf4a5acbdcfe411e47c54de7aab808e8e6f8535d39e0bb2a4ec0e81d9ac5e7.
+BOOT0095 SHA256
+1946fd8085e2ca8d3ba466b504aeb49e85abb583b87e87c57dad20e6f2bf9f5b.
+Exact0094 inputADT/599-byte cmdline/all8/1984MiB; 23 live reservations,
+SMP target0x103485000 and stock ramdisk/DT preservation validated.
+
+Heimdall uppercase BOOT rejected before writing; rebooted old image.
+Early subsequent detect too soon; final lowercase boot upload100percent
+success/reboot. Only boot flashed;0094/0093 restores retained. Single
+capture29344/session52219 boot0095-gpu-live.log started~18:32UTC for1800s.
+Live exact gpu transaction: pmu-force00010102, pmu-state07000000,
+aon-enable002bcac1. Core0 state field7, top0; bus bit11 enabled.
+Guard reports power/bus gate closed, GPU aperture untouched. No GPU_ID,
+power/clock writes, submitted job or accelerated frame. Need validated
+power/voltage/clock sequence before actualGPU_ID/jobs; DMA copy remains
+an alternative requiring separate ownership/completion/pixel validation.
+
+All8 registered with usage inclA75; VM65147free16KiBpages/compressor0,
+ioReady1/poisoned0. Initialdisplay4swaps/4copies, timer13526; no smoothUI
+claim. Touchstream0 after reboot. HostUTC1795113345 synced18:35:45UTC;
+private79104-byte firmware staging valid0/loadresult0/readyA55A PASS.
+First immediate start returned all-FF packets/error-4 and stopped safely;
+one later explicit start succeeds streaming1/slices7/events0, inputstatus3.
+Leave continuous HID ON; no Home injection. Physical touch/UI unverified.
+Final display6swaps/4copies with advancing timer18913: no frame recovery
+claim. Repeated passiveGPU result identical. No new power/clock/job writes.
+Resolution unchanged720x1600: XR828x1792 discussed only, not implemented.
+
+
 ## 2026-11-18 22:29 UTC: reboot date regression explained; volatile UTC restored
 
 User rebooted and reports wrong date. Committed0150 is228642b (2026-11-17),
