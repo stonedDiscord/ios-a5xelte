@@ -189,3 +189,10 @@ not a driver and not staged in kernel. Hostsanitizer pagewalk verifies1024
 physical bases above4GiB, invalidneighbors, exact jobbytes/canary andbounds.
 No hardware MMU mapping or job was submitted. Core power hardware gate
 and runtime ownership/cache/completion/retirement still must be satisfied.
+
+Measured90910010 matches Mesa mesa-24.3.0 pan_props.c product9091=G57/TNAx.
+Vendor gpu_id.h calls modelTNAX. Revision low0010 isr0p1, whose pinned
+issue list omitsTTRX3485 (r0p0 needs dummy-job workaround); do not assume
+all Valhall revisions need the private valhall-1691526 blob. Shader quirks
+and full render jobs still require their own validation. Primary XML field
+correspondence is optionally tested with --mesa-xml PRIVATE/v7.xml.

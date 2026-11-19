@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: core-power CI live; private job format prepared
+
+CI44610344415 exact134902f remainsBuild/in_progress. Existingwatch34005;
+current0097clockGPU_ID90910010 remainsreadable;noextrahardwarewrites.
+PrimaryMesa24.3pan_props maps9091->G57/TNAx;low0010=r0p1. Vendorr0p1
+issues omitTTRX3485 (dummyjobWA neededonr0p0). Joblayoutsharedheader+
+hosttestcommitted317329d/dd568aa:1024above4GiB bases/4KiBpagewalk/onlyjob+
+outputmapped/canary/WRITE_VALUEimmediate64bytes/bounds underASanUBSanPASS,
+plusactualprimaryMesaXMLfieldcorrespondencePASS. Notstagedinkernelyet,
+noMMU/jobhardwareclaim. Runtimebuffer/cache/completion/retirementpending.
+Private0098packer/exactsourceverifierprepared; needCI->BOOTcorepowertrial.
+
 ## 2026-11-19:0165 committed; CI44610344415 dispatched
 
 134902f adds guardedcorepowercycle; exactCI44610344415 queued/running.

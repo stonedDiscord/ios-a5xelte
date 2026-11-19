@@ -1,3 +1,9 @@
+FOLLOWUP20:45UTC44610344415 stillBuild/in_progress; watcher34005live.
+Private0098pack+sourceverifier gpu-cores-work ready. Sharedjoblayouthosttests
+317329d/dd568aa PASS(includingprimaryMesaXML);notstagedinrunningkernel.
+Measured9091identifiesG57/TNAxr0p1;vendorr0p1omitsr0p0dummyjob3485WA.
+Nojobhardwareyet. ContinuecorepowerCIandtrialfirst;0097clocksretained.
+
 ACTIVECI44610344415 exact134902f corepower0165 queued/running.
 BOOT0097 clocks+GPU_ID90910010 VERIFIED; nojob/pixelaccelerationyet.
 LatestioReady1/poisoned0;display7swaps5copies/timer17672. TOUCHON495slices.
