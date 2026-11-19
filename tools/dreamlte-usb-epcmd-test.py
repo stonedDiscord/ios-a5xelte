@@ -129,7 +129,7 @@ int main(void) {
 #ifdef HAS_SNAPSHOT
         assert(strstr(output, "DREAMLTE USB FAIL:"));
 #ifdef HAS_PHY_SNAPSHOT
-        assert(logs == 10 + 2 * (ep == 0) && strstr(output, "DREAMLTE USB PHY:"));
+        assert(logs == 10 + (ep == 0) && strstr(output, "DREAMLTE USB PHY:"));
         for (unsigned i = 0; i < sizeof(phyregs)/sizeof(phyregs[0]); i++)
             assert(phyregs[i] == ((0xa5000000u | i) & (i == 4 ? ~(1u << 31) : ~0u)));
         reset(2); dreamlte_phy = 0;

@@ -15,6 +15,11 @@ while depth:
     depth += (source[end] == '{') - (source[end] == '}')
     end += 1
 function = source[match.start():end]
+critical = function[function.index('if (ud_epcmd(0, DEPCMD_DEPSTARTCFG'):function.index('printf("DREAMLTE USB: STARTCFG completed')]
+assert 'printf(' not in critical, 'framebuffer output during resource allocation'
+cmd = source[source.index('ud_epcmd(unsigned ep,'):source.index('/* Samsung gadget.c start_config')]
+prefix = cmd[:cmd.index('dwc_wr(DEPCMDPAR0')]
+assert 'printf(' not in prefix and 'dreamlte_usb_clocks_print(' not in prefix
 code = r'''
 #include <assert.h>
 #include <stdint.h>

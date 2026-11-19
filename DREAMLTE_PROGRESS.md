@@ -1,5 +1,18 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0234 removes framebuffer delay in resource setup — 2026-11-19
+
+0233 PIPE change latched but endpoint setup still failed. Pinned Samsung
+gadget.c and upstream v6.12 have no console output between STARTCFG and
+resource allocation. XNU printed STARTCFG, three CMU lines and resource
+entry there.0234 defers STARTCFG output until resources complete and
+removes entry printing. Read-only entry snapshot, pre-timeout capture,
+command values/order, one-issue rule and failure/POLL/CMU output remain.
+This tests timing/interference; it is not an established root cause.
+No new clock, PHY, CMU, reset or DMA policy. Hardware untested.
+Host sees fresh Samsung Download Mode device065; no new flash yet.
+
+
 ## 0233 physical PIPE bit28 latches; endpoint setup still fails — 2026-11-19
 
 User confirms PIPE config010c0002->110c0002. CMU prelog-exit unchanged:

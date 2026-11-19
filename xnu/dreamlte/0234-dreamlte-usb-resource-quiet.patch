@@ -1,0 +1,30 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -619,9 +619,7 @@
+ 	struct dreamlte_usb_clocks resource_clocks;
+ 	if (resource_clock) {
+ 		dreamlte_usb_clocks_capture(&resource_clocks);
+-		dreamlte_usb_clocks_print("entry", &resource_clocks);
+-		printf("DREAMLTE USB: resource-entry CLK=%08x\n",
+-		    usb_rd(dreamlte_phy, 0x10));
++		/* Capture without framebuffer delay before command issue. */
+ 	}
+ #endif
+ 	dwc_wr(DEPCMDPAR0(ep), p0);
+@@ -703,13 +701,15 @@
+ 	    usb_rd(dreamlte_phy, 0x10), usb_rd(dreamlte_phy, 0x0c),
+ 	    usb_rd(dreamlte_phy, 0x28));
+ 	if (ud_epcmd(0, DEPCMD_DEPSTARTCFG, 0, 0, 0)) return -1;
+-	printf("DREAMLTE USB: STARTCFG completed reg=%08x\n", dwc_rd(DEPCMD(0)));
++	/* Defer console output until resource allocation completes. */
++	uint32_t startcfg = dwc_rd(DEPCMD(0));
+ 	for (unsigned n = 0; n < out; n++) {
+ 		if (ud_epcmd(2 * n, DEPCMD_SETTRANSFRESOURCE, 1, 0, 0)) return -1;
+ 	}
+ 	for (unsigned n = 0; n < in; n++) {
+ 		if (ud_epcmd(2 * n + 1, DEPCMD_SETTRANSFRESOURCE, 1, 0, 0)) return -1;
+ 	}
++	printf("DREAMLTE USB: STARTCFG completed reg=%08x\n", startcfg);
+ 	printf("DREAMLTE USB: resources assigned in=%u out=%u\n", in, out);
+ 	return 0;
+ }
