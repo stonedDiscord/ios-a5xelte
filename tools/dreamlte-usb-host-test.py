@@ -49,11 +49,12 @@ typedef uintptr_t vm_offset_t;
 #define DWC3_PA 0x10c00000
 #define DWC3_SIZE 0x10000
 static uint32_t core[0x10000 / 4], phy[0x100 / 4];
-static vm_offset_t dreamlte_phy, dreamlte_fsys_cmu, dreamlte_top_cmu;
+static vm_offset_t dreamlte_phy, dreamlte_fsys_cmu, dreamlte_top_cmu, dreamlte_usb_pmu, dreamlte_usb_refsel;
 static unsigned maps, starts, phy_reads;
 static unsigned delays, ignore_retention, force_suspend_readback;
 static int mode;
 static vm_offset_t ml_io_map(uintptr_t pa, unsigned size) {
+    if ((pa == 0x16480000 && size == 0x1000) || (pa == 0x10e50070 && size == 0x10)) return (uintptr_t)core;
     if ((pa == 0x11000000 && size == 0x4000) || (pa == 0x15a80000 && size == 0x3000)) return (uintptr_t)core;
     maps++;
     if (pa == DWC3_PA && size == DWC3_SIZE) return (uintptr_t)core;
@@ -95,6 +96,9 @@ if has_core_timing:
         code += '#define HAS_RESET_WAKE 1\n'
     code += 'static void\n' + function('dreamlte_usb_core_timing') + '\n'
 code += 'static void\n' + function('dreamlte_usb_vbus') + '\n'
+code += re.search(r'struct dreamlte_usb_clocks \{[^}]+\};', source).group() + '\n'
+code += 'static void\n' + function('dreamlte_usb_clocks_capture') + '\n'
+code += 'static void\n' + function('dreamlte_usb_clocks_print') + '\n'
 code += 'static void\n' + function('sweet_usb_probe') + '\n'
 code += r'''
 static void reset(void) {

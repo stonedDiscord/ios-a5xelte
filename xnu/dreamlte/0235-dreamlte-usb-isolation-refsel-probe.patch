@@ -1,0 +1,45 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -90,7 +90,8 @@
+  * Never change mux/divider/gates/Q-channel based on an inferred clock.
+  */
+ static vm_offset_t dreamlte_fsys_cmu, dreamlte_top_cmu;
+-struct dreamlte_usb_clocks { uint32_t busmux, usbmux, aclk, ref, suspend, qch, mux, div, gate; };
++static vm_offset_t dreamlte_usb_pmu, dreamlte_usb_refsel;
++struct dreamlte_usb_clocks { uint32_t busmux, usbmux, aclk, ref, suspend, qch, mux, div, gate, isolation, refsel; };
+ static void
+ dreamlte_usb_clocks_capture(struct dreamlte_usb_clocks *v)
+ {
+@@ -103,6 +104,9 @@
+ 	v->mux = usb_rd(dreamlte_top_cmu, 0x1068);
+ 	v->div = usb_rd(dreamlte_top_cmu, 0x1864);
+ 	v->gate = usb_rd(dreamlte_top_cmu, 0x206c);
++	/* Pinned Samsung pipe3_phy_isol + live DT usbphy-refclk: read only. */
++	v->isolation = usb_rd(dreamlte_usb_pmu, 0x704);
++	v->refsel = usb_rd(dreamlte_usb_refsel, 0x0c);
+ }
+ static void
+ dreamlte_usb_clocks_print(const char *stage, const struct dreamlte_usb_clocks *v)
+@@ -110,6 +114,7 @@
+ 	printf("DREAMLTE CMU %s: BUSMUX=%08x USBMUX=%08x QCH=%08x\n", stage, v->busmux, v->usbmux, v->qch);
+ 	printf("DREAMLTE CMU %s: ACLK=%08x REF=%08x SUSP=%08x\n", stage, v->aclk, v->ref, v->suspend);
+ 	printf("DREAMLTE CMU %s: TOPMUX=%08x DIV=%08x GATE=%08x\n", stage, v->mux, v->div, v->gate);
++	printf("DREAMLTE PREREQ %s: ISOL=%08x REFSEL=%08x\n", stage, v->isolation, v->refsel);
+ }
+ /* Samsung CAL exynos_cal_usbphy_q_ch(enable=1), before DCTL reset.
+  * Only the measured primary PIPE-clock selection is supported here. Do not
+@@ -365,7 +370,13 @@
+ 	}
+ 	dreamlte_fsys_cmu = ml_io_map(0x11000000, 0x4000);
+ 	dreamlte_top_cmu = ml_io_map(0x15a80000, 0x3000);
+-	if (!dreamlte_fsys_cmu || !dreamlte_top_cmu) return;
++	dreamlte_usb_pmu = ml_io_map(0x16480000, 0x1000);
++	dreamlte_usb_refsel = ml_io_map(0x10e50070, 0x10);
++	if (!dreamlte_fsys_cmu || !dreamlte_top_cmu ||
++	    !dreamlte_usb_pmu || !dreamlte_usb_refsel) return;
++	struct dreamlte_usb_clocks inherited;
++	dreamlte_usb_clocks_capture(&inherited);
++	dreamlte_usb_clocks_print("inherited", &inherited);
+ 	if (!dreamlte_usb_prepare(dwc)) sweet_usb_gadget_start(dwc);
+ }
+ #else

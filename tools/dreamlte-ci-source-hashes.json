@@ -1,10 +1,10 @@
 {
-  "description": "DREAMLTE0234 removes framebuffer output between STARTCFG and resource allocation. Timing hypothesis, hardware untested.",
+  "description": "DREAMLTE0235 read-only inherited/command-time PMU isolation and PHY reference selector snapshots; no new register writes. Hardware untested.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "5a3ac225e765c532d1fa749c4c268ab8e04e1922842cea9d32b39f6f18bc9554",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "69671cee2c8b20e630dda18473a21d8197f0b2797edda270bef13f5c090d74ac",
+    "bsd/dev/sweet_usb.c": "403daa257283677905c8acf28f568d057e610c275ab52ce1fb2cb1b3c5189adf",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
@@ -64,7 +64,8 @@
     "DREAMLTE CMU %s: ACLK=",
     "DREAMLTE CMU %s: TOPMUX=",
     "DREAMLTE USB: PIPE config %08x->%08x",
-    "DREAMLTE USB: PIPE config refused ID="
+    "DREAMLTE USB: PIPE config refused ID=",
+    "DREAMLTE PREREQ %s: ISOL="
   ],
   "symbols": [
     "_dreamlte_log_cursor",

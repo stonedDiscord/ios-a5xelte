@@ -20,20 +20,21 @@ code=r'''
 #include <stdio.h>
 typedef uintptr_t vm_offset_t;
 static vm_offset_t dreamlte_fsys_cmu=0x11000000, dreamlte_top_cmu=0x15a80000;
+static vm_offset_t dreamlte_usb_pmu=0x16480000, dreamlte_usb_refsel=0x10e50070;
 static unsigned reads;
-static const unsigned offsets[]={0x100,0x180,0x2078,0x207c,0x2080,0x3044,0x1068,0x1864,0x206c};
+static const unsigned offsets[]={0x100,0x180,0x2078,0x207c,0x2080,0x3044,0x1068,0x1864,0x206c,0x704,0x0c};
 static uint32_t usb_rd(vm_offset_t base,unsigned offset) {
-    assert(reads<9 && offset==offsets[reads]);
-    assert(base==(reads<6?dreamlte_fsys_cmu:dreamlte_top_cmu));
+    assert(reads<11 && offset==offsets[reads]);
+    assert(base==(reads<6?dreamlte_fsys_cmu:reads<9?dreamlte_top_cmu:reads==9?dreamlte_usb_pmu:dreamlte_usb_refsel));
     return ++reads;
 }
 '''+struct+'\nstatic void\n'+function('dreamlte_usb_clocks_capture')+'\nstatic void\n'+function('dreamlte_usb_clocks_print')+r'''
 int main(void) {
     struct dreamlte_usb_clocks v;
     dreamlte_usb_clocks_capture(&v);
-    assert(reads==9 && v.busmux==1 && v.usbmux==2 && v.aclk==3 && v.ref==4 && v.suspend==5 && v.qch==6 && v.mux==7 && v.div==8 && v.gate==9);
-    dreamlte_usb_clocks_print("sample",&v);assert(reads==9);
-    puts("PASS: actual CMU capture reads only nine pinned registers; logging never re-reads MMIO; entry/exit captures precede command/timeout output");
+    assert(reads==11 && v.busmux==1 && v.usbmux==2 && v.aclk==3 && v.ref==4 && v.suspend==5 && v.qch==6 && v.mux==7 && v.div==8 && v.gate==9 && v.isolation==10 && v.refsel==11);
+    dreamlte_usb_clocks_print("sample",&v);assert(reads==11);
+    puts("PASS: actual CMU capture reads eleven pinned registers including isolation/reference selector; logging never re-reads MMIO; entry/exit captures precede command/timeout output");
 }
 '''
 command=function('ud_epcmd')

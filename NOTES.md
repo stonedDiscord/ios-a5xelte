@@ -2,6 +2,23 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0235 prerequisite probe prepared — 2026-11-19
+
+0234 physical cmd2 timeout/POLL001b0048 all1000/wake0 is recorded.0235
+adds read-only PMU USB isolation0x16480704 and PHY reference selector
+0x10e5007c to existing clock snapshots: inherited before PHY setup and
+pre-timeout before any framebuffer error printing. New line:
+DREAMLTE PREREQ <stage>: ISOL=<value> REFSEL=<value>.
+Expected fields from pinned Samsung/live DT: ISOL bit0=1 (isolation
+released), REFSEL bit24=1. These readbacks are not clock measurements.
+Mappings occur only after opt-in2/exact2.80a/stopped-core guards. No new
+MMIO writes, command-order change, reset retry or active command reissue.
+New read accesses untested on device. All seven USB source-derived suites,
+RAM console suite, actual ARM64 compile and exact0234 overlay equality PASS.
+Manifest11sources/9symbols/52diagnostics. Fresh Download Mode066 visible.
+0234 installed; next exact CI and BOOT-only trial. USB console not working.
+
+
 ## 0234 physical result: quiet resource path still times out — 2026-11-19
 
 User reports from0234:
