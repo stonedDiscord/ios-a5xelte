@@ -1,3 +1,9 @@
+ACTIVECI44632519909 exact7e4ea5b replay0170 queued. Privateexactartifact/
+sourceverifier/pack0103ready. BOOT0102now10real2DGPUframes/11520000pixels,
+verified10/completed10/fallback0/quarantine0; touchON985slices27physicalevents.
+NeedreplayCI->0103->CPU/fast/verify sameframe measurement. Physicalacceptance
+stillpending; noFPSclaim. Capture123073/98448. NoHome.
+
 NEXT0170 acceptedcompositorframeboundedreplay1/4/8 forrepeatabletiming.
 BOOT0102actual2DfourfullframesPASS verified4/completed4;fullreadbacktotal
 836191307ns/last173059846ns. Fast+CPU20sbenchzeroFrames=>INCONCLUSIVE,
