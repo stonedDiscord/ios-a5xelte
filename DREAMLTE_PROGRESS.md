@@ -1,5 +1,23 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0235 verified and BOOT flashed; prerequisite readbacks pending — 2026-11-19
+
+Exact CI44518477291 SUCCESS atc202064b5256360ee698b61d6bc9ebe71df1d19c.
+11sources/9symbols/52diagnostics/profile PASS. Kernel SHA256
+b387742111243afa2e59018df28c369426ac535dd67d4053bd6abbce10b08d60.
+BOOT shim/out/dreamlte-xnu-0235.img,18,464,784B,SHA256
+21c864542c8adf8fe47f251a7e8a76141d9adb6fb6d85400fed51d5cc94507b2.
+Original BOOT components/header/payload/fit/hash PASS. Fresh Download
+Mode066 accepted BOOT100%; Heimdall exit0/reboot. Only BOOT written.
+Exact artifacts/manifest/flash log research/dreamlte/ci-44518477291.
+Immediately afterward no1209:0001. Physical new reads unverified; requested
+DREAMLTE PREREQ inherited and prelog-exit ISOL/REFSEL lines or last visible
+line if earlier stop. No new clock/PMU/reference writes in this trial.
+0235 installed; no live CI/preparation/flash. Working console unverified.
+Keep this boot until physical report. CI took longer than0234 and had
+transient API failures; same exact run completed without restart.
+
+
 0235 exact CI44518477291 dispatched atc202064b5256360ee698b61d6bc9ebe71df1d19c.
 Preparation research/dreamlte/prepare-0235.py verifies exact head/run,
 source/profile and packages preserved BOOT components; never flashes.
