@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0102 running, touch restored, timing parser live
+
+ActualclocksID90910010/gates11,11,31; blitON1/verify1. UTC1795128362synced.
+Private79104byteFWstagedvalid0/load0/readyA55A; touchcontinuousON1/slices1
+restored. Actual new timing parser readsall0169fields correctly; frames0/
+verified0/completed0 atthispoint, so nooptimizedshaderhardwareclaimyet.
+GUIstartupstorageadvances5153->6952requests/read731039->1119528sectors,
+ioReady1/poisoned0. Solecapture123073/session98448 boot0102-gpu-blit2-live.log.
+Awaitfirstfouractual2Dfullreadbackframes beforefastmeasurement. NoHome.
+0101physicalinput18events/4GPUframes+28CPUfallback checkpoint retained.
+
 ## 2026-11-19:0169 CI success; BOOT0102 2D/timing trial flashed
 
 CI44629497398 SUCCESS exact44b6f27cd4c58ca43c3438a324e5fdeaeb4386c9.

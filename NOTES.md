@@ -1,3 +1,8 @@
+FOLLOWUP22:47UTC BOOT0102clocksID90910010/blitON1/verify1;UTC1795128362.
+FWload0/A55A/touchONrestored. Timingparserliveallfields;frames0yet,GUIpaging
+storageadvances/iohealthy. Await4verified2Dframes->fasttiming. Capture123073/
+98448 soleowneruntil~23:15UTC. NoHome/physicalanswerpending.
+
 ACTIVEBOOT0102 flashedBOOT-onlySUCCESS. CI44629497398/44b6f27 verified.
 Kernel1609f9aa...5ecb0520;BOOTbe5b980f...d44ce223. Same8cores/1984MiB/cmd599.
 Solecapture123073/session98448 waitingCDC. Onceonlyclocks/blitON/UTCqueued
