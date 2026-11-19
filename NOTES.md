@@ -2,6 +2,18 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0237 verification blocked on physical screen evidence — 2026-11-19
+
+Revalidated across three consecutive goal turns: no1209:0001, no04e8:685d,
+and no ECM interface. Latest journal ends at Download069 disconnect.
+Previous continuation made no implementation progress. No live build,
+preparation or flash can resolve this. Physical screen report is missing.
+Preserve0237 until its last visible line is reported; no specific startup
+fault is established. Both hardware gates remain unverified: automatic USB
+after phone reboot and USB-requested Samsung Download Mode. Goal blocked
+pending the physical observation or a newly available USB connection.
+No new flash or partition writes. Resume from current0237.
+
 ## 0237 first boot: no host enumeration; screen report pending — 2026-11-19
 
 Heimdall flash completed BOOT100%/exit0/reboot. Two bounded30second host
