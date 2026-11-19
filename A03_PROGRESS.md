@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0101 clocks/blit enabled; GUI still paging in
+
+Actual tx1 gpu clocks enables11/11/31 andID90910010; tx2 gpu blit on
+reports enabled1/frames0/fallbacks0/quarantined0. UTC1795126843 synced.
+PrivateFW79104stagedvalid0/load0/readyA55A, touchcontinuousON tx2480;
+tx2495 streaming1/slices222. AllinputrestoredwithoutHome. ioReady1/poisoned0,
+requests advancing4881->8975/readsectors723647->1497513 duringstartup.
+SpringBoard26/backboardd56 exist; both initialsinglethread samples wait in
+lck_mtx_lock_contended -> emmc_strategy -> clustered page-in, exactlinked
+kernel symbolresolution. Vsyncadvances; swaps0/copies0. No GPU framebuffer
+job has arrived yet, so no hardwareblit/PASS/latency claim. Awaitactualframe
+submissions; physicalscreenstatus requested asynchronously. Solecapture
+111070/56476 boot0101-gpu-blit-live.log remainsowner. Goalactive.
+
 ## 2026-11-19:0168 fullCI success; BOOT0101 flashed for framebuffer trial
 
 CI44625038530 SUCCESS exact74e1deff53d2dc27bcc769b92b2b37ec70c16cb9.

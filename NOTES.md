@@ -1,3 +1,9 @@
+FOLLOWUP22:23UTC BOOT0101 clocksID90910010/blitON1, frames0/fallback0/
+quarantine0. GUI26/56initialthreads waitemmc_strategy page-in; IOadvances
+requests4881->8975,notstalled. UTC1795126843 synced;FWload0/A55A; touchON222
+slices. Awaitrealframes, physicalstatusasyncpending. NoHome/extrareset.
+Solecapture111070/56476. Nohardwareframebufferclaimyet.
+
 ACTIVEBOOT0101flashedBOOT-onlysuccess. CI44625038530/74e1def exactsource+
 checksum/SMP/ASanUBSanPASS. Kernel460bfe05...3d1620e/BOOT3825c66c...c7c8d62.
 Sameall8/1984MiB/ADT0094/cmd599. Solecapture111070/session56476 waitingCDC.
