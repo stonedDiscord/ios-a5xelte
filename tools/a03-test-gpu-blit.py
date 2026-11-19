@@ -151,9 +151,11 @@ int main(void){
  reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);
  for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}
  reset(0);assert(blit(37,1601)==0&&!starts);
+ reset(0);a03_gpu_blit_control(3);corrupt=1;assert(blit(37,19)==0&&a03_gpu_blit_verified==0); /* fast cannot bypass initial readback */
  reset(0);a03_gpu_blit_control(3);assert(!a03_gpu_blit_verify);
  for(unsigned n=0;n<5;n++){us=flushes=starts=offs=0;assert(blit(37,19)==1);}
  assert(a03_gpu_blit_verified==4&&a03_gpu_blit_completed==5&&a03_gpu_blit_ns==50);
+ us=flushes=starts=offs=0;corrupt=1;assert(blit(37,19)==1&&a03_gpu_blit_verified==4); /* completed, deliberately not pixel-verified */
  a03_gpu_blit_control(4);assert(a03_gpu_blit_verify);us=flushes=starts=offs=0;corrupt=1;assert(blit(37,19)==0);
  reset(0);if(allocation)free(allocation);return 0;
 }
