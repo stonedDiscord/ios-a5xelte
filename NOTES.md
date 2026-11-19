@@ -1,3 +1,10 @@
+CI44606600103 exact5e1a464 (0164clocks) dispatched; use thisrun next.
+Latest0096touchON617slices13events; display6swaps/4copies/timer16500.
+NoHome/extraGPUwrites/clockenable yet; touchcollection notphysicalUIproof.
+Capture54337/69071 boot0096-gpu-power-live.log ownsconsole until~20:39UTC.
+0095/0096loader comparePASS after masking expectedImageimage_sizefield;
+stockramdisk/DTexactmatch. Firstnaivecomparefailed solelythatheaderfield.
+
 ACTIVE2026-11-19 BOOT0096 running all8/1984MiB; CLOCKSOFF hardwareconfirmed.
 gpu power SC2730pd0/vsel140=1V STOP beforewrites; passivecore10/mem10/sys30,
 force10102/state07000000/AON2bcac1. NoGPU_ID/job. TouchFWload0/A55A,
