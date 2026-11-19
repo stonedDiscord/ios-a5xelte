@@ -2,6 +2,13 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0232 CI44498181713 dispatched at06cbc9be260d56e6be65e042cd5e96ab151335b3.
+Preparation research/dreamlte/prepare-0232.py waits exact head/run,
+verifies11sources/9symbols/50strings and packages, never flashes.
+Fresh Download Mode requested;0231 installed, no0232 physical test yet.
+0231 host watcher ended after20min with no matching ECM interface.
+
+
 0232 adds read-only nine-register USB clock-tree snapshots from pinned
 cmucal-sfr.c: FSYS0 BUS/USB user mux, USB ACLK/reference/suspend gates,
 USB link Q-channel; top USB mux/divider/gate. Only after opt-in2, correct
