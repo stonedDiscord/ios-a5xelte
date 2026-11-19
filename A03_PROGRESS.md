@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0168 CI44625038530 active; translated DMA tests pass
+
+Authoritative kernel CI44625038530 exact74e1deff53d2dc27bcc769b92b2b37ec70c16cb9
+is Build/in_progress. Later commits only improve tests/handoff. No duplicate
+workflow.114patch profile stages offline;0168 applies to exact0100 tree.
+Private0101 fetch/sourceverifier/packer pin this run and SHA.
+
+Expanded fakeDMA validates actual four-level page walks and RO/RW/NX bits
+for every pixel of full720x1600 and clipped53x17 rectangle with124/2884byte
+source/destination offsets; neighboring destination canaries unchanged.
+PrimaryMesa24.3 v9 full-frame header/payload/program/TLS bytes match.
+Actual C GPU+AMFI ARM64 compiles PASS; existing WRITE_VALUE/copy lifecycle
+regression passes against new owner-enabled source. C++ fullCI remains gate.
+BOOT0100 unchanged; continuous touchON1887slices lastchecked, capture103600.
+NeedCIartifact/source/checksum ->0101BOOT-only ->clocks/blit on, actualframe
+readback and physicalacceptance. No newhardwareframebuffer claim.
+
 ## 2026-11-19:0168 IOSurface-to-framebuffer native GPU candidate
 
 Prepared opt-in gpu blit on/off/status. Shared atomic owner serializes all

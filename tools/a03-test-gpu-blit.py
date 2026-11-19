@@ -51,6 +51,16 @@ static uint32_t fake_read(vm_offset_t b,unsigned o){
  }
  return *(uint32_t *)(b+o);
 }
+static uint64_t walk(uint32_t va,int writable){
+ uint64_t *root=(uint64_t *)allocation,pa=0x120000000ULL;
+ unsigned shifts[]={39,30,21,12};uint64_t d=0;
+ for(unsigned level=0;level<4;level++){
+  d=root[((uint64_t)va>>shifts[level])&511];assert((d&3)==3);
+  if(level<3){uint64_t next=d&0x000000fffffff000ULL;assert(next>=pa&&next<pa+0x10000);root=(uint64_t *)((uint8_t *)allocation+next-pa);}
+ }
+ assert(d&(1ULL<<54));assert((d&0xc0)==(writable?0x40:0xc0));
+ return (d&0x000000fffffff000ULL)+(va&4095);
+}
 static void fake_write(unsigned o,uint32_t v){
  assert(o<0x3000);writes++;
  if(o==0x50){assert(v==0x2968a819);return;}
@@ -75,6 +85,9 @@ static void fake_write(unsigned o,uint32_t v){
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
   for(unsigned i=0;i<count;i++){
    unsigned y=i/width,x=i%width;
+   assert(walk(params[0]+y*params[4]+x*4,0)==0x140000000ULL+so+y*params[4]+x*4);
+   assert(walk(params[1]+y*params[5]+x*4,1)==0x9e000000ULL+doff+y*params[5]+x*4);
+
    *(uint32_t *)(dest_mem+doff+y*params[5]+x*4)=*(uint32_t *)(source_mem+so+y*params[4]+x*4);
   }
   if(corrupt)*(uint32_t *)(dest_mem+doff)^=1;
@@ -116,6 +129,10 @@ int main(void){
   if(m==4)assert(r==0&&starts==1&&offs==1);
   assert(!starts||!frees);
  }
+ reset(0);
+ assert(a03_gpu_framebuffer_blit((uintptr_t)source_mem+124,(uintptr_t)dest_mem+2884,0x9e000b44,3072,2880,53,17)==1);
+ assert(dest_mem[2883]==0x5a&&dest_mem[2884+53*4]==0x5a);
+ assert(!memcmp(source_mem+124,dest_mem+2884,53*4));
  reset(0);corrupt=1;assert(blit(37,19)==0&&!a03_gpu_job_poisoned);
  reset(0);bad_source=1;assert(blit(37,19)==0&&!starts);
  reset(0);bad_dest=1;assert(blit(37,19)==0&&!starts);
