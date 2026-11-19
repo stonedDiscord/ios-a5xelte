@@ -2,6 +2,24 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0229 local validation complete: ARM64 object and wrapper/EP/resource/CSR/
+new resource-wake models PASS; overlay equality PASS. One guarded bit31
+wake maximum during same active first EP0 resource command, no reissue.
+11sources/6symbols/45strings. Fresh Download Mode requested; full CI next.
+0228 remains installed; causal experiment only, no USB success claim.
+
+
+
+LATEST0228 full fault: first resource cmd2 active402/PAR0=1, TEST0/PIPE10,
+CLK801b0048 at failure vs001b0048 endpoint entry. Other measured core/
+session values unchanged; EVT82ca6000/8/80001000/0. Bit31 returns after
+endpoint-entry; timing/writer/causality unknown.0228 reset-only clear failed.
+Prepare0229 bounded one-time guarded wake during same active EP0 resource
+command, with entry/poll snapshots and no command reissue/reset loop.
+0228 installed; no working USB. Preserve non-BOOT partitions.
+
+
+
 LATEST0228 command result: user reports STRATCFG completed reg00000009
 (compiled STARTCFG marker), then ep0cmd2 timeout. First transfer-resource
 command still stalls despite CLK31 clear at endpoint entry/PIPE10/TEST0.

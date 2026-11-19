@@ -41,6 +41,7 @@ code = r'''
 #define DEPCMDPAR2(n) (0xc800 + 0x10*(n))
 #define DEPCMD(n) (0xc80c + 0x10*(n))
 #define DEPCMD_CMDACT (1u << 10)
+#define DEPCMD_SETTRANSFRESOURCE 2
 static uint32_t regs[0x10000/4];
 static uint32_t phyregs[0x100/4];
 static uintptr_t dreamlte_phy;
@@ -84,6 +85,7 @@ static uint32_t usb_rd(uintptr_t base, unsigned off) {
 has_snapshot = 'dreamlte_usb_ep_failure' in source
 if has_snapshot:
     code += 'static void\n' + function('dreamlte_usb_ep_failure') + '\n'
+code += 'static int dreamlte_usb_post_reset_wake(uintptr_t phy) { (void)phy; assert(0); return -1; }\n'
 code += 'static int\n' + function('ud_epcmd') + '\n'
 code += r'''
 static void reset(unsigned next) {
@@ -91,6 +93,7 @@ static void reset(unsigned next) {
     writes = delays = reads = logs = 0; mode = next;
     for (unsigned i = 0; i < sizeof(phyregs)/sizeof(phyregs[0]); i++)
         phyregs[i] = 0xa5000000u | i;
+    phyregs[4] &= ~(1u << 31);
     dreamlte_phy = (uintptr_t)phyregs;
 }
 int main(void) {
@@ -120,9 +123,9 @@ int main(void) {
 #ifdef HAS_SNAPSHOT
         assert(strstr(output, "DREAMLTE USB FAIL:"));
 #ifdef HAS_PHY_SNAPSHOT
-        assert(logs == 10 && strstr(output, "DREAMLTE USB PHY:"));
+        assert(logs == 10 + (ep == 0) && strstr(output, "DREAMLTE USB PHY:"));
         for (unsigned i = 0; i < sizeof(phyregs)/sizeof(phyregs[0]); i++)
-            assert(phyregs[i] == (0xa5000000u | i));
+            assert(phyregs[i] == ((0xa5000000u | i) & (i == 4 ? ~(1u << 31) : ~0u)));
         reset(2); dreamlte_phy = 0;
         assert(ud_epcmd(ep, 1, 0, 0, 0) == -1);
         assert(writes == 4 && logs == 7 && !strstr(output, "DREAMLTE USB PHY:"));

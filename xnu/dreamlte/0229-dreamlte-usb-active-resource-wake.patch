@@ -1,0 +1,44 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -546,6 +546,19 @@
+ static int
+ ud_epcmd(unsigned ep, uint32_t cmd, uint32_t p0, uint32_t p1, uint32_t p2)
+ {
++#if defined(DREAMLTE)
++	/* Only the initial EP0 resource command:0228 shows CLK31 returning
++	 * after endpoint-entry. Observe before issue; allow one guarded CAL
++	 * wake during this same active command, never reissue CMDACT.
++	 */
++	int resource_clock = ep == 0 && cmd == DEPCMD_SETTRANSFRESOURCE &&
++	    p0 == 1 && p1 == 0 && p2 == 0 && dreamlte_phy;
++	int resource_woke = 0;
++	if (resource_clock) {
++		printf("DREAMLTE USB: resource-entry CLK=%08x\n",
++		    usb_rd(dreamlte_phy, 0x10));
++	}
++#endif
+ 	dwc_wr(DEPCMDPAR0(ep), p0);
+ 	dwc_wr(DEPCMDPAR1(ep), p1);
+ 	dwc_wr(DEPCMDPAR2(ep), p2);
+@@ -563,6 +576,21 @@
+ 			}
+ 			return 0;
+ 		}
++#if defined(DREAMLTE)
++		if (resource_clock && !resource_woke) {
++			uint32_t clk = usb_rd(dreamlte_phy, 0x10);
++			if (clk & (1u << 31)) {
++				resource_woke = 1;
++				printf("DREAMLTE USB: resource suspend poll=%u CLK=%08x cmd=%08x\n",
++				    (unsigned)i, clk, v);
++				if (dreamlte_usb_post_reset_wake(dreamlte_phy)) {
++					printf("DREAMLTE USB: resource wake refused\n");
++					dreamlte_usb_ep_failure(ep, cmd);
++					return -1;
++				}
++			}
++		}
++#endif
+ 		delay(1);
+ 	}
+ 	printf("SWEET USB: ep%u cmd 0x%x timeout\n", ep, cmd & 0xf);

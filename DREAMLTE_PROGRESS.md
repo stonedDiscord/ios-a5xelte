@@ -1,5 +1,39 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0228 complete fault: CLK31 returns after endpoint entry — 2026-11-19
+
+User same-boot trace: STARTCFG reg9 completed; ep0cmd2 timeout/reg402;
+PAR0=1/PAR1=0/PAR2=0; GCTL80e92004 GSTS3e800000 USB2=40102400;
+DCTL0 DSTS00520000 EN0; CORE PIPE010c0002 HW3=10420085
+BUS22220001/300; DCFG80800 HW1=0160c93b;
+EVT82ca6000/000000008/80001000/0 (high word numerically8);
+TEST0 PHYPIPE10 LINK08000180 UTMI660 CLK801b0048 Q7e00 SEL0.
+
+CLK31 was clear at endpoint entry and set at the failure snapshot.
+Thus0228 narrows the transition to after endpoint-entry; it does not
+identify exactly when, which agent changes it, or prove it causes cmd2
+failure. Clearing it only after DCTL reset did not resolve resource setup.
+Next candidate will observe the first resource command and try at most
+one guarded Samsung CAL bit31 clear while that same command is active;
+never reissue an active command or loop controller reset. Preserve other
+PHY fields and existing reset/mux/free-clock guards. No USB success.
+
+
+0229 candidate observes first EP0 resource entry and each active-command
+poll until first CLK31 assertion. At most once it calls the existing
+post-reset wake helper (strict reset/mux/free-clock/all-ones guards,
+clear only31,500us,exact readback), then keeps polling the same command.
+It never reissues parameters/CMDACT or resets the controller. A failed
+wake refuses immediately; repeated suspend does not cause repeated writes.
+This is a causal experiment based on0228 transition, not a proven fix.
+Actual ARM64 object compile, wrapper/EP/resource/CSR models and new
+source-derived resource-wake suite PASS; plain overlay/full-source equality
+PASS. New model tests immediate/delayed suspend, completion, persistent
+readback/recurrent suspend, guards, unrelated endpoints and four command
+writes only. Manifest11sources/6symbols/45diagnostics;0228 manifest archived.
+0228 installed. Asked fresh Download Mode; full CI next. No new flash.
+
+
 ## 0228 STARTCFG succeeds; first resource command times out — 2026-11-19
 
 User follows the awake-clock checkpoints with exact text:
