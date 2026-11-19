@@ -1,0 +1,111 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -171,4 +171,83 @@
+         a03_gpu_read(a03_gpu_dvfs, 0x38), a03_gpu_read(a03_gpu_topdvfs, 0x18), a03_gpu_read(a03_gpu_topdvfs, 0x150));
+     a03_gpu_probe();
+ }
++
++/* BOOT0096 measured: top on, C0 asleep, inherited rail selector320 (1V),
++ * core/mem384MHz source /1, sys /4, all leaf gates off. Enable only these
++ * fixed inherited gates; never program PMIC, PLL, DVFS or clock rate. */
++static vm_offset_t a03_gpu_pll;
++static uint64_t
++a03_gpu_twpll_rate(uint32_t c0, uint32_t c1, uint32_t c2)
++{
++    uint64_t rate;
++    if (!(c0 & 1U)) rate = 26000000ULL * ((c0 >> 5) & 0x7ffU);
++    else {
++        uint64_t fraction = (c0 & 2U) ? (c1 & 0x7fffffU) : 0;
++        rate = 26000000ULL * ((((uint64_t)(c1 >> 23) & 0x7fU) << 23) + fraction) / (1ULL << 23);
++    }
++    if (c2 & (1U << 13)) rate /= 2;
++    return rate;
++}
++
++void a03_gpu_clocks(void);
++void
++a03_gpu_clocks(void)
++{
++    uint32_t pd, voltage, force, state, bus, core, mem, sys;
++    if (!a03_gpu_supply_status(&pd, &voltage) || pd & 8U ||
++        (voltage & 0x1ffU) != 320U) {
++        printf("A03 GPU clocks: inherited supply differs from0096; stop\n");
++        return;
++    }
++    if (!a03_gpu_pmu) a03_gpu_pmu = ml_io_map(A03_GPU_PMU_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_aon) a03_gpu_aon = ml_io_map(A03_GPU_AON_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_pmu || !a03_gpu_aon) return;
++    force = a03_gpu_read(a03_gpu_pmu, 0x2c4);
++    state = a03_gpu_read(a03_gpu_pmu, 0x500);
++    bus = a03_gpu_read(a03_gpu_aon, 0);
++    if (!a03_gpu_domain_accessible(force, state, bus)) return;
++    if (!a03_gpu_apb) a03_gpu_apb = ml_io_map(A03_GPU_APB_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_dvfs) a03_gpu_dvfs = ml_io_map(0x23014000ULL, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_pll) a03_gpu_pll = ml_io_map(0x645a0000ULL, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_apb || !a03_gpu_dvfs || !a03_gpu_pll) return;
++    core = a03_gpu_read(a03_gpu_apb, 4);
++    mem = a03_gpu_read(a03_gpu_apb, 8);
++    sys = a03_gpu_read(a03_gpu_apb, 12);
++    uint32_t pll0 = a03_gpu_read(a03_gpu_pll, 0);
++    uint32_t pll1 = a03_gpu_read(a03_gpu_pll, 4);
++    uint32_t pll2 = a03_gpu_read(a03_gpu_pll, 8);
++    uint64_t rate = a03_gpu_twpll_rate(pll0, pll1, pll2);
++    uint32_t dvfs = a03_gpu_read(a03_gpu_dvfs, 0x38);
++    printf("A03 GPU clocks: before core=%08x mem=%08x sys=%08x PLL=%08x/%08x/%08x Hz=%llu dvfs-state=%08x\n",
++        core, mem, sys, pll0, pll1, pll2, (unsigned long long)rate, dvfs);
++    /* Parent selector1 is TWPLL/4. Tolerance covers fractional PLL rounding.
++     * Refuse mixed leaf ownership and unexpected inherited rate/divider. */
++    if ((core & 0x771U) != 0x10U || (mem & 0x771U) != 0x10U ||
++        (sys & 0x71U) != 0x30U || !(pll0 & (1U << 18)) ||
++        rate < 1535000000ULL || rate > 1537000000ULL || (dvfs & 0x80000U)) {
++        printf("A03 GPU clocks: inherited rate/PLL/gate ownership mismatch; stop\n");
++        return;
++    }
++    /* Follow vendor leaf order, preserving all selector/divider/reserved bits.
++     * No jobs exist. Rollback changes only owned leaf enable bits on failure. */
++    if (!a03_gpu_update(a03_gpu_apb, 4, 1, 1) ||
++        !a03_gpu_update(a03_gpu_apb, 8, 1, 1) ||
++        !a03_gpu_update(a03_gpu_apb, 12, 1, 1)) goto rollback;
++    delay(400);
++    if (!a03_gpu_domain_accessible(a03_gpu_read(a03_gpu_pmu, 0x2c4),
++        a03_gpu_read(a03_gpu_pmu, 0x500), a03_gpu_read(a03_gpu_aon, 0))) goto rollback;
++    if (!a03_gpu_regs) a03_gpu_regs = ml_io_map(A03_GPU_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_regs) goto rollback;
++    uint32_t id = a03_gpu_read(a03_gpu_regs, 0);
++    printf("A03 GPU clocks: enabled GPU_ID=%08x cgm=%08x voltage=%08x; no jobs\n",
++        id, a03_gpu_read(a03_gpu_dvfs, 0x34), a03_gpu_read(a03_gpu_dvfs, 0x2c));
++    if (!id || id == UINT32_MAX) goto rollback;
++    a03_gpu_probe();
++    return;
++rollback:
++    (void)a03_gpu_update(a03_gpu_apb, 12, 1, 0);
++    (void)a03_gpu_update(a03_gpu_apb, 8, 1, 0);
++    (void)a03_gpu_update(a03_gpu_apb, 4, 1, 0);
++    printf("A03 GPU clocks: owned leaf gates restored off; stop\n");
++}
+ #endif
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -612,12 +612,13 @@
+ extern void a03_cpu_usage_probe(void);
+ extern void a03_gpu_probe(void);
+ extern void a03_gpu_power(void);
++extern void a03_gpu_clocks(void);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power|gpu clocks creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -641,6 +642,7 @@
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
+  else if(!strcmp(command,"gpu power"))a03_gpu_power();
++ else if(!strcmp(command,"gpu clocks"))a03_gpu_clocks();
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

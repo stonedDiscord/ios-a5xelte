@@ -131,3 +131,20 @@ actual passive code and checks every fake register bank remains unchanged.
 It also covers supply selector bounds, top timeout/force restore, missing
 sharedtopDVFS clock, map failures and shared runtimeADI exclusion. These
 checks prove software guards under the model, not electrical behavior.
+
+## BOOT0096 hardware and0164 inherited-clock candidate
+
+Actual SC2730 selector0140 reads1.0V;0163 power command refuses it and
+makes no power/clock writes. Separate passive GPU probe confirms top on,
+shader asleep and APB core10/mem10/sys30: all leaf gates off. ActualGPU_ID
+still unmeasured. Touch firmware/continuous forwarding restored after reboot.
+
+0164 adds explicit gpu clocks. It accepts only the exact inherited1V rail,
+already-on top/bus, three closed leaf gates and measured parent/dividers.
+Native ums9230 clock source defines selector1 asTWPLL/4, core/memdivide1,
+sysdivide4. ReadonlyTWPLL config is decoded using nativePLL fields; require
+lockbit18 and parent near1536MHz. Enable only core/mem/sysbit0 in vendor
+order, wait400us, recheckdomain, readGPU_ID. InvalidID/mapfailure restores
+ownedleafgates. No voltage/rate/PLL/DVFS/job writes. It preserves inherited
+1V for this bounded bringup stage; it does not establish1V as the correct
+runtimeOPP. FullCI and hardware verification remain required.

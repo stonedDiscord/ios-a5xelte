@@ -1,3 +1,12 @@
+ACTIVE2026-11-19 BOOT0096 running all8/1984MiB; CLOCKSOFF hardwareconfirmed.
+gpu power SC2730pd0/vsel140=1V STOP beforewrites; passivecore10/mem10/sys30,
+force10102/state07000000/AON2bcac1. NoGPU_ID/job. TouchFWload0/A55A,
+continuousHIDON1/slice1;UTCsynced;iohealthy. Capture54337/PID69071.
+0164gpu clocks candidate: exactinherited1V/topon/bus+closedgates/ratesguard,
+readonlyTWPLLlock+1536MHzdecode, onlyleafbit0writes,400us/domainrecheck/ID,
+invalid/mapfailownedgaterollback. NOvoltage/PLL/rate/DVFSwrites.
+ActualASanUBSan+2BSDcompiles+110profilePASS. NeedfullCIthen0097BOOTtrial.
+
 ACTIVE2026-11-19 BOOT0096 flashed boot-only SUCCESS; capture54337.
 CI44591622019/b8f8f04 verified;BOOTffceaeca...491d754e; exact0094ADT/cmd599/
 all8/1984MiB/SMP103485000/23reservations/stockramdiskDTPASS.

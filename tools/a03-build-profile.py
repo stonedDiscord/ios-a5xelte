@@ -165,7 +165,8 @@ def main():
                      '0160-a03-readonly-per-cpu-usage.patch',
                      '0161-a03-prefer-idle-a75.patch',
                      '0162-a03-passive-gpu-probe.patch',
-                     '0163-a03-gpu-power-preflight.patch'):
+                     '0163-a03-gpu-power-preflight.patch',
+                     '0164-a03-inherited-gpu-clock-gates.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

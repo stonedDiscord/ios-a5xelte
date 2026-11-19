@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0096 hardware clocks gated;0164 clock-enable candidate
+
+BOOT0096 all8 initialized/SGI PASS. Actual gpu power transaction1 reads
+SC2730pd0000/vsel0140 =>1000000uV; conservative700-800mV guard stops
+before PMU/AON/leaf writes. Passive gpu transaction3 confirms topstate0,
+C0state7, force00010102/AON002bcac1; core00000010/mem00000010/sys00000030:
+allthree bit0 gatesOFF; parentselector1/div1 core+mem, sysdivider4.
+No GPU_ID/job/pixel yet. Clock-off evidence is now hardware, not inferred.
+UTC1795119037 synced; private79104 firmware staged/valid0, load0/readyA55A,
+continuousHIDstart and streaming1/slices1 confirmed; leaveON. ioReady1/
+poisoned0. NoHome.0096 capture54337/PID69071 owns live log.
+
+0164 explicit gpu clocks requires exact inherited1V rail, already-on top/
+bus, three closed leaf gates and inherited384MHzparent/dividers; decode
+TWPLL from read-only645a0000 registers and require lockbit18 plus rate near
+1536MHz. No PLL/rate/PMIC/DVFS writes. Enable only leafbit0 core/mem/sys in
+vendororder,400us settle, recheckdomain, readGPU_ID; invalidID/mapfailure
+restores only owned gates. This preserves bootloader1V, not a new recommended
+voltage or measured frequency. Actualsource ASanUBSan PLL/rail/ownership/
+map/rollback/leaf-onlychanges PASS;2BSD ARM64MachO compiles PASS;110profile
+stage PASS. FullCI/link/hardware clockenable still pending.
+
 ## 2026-11-19: BOOT0096 power-preflight trial flashed
 
 Goal resumed. ExactCI44591622019 kernel packaged with unchanged0094 input
