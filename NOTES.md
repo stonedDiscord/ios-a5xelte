@@ -2,6 +2,11 @@
 
 ## Active S8 handoff — 2026-11-19
 
+User clarifies WHEN READY was a joke and confirms Download Mode.
+Host sees fresh04e8:685d device064.0233 CI44503956468/head63349a0
+still building; preparation2652 waits exact artifacts. No handshake/flash.
+
+
 0233 CI44503956468 dispatched at63349a0f3aae1f34cc282465b28748a9f7a4b193.
 Preparation research/dreamlte/prepare-0233.py waits exact run/head,
 verifies11sources/9symbols/52strings and packages; never flashes.
