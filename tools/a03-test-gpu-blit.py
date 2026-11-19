@@ -3,6 +3,11 @@
 from pathlib import Path
 import argparse,subprocess,tempfile
 p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source',type=Path,required=True);args=p.parse_args()
+fb=(args.source/'iokit/Kernel/arm/SweetFramebuffer.cpp').read_text()
+assert 'IOLockLock(fFB->fLock);'+chr(10)+'\t\tfFB->swap(rec);'+chr(10)+'\t\tIOLockUnlock(fFB->fLock);' in fb
+assert 'a03_fb_gpu_quarantined_surface=s;' in fb
+assert fb.index('if(a03_fb_gpu_quarantined)return;')<fb.index('uint32_t mask = get32(rec, 0x104);')
+assert fb.index('int copied=a03_gpu_framebuffer_blit')<fb.index('if(!copied)for (int32_t y = 0; y < h; y++)')
 src=(args.source/'bsd/dev/a03_gpu.c').read_text()
 src=chr(10).join(l for l in src.splitlines() if not l.startswith('#include')).replace('__asm__ volatile("dsb sy" ::: "memory");','')
 src=src.replace('uint32_t value = *(volatile uint32_t *)(base + offset);','uint32_t value = fake_read(base, offset);').replace('*(volatile uint32_t *)(a03_gpu_regs + offset) = value;','fake_write(offset, value);')
