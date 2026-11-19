@@ -41,6 +41,7 @@ def report(before,after,mode):
     delta.update(mode=mode,mean_copy_ms=elapsed/n/1000000 if n else None,quarantined=after['quarantined'])
     if not n:delta['result']='inconclusive: no actual frame copies'
     elif after['quarantined']:delta['result']='failed: GPU quarantined'
+    elif delta['fallbacks']:delta['result']='mixed: GPU fallback occurred; inspect counters before comparing'
     elif mode=='fast' and delta['verified']:delta['result']='mixed: initial verification included; repeat after warmup'
     else:delta['result']='measured actual copies; elapsed time includes scheduling, cache and completion overhead'
     return delta

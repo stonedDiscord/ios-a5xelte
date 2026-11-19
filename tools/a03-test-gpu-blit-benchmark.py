@@ -9,6 +9,7 @@ b={k:0 for k in fields};b['quarantined']=0
 a=dict(b,cpu_copies=10,cpu_ns=100000000)
 r=m.report(b,a,'cpu');assert r['mean_copy_ms']==10 and r['cpu_copies']==10
 assert m.report(b,b,'fast')['mean_copy_ms'] is None
+assert m.report(b,dict(b,gpu_copies=1,gpu_ns=100,fallbacks=1),'fast')['result'].startswith('mixed:')
 try:m.report(a,b,'cpu');assert False
 except RuntimeError:pass
 class Probe:
