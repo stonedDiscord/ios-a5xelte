@@ -34,6 +34,13 @@ writes only. Manifest11sources/6symbols/45diagnostics;0228 manifest archived.
 0228 installed. Asked fresh Download Mode; full CI next. No new flash.
 
 
+0229 full CI44483460784 dispatched at168c141d7c3170de929f5f0242f2e79c7bea5d5c.
+Preparation96832/script research/dreamlte/prepare-0229.py waits exact
+run/head, downloads, verifies11sources/6symbols/45strings and packages;
+never flashes. Log research/dreamlte/prepare-0229.log. Fresh Download Mode
+request pending;0228 installed. Physical0229 effect untested.
+
+
 ## 0228 STARTCFG succeeds; first resource command times out — 2026-11-19
 
 User follows the awake-clock checkpoints with exact text:

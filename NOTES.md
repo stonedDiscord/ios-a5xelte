@@ -2,6 +2,14 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0229 full CI44483460784 dispatched at168c141d7c3170de929f5f0242f2e79c7bea5d5c.
+Preparation96832/script research/dreamlte/prepare-0229.py waits exact
+run/head, downloads, verifies11sources/6symbols/45strings and packages;
+never flashes. Log research/dreamlte/prepare-0229.log. Fresh Download Mode
+request pending;0228 installed. Physical0229 effect untested.
+
+
+
 0229 local validation complete: ARM64 object and wrapper/EP/resource/CSR/
 new resource-wake models PASS; overlay equality PASS. One guarded bit31
 wake maximum during same active first EP0 resource command, no reissue.
