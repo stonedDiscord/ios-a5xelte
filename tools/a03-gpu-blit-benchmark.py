@@ -24,9 +24,9 @@ def command(probe,log,cmd,timeout=25):
 
 def snapshot(probe,log):
     gpu=command(probe,log,'gpu blit');display=command(probe,log,'display')
-    fields=re.search(r'enabled=(d+) frames=(d+) pixels=(d+) fallbacks=(d+) quarantined=(d+)',gpu)
-    policy=re.search(r'verify=(d+) verified=(d+) completed=(d+) total-ns=(d+) last-ns=(d+)',gpu)
-    timing=re.search(r'copy timing cpu=(d+)/(d+)ns gpu=(d+)/(d+)ns',display)
+    fields=re.search(r'enabled=([0-9]+) frames=([0-9]+) pixels=([0-9]+) fallbacks=([0-9]+) quarantined=([0-9]+)',gpu)
+    policy=re.search(r'verify=([0-9]+) verified=([0-9]+) completed=([0-9]+) total-ns=([0-9]+) last-ns=([0-9]+)',gpu)
+    timing=re.search(r'copy timing cpu=([0-9]+)/([0-9]+)ns gpu=([0-9]+)/([0-9]+)ns',display)
     if not(fields and policy and timing):raise RuntimeError('Missing0169 counters or GPU busy; no measurement')
     keys=['enabled','frames','pixels','fallbacks','quarantined','verify','verified','completed','total_ns','last_ns','cpu_copies','cpu_ns','gpu_copies','gpu_ns']
     return dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
