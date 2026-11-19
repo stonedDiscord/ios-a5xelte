@@ -8,6 +8,12 @@ run/head, downloads, verifies11sources/6symbols/45strings and packages;
 never flashes. Log research/dreamlte/prepare-0229.log. Fresh Download Mode
 request pending;0228 installed. Physical0229 effect untested.
 
+User confirms fresh Download Mode ready. Host sees04e8:685d at device060.
+0229 exact CI44483460784/head168c141 still building; preparation96832
+continues waiting exact run. No protocol handshake or flash yet. Preserve
+fresh mode for verified BOOT-only upload when build/image checks finish.
+
+
 
 
 0229 local validation complete: ARM64 object and wrapper/EP/resource/CSR/
