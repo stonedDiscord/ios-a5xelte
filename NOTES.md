@@ -1,6 +1,20 @@
 # iOS 16 on sweet (Redmi Note 10 Pro, SM7150) - working notes
 
-## Active S8 handoff — 2026-11-18
+## Active S8 handoff — 2026-11-19
+
+0228 ready for full CI: post-DCTL-reset clear only CLK31,500us/exact
+readback; pre-reset/endpoint CLK/PIPE/TEST snapshots. ARM64 plus modeled
+bit-preservation/persistent-bit/reset/mux/free-clock refusal and all USB
+suites PASS; patch equality PASS. Manifest11sources/6symbols/42strings.
+Fresh Download Mode059 confirmed/untouched.0227 installed; no new flash.
+
+LATEST0227 physical: cmd2 still402/PAR0=1 despite TEST0/PHYPIPE10.
+CLK801b0048 has EN_UTMISUSPEND bit31 set again after helper required clear;
+restoration point unknown. Session bits retained, event ring CSR verified,
+no working USB. Next pre/post-reset clock snapshots and narrowly scoped
+post-reset bit31 reassertion; no new reset/PLL/mux writes.0227 installed;
+no live CI/prep or Download Mode/gadget at inspection.
+
 
 0225 CI44316294206 at6943dd9 dispatched. Preparation14190/script
 research/dreamlte/prepare-0225.py waits exact run, verifies11sources/

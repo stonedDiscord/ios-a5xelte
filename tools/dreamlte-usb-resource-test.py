@@ -24,6 +24,12 @@ code = r'''
 #define DEPCMD_SETTRANSFRESOURCE 2
 static unsigned in_count, out_count, calls, fail_at;
 static unsigned eps[33], cmds[33];
+static uintptr_t dreamlte_phy;
+static uint32_t usb_rd(uintptr_t base, unsigned off) {
+    assert(base == dreamlte_phy);
+    assert(off == 0x10 || off == 0x0c || off == 0x28);
+    return off == 0x0c ? 0x10 : 0;
+}
 static uint32_t dwc_rd(unsigned off) {
     if (off == DEPCMD(0)) return 9;
     assert(off == 0xc14c);

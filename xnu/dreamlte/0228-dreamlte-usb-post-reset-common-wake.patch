@@ -1,0 +1,66 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -190,6 +190,35 @@
+ 	return 0;
+ }
+ 
++/* Samsung CAL disables link-driven common-block suspend in ss_enable.
++ * The0227 failure snapshot shows EN_UTMISUSPEND reasserted later. Reapply
++ * only that wake bit after DCTL reset; preserve PLL/reference/reset fields.
++ */
++static int
++dreamlte_usb_post_reset_wake(vm_offset_t phy)
++{
++	uint32_t before = usb_rd(phy, 0x10);
++	uint32_t pipe = usb_rd(phy, 0x0c);
++	uint32_t sel = usb_rd(phy, 0x6c);
++	if (before == 0xffffffffu || (before & 2u) ||
++	    (sel & 0x3fu) || !(pipe & (1u << 4)) || pipe == 0xffffffffu) {
++		printf("DREAMLTE USB: post-reset wake refused CLK=%08x PIPE=%08x SEL=%08x\n",
++		    before, pipe, sel);
++		return -1;
++	}
++	uint32_t awake = before & ~(1u << 31);
++	if (awake != before) {
++		*(volatile uint32_t *)(phy + 0x10) = awake;
++		__asm__ volatile("dsb sy" ::: "memory");
++	}
++	delay(500);
++	uint32_t after = usb_rd(phy, 0x10);
++	printf("DREAMLTE USB: post-reset wake CLK=%08x->%08x PIPE=%08x\n",
++	    before, after, pipe);
++	if (after != awake) return -1;
++	return 0;
++}
++
+ static int
+ dreamlte_usb_prepare(vm_offset_t dwc)
+ {
+@@ -559,6 +588,9 @@
+ 		printf("DREAMLTE USB: invalid endpoint counts hw=%08x in=%u out=%u\n", hw, in, out);
+ 		return -1;
+ 	}
++	printf("DREAMLTE USB: endpoint-entry CLK=%08x PIPE=%08x TEST=%08x\n",
++	    usb_rd(dreamlte_phy, 0x10), usb_rd(dreamlte_phy, 0x0c),
++	    usb_rd(dreamlte_phy, 0x28));
+ 	if (ud_epcmd(0, DEPCMD_DEPSTARTCFG, 0, 0, 0)) return -1;
+ 	printf("DREAMLTE USB: STARTCFG completed reg=%08x\n", dwc_rd(DEPCMD(0)));
+ 	for (unsigned n = 0; n < out; n++) {
+@@ -1173,6 +1205,9 @@
+ 	 * and endpoint setup. Do not defer it until after STARTTRANSFER.
+ 	 */
+ 	dreamlte_usb_vbus();
++	printf("DREAMLTE USB: pre-reset CLK=%08x PIPE=%08x TEST=%08x\n",
++	    usb_rd(dreamlte_phy, 0x10), usb_rd(dreamlte_phy, 0x0c),
++	    usb_rd(dreamlte_phy, 0x28));
+ #endif
+ 
+ 	/* Device controller soft reset (PHY and global setup stay as ABL left them). */
+@@ -1189,6 +1224,7 @@
+ 
+ #if defined(DREAMLTE)
+ 	dreamlte_usb_core_timing(dwc);
++	if (dreamlte_usb_post_reset_wake(dreamlte_phy)) return;
+ 	/* Device reset must not silently power the PHY down again. */
+ 	uint32_t phytest = usb_rd(dreamlte_phy, 0x28);
+ 	if (phytest & 0xcu) {

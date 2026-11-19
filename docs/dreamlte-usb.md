@@ -1,5 +1,14 @@
 # DREAMLTE USB bring-up evidence
 
+##0227 bit31 restoration;0228 post-reset wake candidate
+
+0227 physical first resource cmd2 remains402/PAR0=1. TEST0/PHYPIPE10,
+CLK801b0048, retained session bits and event CSR. Helper required CLK31
+clear earlier; restoration point unknown.0228 logs pre-reset and endpoint
+states, clears only link-controlled suspend CLK31 after DCTL reset, waits
+500us and requires exact readback. No new reset/reference/PLL/mux change.
+ARM64/models PASS; hardware effect unverified. Download Mode059 ready.
+
 ##0227 verified hardware trial
 
 CI44331761587 SUCCESS; source/profile and preserved BOOT packaging checks

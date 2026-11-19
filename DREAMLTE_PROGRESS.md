@@ -1,5 +1,35 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 2026-11-19:0227 free clock retained, link-controlled suspend returns
+
+- User0227 physical: ep0cmd2 timeout/reg402/PAR0=1/PAR1=0/PAR2=0;
+  GCTL80e92004 GSTS3e800000 USB2=40102400 DCTL0 DSTS00520000 EN0;
+  CORE PIPE010c0002 HW3=10420085 BUS22220001/300; DCFG80800 HW1=0160c93b;
+  EVT82ca8000/000000008/80001000/0 as transcribed (high word numerically8);
+  PHY TEST0 PIPE10 LINK08000180 UTMI660 CLK801b0048 Q7e00 SEL0.
+-0227 proceeds through the retention guard and power-up into endpoint
+  setup. Free UTMI clock remains selected, power-down bits remain clear,
+  but first resource command still active. No USB functionality established.
+-CLK bit31 EN_UTMISUSPEND is set again at failure although clock helper
+  requires it clear before returning. Exact point of restoration unknown:
+  power-up, device reset or later hardware action. Source contains no later
+  explicit CLK write. Next inspect/reassert only this Samsung CAL wake bit
+  after device reset and add pre/post-reset snapshots to distinguish timing.
+- No host gadget/Download Mode at inspection;0227 installed. No live CI,
+  preparation or phone write. Preserve all non-BOOT partitions.
+
+
+-0228 candidate clears only EN_UTMISUSPEND(bit31) after DCTL reset and
+  existing core timing, preserves all other CLK bits, waits500us, requires
+  exact readback. Refuses asserted port reset/nonprimary mux/missing free
+  clock/all-ones registers. Adds pre-reset and endpoint-entry CLK/PIPE/TEST
+  snapshots to locate restoration. No new reset/PLL/reference/mux sequence.
+- Actual ARM64 object compile, wrapper/EP/resource/CSR suites and plain
+  overlay/full-source equality PASS. Modeled bit31 restore cleared, all
+  unrelated bits preserved; forced readback reassertion and reset/mux/clock
+  refusal stop.11sources/6symbols/42strings.0227 own manifest archived.
+  Fresh Download Mode059 confirmed; no handshake/flash. Full CI next.
+
 ## 2026-11-18:0227 verified and BOOT flashed; continuation trace pending
 
 - Exact CI44331761587 SUCCESS atb11e4f62e81cfb01eeef11d27c1fce7244c473b9.
@@ -39,7 +69,8 @@
   research/dreamlte/prepare-0227.py waits exact head/run, downloads,
   verifies11sources/6symbols/38strings and packages; never flashes.
   Request fresh Download Mode; do not overwrite current physical evidence.
-\n## 2026-11-18:0226 verified and BOOT flashed; clock trace pending
+
+## 2026-11-18:0226 verified and BOOT flashed; clock trace pending
 
 - Exact CI44324136923 SUCCESS at42d14a1dc97111ef63ee395158ff48e9e3ab60b7.
   Preparation44451 completed exact downloads/source verification/packaging.
