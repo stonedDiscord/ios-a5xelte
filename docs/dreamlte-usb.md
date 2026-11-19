@@ -1,5 +1,29 @@
 # DREAMLTE USB bring-up evidence
 
+## 0234 host absent; remaining PHY prerequisite audit — 2026-11-19
+
+Previous goal turn made progress:0234 source compiled, exact CI passed and
+verified BOOT flashed. This continuation rechecked installed artifact/source
+hash and host: no1209:0001/ECM and no Download Mode; no live build/flash.
+Physical0234 endpoint/POLL result remains pending; do not replace its BOOT
+before observing the timing trial. Host absence alone cannot locate failure.
+
+Source audit: the exact0234 kernel maps CMUs and PHY, but never maps/reads
+PMU USB isolation0x16480704 or PHY reference selector0x10e5007c. Pinned
+Samsung phy_power_on releases PMU bit0; change_refclk applies the DT-selected
+bit24 reference path before CAL initialization. Their current hardware state
+is unknown; configured CMU gates do not prove either prerequisite. If0234
+repeats resource timeout, read these two prerequisites before changing them;
+do not blindly add PLL/reference or isolation writes. Corrected old map's
+USB user-mux busy bit16 to bit7 per pinned cmucal-sfr.c; top mux busy stays16.
+
+Reachability clarification: in exact0233/0234 source, CMU prelog-exit is
+printed only after ud_epcmd times out and resource_clock is true; that
+predicate requires ep0/cmd2/PAR0=1/PAR1=PAR2=0. Thus the user's0233 prelog-exit
+lines imply this timeout path by code inspection. The raw0233 cmd/POLL
+values remain unreported; this inference must stay separate from observations.
+
+
 ## 0234 verified and BOOT flashed; timing trial result pending — 2026-11-19
 
 Exact CI44509055685 SUCCESS at560236930010a5b7b80065f17100b1bb60ba7248.
@@ -683,7 +707,7 @@ none of these new clock/PMU writes has been tested on XNU.
 | --- | --- | --- |
 | USB DRD isolation release | PMU `0x16480704`, bit0 set | live PMU node; phy-exynos-usbdrd.h and pipe3_phy_isol |
 | PHY reference selector | `0x10e5007c`, bit24 set | live usbphy-refclk and change_refclk |
-| FSYS0 USB clock user mux | `0x11000180`, select bit4, busy bit16 | cmucal-sfr.c / cmucal-node.c |
+| FSYS0 USB clock user mux | `0x11000180`, select bit4, busy bit7 | cmucal-sfr.c / cmucal-node.c |
 | USB link Q-channel | `0x11003044`, enable bit0, request bit1 | cmucal-sfr.c / clk-exynos8895.c |
 | USB ACLK gate | `0x11002078`, manual bit20, value bit21 | cmucal-sfr.c |
 | USB reference gate | `0x1100207c`, manual bit20, value bit21 | cmucal-sfr.c |
