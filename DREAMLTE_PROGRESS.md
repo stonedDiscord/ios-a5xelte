@@ -1,5 +1,21 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0235 last visible marker is pmap_startup entry — 2026-11-19
+
+User reports DREAMLTE VM: pmap_startup enter and confirms it remains the
+last visible line after30seconds. No USB/prerequisite line reported. Host
+has no1209:0001 and no Download Mode. This locates the last observed output
+before BSD USB initialization; it does not prove the exact instruction
+that stopped execution or distinguish a VM stall from loss of output.
+Exact0234/0235 compiled archives have identical vm_resident.c, arm_vm_init.c,
+vm_init.c and startup.c.0235 code change is in sweet_usb.c, whose new
+register reads execute later; no evidence those reads executed on this boot.
+Image hash reverified. Next test: fresh restart of the same verified0235
+BOOT to determine reproducibility before adding VM instrumentation or
+attributing this to a USB register read. No new flash/build performed.
+Preserve all non-BOOT partitions; console goal remains unachieved.
+
+
 ## 0235 verified and BOOT flashed; prerequisite readbacks pending — 2026-11-19
 
 Exact CI44518477291 SUCCESS atc202064b5256360ee698b61d6bc9ebe71df1d19c.
