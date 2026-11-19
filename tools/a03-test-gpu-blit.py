@@ -9,7 +9,121 @@ src=src.replace('uint32_t value = *(volatile uint32_t *)(base + offset);','uint3
 layout=''
 for name in ['a03_gpu_job_layout.h','a03_gpu_copy_layout.h','a03_gpu_blit_layout.h']:
  layout+=chr(10).join(l for l in (args.source/'bsd/dev'/name).read_text().splitlines() if not l.startswith('#include'))+chr(10)
-header='\n#include <stdint.h>\n#include <stdio.h>\n#include <stdlib.h>\n#include <stdarg.h>\n#include <string.h>\n#include <assert.h>\n#define ARM64_BOARD_CONFIG_SWEET 1\ntypedef uintptr_t vm_offset_t;\ntypedef unsigned long vm_size_t;\nstatic uint32_t bank[7][4096];\nstatic unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed;\nstatic void *allocation;\nstatic int capture(const char*fmt,...){\n char line[1024];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof(line),fmt,ap);va_end(ap);\n if(strstr(line,"PASS=1"))passed++;return 0;\n}\n#define printf capture\nstatic void delay(unsigned n){us+=n;assert(us<2000000);}\nint a03_gpu_supply_status(uint32_t*p,uint32_t*v){*p=0;*v=320;return 1;}\nstatic uint8_t source_mem[0x800000] __attribute__((aligned(16384)));\nstatic uint8_t dest_mem[0x468000] __attribute__((aligned(16384)));\nstatic unsigned bad_source,bad_dest,corrupt;\nvm_offset_t ml_io_map(vm_offset_t p,vm_size_t n){(void)p;(void)n;return 0;}\nstatic void *IOMallocContiguous(vm_size_t n,vm_size_t align,void*p){\n assert(n==0x10000&&align==0x4000&&!p);if(mode==1)return 0;\n assert(!allocation);allocation=aligned_alloc(align,n);return allocation;\n}\nstatic void IOFreeContiguous(void*p,vm_size_t n){assert(!starts&&p==allocation&&n==0x10000);frees++;free(p);allocation=0;}\nuint64_t kvtophys(vm_offset_t p){\n if(p>=(uintptr_t)source_mem&&p<(uintptr_t)source_mem+sizeof(source_mem))return bad_source?0x80000000:0x140000000ULL+p-(uintptr_t)source_mem;\n if(p>=(uintptr_t)dest_mem&&p<(uintptr_t)dest_mem+sizeof(dest_mem))return bad_dest?0:0x9e000000ULL+p-(uintptr_t)dest_mem;\n assert(allocation&&p>=(uintptr_t)allocation&&p<(uintptr_t)allocation+0x10000);\n return 0x120000000ULL+p-(uintptr_t)allocation+((mode==2&&p>(uintptr_t)allocation+0x2000)?0x4000:0);\n}\nstatic void FlushPoC_DcacheRegion(vm_offset_t p,vm_size_t n){assert((p==(uintptr_t)allocation&&n==0x10000)||(p>=(uintptr_t)source_mem&&p+n<=(uintptr_t)source_mem+sizeof(source_mem)));flushes++;}\nstatic uint32_t fake_read(vm_offset_t b,unsigned o){\n assert(o<0x4000);if(b==(uintptr_t)bank[3]&&o==0x2428){\n  if((mode==3&&updates==1)||(mode==7&&updates>=2))return 1;\n }\n return *(uint32_t *)(b+o);\n}\nstatic void fake_write(unsigned o,uint32_t v){\n assert(o<0x3000);writes++;\n if(o==0x50){assert(v==0x2968a819);return;}\n if(o==0x58){bank[3][o/4]=v;return;}\n if(o==0x190){bank[3][0x150/4]=bank[3][0x160/4]=1;return;}\n if(o==0x180){assert(bank[3][0x160/4]);bank[3][0x140/4]=1;return;}\n if(o==0x1c0){offs++;bank[3][0x140/4]=0;return;}\n if(o==0x1d0){bank[3][0x150/4]=0;return;}\n if(o==0x1e0){bank[3][0x160/4]=0;return;}\n if(o==0x2418){assert(v==1);updates++;return;}\n if(o==0x1004){assert(v==0x20002);bank[3][0x1000/4]&=~v;return;}\n if(o==0x18e0&&v==1){\n  starts++;assert(((uint32_t *)((uint8_t*)allocation+0x4000))[4]==0x10008);assert(flushes==2&&bank[3][0x2430/4]==0x21000006);\n  assert(bank[3][0x2400/4]==0x20000000&&bank[3][0x2404/4]==1);\n  assert(bank[3][0x2408/4]==0x888d8f88&&bank[3][0x240c/4]==0x4c8d);\n  assert(bank[3][0x18c0/4]==0x2000000&&bank[3][0x18d8/4]==0x83300);\n\n  if(mode==4||mode==6){bank[3][0x18e0/4]=1;bank[3][0x1010/4]=2;return;}\n  if(mode==5){bank[3][0x1000/4]=0x20000;bank[3][0x2000/4]=1;return;}\n  uint32_t *params=(uint32_t *)((uint8_t *)allocation+0x4200);\n  unsigned count=((uint32_t *)((uint8_t *)allocation+0x4000))[10],width=params[6];\n  unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;\n  for(unsigned i=0;i<count;i++){\n   unsigned y=i/width,x=i%width;\n   *(uint32_t *)(dest_mem+doff+y*params[5]+x*4)=*(uint32_t *)(source_mem+so+y*params[4]+x*4);\n  }\n  if(corrupt)*(uint32_t *)(dest_mem+doff)^=1;\n\n  *(uint32_t *)((uint8_t*)allocation+0x4000)=1;\n  if(mode==8)*(uint64_t *)((uint8_t*)allocation+0x5000)=0xa5a55a5adeadbeefULL;\n  if(mode==9)*(uint32_t *)((uint8_t*)allocation+0x4000)=0;\n  bank[3][0x1000/4]=2;return;\n }\n if(o==0x18e0&&v==0){if(mode!=6)bank[3][0x18e0/4]=0;return;}\n if(o==0x18a0){assert(v==3);if(mode!=6)bank[3][0x1010/4]=0;return;}\n assert(o==0x2430||o==0x2434||o==0x2400||o==0x2404||o==0x2408||o==0x240c||o==0x18c0||o==0x18c4||o==0x18d0||o==0x18d4||o==0x18d8||o==0x18dc);\n bank[3][o/4]=v;\n}\n'
+header=r'''
+tests=r'''
+static void reset(unsigned m){
+ if(allocation)free(allocation);allocation=0;
+ memset(bank,0,sizeof(bank));memset(dest_mem,0x5a,sizeof(dest_mem));
+ for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
+ mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=0;
+ a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
+ a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
+ a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;
+ bank[1][0]=1<<11;bank[0][0x500/4]=7<<24;bank[2][1]=bank[2][2]=0x11;bank[2][3]=0x31;
+ bank[3][0]=0x90910010;bank[3][0x100/4]=bank[3][0x110/4]=bank[3][0x120/4]=1;
+ bank[3][0x18/4]=1;bank[3][0x1c/4]=2;bank[3][0xc4/4]=20;
+ bank[3][0x2408/4]=0x13579bdf;bank[3][0x240c/4]=0x2468ace0;bank[3][0x2430/4]=1;
+}
+static int blit(unsigned w,unsigned h){return a03_gpu_framebuffer_blit((uintptr_t)source_mem,(uintptr_t)dest_mem,0x9e000000,3072,2880,w,h);}
+int main(void){
+ reset(0);assert(blit(720,1600)==1&&starts==1&&offs==1&&flushes==3&&!a03_gpu_job_poisoned);
+ assert(a03_gpu_scratch==0&&a03_gpu_scratch_pa==0&&a03_gpu_blit_frames==1);
+ assert(bank[3][0x2400/4]==0&&bank[3][0x2404/4]==0&&bank[3][0x2430/4]==1&&bank[3][0x2408/4]==0x13579bdf);
+ us=flushes=starts=offs=0;assert(blit(37,19)==1&&starts==1&&offs==1);
+ for(unsigned m=1;m<=7;m++){
+  reset(m);int r=blit(37,19);assert(r!=1&&!a03_gpu_job_requested&&!a03_gpu_owner);
+  if(m==3||m==5||m==6||m==7){assert(r==-1&&a03_gpu_job_poisoned);unsigned n=writes;assert(blit(37,19)==-1&&writes==n);}
+  if(m==4)assert(r==0&&starts==1&&offs==1);
+  assert(!starts||!frees);
+ }
+ reset(0);corrupt=1;assert(blit(37,19)==0&&!a03_gpu_job_poisoned);
+ reset(0);bad_source=1;assert(blit(37,19)==0&&!starts);
+ reset(0);bad_dest=1;assert(blit(37,19)==0&&!starts);
+ reset(0);a03_gpu_owner=1;unsigned n=writes;assert(blit(37,19)==-2&&writes==n);a03_gpu_job();assert(writes==n);
+ reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);
+ for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}
+ reset(0);assert(blit(37,1601)==0&&!starts);
+ reset(0);if(allocation)free(allocation);return 0;
+}
+'''#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <assert.h>
+#define ARM64_BOARD_CONFIG_SWEET 1
+typedef uintptr_t vm_offset_t;
+typedef unsigned long vm_size_t;
+static uint32_t bank[7][4096];
+static unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed;
+static void *allocation;
+static int capture(const char*fmt,...){
+ char line[1024];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof(line),fmt,ap);va_end(ap);
+ if(strstr(line,"PASS=1"))passed++;return 0;
+}
+#define printf capture
+static void delay(unsigned n){us+=n;assert(us<2000000);}
+int a03_gpu_supply_status(uint32_t*p,uint32_t*v){*p=0;*v=320;return 1;}
+static uint8_t source_mem[0x800000] __attribute__((aligned(16384)));
+static uint8_t dest_mem[0x468000] __attribute__((aligned(16384)));
+static unsigned bad_source,bad_dest,corrupt;
+vm_offset_t ml_io_map(vm_offset_t p,vm_size_t n){(void)p;(void)n;return 0;}
+static void *IOMallocContiguous(vm_size_t n,vm_size_t align,void*p){
+ assert(n==0x10000&&align==0x4000&&!p);if(mode==1)return 0;
+ assert(!allocation);allocation=aligned_alloc(align,n);return allocation;
+}
+static void IOFreeContiguous(void*p,vm_size_t n){assert(!starts&&p==allocation&&n==0x10000);frees++;free(p);allocation=0;}
+uint64_t kvtophys(vm_offset_t p){
+ if(p>=(uintptr_t)source_mem&&p<(uintptr_t)source_mem+sizeof(source_mem))return bad_source?0x80000000:0x140000000ULL+p-(uintptr_t)source_mem;
+ if(p>=(uintptr_t)dest_mem&&p<(uintptr_t)dest_mem+sizeof(dest_mem))return bad_dest?0:0x9e000000ULL+p-(uintptr_t)dest_mem;
+ assert(allocation&&p>=(uintptr_t)allocation&&p<(uintptr_t)allocation+0x10000);
+ return 0x120000000ULL+p-(uintptr_t)allocation+((mode==2&&p>(uintptr_t)allocation+0x2000)?0x4000:0);
+}
+static void FlushPoC_DcacheRegion(vm_offset_t p,vm_size_t n){assert((p==(uintptr_t)allocation&&n==0x10000)||(p>=(uintptr_t)source_mem&&p+n<=(uintptr_t)source_mem+sizeof(source_mem)));flushes++;}
+static uint32_t fake_read(vm_offset_t b,unsigned o){
+ assert(o<0x4000);if(b==(uintptr_t)bank[3]&&o==0x2428){
+  if((mode==3&&updates==1)||(mode==7&&updates>=2))return 1;
+ }
+ return *(uint32_t *)(b+o);
+}
+static void fake_write(unsigned o,uint32_t v){
+ assert(o<0x3000);writes++;
+ if(o==0x50){assert(v==0x2968a819);return;}
+ if(o==0x58){bank[3][o/4]=v;return;}
+ if(o==0x190){bank[3][0x150/4]=bank[3][0x160/4]=1;return;}
+ if(o==0x180){assert(bank[3][0x160/4]);bank[3][0x140/4]=1;return;}
+ if(o==0x1c0){offs++;bank[3][0x140/4]=0;return;}
+ if(o==0x1d0){bank[3][0x150/4]=0;return;}
+ if(o==0x1e0){bank[3][0x160/4]=0;return;}
+ if(o==0x2418){assert(v==1);updates++;return;}
+ if(o==0x1004){assert(v==0x20002);bank[3][0x1000/4]&=~v;return;}
+ if(o==0x18e0&&v==1){
+  starts++;assert(((uint32_t *)((uint8_t*)allocation+0x4000))[4]==0x10008);assert(flushes==2&&bank[3][0x2430/4]==0x21000006);
+  assert(bank[3][0x2400/4]==0x20000000&&bank[3][0x2404/4]==1);
+  assert(bank[3][0x2408/4]==0x888d8f88&&bank[3][0x240c/4]==0x4c8d);
+  assert(bank[3][0x18c0/4]==0x2000000&&bank[3][0x18d8/4]==0x83300);
+
+  if(mode==4||mode==6){bank[3][0x18e0/4]=1;bank[3][0x1010/4]=2;return;}
+  if(mode==5){bank[3][0x1000/4]=0x20000;bank[3][0x2000/4]=1;return;}
+  uint32_t *params=(uint32_t *)((uint8_t *)allocation+0x4200);
+  unsigned count=((uint32_t *)((uint8_t *)allocation+0x4000))[10],width=params[6];
+  unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
+  for(unsigned i=0;i<count;i++){
+   unsigned y=i/width,x=i%width;
+   *(uint32_t *)(dest_mem+doff+y*params[5]+x*4)=*(uint32_t *)(source_mem+so+y*params[4]+x*4);
+  }
+  if(corrupt)*(uint32_t *)(dest_mem+doff)^=1;
+
+  *(uint32_t *)((uint8_t*)allocation+0x4000)=1;
+  if(mode==8)*(uint64_t *)((uint8_t*)allocation+0x5000)=0xa5a55a5adeadbeefULL;
+  if(mode==9)*(uint32_t *)((uint8_t*)allocation+0x4000)=0;
+  bank[3][0x1000/4]=2;return;
+ }
+ if(o==0x18e0&&v==0){if(mode!=6)bank[3][0x18e0/4]=0;return;}
+ if(o==0x18a0){assert(v==3);if(mode!=6)bank[3][0x1010/4]=0;return;}
+ assert(o==0x2430||o==0x2434||o==0x2400||o==0x2404||o==0x2408||o==0x240c||o==0x18c0||o==0x18c4||o==0x18d0||o==0x18d4||o==0x18d8||o==0x18dc);
+ bank[3][o/4]=v;
+}
+'''
 tests='\nstatic void reset(unsigned m){\n if(allocation)free(allocation);allocation=0;\n memset(bank,0,sizeof(bank));memset(dest_mem,0x5a,sizeof(dest_mem));\n for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;\n mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=0;\n a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];\n a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;\n a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;\n bank[1][0]=1<<11;bank[0][0x500/4]=7<<24;bank[2][1]=bank[2][2]=0x11;bank[2][3]=0x31;\n bank[3][0]=0x90910010;bank[3][0x100/4]=bank[3][0x110/4]=bank[3][0x120/4]=1;\n bank[3][0x18/4]=1;bank[3][0x1c/4]=2;bank[3][0xc4/4]=20;\n bank[3][0x2408/4]=0x13579bdf;bank[3][0x240c/4]=0x2468ace0;bank[3][0x2430/4]=1;\n}\nstatic int blit(unsigned w,unsigned h){return a03_gpu_framebuffer_blit((uintptr_t)source_mem,(uintptr_t)dest_mem,0x9e000000,3072,2880,w,h);}\nint main(void){\n reset(0);assert(blit(720,1600)==1&&starts==1&&offs==1&&flushes==3&&!a03_gpu_job_poisoned);\n assert(a03_gpu_scratch==0&&a03_gpu_scratch_pa==0&&a03_gpu_blit_frames==1);\n assert(bank[3][0x2400/4]==0&&bank[3][0x2404/4]==0&&bank[3][0x2430/4]==1&&bank[3][0x2408/4]==0x13579bdf);\n us=flushes=starts=offs=0;assert(blit(37,19)==1&&starts==1&&offs==1);\n for(unsigned m=1;m<=7;m++){\n  reset(m);int r=blit(37,19);assert(r!=1&&!a03_gpu_job_requested&&!a03_gpu_owner);\n  if(m==3||m==5||m==6||m==7){assert(r==-1&&a03_gpu_job_poisoned);unsigned n=writes;assert(blit(37,19)==-1&&writes==n);}\n  if(m==4)assert(r==0&&starts==1&&offs==1);\n  assert(!starts||!frees);\n }\n reset(0);corrupt=1;assert(blit(37,19)==0&&!a03_gpu_job_poisoned);\n reset(0);bad_source=1;assert(blit(37,19)==0&&!starts);\n reset(0);bad_dest=1;assert(blit(37,19)==0&&!starts);\n reset(0);a03_gpu_owner=1;unsigned n=writes;assert(blit(37,19)==-2&&writes==n);a03_gpu_job();assert(writes==n);\n reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);\n for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}\n reset(0);assert(blit(37,1601)==0&&!starts);\n reset(0);if(allocation)free(allocation);return 0;\n}\n'
 with tempfile.TemporaryDirectory(prefix='a03-blit-') as temp:
  temp=Path(temp);c=temp/'test.c';exe=temp/'test';c.write_text(header+layout+src+tests)

@@ -1,3 +1,9 @@
+ACTIVECI44625038530 exact74e1def framebuffer0168 kernel compiling. DefaultGPU
+blitOFF; explicit gpu clocks then gpu blit on after0101. Privateexactrun
+fetch/sourceverifier/pack0101prepared. NeedfullCIartifact/source/checksum
+thenBOOT-onlytrial, actualreadback+repeatedframes andphysicalacceptance.
+BOOT0100sixcopyPASS/touchON retained;capture103600 until~22:22UTC.
+
 NEXT0168 guardedIOSurfaceGPUblit candidate staged: atomicowner/allGPU,
 serializedswaps/retainedpages/ROsource/validatedpaneldestination/cacheflush/
 boundedretirement/fullreadback/CPUfallbackonlyafterretirement. Quarantine
