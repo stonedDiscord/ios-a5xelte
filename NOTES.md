@@ -1,3 +1,8 @@
+FOLLOWUP21:42UTC CI44620376179 stillBuild. Addedreproducible --mesa-build
+primaryv9descriptorbytecheck; PASS plusnativecopyshaderhashrepeat+2BSDARM64.
+BOOT0099touchON656slices/display41swaps36softwarecopies. NoBOOT0100flashyet.
+Solecapture97724/4575 retained.
+
 ACTIVE21:38UTC compute CI44620376179/c6b8c852 still Build; prior44617226681
 is the completed WRITE_VALUE hardware-PASS build. No duplicateCI.
 BOOT0099 firmware nowloaded0/readyA55A; initialvalid15stopped, restart

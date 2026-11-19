@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: reproducible primary compute descriptor verification
+
+Added optional --mesa-build to tools/a03-test-gpu-copy-layout.py. It reuses
+pinnedMesa24.3 native compiler settings and independently packs the v9
+compute job/header, shader program and local-storage descriptors, requiring
+byte equality with the prepared kernel layout. Actual test PASS. Native
+shader rebuild again reproduces SHA565e07d886d6f111fac39102242d7175f06f0ba5f6f5b52797f8537d0c6814b7.
+Both actual BSD ARM64 source compiles repeat PASS. These are host results.
+CI44620376179 remains Build/in_progress at21:42UTC; no new flash/copy claim.
+BOOT0099 touch streaming1/slices656; display41swaps/36copies (software).
+
 ## 2026-11-19: compute-copy CI identified; BOOT0099 touch restored
 
 The successful job build is CI44617226681. The newly staged0167 compute
