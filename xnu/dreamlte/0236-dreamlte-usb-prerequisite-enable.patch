@@ -1,0 +1,57 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -250,6 +250,44 @@
+ 	return 0;
+ }
+ 
++/* Pinned Samsung phy_power_on/pipe3_phy_isol releases PMU bit0;
++ * phy_init/change_refclk applies live DT mask/value bit24 before CAL.
++ * 0235 measured both fields zero at entry and resource timeout. Preserve
++ * every unrelated bit, refuse invalid/running state and verify each write.
++ */
++static int
++dreamlte_usb_prerequisites(vm_offset_t dwc)
++{
++	uint32_t id = usb_rd(dwc, 0xc120);
++	uint32_t dctl = usb_rd(dwc, 0xc704);
++	uint32_t isolation = usb_rd(dreamlte_usb_pmu, 0x704);
++	uint32_t reference = usb_rd(dreamlte_usb_refsel, 0x0c);
++	if (id != 0x5533280au || (dctl & (3u << 30)) ||
++	    isolation == 0xffffffffu || reference == 0xffffffffu) {
++		printf("DREAMLTE USB: prerequisites refused ID=%08x DCTL=%08x ISOL=%08x REFSEL=%08x\n", id, dctl, isolation, reference);
++		return -1;
++	}
++	uint32_t desired_isolation = isolation | 1u;
++	if (desired_isolation != isolation) {
++		*(volatile uint32_t *)(dreamlte_usb_pmu + 0x704) = desired_isolation;
++		__asm__ volatile("dsb sy" ::: "memory");
++	}
++	uint32_t isolation_after = usb_rd(dreamlte_usb_pmu, 0x704);
++	if (isolation_after != desired_isolation) {
++		printf("DREAMLTE USB: isolation mismatch %08x->%08x expected=%08x\n", isolation, isolation_after, desired_isolation);
++		return -1;
++	}
++	uint32_t desired_reference = reference | (1u << 24);
++	if (desired_reference != reference) {
++		*(volatile uint32_t *)(dreamlte_usb_refsel + 0x0c) = desired_reference;
++		__asm__ volatile("dsb sy" ::: "memory");
++	}
++	uint32_t reference_after = usb_rd(dreamlte_usb_refsel, 0x0c);
++	printf("DREAMLTE USB: prerequisites ISOL=%08x->%08x REFSEL=%08x->%08x\n",
++	    isolation, isolation_after, reference, reference_after);
++	return reference_after == desired_reference ? 0 : -1;
++}
++
+ static int
+ dreamlte_usb_prepare(vm_offset_t dwc)
+ {
+@@ -377,7 +415,8 @@
+ 	struct dreamlte_usb_clocks inherited;
+ 	dreamlte_usb_clocks_capture(&inherited);
+ 	dreamlte_usb_clocks_print("inherited", &inherited);
+-	if (!dreamlte_usb_prepare(dwc)) sweet_usb_gadget_start(dwc);
++	if (!dreamlte_usb_prerequisites(dwc) &&
++	    !dreamlte_usb_prepare(dwc)) sweet_usb_gadget_start(dwc);
+ }
+ #else
+ void

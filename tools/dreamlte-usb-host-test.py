@@ -89,6 +89,7 @@ if has_phy_clock:
     code += '#define HAS_PHY_CLOCK 1\nstatic int\n' + function('dreamlte_usb_phy_clock_up') + '\n'
 if 'dreamlte_usb_post_reset_wake' in source:
     code += '#define HAS_POST_RESET_WAKE 1\nstatic int\n' + function('dreamlte_usb_post_reset_wake') + '\n'
+code += 'static int\n' + function('dreamlte_usb_prerequisites') + '\n'
 code += 'static int\n' + function('dreamlte_usb_prepare') + '\n'
 if has_core_timing:
     code += '#define HAS_CORE_TIMING 1\n'

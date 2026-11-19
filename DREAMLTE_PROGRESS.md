@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0235 isolation/reference fields zero;0236 implements prerequisites — 2026-11-19
+
+User reports DREAMLTE PREREQ inherited and prelog-exit both ISOL00000000,
+REFSEL00000000. This supersedes the earlier apparent pmap-only stop as the
+latest observed progress: USB probe and initial resource timeout path ran.
+Do not infer how the earlier stop cleared or invent current POLL values.
+Pinned Samsung PHY power-on releases PMU bit0; PHY init applies DT refsel
+bit24 before CAL. Both measured prerequisite fields were missing.
+0236 sets only PMU0x16480704 bit0 and selector0x10e5007c bit24 before the
+existing PHY initialization, after exact ID/opt-in/stopped-core guards.
+Reads both before writing, refuses all-ones, verifies isolation before
+reference and exact reference readback before proceeding. No PLL/rate/
+CMU/mux-policy tuning, endpoint reorder, timeout extension or retry.
+Source-backed missing initialization, not proof of the cmd2 root cause.
+0235 still installed; new hardware writes untested. BOOT-only trial next.
+
+
 ## 0235 last visible marker is pmap_startup entry — 2026-11-19
 
 User reports DREAMLTE VM: pmap_startup enter and confirms it remains the
