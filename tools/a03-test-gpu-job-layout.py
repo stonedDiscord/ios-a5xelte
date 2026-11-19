@@ -1,8 +1,24 @@
 #!/usr/bin/env python3
 """Check actual A03 private GPU table/WRITE_VALUE bytes; no hardware claim."""
 from pathlib import Path
-import subprocess,tempfile
+import argparse,subprocess,tempfile,xml.etree.ElementTree as ET
 ROOT=Path(__file__).resolve().parents[1]
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--mesa-xml',type=Path,help='optional primary Mesa v7.xml provenance check')
+args=parser.parse_args()
+if args.mesa_xml:
+ tree=ET.parse(args.mesa_xml).getroot()
+ def node(tag,name):return next(n for n in tree.findall(tag) if n.get('name')==name)
+ def field(name,label):return next(n for n in node('struct',name).findall('field') if n.get('name')==label)
+ assert field('Job Header','Type').get('start')=='4:1'
+ assert field('Job Header','Index').get('start')=='4:16'
+ assert field('Write Value Job Payload','Address').get('start')=='0:0'
+ assert field('Write Value Job Payload','Type').get('start')=='2:0'
+ assert field('Write Value Job Payload','Immediate Value').get('start')=='4:0'
+ assert next(n for n in node('enum','Write Value Type').findall('value') if n.get('name')=='Immediate 64').get('value')=='7'
+ assert next(n for n in node('aggregate','Write Value Job').findall('section') if n.get('name')=='Payload').get('offset')=='32'
+ print('PASS primary Mesa v7 XML header/type/index/address/immediate field correspondence')
+
 source='''
 #include <assert.h>
 #include <stdlib.h>
