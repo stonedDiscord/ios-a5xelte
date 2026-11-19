@@ -1,16 +1,22 @@
 # A03 GPU acceleration bring-up
 
-The BOOT0099 compositor is software. GPU_ID90910010, leaf clock enable,
-a complete core power cycle, and one real WRITE_VALUE GPU job with exact
-64-bit readback are hardware-verified. Native compute copy, framebuffer
+The BOOT0100 compositor still uses CPU copies. Power, leaf clocks, actual
+GPU_ID90910010, core power cycles, WRITE_VALUE execution and a native G57
+1024-u32 compute copy are hardware-verified. IOSurface/framebuffer GPU
 acceleration, EAGL/Metal and GPU-accelerated SpringBoard remain unverified.
 
-BOOT0099 uses successful CI44617226681 at6c81044. Transaction2 completed
-submitted1/done1/retired1, JOB_IRQ2/MMU0/ASfault0/headerexception1, exact
-output0077ccff003388aa and clean core shutdown. Staged0167 adds the isolated
-1024-u32 nativeG57 compute copy; CI44620376179 atc6b8c85 is its separate
-full build. A private copy PASS will still require subsequent IOSurface and
-framebuffer integration before claiming the requested video acceleration.
+BOOT0100 uses successful CI44620376179 atc6b8c85. Transaction2 reports
+compute words1024/mismatches0/PASS1, submitted1/done1/retired1, JOB_IRQ2/
+MMU0/ASfault0/headerexception1 and clean core shutdown. Both the source and
+destination patterns are checked. This is an isolated offscreen allocation;
+it does not import an IOSurface or write the display framebuffer. The generic
+job output field shows code bytes for this mode; the array check is the
+compute-copy acceptance result.
+
+Next is repeatability, then serialized IOSurface-to-framebuffer submission
+with validated physical mappings, cache maintenance, retained lifetimes,
+bounded completion/retirement and CPU fallback only after DMA is retired.
+Repeated real frame use and physical acceptance remain separate gates.
 
 ## Hardware passive result, 2026-11-19
 
