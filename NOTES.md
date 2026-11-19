@@ -2,6 +2,18 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0238 reaches USB poller with zero traffic — 2026-11-19
+
+User reports SWEET USB: ue0 rx0 tx0 frames on current0238. This proves
+execution beyond pmap_startup into the USB poll thread; this boot is not
+stopped at the previous VM entry marker. It does not prove electrical
+attachment, enumeration or an operational USB link. Host still sees no
+1209:0001/ECM; journal only Download071 disconnect. Requested preceding
+running DSTS/bus reset/connect/setup messages before touching the cable.
+Keep current boot for link evidence. No new flash/build/reset performed.
+Intermittent VM issue remains separate;0238 checkpoints did not establish
+a reliability fix. USB reboot completion fix awaits runtime verification.
+
 ## 0238 first boot no enumeration; internal VM marker requested — 2026-11-19
 
 Bounded45second host check: no1209:0001 and no ECM; kernel journal shows
