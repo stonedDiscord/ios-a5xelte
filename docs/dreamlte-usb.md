@@ -1,5 +1,37 @@
 # DREAMLTE USB bring-up evidence
 
+## 0236 WORKING XNU USB console verified — 2026-11-19
+
+User reports prerequisites ISOL00000000->00000001 and
+REFSEL00000000->01000000; SWEET USB running DSTS00920001 after0ms,
+DMA882cae000. Host now enumerates1209:0001 device068 with CDC-ECM
+interface enp0s20f0u3, expected MAC02:00:5e:77:ee:01 and verified USB parent.
+Host initially had192.168.42.1; added192.168.7.1/24 and brought interface up
+using available noninteractive sudo. No new flash or partition writes.
+
+Actual sudo host checker PASS: device/config descriptors, status and active
+configuration over EP0; exact ECM endpoints;3/3 ICMP replies from192.168.7.2
+with0% loss;2373 bytes identifiable XNU SWEET USB event/setup text received
+from192.168.7.2 on UDP5140 over30seconds. No USB-console success inferred
+from build or ping alone: captured text includes GET_DESCRIPTOR/GET_STATUS/
+GET_CONFIGURATION handling. Output log and full checker result remain private
+at research/dreamlte/ci-44526044672/xnu-usb-console.log and
+host-console-check.log; updated prepared-boot.json records log hash/results.
+
+Working checkpoint0236 CI44526044672/sourcebf796ff, BOOT SHA256
+7e1ec3f1e5da1a365302b894ebb0d1469126f32daad6fc2f78568cc0c0c1d36d.
+Preserve this installed BOOT. Both missing prerequisite fields were corrected
+in one trial, so success does not isolate their individual contributions.
+The transport is USB Ethernet carrying kernel output, not CDC serial and
+not an interactive shell. Host listener: tools/sweet-usbnet.sh LOGFILE
+(configures192.168.7.1 and listens UDP5140; sudo required for interface).
+Reverify: sudo python3 tools/dreamlte-usb-check.py --interface enp0s20f0u3
+--console-seconds 30 --console-log <private-path>. Interface name may change;
+match expected MAC and USB parent. Stop any other5140 listener before checker.
+Goal completion gates enumeration/control/bidirectional data/XNU text PASS.
+UFS mounting, iOS userspace and GUI are separate and remain unverified.
+
+
 ## 0236 verified and BOOT flashed; prerequisite-enable result pending — 2026-11-19
 
 Exact CI44526044672 SUCCESS atbf796ffd38b3d065ad7e6da9d51ae761e32643cb.
