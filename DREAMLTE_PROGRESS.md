@@ -2,6 +2,13 @@
 
 ## 0237 restart/reconnect works;0238 fixes reboot completion gate — 2026-11-19
 
+User confirms0238 Download Mode ready; host sees fresh04e8:685d/071.
+Exact CI44540095593 still Build in progress. Preparation32691 remains live
+waiting for the same run. No flash until exact artifact verification.
+Removing all DREAMLTE diagnostic blocks from old/new vm_resident.c yields
+identical source, confirming0238 has no allocator behavior change.
+
+
 0238 exact CI44540095593 dispatched atc84a677953a719be67710fa9eae76321969b77c9.
 Preparation research/dreamlte/prepare-0238.py verifies exact run/head,
 source/profile and preserved BOOT components; never flashes.0237 remains
