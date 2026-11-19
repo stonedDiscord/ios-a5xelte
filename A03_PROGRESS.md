@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: physical swipe delivered; optimizedCI44629497398 active
+
+BOOT0101 touchstream has18 physical contact events: down362,1598 through
+421,666 thenreportdrivenrelease; HID1 andSweetHID down/up confirmdelivery.
+No synthetic command during that event interval. GPUframes remain4 and
+swaps37, so this is physicalinputdelivery, NOT visibleUIresponse evidence.
+SpringBoard26 now17threads/mainmach_msgwait;backboardd56 has13threads/main
+mach_msgwait. No pendingGPUjob/quarantine. Physicalscreenanswerpending.
+
+0169 exact44b6f27 fullCI44629497398 is Build/in_progress.115patchprofile
+stages; private0102artifact/source/packer pinned. Added actualcopybenchmark
+helper with exacttransaction/counter-reset/no-frame-inconclusive handling
+and finally restoration oforiginalGPUenabled/verificationmode. Selfchecks
+pass. NeedsuccessfulCI->0102->4verified2Dframes->fastmode timing/physical
+acceptance. Current0101 remainsGPUenabled/touchON/storagehealthy.
+
 ## 2026-11-19:0169 2D dispatch, verification policy and timing candidate
 
 BOOT0101 real4frames/4608000pixels remains checkpoint. Prepared0169 uses

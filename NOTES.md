@@ -1,3 +1,9 @@
+FOLLOWUP22:36UTC physicalswipe18contactevents/downmovementrelease/HID1
+confirmed; GPUframesstill4/swaps37, soUIresponseunproven. SB26now17threads/
+BB56now13/mainmach_msgwait. CI44629497398/44b6f27stillBuild. Current0101
+GPUON/touchON/storagehealthy. Benchmarkhelper+restorationtestscommitted.
+Need0102CI->hardware2D/fasttiming;physicalscreenquestionpending.
+
 ACTIVECI44629497398 exact44b6f27 optimized2Dblit0169 running. Native256byte
 shaderpreloadR60R61; selectableverify(defaultON)+CPU/GPUtiming. Private
 exactfetch/sourceverifier/pack0102ready. NeedfullCIartifact/source/checksum
