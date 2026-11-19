@@ -1,3 +1,11 @@
+ACTIVE2026-11-19 CI44591622019 SUCCESS, exactb8f8f04; artifactsVERIFIED.
+KernelSHA25676f967658ff3406d2ca41751640f4fc69e40ef899511e0fcab35affee2aa5d5b.
+Checksums/uploaded3sources byte-match/0163reverseapply/linkedGPU+A75+SMP+
+displaymarkers/actualASanUBSanPASS. Artifacts ci44591622019-power and
+-power-tree/extracted under ignoredshim/a03/out. No0096pack/flash yet.
+GoalPAUSED; userfollowup builddone verified only. Onresume pack/validate0096
+then BOOT-onlypower/clocktrial. NoGPU_ID/jobs/accelerationclaim.
+
 ACTIVE CI44591622019 exactb8f8f045548a74483757364ed66dfb68ded2f766
 is authoritative0163 build (supersedes44591419852). Need successful linked
 artifact/SHA256/uploadedsource reverseapply, pack0096 with0094inputADT and

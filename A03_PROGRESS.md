@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0163 full kernel build and artifacts verified
+
+CI44591622019 completed SUCCESS at exact
+b8f8f045548a74483757364ed66dfb68ded2f766. Downloaded kernel/buildtree;
+SHA256SUMS PASS. Uploaded a03_gpu.c, a03_usb_console.c and sweet_amfi.c
+byte-match locally tested sources;0163 reverse-apply check PASS. Linked
+GPU power/clock/sharedtopDVFS guard, A75/display and SMP markers PASS.
+Actual0163 ASan/UBSan harness repeats PASS including2048 shader/top/bus
+combinations. Kernel SHA256:
+76f967658ff3406d2ca41751640f4fc69e40ef899511e0fcab35affee2aa5d5b.
+Private artifacts: shim/a03/out/ci44591622019-power and corresponding
+-power-tree/extracted. No0096 image packed or flashed in this followup;
+no hardwareGPU_ID/clocksetup/jobs/acceleration claim. Goal was paused;
+this followup verifies the user's completed-build report only. Next resumed
+step: pack/validate0096 from exactkernel, then authorized BOOT-only trial.
+
 ## 2026-11-19:0163 committed and full CI dispatched
 
 f3e16bd adds preflight; b8f8f04 adds liveDT AONEB1bit7 guard before
