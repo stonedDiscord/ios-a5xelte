@@ -2,6 +2,29 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0238 first boot no enumeration; internal VM marker requested — 2026-11-19
+
+Bounded45second host check: no1209:0001 and no ECM; kernel journal shows
+Download071 disconnect without subsequent connect. Current0238 screen
+result requested: page array allocate/map or frame init line and numbers,
+or exact earlier marker. Preserve this boot until physical result; do not
+assume the0237 marker repeated. No new flash/build selected.0238 installed.
+USB status completion fix remains hardware untested; intermittent boot
+reliability remains unresolved. No startup success inferred from CI.
+
+## 0238 verified and BOOT flashed — 2026-11-19
+
+Exact CI44540095593 SUCCESS atc84a677953a719be67710fa9eae76321969b77c9.
+11sources/9symbols/64diagnostics/profile PASS. Kernel SHA256
+27095649263ec7ebee74d5c95be15a30f64b6fe4e34e63cf991a0d2f3d0f10fa.
+BOOT shim/out/dreamlte-xnu-0238.img,18,464,784B,SHA256
+a9eebc0fe007a1c538a6fb2fec13a31e36a64aebf2bf92fd19b54feb81541458.
+Original BOOT header/components/payload/fit/hash verified. Fresh Download
+Mode071 accepted BOOT100%; Heimdall exit0/reboot. Only BOOT written.
+0238 installed. First USB observation pending; new status flag fix and
+normal/download reboot remain physically unverified. New VM markers are
+diagnostic, not a fix for intermittent startup. No live CI/flash/preparation.
+
 ## 0237 restart/reconnect works;0238 fixes reboot completion gate — 2026-11-19
 
 User confirms0238 Download Mode ready; host sees fresh04e8:685d/071.
