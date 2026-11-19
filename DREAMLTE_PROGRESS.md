@@ -1,5 +1,21 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0236 verified and BOOT flashed; prerequisite-enable result pending — 2026-11-19
+
+Exact CI44526044672 SUCCESS atbf796ffd38b3d065ad7e6da9d51ae761e32643cb.
+11sources/9symbols/55diagnostics/profile PASS. Kernel SHA256
+d56e41c899bf18364ea79f3597d8e6ef8beea10abad20d0dae00b580e1399703.
+BOOT shim/out/dreamlte-xnu-0236.img,18,464,784B,SHA256
+7e1ec3f1e5da1a365302b894ebb0d1469126f32daad6fc2f78568cc0c0c1d36d.
+Original BOOT components/header/payload/fit/hash PASS. User confirms ready;
+fresh Download Mode067 accepted BOOT100%, Heimdall exit0/reboot. Only BOOT
+written. Exact artifacts/manifest/log research/dreamlte/ci-44526044672.
+Immediately host has no1209:0001/ECM. Requested prerequisites ISOL/REFSEL
+before/after and resources/running or failure/POLL; refusal/mismatch if
+stopped earlier. New masked writes physically unverified; no USB success.
+0236 installed, no live CI/preparation/flash. Keep this boot for evidence.
+
+
 0236 CI44526044672 dispatched atbf796ffd38b3d065ad7e6da9d51ae761e32643cb.
 Actual ARM64 compile; eight source-derived USB suites including new
 prerequisite preservation/order/refusal checks; RAM reader/sender suite;
