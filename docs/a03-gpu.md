@@ -125,3 +125,9 @@ regulator, qogirl6 headers), vendor79c7c8b above (platform sequence/GPU DVFS
 register map). Vendor T606 table removes768MHz and retunes GPLL to650MHz;
 do not copy generic850MHz. Index0 uses384MHz/700mV without high-bin voltage
 map changes. Hardware DVFS ownership/rail/clocks require BOOT-only trial.
+
+The0163 host harness exhausts all2048 shader/top/bus combinations against
+actual passive code and checks every fake register bank remains unchanged.
+It also covers supply selector bounds, top timeout/force restore, missing
+sharedtopDVFS clock, map failures and shared runtimeADI exclusion. These
+checks prove software guards under the model, not electrical behavior.

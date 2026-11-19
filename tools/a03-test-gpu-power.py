@@ -46,6 +46,13 @@ static void reset(void){
  banks[2][1]=banks[2][2]=banks[2][3]=1;banks[3][0]=0x70930000;
 }
 int main(void){
+ /* Exercise every shader/top/bus combination without mutating registers. */
+ for(unsigned shader=0;shader<32;shader++)for(unsigned top=0;top<32;top++)for(unsigned bus=0;bus<2;bus++){
+  reset();banks[0][0x500/4]=(shader<<24)|(top<<16);banks[1][0]=bus<<11;
+  uint32_t snapshot[6][1024];memcpy(snapshot,banks,sizeof(snapshot));
+  a03_gpu_probe();assert((maps[3]!=0)==(!top&&bus));
+  assert(!memcmp(snapshot,banks,sizeof(snapshot)));
+ }
  reset();a03_gpu_probe();assert(maps[3]==1); /* sleeping C0 does not block top registers */
  reset();uint32_t before[4][1024];memcpy(before,banks+2,sizeof(before));
  a03_gpu_power();assert(maps[4]&&maps[5]&&maps[3]);assert(ticks==300);
