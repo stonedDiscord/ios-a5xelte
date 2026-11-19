@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0164 CI44606600103 running;0096 preserved
+
+Committed5e1a464a1a8698ee410b159c42c7f7a903c376b1; fullCI44606600103
+is compiling the110patch A03 profile. No leafclockenable yet. Current0096
+all8registered with advancing A75usage (cpu6user1499/sys15785, cpu7user1525/
+sys15380); continuousHIDON843slices/13events, display6swaps4copies/timer16500.
+NophysicalGUI/accelerationclaim orHome injection. Singlecapture69071/session
+54337 remainsowner until~20:39UTC. CIwatch94270 writesci44606600103-watch.log.
+Privatepack0097.py prepared and requires exactsuccessfulCI/checksum/markers;
+next source/artifactvalidation ->0097BOOT-only ->gpu clocks actualID/readback.
+
 ## 2026-11-19: BOOT0096 hardware clocks gated;0164 clock-enable candidate
 
 BOOT0096 all8 initialized/SGI PASS. Actual gpu power transaction1 reads
