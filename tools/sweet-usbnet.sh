@@ -17,7 +17,8 @@ mac=02:00:5e:77:ee:01
 echo "waiting for the phone's USB Ethernet ($mac)..." >&2
 until ip -o link | grep -qi "$mac"; do sleep 1; done
 ifname=$(ip -o link | grep -i "$mac" | awk -F': ' '{print $2}' | cut -d@ -f1)
-nmcli dev set "$ifname" managed no 2>/dev/null || true
+# Keep NetworkManager ownership for the persistent DREAMLTE reconnect profile.
+# Install it once with: sudo tools/dreamlte-usb-host.sh
 sudo ip addr replace 192.168.7.1/24 dev "$ifname"
 sudo ip link set "$ifname" up
 echo "$ifname up: 192.168.7.1 <-> phone 192.168.7.2; live log on udp/5140" >&2

@@ -1,0 +1,98 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -852,6 +852,32 @@
+ 	return n;
+ }
+ 
++#if defined(DREAMLTE)
++/* Local EP0 requests; reset only after successful control status completion. */
++static unsigned dreamlte_reboot_pending, dreamlte_reboot_mode, dreamlte_reboot_delay;
++static void
++dreamlte_usb_reboot(unsigned mode)
++{
++	if (!dreamlte_usb_pmu || mode < 1 || mode > 2) return;
++	/* Samsung sec_reboot.c/sec_ext.h, pinned 3cfb914: INFORM2/3.
++	 * Live Exynos8895 reboot node: PMU base 0x16480000.
++	 * Volatile reset flags only; no partition writes. */
++	uint32_t reason = mode == 2 ? 0x12345671u : 0x12345670u;
++	*(volatile uint32_t *)(dreamlte_usb_pmu + 0x808) = 0x12345678u;
++	*(volatile uint32_t *)(dreamlte_usb_pmu + 0x80c) = reason;
++	__asm__ volatile("dsb sy" ::: "memory");
++	if (usb_rd(dreamlte_usb_pmu, 0x808) != 0x12345678u ||
++	    usb_rd(dreamlte_usb_pmu, 0x80c) != reason) {
++		printf("DREAMLTE USB: reboot flag readback failed\n");
++		return;
++	}
++	printf("DREAMLTE USB: reboot %s\n", mode == 2 ? "download" : "normal");
++	/* exynos_reboot.c: SWRESET=1 after INFORM flags become visible. */
++	*(volatile uint32_t *)(dreamlte_usb_pmu + 0x400) = 1;
++	__asm__ volatile("dsb sy" ::: "memory");
++}
++#endif
++
+ static void ud_rx_arm(void);
+ static void ud_tx_kick_locked(void);
+ static void ud_link_event(bool up);
+@@ -916,6 +942,14 @@
+ 
+ 	printf("SWEET USB: setup %02x %02x %04x %04x len %u\n", type, req, value, index, length);
+ 	ud.data_in = (type & 0x80) != 0;
++#if defined(DREAMLTE)
++	dreamlte_reboot_pending = 0;
++	if (type == 0xc0 && req == 0x50 && value == 0 && index == 0x8895 && length == 8) {
++		memcpy(data, "DUSB\1\3\0\0", 8); n = 8;
++	} else if (type == 0x40 && req == 0x51 && value <= 1 && index == 0x8895 && length == 0) {
++		dreamlte_reboot_pending = value + 1;
++	} else
++#endif
+ 	if ((type & 0x60) == 0x20) {    /* class request (e.g. SET_ETHERNET_PACKET_FILTER) */
+ 		ok = (length == 0);
+ 	} else if ((type & 0x60) != 0) {
+@@ -1196,6 +1230,9 @@
+ 	if (ev & 1) {                   /* device event */
+ 		uint32_t type = (ev >> 8) & 0xf;
+ 		if (type == 1) {        /* USB reset */
++#if defined(DREAMLTE)
++			dreamlte_reboot_pending = dreamlte_reboot_mode = dreamlte_reboot_delay = 0;
++#endif
+ 			dwc_wr(DCFG, dwc_rd(DCFG) & ~(0x7fu << 3));
+ 			printf("SWEET USB: bus reset\n");
+ 		} else if (type == 2) { /* connect done */
+@@ -1208,6 +1245,9 @@
+ 			printf("SWEET USB: connected, speed %u\n", speed);
+ 		} else if (type == 0) {
+ 			printf("SWEET USB: disconnect\n");
++#if defined(DREAMLTE)
++			dreamlte_reboot_pending = dreamlte_reboot_mode = dreamlte_reboot_delay = 0;
++#endif
+ 		}
+ 		return;
+ 	}
+@@ -1245,6 +1285,13 @@
+ 			ud.state = EP0_WAIT_STATUS3;
+ 			break;
+ 		case EP0_STATUS:
++#if defined(DREAMLTE)
++			if (dreamlte_reboot_pending && status == 0) {
++				dreamlte_reboot_mode = dreamlte_reboot_pending;
++				dreamlte_reboot_pending = 0;
++				dreamlte_reboot_delay = 100;
++			}
++#endif
+ 			ud_start_setup();
+ 			break;
+ 		default:
+@@ -1288,6 +1335,13 @@
+ 		if ((++ticks % 30000) == 0) {
+ 			printf("SWEET USB: ue0 rx %llu tx %llu frames\n", ud.rx_frames, ud.tx_frames);
+ 		}
++#if defined(DREAMLTE)
++		if (dreamlte_reboot_delay && --dreamlte_reboot_delay == 0) {
++			unsigned mode = dreamlte_reboot_mode;
++			dreamlte_reboot_mode = 0;
++			dreamlte_usb_reboot(mode);
++		}
++#endif
+ 		ud_sleep_ms(1);
+ 	}
+ }

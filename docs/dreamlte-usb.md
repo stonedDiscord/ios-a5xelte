@@ -1,5 +1,38 @@
 # DREAMLTE USB bring-up evidence
 
+## 0237 USB reconnect and buttonless reboot candidate — 2026-11-19
+
+Previous goal turn established working0236 USB. This turn installs persistent
+host networking and adds an EP0 reboot protocol. Host was still1209:0001/068,
+with generic NetworkManager shared192.168.42.1 plus manually added7.1.
+Installed DREAMLTE-XNU-USB profile, MAC-bound02:00:5e:77:ee:01, static
+192.168.7.1/24, autoconnect priority100, no default route/DNS/IPv6. Actual
+EP0 and3/3 ping PASS after activation. Reconnect selected the same profile;
+full phone reboot recovery still requires physical verification. Console
+helper no longer disables NetworkManager. Idempotent installer:
+sudo tools/dreamlte-usb-host.sh
+
+0237 adds strict device-vendor EP0 capability0x50/index8895 and reboot0x51:
+value0 normal/value1 download, zero payload. Reset armed only after
+successful EP0 status completion, delayed100 poll ticks; USB reset or
+disconnect cancels. Samsung pinned3cfb914 sec_reboot.c/sec_ext.h supply
+INFORM2=12345678 and INFORM3=12345670(normal)/12345671(download), offsets
+808/80c; live reboot node PMU16480000; exynos_reboot.c SWRESET offset400.
+Only volatile PMU writes, no partition writes. Omits Linux ACPM/DFD
+coordination: successful hardware reset/bootloader mode is UNPROVEN.
+Host tool checks capability first, then same-port re-enumeration:
+sudo python3 tools/dreamlte-usb-reboot.py normal
+sudo python3 tools/dreamlte-usb-reboot.py download
+Use status for a read-only capability query.
+
+Actual ARM64 compile, nine USB source-derived suites, RAM console sender
+and UDP receiver suites PASS.0236 remains installed. One initial manual
+Download Mode entry requested because0236 lacks the command. No new flash.
+Preserve RECOVERY/bootloaders/EFS/CPEFS/USERDATA and all non-BOOT partitions.
+Goal stays active until normal reboot restores USB automatically and USB
+download command physically enumerates Samsung04e8:685d.
+
+
 ## 0236 WORKING XNU USB console verified — 2026-11-19
 
 User reports prerequisites ISOL00000000->00000001 and
