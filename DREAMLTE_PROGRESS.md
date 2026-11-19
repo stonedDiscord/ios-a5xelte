@@ -1,5 +1,24 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0239 flashed; first boot stalls during page array mapping
+
+CI 44550208083 passed at 326cc843fddb6cfe059b141ffae6f1691c83a4ac.
+Verified 11 source files, 9 symbols, 68 diagnostics and preserved BOOT
+components. Kernel SHA-256:
+`f2dc9955715e9c6067855594e3a6efa4959ba67d7b8e41f177269abd23194a71`.
+BOOT image `shim/out/dreamlte-xnu-0239.img` (18,466,832 bytes), SHA-256:
+`819b10f829954bd5fd3b03f23d378e01f5cfd8948b5b8111cb3d6913f6713e77`.
+Heimdall wrote only BOOT from USB-requested Download Mode device 074 and
+rebooted successfully. No host attachment or UDP console on this boot.
+
+User reports the last visible line verbatim:
+`DREAMLTE VM: page array map va=0xffffffff0666ee000 ppn=882aec`.
+The checkpoint prints before `pmap_enter` every 2 MiB, so this narrows the
+stall to page array mapping without identifying the exact call. It precedes
+USB initialization; this boot cannot test the new pull-up sequence.
+User initiated a restart of the same 0239 BOOT with the cable connected.
+The first boot capture was empty; the restart is a separate observation.
+
 ## 0239 candidate matches Samsung DP pull-up sequencing — 2026-11-19
 
 0239 exact CI44550208083 dispatched at326cc843fddb6cfe059b141ffae6f1691c83a4ac.
