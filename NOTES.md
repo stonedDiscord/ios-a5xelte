@@ -4,6 +4,15 @@
 
 ## 0237 restart/reconnect works;0238 fixes reboot completion gate — 2026-11-19
 
+0238 exact CI44540095593 dispatched atc84a677953a719be67710fa9eae76321969b77c9.
+Preparation research/dreamlte/prepare-0238.py verifies exact run/head,
+source/profile and preserved BOOT components; never flashes.0237 remains
+installed, enumerated070. Fresh Download Mode requested for corrected image.
+Normal reboot0237 acknowledged but120second same-port check failed; do not
+repeat that installed command expecting a different result. Goal resumed
+with physical evidence and new implementation progress; no VM fix claimed.
+
+
 User reports last screen DREAMLTE VM: pmap_startup enter, then restarts0237
 and reconnects USB. Host enumerates1209:0001/070; automatic MAC-bound host
 profile supplies192.168.7.1/24 with no manual address/setup command. Exact
