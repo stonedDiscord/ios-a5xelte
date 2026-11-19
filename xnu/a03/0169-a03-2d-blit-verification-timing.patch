@@ -1,0 +1,210 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -307,6 +307,8 @@
+ static unsigned a03_gpu_blit_source_stride,a03_gpu_blit_destination_stride,a03_gpu_blit_width,a03_gpu_blit_height;
+ static unsigned a03_gpu_last_pass,a03_gpu_blit_enabled,a03_gpu_blit_frames,a03_gpu_blit_fallbacks;
+ static uint64_t a03_gpu_blit_pixels;
++static unsigned a03_gpu_blit_verify=1,a03_gpu_blit_verified,a03_gpu_blit_completed;
++static uint64_t a03_gpu_blit_ns,a03_gpu_blit_last_ns;
+ static vm_size_t a03_gpu_memory_size(void) { return a03_gpu_job_requested==3 ? A03_GPU_BLIT_SIZE : A03_GPU_SCRATCH_SIZE; }
+ static int a03_gpu_blit_prepare(void)
+ {
+@@ -499,7 +501,8 @@
+     if(a03_gpu_job_requested==3) {
+         __asm__ volatile("dsb sy" ::: "memory");
+         unsigned mismatches=0;
+-        if(done && exception==1 && !as_fault) {
++        unsigned verify=a03_gpu_blit_verify || a03_gpu_blit_verified<4;
++        if(verify && done && exception==1 && !as_fault) {
+             for(unsigned y=0;y<a03_gpu_blit_height;y++) {
+                 const volatile uint32_t *src=(const volatile uint32_t *)(a03_gpu_blit_source+(uint64_t)y*a03_gpu_blit_source_stride);
+                 const volatile uint32_t *dst=(const volatile uint32_t *)(a03_gpu_blit_destination+(uint64_t)y*a03_gpu_blit_destination_stride);
+@@ -508,8 +511,10 @@
+         }
+         pass=done && exception==1 && !as_fault && !mismatches;
+         a03_gpu_last_pass=pass;
+-        if(a03_gpu_blit_frames<8 || !pass)printf("A03 GPU blit: pixels=%u mismatches=%u done=%d retired=1 PASS=%d\n",
+-            a03_gpu_blit_width*a03_gpu_blit_height,mismatches,done,pass);
++        if(pass && verify)a03_gpu_blit_verified++;
++        if(pass)a03_gpu_blit_completed++;
++        if(a03_gpu_blit_frames<8 || !pass)printf("A03 GPU blit: pixels=%u mismatches=%u done=%d retired=1 verify=%u PASS=%d\n",
++            a03_gpu_blit_width*a03_gpu_blit_height,mismatches,done,verify,pass);
+     }
+     if(a03_gpu_job_requested!=3)
+     printf("A03 GPU job: submitted=%d done=%d retired=1 irq=%08x mmu=%08x gpu=%08x js=%08x asfault=%08x exception=%08x output=%llx expected=%llx PASS=%d\n",
+@@ -662,7 +667,10 @@
+ void a03_gpu_blit_control(unsigned enable) {
+     if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
+     if(enable<2 && !a03_gpu_job_poisoned)a03_gpu_blit_enabled=enable;
++    if(enable==3)a03_gpu_blit_verify=0;
++    if(enable==4)a03_gpu_blit_verify=1;
+     printf("A03 GPU blit: enabled=%u frames=%u pixels=%llu fallbacks=%u quarantined=%u\n",a03_gpu_blit_enabled,a03_gpu_blit_frames,(unsigned long long)a03_gpu_blit_pixels,a03_gpu_blit_fallbacks,a03_gpu_job_poisoned);
++    printf("A03 GPU blit: verify=%u verified=%u completed=%u total-ns=%llu last-ns=%llu\n",a03_gpu_blit_verify,a03_gpu_blit_verified,a03_gpu_blit_completed,(unsigned long long)a03_gpu_blit_ns,(unsigned long long)a03_gpu_blit_last_ns);
+     __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
+ }
+ /* Return1 copied and readback verified,0 safe CPU fallback,-1 possible DMA.
+@@ -682,9 +690,12 @@
+     a03_gpu_blit_source=source;a03_gpu_blit_destination=destination;a03_gpu_blit_destination_pa=physical;
+     a03_gpu_blit_source_stride=source_stride;a03_gpu_blit_destination_stride=destination_stride;
+     a03_gpu_blit_width=width;a03_gpu_blit_height=height;
++    uint64_t begin=mach_absolute_time();
+     void *saved=a03_gpu_scratch;uint64_t saved_pa=a03_gpu_scratch_pa;
+     a03_gpu_job_requested=3;a03_gpu_last_pass=0;
+     a03_gpu_cores_owned();
++    uint64_t ns=0;absolutetime_to_nanoseconds(mach_absolute_time()-begin,&ns);
++    a03_gpu_blit_last_ns=ns;a03_gpu_blit_ns+=ns;
+     a03_gpu_job_requested=0;a03_gpu_scratch=saved;a03_gpu_scratch_pa=saved_pa;
+     if(a03_gpu_job_poisoned){result=-1;goto out;}
+     if(a03_gpu_last_pass){a03_gpu_blit_frames++;a03_gpu_blit_pixels+=(uint64_t)width*height;result=1;goto out;}
+--- a/bsd/dev/a03_gpu_blit_layout.h
++++ b/bsd/dev/a03_gpu_blit_layout.h
+@@ -1,5 +1,5 @@
+ /* Native G57 strided BGRA/u32 copy, generated with Mesa24.3.0.
+- * SHA256 88dab0e057aaf95fb42c64e38e24153c7639487442314ebea89f733ca4abf382; TLS/WLS0,32regs,preloadR60. */
++ * SHA256 eb88a77a8595eaf054c5d9d73d69cbbbd3fe689bb358ef2ae7a121c3641d0548; TLS/WLS0,32regs,preloadR60/R61. */
+ #ifndef A03_GPU_BLIT_LAYOUT_H
+ #define A03_GPU_BLIT_LAYOUT_H
+ #include "a03_gpu_copy_layout.h"
+@@ -10,71 +10,10 @@
+ static const uint64_t a03_g57_blit_code[] = {
+     0x0110c002000210c0ULL,
+     0x0091c100000000c0ULL,
+-    0x086080e630000040ULL,
+-    0x0090c30000190002ULL,
+-    0x009cc30000000043ULL,
+-    0x0110c44f7ffffec0ULL,
+-    0x00b2c30400c04443ULL,
+-    0x0090c300c01c0043ULL,
+-    0x00a0c400000a0302ULL,
+-    0x00a8c400000144c0ULL,
+-    0x0090c50030140004ULL,
+-    0x0090c40000140044ULL,
+-    0x0090c60000140003ULL,
+-    0x00a0c700000a0506ULL,
+-    0x00a0c600000a0446ULL,
+-    0x0090c80030140003ULL,
+-    0x00a0c500000a4508ULL,
+-    0x00a0c400000a4448ULL,
+-    0x00a1c800200507c0ULL,
+-    0x00a8c80000004806ULL,
+-    0x00f0c60400c04608ULL,
+-    0x00a8c50000004645ULL,
+-    0x00a1c600200504c0ULL,
+-    0x00a8c60000004608ULL,
+-    0x00f0c60400c04846ULL,
+-    0x0090c70030140047ULL,
+-    0x00a8c50000004745ULL,
+-    0x00a8c50000004645ULL,
+-    0x0090c40030140044ULL,
+-    0x00a8c40000004445ULL,
+-    0x00a8c30000004443ULL,
+-    0x0090c40030140003ULL,
+-    0x0090c30000140043ULL,
+-    0x0090c5000014003cULL,
+-    0x00a0c600000a0405ULL,
+-    0x00a0c500000a0345ULL,
+-    0x0090c7003014003cULL,
+-    0x00a0c400000a4407ULL,
+-    0x00a0c300000a4347ULL,
+-    0x00a1c700200506c0ULL,
+-    0x00a8c70000004705ULL,
+-    0x00f0c50400c04507ULL,
+-    0x00a8c40000004544ULL,
+-    0x00a1c500200503c0ULL,
+-    0x00a8c50000004507ULL,
+-    0x00f0c50400c04745ULL,
+-    0x0090c60030140046ULL,
+-    0x00a8c40000004644ULL,
+-    0x00a8c40000004544ULL,
+-    0x0090c30030140043ULL,
+-    0x00a8c30000004344ULL,
+-    0x00a0c400000a0203ULL,
+-    0x00a8c4000001447cULL,
+-    0x00a8c50000010204ULL,
+-    0x00f0c60280c00204ULL,
+-    0x0150c4004544c006ULL,
+-    0x00a8c50000010204ULL,
+-    0x00f0c20280c04204ULL,
+-    0x0150c4004544c002ULL,
+-    0x0110c500000001c0ULL,
+-    0x0150c60005c0c046ULL,
+-    0x0150c20045c0c042ULL,
+-    0x00a8c30000004643ULL,
+-    0x00a8c20000004243ULL,
+-    0x00a0c000000a4002ULL,
+-    0x00a0c100000a4142ULL,
+-    0x00b4c20119c0c844ULL,
++    0x086080f428000040ULL,
++    0x00a0c000000a403dULL,
++    0x00a0c100000a417dULL,
++    0x00b4c20119c0c87cULL,
+     0x00a8c00000000240ULL,
+     0x00a8c10000004241ULL,
+     0x0110c202000200c0ULL,
+@@ -88,9 +27,6 @@
+     0x0091c20000000041ULL,
+     0x2091c300000000c0ULL,
+     0x7861400218000042ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+     0x0000000000000000ULL,
+     0x0000000000000000ULL,
+     0x0000000000000000ULL,
+@@ -140,7 +76,8 @@
+         q[0x2000/8+40+i]=(physical+0xc000+i*4096)|0x403ULL;
+     }
+     uint32_t *job=(uint32_t *)((uint8_t *)memory+0x4000);
+-    job[10]=width*height;
++    job[10]=width;job[11]=height;
++    ((uint32_t *)((uint8_t *)memory+0x4100))[1]=0x3000U; /* preload globalX/Y */
+     uint64_t *code=(uint64_t *)((uint8_t *)memory+0x5000);
+     for(unsigned i=0;i<sizeof(a03_g57_blit_code)/8;i++)code[i]=a03_g57_blit_code[i];
+     uint32_t *params=(uint32_t *)((uint8_t *)memory+0x4200);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -653,6 +653,8 @@
+  else if(!strcmp(command,"gpu blit on"))a03_gpu_blit_control(1);
+  else if(!strcmp(command,"gpu blit off"))a03_gpu_blit_control(0);
+  else if(!strcmp(command,"gpu blit"))a03_gpu_blit_control(2);
++ else if(!strcmp(command,"gpu blit fast"))a03_gpu_blit_control(3);
++ else if(!strcmp(command,"gpu blit verify"))a03_gpu_blit_control(4);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -68,6 +68,7 @@
+ struct A03DisplayStats {
+     uint64_t vsyncEntered, vsyncDone, vsyncAt;
+     uint64_t swapEntered, swapDone, swapAt, copies, copyAt;
++    uint64_t cpuCopies,cpuNs,gpuCopies,gpuNs;
+     uint64_t notifyAttempt, notifyOK, notifyError, notifySkipped, notifyAt, lastError;
+ };
+ static A03DisplayStats a03_display_stats;
+@@ -83,6 +84,7 @@
+     IOLog("A03 DISPLAY swap entered=%llu done=%llu last=%llu copies=%llu copy-last=%llu\n",
+         a03_fb_read(&s->swapEntered), a03_fb_read(&s->swapDone), a03_fb_read(&s->swapAt),
+         a03_fb_read(&s->copies), a03_fb_read(&s->copyAt));
++    IOLog("A03 DISPLAY copy timing cpu=%llu/%lluns gpu=%llu/%lluns\n",a03_fb_read(&s->cpuCopies),a03_fb_read(&s->cpuNs),a03_fb_read(&s->gpuCopies),a03_fb_read(&s->gpuNs));
+     IOLog("A03 DISPLAY notify attempts=%llu ok=%llu errors=%llu skipped=%llu last=%llu error=0x%llx\n",
+         a03_fb_read(&s->notifyAttempt), a03_fb_read(&s->notifyOK), a03_fb_read(&s->notifyError),
+         a03_fb_read(&s->notifySkipped), a03_fb_read(&s->notifyAt), a03_fb_read(&s->lastError));
+@@ -330,6 +332,7 @@
+ 		if (src != 0 && bpe == 4 && s->pixelFormat == SWEET_FB_FORMAT_BGRA) {
+ 			/* A03: validated GUI pixels take ownership; logs remain on USB. */
+ 			a03_console_panel_quiet();
++            uint64_t copyBegin=mach_absolute_time();
+             int copied=a03_gpu_framebuffer_blit(src+s->offset+(uint64_t)sy*s->bytesPerRow+(uint64_t)sx*4,
+                 fPixels+(uint64_t)dy*fRowBytes+(uint64_t)dx*4,
+                 fPhys+(uint64_t)dy*fRowBytes+(uint64_t)dx*4,s->bytesPerRow,fRowBytes,(unsigned)w,(unsigned)h);
+@@ -342,6 +345,9 @@
+ 				    (const void *)(src + s->offset + (uint64_t)(sy + y) * s->bytesPerRow + (uint64_t)sx * 4),
+ 				    (size_t)w * 4);
+ 			}
++            uint64_t ns=0;absolutetime_to_nanoseconds(mach_absolute_time()-copyBegin,&ns);
++            if(copied){a03_fb_inc(&a03_display_stats.gpuCopies);__atomic_add_fetch(&a03_display_stats.gpuNs,ns,__ATOMIC_RELAXED);}
++            else{a03_fb_inc(&a03_display_stats.cpuCopies);__atomic_add_fetch(&a03_display_stats.cpuNs,ns,__ATOMIC_RELAXED);}
+ 			a03_fb_inc(&a03_display_stats.copies);
+ 			a03_fb_set(&a03_display_stats.copyAt, mach_absolute_time());
+ 		}

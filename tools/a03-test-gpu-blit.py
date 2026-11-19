@@ -26,6 +26,9 @@ typedef uintptr_t vm_offset_t;
 typedef unsigned long vm_size_t;
 static uint32_t bank[7][4096];
 static unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed;
+static uint64_t fake_time;
+static uint64_t mach_absolute_time(void){return ++fake_time;}
+static void absolutetime_to_nanoseconds(uint64_t t,uint64_t *ns){*ns=t*10;}
 static void *allocation;
 static int capture(const char*fmt,...){
  char line[1024];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof(line),fmt,ap);va_end(ap);
@@ -87,7 +90,7 @@ static void fake_write(unsigned o,uint32_t v){
   if(mode==4||mode==6){bank[3][0x18e0/4]=1;bank[3][0x1010/4]=2;return;}
   if(mode==5){bank[3][0x1000/4]=0x20000;bank[3][0x2000/4]=1;return;}
   uint32_t *params=(uint32_t *)((uint8_t *)allocation+0x4200);
-  unsigned count=((uint32_t *)((uint8_t *)allocation+0x4000))[10],width=params[6];
+  unsigned width=((uint32_t *)((uint8_t *)allocation+0x4000))[10],height=((uint32_t *)((uint8_t *)allocation+0x4000))[11],count=width*height;
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
   for(unsigned i=0;i<count;i++){
    unsigned y=i/width,x=i%width;
@@ -117,7 +120,7 @@ static void reset(unsigned m){
  mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=0;
  a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
  a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
- a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;
+ a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;a03_gpu_blit_verified=0;a03_gpu_blit_verify=1;a03_gpu_blit_completed=0;a03_gpu_blit_ns=0;
  bank[1][0]=1<<11;bank[0][0x500/4]=7<<24;bank[2][1]=bank[2][2]=0x11;bank[2][3]=0x31;
  bank[3][0]=0x90910010;bank[3][0x100/4]=bank[3][0x110/4]=bank[3][0x120/4]=1;
  bank[3][0x18/4]=1;bank[3][0x1c/4]=2;bank[3][0xc4/4]=20;
@@ -148,6 +151,10 @@ int main(void){
  reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);
  for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}
  reset(0);assert(blit(37,1601)==0&&!starts);
+ reset(0);a03_gpu_blit_control(3);assert(!a03_gpu_blit_verify);
+ for(unsigned n=0;n<5;n++){us=flushes=starts=offs=0;assert(blit(37,19)==1);}
+ assert(a03_gpu_blit_verified==4&&a03_gpu_blit_completed==5&&a03_gpu_blit_ns==50);
+ a03_gpu_blit_control(4);assert(a03_gpu_blit_verify);us=flushes=starts=offs=0;corrupt=1;assert(blit(37,19)==0);
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''

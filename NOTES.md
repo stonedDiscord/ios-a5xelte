@@ -1,3 +1,10 @@
+NEXT0169 2Dnativeblit256bytes(no per-pixeldivision),fullverifydefaultON,
+explicitgpu blit fast skipsreadbackonlyafter4verifiedframes; verify restores.
+AlwaysrequireIRQ/header/MMU/retirement. AddedGPUandCPUcopytimingns/counters.
+HosttranslatedDMA/primaryMesa/hash/ARM64PASS. NeedfullCI->0102BOOT-only.
+Current0101realGPU4frames4608000pixels/fallbackhardwarePASS/touchON retained.
+Physicalscreenquestionpending, noFPS/speedupclaim. Capture111070/56476.
+
 FOLLOWUP22:28UTC BOOT0101 realGPUframes4/pixels4608000 allfullreadbackPASS.
 CPUfallbackhardwarePASS: blitOFFframes4,copies4->32 afteronebounded swipe;
 thenblitONrestoredtx2529. Currentenabled1/frames4/fallback0/quarantine0.

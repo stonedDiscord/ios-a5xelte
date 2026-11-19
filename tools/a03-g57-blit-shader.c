@@ -12,14 +12,13 @@ int main(int argc,char **argv){
  glsl_type_singleton_init_or_ref();
  nir_builder b=nir_builder_init_simple_shader(MESA_SHADER_COMPUTE,&bifrost_nir_options_v9,"a03_g57_strided_blit_u32");
  b.shader->info.workgroup_size[0]=1;b.shader->info.workgroup_size[1]=1;b.shader->info.workgroup_size[2]=1;
- nir_def *id=nir_channel(&b,nir_load_global_invocation_id(&b,32),0);
+ nir_def *global=nir_load_global_invocation_id(&b,32);
+ nir_def *x=nir_channel(&b,global,0),*y=nir_channel(&b,global,1);
  nir_def *params=nir_imm_int(&b,0x02000200);
  nir_def *srcbase=nir_load_global(&b,params,4,1,32);
  nir_def *dstbase=nir_load_global(&b,nir_iadd_imm(&b,params,4),4,1,32);
  nir_def *srcstride=nir_load_global(&b,nir_iadd_imm(&b,params,16),4,1,32);
  nir_def *dststride=nir_load_global(&b,nir_iadd_imm(&b,params,20),4,1,32);
- nir_def *width=nir_load_global(&b,nir_iadd_imm(&b,params,24),4,1,32);
- nir_def *y=nir_udiv(&b,id,width),*x=nir_umod(&b,id,width);
  nir_def *src=nir_u2u64(&b,nir_iadd(&b,srcbase,nir_iadd(&b,nir_imul(&b,y,srcstride),nir_ishl_imm(&b,x,2))));
  nir_def *dst=nir_u2u64(&b,nir_iadd(&b,dstbase,nir_iadd(&b,nir_imul(&b,y,dststride),nir_ishl_imm(&b,x,2))));
  nir_def *value=nir_load_global(&b,src,4,1,32);

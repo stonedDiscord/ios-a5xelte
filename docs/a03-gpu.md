@@ -268,3 +268,12 @@ skipped. Validated source pages are RO/NX; only the fixed panel extent is
 writable. CPU fallback follows proven retirement, never a pending timeout.
 Full rectangle readback is enabled for bring-up, so no speedup is promised.
 Native shader generation and host MMIO tests are not hardware-blit evidence.
+
+##0169 2D and selectable readback candidate
+
+Dispatch width-by-height with native global X/Y removes per-pixel division.
+The pinned shader is256bytes,32registers,noTLS/WLS,preloadR60/R61. Full
+readback defaults on; explicit gpu blit fast omits it after four successful
+verified frames. gpu blit verify restores full checks. Completion, MMU fault
+and retirement checks always apply. Counters report verified/completed frames
+and CPU/GPU copy nanoseconds. Candidate tests do not prove speedup.

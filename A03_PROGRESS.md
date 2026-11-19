@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0169 2D dispatch, verification policy and timing candidate
+
+BOOT0101 real4frames/4608000pixels remains checkpoint. Prepared0169 uses
+native globalX/globalY with width-by-height dispatch instead of expensive
+perpixel integer divide/modulo. PinnedMesa shader shrinks768->256bytes,
+32regs/TLSWLS0/preloadR60+R61, SHAeb88a77a8595eaf054c5d9d73d69cbbbd3fe689bb358ef2ae7a121c3641d0548.
+Fullverification defaultsON; explicit gpu blit fast skips CPUrectangle
+readback only after4 verified successfulframes. gpu blit verify restores
+fullreadback. Allcompletion/MMU/retirement/lifetimeguards remain mandatory.
+Counters distinguish verified/completedframes and total/lastGPU ns;
+framebuffer separately tracksCPU/GPUcopyns/counts for comparison. No measured
+speedup claim until hardware. Nativehash/primaryv9packers/actualtranslated
+DMA fullrect+offset+noncontiguous/fault/timeout/fastpolicy ASanUBSanPASS;
+GPU/AMFI ARM64actualflagscompilePASS. NeedfullCIthenBOOT-only0102trial.
+Physicalscreenacceptance question stillpending. Current0101blitON/touchON.
+
 ## 2026-11-19: four real GPU frames and hardware CPU fallback verified
 
 BOOT0101 actual GPU frames advanced2->4 (4608000 pixels total), each logged
