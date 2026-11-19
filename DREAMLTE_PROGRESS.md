@@ -1,5 +1,21 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## Host console success gate added;0233 physical result pending — 2026-11-19
+
+Previous goal turn made progress: verified0233 BOOT flash, exact image and
+handoff committed. Current recheck still no1209:0001 or Download Mode;
+EP0 checker reports zero gadgets. No current phone console text or PIPE
+readback supplied. Do not infer0233 repeated0231's cmd2 failure, or reflash
+before its physical result. No live CI/flash.0233 remains installed.
+
+Enhanced tools/dreamlte-usb-check.py with optional bounded --console-seconds
+and --console-log: requires exact ECM identity, EP0 checks, ping and actual
+identifiable XNU UDP text from192.168.7.2. Real loopback tests PASS for split
+markers, data equality, empty/foreign/unrelated packets and timeout; CLI
+rejects invalid duration/missing interface. Host-only change; no new kernel
+or hardware claim. Working USB console remains unverified and goal active.
+
+
 ## 0233 verified and BOOT flashed; PIPE trial result pending — 2026-11-19
 
 Exact CI44503956468 SUCCESS at63349a0f3aae1f34cc282465b28748a9f7a4b193.

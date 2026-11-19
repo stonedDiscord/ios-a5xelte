@@ -680,3 +680,18 @@ host ECM interface at192.168.7.1/24, add `--interface NAME` to require its
 USB parent/MAC identity and three ICMP request/reply exchanges. This helper
 has only been checked for syntax/help and correct absence reporting so far;
 no running S8 gadget has passed it yet.
+
+## Host console completion check
+
+After the exact ECM interface is configured at192.168.7.1/24, stop any
+other UDP5140 listener and run:
+
+    python3 tools/dreamlte-usb-check.py --interface INTERFACE --console-seconds 60 --console-log research/dreamlte/xnu-usb-console.log
+
+This requires real EP0 transfers, three ping replies and identifiable
+XNU UDP5140 text from192.168.7.2, saving validated bytes privately. Enumeration
+or ping alone is not a console pass. A full bounded capture waits its window;
+60seconds includes the poller's periodic30second status if no new boot text
+remains. The receiver has actual loopback UDP tests, including split markers,
+wrong peer, unrelated traffic, empty datagrams and silence. This host test
+is not evidence of phone delivery;0233 has not enumerated at latest check.
