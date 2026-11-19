@@ -1,5 +1,23 @@
 # DREAMLTE USB bring-up evidence
 
+## 0234 physical result: quiet resource path still times out — 2026-11-19
+
+User reports from0234:
+    SWEET USB: ep0 cmd 0x2 timeout
+    DREAMLTE USB POLL: first=001b0048 last=001b0048 exit=001b0048 n=1000 wake=0
+    SWEET USB: endpoint 0 setup failed
+
+Removing framebuffer output between STARTCFG and resource allocation did
+not advance initial EP0 SETTRANSFRESOURCE. CLK31 remained clear at every
+sample and pre-log exit, and no wake was attempted. This rejects the added
+inter-command printing as a sufficient explanation/fix; it does not prove
+all timing effects impossible or that clocks/PHY are electrically healthy.
+No endpoint-resource progress or working USB console.0234 remains installed.
+Result recorded; user asks for an explanation of last change, not a new
+flash. Next evidence-based candidate is read-only PMU isolation/reference
+selector sampling; no register write policy or next CI selected yet.
+
+
 0234 bounded host observation completed:60 sysfs samples over120.14s,
 no1209:0001 at any sample. Evidence saved privately in exact-run directory
 host-observation.json. Current physical screen result still pending; no
