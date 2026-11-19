@@ -68,6 +68,8 @@ static void fake_write(unsigned o,uint32_t v){
   if(mode==5){bank[3][0x1000/4]=0x20000;bank[3][0x2000/4]=1;return;}
   *(uint64_t *)((uint8_t*)allocation+0x5000)=0x0077ccff003388aaULL;
   *(uint32_t *)((uint8_t*)allocation+0x4000)=1;
+  if(mode==8)*(uint64_t *)((uint8_t*)allocation+0x5000)=0xa5a55a5adeadbeefULL;
+  if(mode==9)*(uint32_t *)((uint8_t*)allocation+0x4000)=0;
   bank[3][0x1000/4]=2;return;
  }
  if(o==0x18e0&&v==0){if(mode!=6)bank[3][0x18e0/4]=0;return;}
@@ -90,7 +92,7 @@ static void reset(unsigned m){
 int main(void){
  reset(0);a03_gpu_job();assert(passed==1&&starts==1&&offs==1&&!frees&&flushes==2&&!a03_gpu_job_poisoned);
  assert(bank[3][0x2400/4]==0&&bank[3][0x2404/4]==0&&bank[3][0x2430/4]==1&&bank[3][0x2408/4]==0x13579bdf&&bank[3][0x240c/4]==0x2468ace0);
- for(unsigned m=1;m<=7;m++){
+ for(unsigned m=1;m<=9;m++){
   reset(m);a03_gpu_job();assert(!passed&&!a03_gpu_job_requested);
   if(m==1||m==2)assert(!starts&&offs==1);
   if(m==2)assert(frees==1&&!allocation);
