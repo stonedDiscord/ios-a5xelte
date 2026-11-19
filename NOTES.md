@@ -1,3 +1,13 @@
+ACTIVE2026-11-19 POWER/CLOCK-FIRST0163 candidate, per user direction.
+Correct0162 C0/top-domain guard; nohardwareGPU_IDclaim. Explicit gpu power
+boundedADI rail observation/noPMICwrites, atomicDownload/ADIownership,
+topFORCEclear/300us+2000usboundedwait/timeoutrestore, AONbusenable.
+Capture inheritedclocks+GPU/topDVFS; NOleafgate/rate/PLL/voltagevote/jobs.
+ActualASanUBSan+all3BSD ARM64compiles+USBregressions+109profilestagePASS.
+NeedfullCI/link/sourcevalidation->BOOT-onlytrial->actualsnapshots before
+choosingclocksetup. Goalstillbasicactualhardwareblit+framebufferintegration.
+0095/0094/0093restores retained. docs/a03-gpu.md details; privatefilesignored.
+
 ACTIVE2026-11-19 GPU passive trial0095: CI44409726184 SUCCESS exact15b1445.
 Kernel f1cf4a5a...d9ac5e7; BOOT1946fd80...bf9f5b. Checksum/source/markers/
 ASanUBSan/SMP/RAM PASS. Lowercase boot flashed100percent; uppercase BOOT

@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: power/clock-first0163 preflight candidate
+
+User directs clock and power setups first. Source review identifies0162
+shader-C0/top-domain conflation: core0state7 alone does not prove control
+aperture off.0163 gates top state only, pending actual hardware GPU_ID.
+Explicit gpu power reads inherited SC2730 rail via bounded ADI (181c bit3,
+1854 selector*3125uV), rejects disabled/outside700-800mV; no PMIC writes.
+Shared runtimeADI atomic ownership covers GPU reads and Download reset.
+Clear only top FORCEbit25 if set,300us then bounded2000us top-state wait,
+restore changedforce on timeout; enable only AONbusbit11 if needed.
+Snapshot APB clocks/QoS, GPU DVFS and topDVFS; leaf gates/rates/PLLs/votes
+remain unchanged pending actual inherited-state validation. No GPU jobs.
+Actual source ASan/UBSan rail-bound/top-vs-shader/timeout/restore/map/gates/
+ADIownership tests PASS. All3 changed C files compile toARM64MachO using
+exact44409726184 BSD flags/generatedheaders; no builtin substitutions.
+USBsupply+Download existing host regressions PASS;109patchprofile staged.
+Full CI/link/BOOT trial and hardware power/clock setup still pending.
+
 ## 2026-11-19: BOOT0095 passive GPU trial reaches closed power-domain guard
 
 Resumed basic acceleration experiment. CI44409726184 completed SUCCESS

@@ -94,3 +94,34 @@ insufficient evidence: retain the actual renderer string and prove completed
 hardware jobs. Do not install these S7 libraries to claim A03 acceleration.
 The A03 bridge must also handle XNU16KiB pages versus GPU page-table geometry,
 IOSurface lifetimes, per-client isolation and synchronization.
+
+## Power and clock preflight0163 (2026-11-19)
+
+User directs power/clock setup first. Review found0162 conflates shader C0
+power (PMU state bits28:24) with GPU top-domain power (bits20:16). The Mali
+platform sequence powers top and enables clocks before kbase powers shader
+cores.0163 gates register access on top only; a sleeping shader alone is not
+evidence that the control aperture is inaccessible. Source-based correction
+pending hardware verification, not a GPU_ID claim.
+
+Explicit gpu power observes SC2730 DCDC_GPU via existing bounded ADI:
+POWER_PD_SW181c bit3, VOL1854 bits8:0 x3125uV. Live DT marks the rail
+always-on and lowest OPP384MHz/700mV. Reject disabled supply or inherited
+voltage outside700-800mV; never write PMIC. Runtime ADI reads and Download
+reset share atomic ownership; startup USB supply precedes both workers.
+
+Sequence: reject auto-shutdown ownership, clear only PMU2c4 FORCE bit25 if
+needed, wait300us then poll top state up to2000us, enable AON bus bit11 if
+needed, capture inherited APB core/mem/sys and QoS, GPU DVFS index/idle/map0/
+update/bypass/voltage/clock/state and topDVFS MM control/tuning. A top timeout
+restores only a force bit this command cleared and never accesses APB/GPU.
+Leaf clock gates, rate selectors/dividers, PLLs, voltage votes, QoS and jobs
+remain unchanged until inherited states are validated.0163 implements top
+power setup and clock preflight, not complete clock setup or acceleration.
+The passive gpu command remains write-free.
+
+References: native Samsung kernel checkout b48e9dd (clock driver, SC2730
+regulator, qogirl6 headers), vendor79c7c8b above (platform sequence/GPU DVFS
+register map). Vendor T606 table removes768MHz and retunes GPLL to650MHz;
+do not copy generic850MHz. Index0 uses384MHz/700mV without high-bin voltage
+map changes. Hardware DVFS ownership/rail/clocks require BOOT-only trial.

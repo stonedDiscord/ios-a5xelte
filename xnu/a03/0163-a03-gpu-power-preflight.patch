@@ -1,0 +1,169 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -1,8 +1,9 @@
+ /* A03 ums9230 GPU diagnostic. Explicit live-worker request only.
+- * Provenance: docs/a03-gpu.md. No register writes, power-on, DVFS or jobs. */
++ * Provenance: docs/a03-gpu.md. Explicit power command; no DVFS, PLL, job or compositor writes. */
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+ #include <sys/param.h>
+ #include <sys/systm.h>
++#include <kern/clock.h>
+ #include <machine/machine_routines.h>
+ extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
+ 
+@@ -12,16 +13,20 @@
+ #define A03_GPU_PA 0x23100000ULL
+ #define A03_GPU_MAP_SIZE 0x1000
+ #define A03_GPU_FORCE_OFF ((1U << 25) | (1U << 24))
+-#define A03_GPU_STATE_MASK 0x1f1f0000U
++#define A03_GPU_STATE_MASK 0x001f0000U /* top domain; shader C0 may sleep */
+ #define A03_GPU_BUS_ENABLE (1U << 11)
+ 
+ /* Permanent mappings, owned only by the single dedicated probe worker.
+  * ml_io_map must not be paired with ml_io_unmap. */
+ static vm_offset_t a03_gpu_pmu, a03_gpu_aon, a03_gpu_apb, a03_gpu_regs;
++static vm_offset_t a03_gpu_dvfs, a03_gpu_topdvfs;
++extern int a03_gpu_supply_status(uint32_t *, uint32_t *);
+ static uint32_t
+ a03_gpu_read(vm_offset_t base, unsigned offset)
+ {
+-    return *(volatile uint32_t *)(base + offset);
++    uint32_t value = *(volatile uint32_t *)(base + offset);
++    __asm__ volatile("dsb sy" ::: "memory");
++    return value;
+ }
+ 
+ static int
+@@ -91,4 +96,73 @@
+         a03_gpu_read(a03_gpu_regs, 0x114), a03_gpu_read(a03_gpu_regs, 0x110),
+         a03_gpu_read(a03_gpu_regs, 0x124), a03_gpu_read(a03_gpu_regs, 0x120));
+ }
++
++/* Separate explicit command. Observe inherited rail and DVFS before clock
++ * changes. No PMIC writes, PLL changes, GPU jobs or startup invocation. */
++static int
++a03_gpu_update(vm_offset_t base, unsigned offset, uint32_t mask, uint32_t value)
++{
++    uint32_t old = a03_gpu_read(base, offset);
++    *(volatile uint32_t *)(base + offset) = (old & ~mask) | (value & mask);
++    __asm__ volatile("dsb sy" ::: "memory");
++    return (a03_gpu_read(base, offset) & mask) == (value & mask);
++}
++
++void a03_gpu_power(void);
++void
++a03_gpu_power(void)
++{
++    uint32_t pd, voltage, force, state, bus;
++    if (!a03_gpu_supply_status(&pd, &voltage)) {
++        printf("A03 GPU power: supply read failed; no power/clock writes\n");
++        return;
++    }
++    printf("A03 GPU power: SC2730 pd=%04x vsel=%04x voltage-uV=%u\n",
++        pd, voltage, (voltage & 0x1ffU) * 3125U);
++    /* DT lowest OPP384MHz/700mV. Only observe inherited stock OPP rail. */
++    if ((pd & 8U) || (voltage & 0x1ffU) < 224U || (voltage & 0x1ffU) > 256U) {
++        printf("A03 GPU power: supply outside validated 700-800mV; stop\n");
++        return;
++    }
++    if (!a03_gpu_pmu) a03_gpu_pmu = ml_io_map(A03_GPU_PMU_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_aon) a03_gpu_aon = ml_io_map(A03_GPU_AON_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_pmu || !a03_gpu_aon) return;
++    force = a03_gpu_read(a03_gpu_pmu, 0x2c4);
++    state = a03_gpu_read(a03_gpu_pmu, 0x500);
++    bus = a03_gpu_read(a03_gpu_aon, 0);
++    printf("A03 GPU power: before force=%08x state=%08x bus=%08x\n", force, state, bus);
++    if (force & (1U << 24)) {
++        printf("A03 GPU power: auto-shutdown owner present; stop\n");
++        return;
++    }
++    /* Vendor mali_power_on changes only top FORCE_SHUTDOWN. */
++    if ((force & (1U << 25)) && !a03_gpu_update(a03_gpu_pmu, 0x2c4, 1U << 25, 0)) return;
++    delay(300);
++    unsigned wait;
++    for (wait = 0; wait < 2000; wait++) {
++        state = a03_gpu_read(a03_gpu_pmu, 0x500);
++        if (!(state & A03_GPU_STATE_MASK)) break;
++        delay(1);
++    }
++    if (state & A03_GPU_STATE_MASK) {
++        printf("A03 GPU power: top timeout state=%08x; no APB/GPU access\n", state);
++        if (force & (1U << 25)) (void)a03_gpu_update(a03_gpu_pmu, 0x2c4, 1U << 25, force);
++        return;
++    }
++    if (!(bus & A03_GPU_BUS_ENABLE) && !a03_gpu_update(a03_gpu_aon, 0, A03_GPU_BUS_ENABLE, A03_GPU_BUS_ENABLE)) return;
++    if (!a03_gpu_apb) a03_gpu_apb = ml_io_map(A03_GPU_APB_PA, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_dvfs) a03_gpu_dvfs = ml_io_map(0x23014000ULL, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_topdvfs) a03_gpu_topdvfs = ml_io_map(0x64014000ULL, A03_GPU_MAP_SIZE);
++    if (!a03_gpu_apb || !a03_gpu_dvfs || !a03_gpu_topdvfs) return;
++    printf("A03 GPU power: clocks core=%08x mem=%08x sys=%08x qos=%08x\n",
++        a03_gpu_read(a03_gpu_apb, 4), a03_gpu_read(a03_gpu_apb, 8),
++        a03_gpu_read(a03_gpu_apb, 12), a03_gpu_read(a03_gpu_apb, 16));
++    printf("A03 GPU power: dvfs index=%08x idle=%08x map0=%08x update=%08x bypass=%08x\n",
++        a03_gpu_read(a03_gpu_dvfs, 0x8c), a03_gpu_read(a03_gpu_dvfs, 0x90),
++        a03_gpu_read(a03_gpu_dvfs, 0x48), a03_gpu_read(a03_gpu_dvfs, 0xa4), a03_gpu_read(a03_gpu_dvfs, 0x24));
++    printf("A03 GPU power: dvfs voltage=%08x cgm=%08x state=%08x top-mm=%08x tune=%08x\n",
++        a03_gpu_read(a03_gpu_dvfs, 0x2c), a03_gpu_read(a03_gpu_dvfs, 0x34),
++        a03_gpu_read(a03_gpu_dvfs, 0x38), a03_gpu_read(a03_gpu_topdvfs, 0x18), a03_gpu_read(a03_gpu_topdvfs, 0x150));
++    a03_gpu_probe();
++}
+ #endif
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -152,7 +152,7 @@
+ /* Matches sprd_adi_restart_handler("download") through the live DT's
+  * sharkl5/SC2730 variant. This is Samsung Download, not fastboot USB.
+  * Fixed register sequence only; no caller-supplied addresses or values. */
+-static int download_reset(void) {
++static int download_reset_unlocked(void) {
+  uint32_t status,enable,reset,check;
+  if(!adi || !adi_read(0x1bac,&status) || !adi_read(0x1bf8,&enable) ||
+     !adi_read(0x1824,&reset))return 0;
+@@ -164,6 +164,22 @@
+  if(!adi_write_raw(0x1824,reset|1))return 0;
+  delay(1000000);
+  return 0;
++}
++/* Shared ADI ownership: USB supply setup finishes before workers start.
++ * No arbitrary PMIC API or expansion of the USB write allowlist. */
++static volatile unsigned adi_runtime_busy;
++int a03_gpu_supply_status(uint32_t *, uint32_t *);
++int a03_gpu_supply_status(uint32_t *pd, uint32_t *voltage) {
++ if (!adi || !__sync_bool_compare_and_swap(&adi_runtime_busy, 0, 1)) return 0;
++ int ok = adi_read(0x181c, pd) && adi_read(0x1854, voltage);
++ __sync_lock_release(&adi_runtime_busy);
++ return ok;
++}
++static int download_reset(void) {
++ if (!__sync_bool_compare_and_swap(&adi_runtime_busy, 0, 1)) return 0;
++ int ok = download_reset_unlocked();
++ __sync_lock_release(&adi_runtime_busy);
++ return ok;
+ }
+ static int usb_supply(void) {
+  uint32_t pd,vol,after_pd,after_vol;
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -611,12 +611,13 @@
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
+ extern void a03_gpu_probe(void);
++extern void a03_gpu_power(void);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus gpu creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -639,6 +640,7 @@
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
++ else if(!strcmp(command,"gpu power"))a03_gpu_power();
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);
