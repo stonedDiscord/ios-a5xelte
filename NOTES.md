@@ -1,3 +1,11 @@
+ACTIVE20:32UTC BOOT0097 GPUCLOCKS+ID VERIFIED! gpu clocks tx1 ID90910010,
+status100/shader1/tiler1/L2=1. core10/mem10/sys30->11/11/31; PLLdecode
+1535999998Hz;DVFSCGM1003/voltage0;force10102/state07000000unchanged.
+NoPMIC/PLL/rate/DVFSwrites; nojobs/pixels/accelerationyet. iohealthy/all8.
+UTCsynced/privateFW79104load0/A55A; TOUCHON1/slice1. Capture75107/1149.
+Nextvendorcorepowersequence(PWRKEY2968a819/PWROVERRIDE1f01e0078), bounded
+readiness/shutdown;thenownedoffscreenjob. Preserve0097/0096/0095 images.
+
 ACTIVE20:30UTC BOOT0097flashSUCCESS boot-only; capture1149 waitingCDC.
 CI44606600103 SUCCESS exact5e1a464/source/checksum/markers/hosttestsPASS.
 Kernel21f29fb5...c2bfc253;BOOT198c4b15...77d812b. Sameall8/1984MiB/cmd599/

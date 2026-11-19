@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0097 GPU clocks and actual GPU_ID verified
+
+Explicit gpu clocks transaction1 succeeds on BOOT0097. Beforecore10/mem10/
+sys30; TWPLL0004077b/1d89d89d/0003c005 decodes1535999998Hz (register-derived,
+not measured oscilloscope frequency); dvfsstate0. Aftercore11/mem11/sys31,
+GPU_ID90910010/status100, shaderpresent1/tilerpresent1/L2present1; highmasks0.
+GPUdvfsCGM1003/voltage0. PMUforce10102/state07000000/AON2bcac1 unchanged.
+This verifies actual leafclockenable and readable GPUcontrol aperture with
+sleepingshader, notGPUjobs/pixels/framebufferacceleration. NoPMIC/PLL/rate/
+DVFSwrites. ioReady1/poisoned0. All8PSCIrc0/selected8; UARTinterleavegarbles
+completionline but perCPU1..7initSGI records present. UTC1795120343 synced.
+Private79104firmwarestagedvalid0/load0/readyA55A; continuousHIDON1/slice1.
+SinglecapturePID75107/session1149 ownsboot0097-gpu-clocks-live.log.
+Next sourcevalidated tiler/L2/shaderpower (vendorPWRKEY/OVERRIDE sequence),
+then driverownedoffscreenjob/pixelreadback andframebufferintegration.
+Keep0097clockcheckpoint plus0096/0095restores. NoHome/nootherpartitionwrites.
+
 ## 2026-11-19:0164 CI success and BOOT0097 flashed
 
 CI44606600103 SUCCESS exact5e1a464a1a8698ee410b159c42c7f7a903c376b1.

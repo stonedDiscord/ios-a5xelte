@@ -148,3 +148,15 @@ order, wait400us, recheckdomain, readGPU_ID. InvalidID/mapfailure restores
 ownedleafgates. No voltage/rate/PLL/DVFS/job writes. It preserves inherited
 1V for this bounded bringup stage; it does not establish1V as the correct
 runtimeOPP. FullCI and hardware verification remain required.
+
+## BOOT0097 hardware milestone
+
+Explicit gpu clocks enabled APBcore/mem/sys bit0:10/10/30 ->11/11/31.
+Actual GPU_ID90910010/status100, shader/tiler/L2present1 (highmasks0).
+TWPLL registers0004077b/1d89d89d/0003c005 decode1535999998Hz; CGM1003.
+This proves clock gating/control register access, not jobs or acceleration.
+NoPLL/rate/voltage/DVFS writes. Next power step follows pinned vendor
+backend/gpu/mali_kbase_pm_driver.c: before each power-on PWR_KEY050 gets
+2968a819, PWR_OVERRIDE1 at058 getsF01E0078; tiler power brings firstL2,
+waittiler+L2, then shader power and120us delay. Needboundedhardwarevalidation
+and ownership/rollback before job submission. Do not reuse donor PMIC/MMIO.
