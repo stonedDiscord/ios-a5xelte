@@ -1,3 +1,10 @@
+ACTIVEBOOT0099 WRITE_VALUEHARDWAREPASS tx2:submitted1/done1/retired1,
+IRQ2/MMU0/ASfault0/exception1/output77ccff003388aaEXACT. CoreoffPASS/fault0.
+Notframebufferaccelerationyet. iohealthy/all8/UTCsynced. FWstage15986needs
+load/startleaveON;capture97724/4575.0167computeNOWPROFILEafterjobPASS,
+localtests/Mesapackermatch/ARM64/113profilePASS. NeedfullCI->0100copytrial.
+Keep0099/0098/0097restores;noHome/nootherpartitionwrites.
+
 ACTIVEBOOT0099 correctedv9jobkernel flashedboot-onlySUCCESS;capture4575.
 CI44617226681/6c81044verified. Kernele83efc2b...10d62f0c/BOOTac932ced...
 d2926c17;all8/1984MiB/ADT0094/cmd599/SMP/reservations/stockramdiskDTPASS.

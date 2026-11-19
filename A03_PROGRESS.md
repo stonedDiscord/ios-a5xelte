@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0099 first real GPU WRITE_VALUE job PASS
+
+Explicitgpu clocks tx1 ID90910010; gpu job tx2 powersall1 thenactual
+submitted1/done1/retired1, JOBIRQ00000002/MMU0/GPUIRQ700/JSstatus0/
+ASfault0/headerexception1. Output0077ccff003388aa EXACTexpected PASS1.
+Corecyclepowered1/shutdown1/fault0. This provesrealGPUjobexecution and
+ownedmemoryreadback, notframebufferacceleration. ioReady1/poisoned0.
+All8selected/PSCI1..7rc0. UTC1795124111 synced;FWstaging15986 underway,
+needload/startleaveON. Singlecapture97724/4575 boot0099-gpu-job-live.log.
+
+Prepared0167nowstaged afteractualWRITE_VALUEPASS. NativeG57compute1024u32
+copylayout/source+destreadback,mismatchtests/Mesav9packermatch/ARM64/
+113profilechecksPASS. NeedfullCIthen0100BOOTtrialactualcomputecopy.
+GoalstillneedsrepeatcopyandIOSurfaceframebufferintegration/physicalframes.
+Keep0099jobcheckpoint+0098/0097restores. Nootherpartitionwrites/Home.
+
 ## 2026-11-19: corrected0166 CI success; BOOT0099 flashed
 
 CI44617226681 SUCCESS exact6c810448c1f60e62cee8e8c82262a8e239d8f456.

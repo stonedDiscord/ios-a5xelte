@@ -240,3 +240,11 @@ andchecksderivedcodeSHA256565e07d886d6f111fac39102242d7175f06f0ba5f6f5b52797f853
 ReproductionPASS. LocalglibcC23once_flag/call_oncecollision wasresolved
 onlyinignoredMesacheckout byrenamingMesaemulationidentifiers; noPanfrost
 compilerinstructionlogicchanged. No phonecomputeexecutionclaim.
+
+## BOOT0099 first hardware job PASS
+
+Correctedv9 WRITE_VALUE tx2:submitted1/done1/retired1,IRQ2/MMU0/ASfault0,
+headerexception1,output0077ccff003388aaequalsimmediatevalue. Corepoweroff
+PASS/fault0. This isrealhardwarejob/readback, notprivateCPUzeroing.
+NoIOSurface/scanoutaccelerationyet.0167nativecomputecopy stagedonlyafter
+thishardwaregate; fullCIandactualcopyreadbackremainrequired.
