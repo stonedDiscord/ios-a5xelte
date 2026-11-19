@@ -2,6 +2,13 @@
 
 ## 0237 USB reconnect and buttonless reboot candidate — 2026-11-19
 
+0237 exact CI44533145336 dispatched at4eef21e2fc5ea34c48fc0c24ca79e1fe4e558e61.
+User confirms initial manual Download Mode; host sees fresh04e8:685d/069.
+Preparation research/dreamlte/prepare-0237.py waits exact run/head, verifies
+compiled source/profile and preserved original BOOT components; never flashes.
+0236 remains installed. No0237 physical test yet; keep fresh Download Mode.
+
+
 Previous goal turn established working0236 USB. This turn installs persistent
 host networking and adds an EP0 reboot protocol. Host was still1209:0001/068,
 with generic NetworkManager shared192.168.42.1 plus manually added7.1.
