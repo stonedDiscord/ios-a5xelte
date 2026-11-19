@@ -1,5 +1,34 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0237 first boot: no host enumeration; screen report pending — 2026-11-19
+
+Heimdall flash completed BOOT100%/exit0/reboot. Two bounded30second host
+observations found no1209:0001. Kernel journal shows Download Mode069
+disconnect and no subsequent USB connect attempt. No ECM interface exists;
+this is earlier than host address activation, not evidence that the new
+NetworkManager profile failed. Physical last screen line requested.
+Exact0236/0237 compiled archives have identical VM/startup/BSD init sources,
+and identical sweet_usb_probe and sweet_usb_gadget_start implementations.
+New EP0 reboot logic cannot execute until a host request, but code-layout
+or reboot-state effects are not ruled out. Do not attribute this boot to
+the historical0235 pmap stop without the current screen evidence.
+0237 installed; no live CI/preparation/flash. Preserve current boot until
+its physical result. Goal remains active: neither reboot command nor
+post-phone-reboot automatic USB has passed hardware verification yet.
+
+## 0237 verified and BOOT flashed — 2026-11-19
+
+Exact CI44533145336 SUCCESS at4eef21e2fc5ea34c48fc0c24ca79e1fe4e558e61.
+11sources/9symbols/57diagnostics/profile PASS. Kernel SHA256
+fb89c3a1cca9b61290217736b17f32b3dd1a4103ed3de7c584959b1df43261af.
+BOOT shim/out/dreamlte-xnu-0237.img,18,464,784B,SHA256
+381e53c469821250f4c3b36b72d6a9750a4d8978d877e9e500948de03114a9bd.
+Original BOOT header/components/payload/fit/hash verified. Fresh Download
+Mode069 accepted BOOT100%; Heimdall exit0/reboot. Only BOOT written.
+0237 now installed. Initial host sample has no1209:0001; waiting for boot,
+not evidence of a USB failure yet. Runtime capability, normal reboot and
+Download Mode command remain untested. No live CI/preparation/flash.
+
 ## 0237 USB reconnect and buttonless reboot candidate — 2026-11-19
 
 0237 exact CI44533145336 dispatched at4eef21e2fc5ea34c48fc0c24ca79e1fe4e558e61.
