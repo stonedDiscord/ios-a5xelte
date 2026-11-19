@@ -1,5 +1,22 @@
 # DREAMLTE USB bring-up evidence
 
+## 0233 verified and BOOT flashed; PIPE trial result pending — 2026-11-19
+
+Exact CI44503956468 SUCCESS at63349a0f3aae1f34cc282465b28748a9f7a4b193.
+Preparation2652 finished;11sources/9symbols/52diagnostics/profile PASS.
+Kernel SHA256ca505ccd8d0cd6e7ae69717a2384360b4c4366ee8218501c67be533d1ea194be.
+BOOT shim/out/dreamlte-xnu-0233.img,18,464,784B,SHA256
+1cc6b8bb73f31da1a90e41a1dc449a4487f1bd4ceff449ee78124e8f2fd23486.
+Original BOOT components/header/payload/fit/hash PASS. Fresh Download
+Mode064 accepted BOOT100%; Heimdall exit0/reboot. Only BOOT written.
+Exact artifacts/reviewed manifest/flash log research/dreamlte/ci-44503956468.
+Host post-flash no1209:0001 or Download Mode; EP0 checker fails absence.
+Requested PIPE config before/after and resources/running or failed command/
+POLL from this same boot.0233 installed; physical bit28/readback and endpoint
+progress unverified. No USB console success. No live CI/preparation/flash.
+Preserve current boot until physical result; no non-BOOT partition write.
+
+
 0233 candidate matches pinned Samsung core.c dwc3_core_config:
 for revisions>=2.50a set GUSB3PIPECTL.DIS_RXDETP3(bit28). Previously
 reported firmware PIPE010c0002 lacks it; saved configured Android dump
