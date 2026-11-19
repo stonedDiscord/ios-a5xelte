@@ -1,5 +1,24 @@
 # DREAMLTE USB bring-up evidence
 
+## Current status: 0238 hardware, 0239 in CI
+
+Build 0238 verified buttonless entry to Samsung Download Mode on the S8:
+
+```sh
+sudo python3 tools/dreamlte-usb-reboot.py download --timeout 30
+```
+
+Run this from the working XNU USB connection. The tool checks that the
+same physical port returns as Samsung `04e8:685d`. The transition writes
+no partitions. XNU console output is only available while XNU is running.
+
+The normal reboot command also restarted the phone, but USB did not return
+within 120 seconds. A cable replug on that same boot restored enumeration,
+automatic host IP configuration, ping and XNU console output. The console
+showed no bus reset or connection until the replug. The 0239 candidate tests
+Samsung's PHY pull-up sequence; see [DREAMLTE_PROGRESS.md](../DREAMLTE_PROGRESS.md)
+for the latest build and hardware evidence.
+
 ## 0237 USB reconnect and buttonless reboot candidate — 2026-11-19
 
 Previous goal turn established working0236 USB. This turn installs persistent
