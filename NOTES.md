@@ -1,3 +1,10 @@
+ACTIVECI44610344415 exact134902f corepower0165 queued/running.
+BOOT0097 clocks+GPU_ID90910010 VERIFIED; nojob/pixelaccelerationyet.
+LatestioReady1/poisoned0;display7swaps5copies/timer17672. TOUCHON495slices.
+NeedexactCI/source/checksum->0098sameADT/cmd599/all8/1984MiBBOOT-only,
+passivegpu(requireclocks), gpu clocks ifgated, thenexplicitgpu cores cycle.
+Keep75107/1149singlecapture;volatileFWrestoreafteranyreboot.
+
 NEXT0165gpu cores candidate prepared/tested; BOOT0097unchanged.
 VendorPWRKEY/OVERRIDEthenTILER+L2readythenSHADER120us;20msboundedwaits,
 shutdownreverse/overrideonlyafterdrain. ExactID/topology/ownershipguards.

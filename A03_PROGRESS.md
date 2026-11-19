@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0165 committed; CI44610344415 dispatched
+
+134902f adds guardedcorepowercycle; exactCI44610344415 queued/running.
+Current0097 remainsGPU_ID90910010/clocksenabled, touchcontinuousON;
+ioReady1/poisoned0,display7swaps5copies/timer17672. NoHomeinjection,
+corepowerrequests/jobs/pixelsorframebufferaccelerationclaim. Next exact
+CIartifact/source/checksum ->0098BOOT-only ->explicitcorecycle. Single
+capture75107/1149 remainsowner;0097/0096/0095 checkpointsretained.
+
 ## 2026-11-19:0165 vendor core-power cycle candidate
 
 0097clockenable persists: repeatedpassiveGPU_ID90910010/status100/core11/
