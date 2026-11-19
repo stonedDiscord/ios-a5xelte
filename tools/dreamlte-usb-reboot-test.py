@@ -53,6 +53,7 @@ static unsigned ud_string(unsigned i,void*p) {(void)i;(void)p;return 0;}
 static void ud_stall(void) {stalled++;}
 static void ud_start(unsigned e,unsigned b,unsigned n,unsigned c) {(void)e;(void)b;(void)n;(void)c;starts++;}
 '''
+code += 'static int dreamlte_usb_dp_pullup(bool enable) {(void)enable;return 0;}\n'
 code+='static void\n'+function('ud_setup')+'\nstatic void\n'+function('dreamlte_usb_reboot')+'\nstatic void\n'+function('ud_event')+r'''
 int main(void) {
  ud.dma=(uintptr_t)dma;

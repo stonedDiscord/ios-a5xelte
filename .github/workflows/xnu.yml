@@ -142,6 +142,7 @@ jobs:
           python3 tools/dreamlte-usb-epcmd-test.py dxb/xnu/bsd/dev/sweet_usb.c
           python3 tools/dreamlte-usb-resource-test.py dxb/xnu/bsd/dev/sweet_usb.c
           python3 tools/dreamlte-usb-reboot-test.py dxb/xnu/bsd/dev/sweet_usb.c
+          python3 tools/dreamlte-usb-dp-test.py dxb/xnu/bsd/dev/sweet_usb.c
           strings "$kernel" > dreamlte-strings.txt
           for marker in 'DREAMLTE WAIT' 'DREAMLTE START' 'dreamlte_ios16_provisional_reply' 'dreamlte_sandbox_disabled'; do
             grep -F "$marker" dreamlte-strings.txt >/dev/null || exit 1

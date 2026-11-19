@@ -2,6 +2,46 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0239 candidate matches Samsung DP pull-up sequencing — 2026-11-19
+
+0238 USB download mode074 is physically verified above.0239 follows pinned
+Samsung gadget_pullup/reset/conndone and CAL enable/disable_dp_pullup:
+clear PHYUTMI bit9 after endpoints and before RUN_STOP, set after USB reset
+address clearing, clear on high-speed connect. Only bit9 is changed, exact
+readback required, all-ones/mapping failure refused. Session force-valid
+setup before endpoints remains. No clock/PLL/CMU/port switch, timer retry,
+watchdog or external MUIC programming. This is an unproven attachment fix.
+Actual ARM64 compile, source-derived131072 field-preservation cases and
+invalid/mismatch refusal PASS. Reboot event suite remains PASS. Exact0238
+patch application equals compiled0239 input. Full CI/BOOT trial next.
+Current Download074 reached entirely by USB command, ready for BOOT-only
+test without buttons.0238 installed until verified new image exists.
+
+## 0238 USB Download Mode VERIFIED; normal boot attachment needs replug — 2026-11-19
+
+User confirms USB normal command visibly restarted phone and new boot reached
+SWEET USB ue0 rx0 tx0 frames. Host had no attachment, so normal reset works
+but automatic attachment fails before enumeration. User then explicitly
+replugs cable: same0238 boot appears1209:0001/073, automatic host IP/profile,
+capability/EP0/3ping PASS.23366bytes of XNU console recovered privately as
+ci-44540095593/normal-reboot-replug-console.log. It shows initial DSTS00920001,
+zero counters then real bus resets/connected speed0/setup after replug.
+
+Actual USB download command ACK, captured status ep1 flags=c mode2, and
+same physical port enumerates Samsung04e8:685d/074. Host tool PASS. NO buttons,
+no flash, no partition write for this transition. Download half of objective
+is physically verified. Current phone is in Download Mode074; preserve for
+next BOOT trial. Normal reboot auto-attachment and intermittent VM startup
+remain unresolved; do not mark full goal complete.
+
+Pinned Samsung gadget_pullup enables by clearing PHYUTMI.VBUSVLDEXT via
+SET_DPPULLUP_DISABLE before RUN_STOP. USB reset handler enables that bit;
+connect-done and wake handlers disable it again. Current XNU instead holds
+bit9 high before RUN_STOP and leaves it high at reset/connect. This is a
+source-backed startup/session difference worth a scoped BOOT trial; it is
+not yet an established root cause. External MAX77865 MUIC/S2MM005 switching
+also exists in live DT; no unsupported I2C programming has been attempted.
+
 ## 0238 normal USB reboot passes completion gate; return absent — 2026-11-19
 
 User supplies resources assigned in16/out16 and running DSTS00920001 after0ms,
