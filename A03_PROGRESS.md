@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0168 fullCI success; BOOT0101 flashed for framebuffer trial
+
+CI44625038530 SUCCESS exact74e1deff53d2dc27bcc769b92b2b37ec70c16cb9.
+All6 uploadedGPU/layout/AMFI/framebuffer source files byte-match tested
+candidate;0168reversecheck/checksum/linkedmarkers/SMP/actualsourceASanUBSan
+PASS. KernelSHA256460bfe0564e4abebded43e9a188434f5403c29aa5cfbbc7268e9ff05e3d1620e.
+BOOT0101SHA2563825c66cb24538b35a5fbab1c50644447a3504a6a569bd116a4b167a6c7c8d62.
+Same0094ADT/cmd599/all8/1984MiB/23reservations/SMP103485000/stockramdiskDT.
+SyncedDownload ->Heimdalldetect ->BOOT-onlyuploadsuccess/reboot. No other
+partition flashed. Solecapture111070/session56476 boot0101-gpu-blit-live.log.
+AwaitCDC; queuedonce gpu clocks then gpu blit on andUTCsync. NoactualGPU
+framebuffer/pixelclaim until completion/readback counters. NeedprivateFW/
+load/startleaveON afterreboot.0100/0099/0098restoreskept.
+
 ## 2026-11-19:0168 CI44625038530 active; translated DMA tests pass
 
 Authoritative kernel CI44625038530 exact74e1deff53d2dc27bcc769b92b2b37ec70c16cb9
