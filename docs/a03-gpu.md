@@ -262,3 +262,15 @@ headerexception1,output0077ccff003388aaequalsimmediatevalue. Corepoweroff
 PASS/fault0. This isrealhardwarejob/readback, notprivateCPUzeroing.
 NoIOSurface/scanoutaccelerationyet.0167nativecomputecopy stagedonlyafter
 thishardwaregate; fullCIandactualcopyreadbackremainrequired.
+
+##0168 retained IOSurface framebuffer candidate
+
+Explicit gpu blit on enables the guarded native strided-copy backend; the
+default is off. gpu blit reports verified frames/pixels/fallback/quarantine.
+All GPU entry points share one atomic owner. AppleCLCD retains the source
+surface during synchronous submission/readback; uncertain DMA keeps that
+retain indefinitely and disables panel writes until reboot. Busy frames are
+skipped. Validated source pages are RO/NX; only the fixed panel extent is
+writable. CPU fallback follows proven retirement, never a pending timeout.
+Full rectangle readback is enabled for bring-up, so no speedup is promised.
+Native shader generation and host MMIO tests are not hardware-blit evidence.

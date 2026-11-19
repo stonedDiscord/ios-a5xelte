@@ -169,7 +169,8 @@ def main():
                      '0164-a03-inherited-gpu-clock-gates.patch',
                      '0165-a03-gpu-core-power-cycle.patch',
                      '0166-a03-private-write-value-job.patch',
-                     '0167-a03-private-g57-compute-copy.patch'):
+                     '0167-a03-private-g57-compute-copy.patch',
+                     '0168-a03-iosurface-framebuffer-gpu-blit.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

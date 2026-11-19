@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0168 IOSurface-to-framebuffer native GPU candidate
+
+Prepared opt-in gpu blit on/off/status. Shared atomic owner serializes all
+live GPU diagnostics and framebuffer submissions; framebuffer swaps also
+serialize under the existing lock.64KiB retained contiguous scratch holds
+four extra source and four destination4KiB L3 tables (8MiB bounds each).
+Source pages validated within managedRAM and RO/NX; destination restricted
+to actual9e000000..9e465000 panel extent and verified physical mapping.
+Native Mesa24.3 parameterized strided shader is768bytes/32regs/TLSWLS0/
+preloadR60; SHA88dab0e057aaf95fb42c64e38e24153c7639487442314ebea89f733ca4abf382.
+Source cache flush before GPU access, bounded job retirement, and full
+rectangle readback before hardwarePASS. Safe retired failure permits CPU
+fallback; possible DMA retains source surface and suppresses future panel
+writes until reboot. GPU path defaultsOFF; no new hardware blit claim.
+
+Actualsource ASan/UBSan lifecycle tests cover full720x1600 and strided
+rectangles, badpages, allocation/AS failure, timeout, faults, corruption,
+quarantine, repeat reuse and busyowner. Native shader hash reproduced.
+GPU C compiles with actualCI flags. Local framebuffer C++ compile cannot
+validate Apple's missing typed-allocation builtins; fullCI is required.
+BOOT0100 six-copy checkpoint/touchON retained; no new flash yet.
+
 ## 2026-11-19: BOOT0100 six native copy trials PASS; touch restored
 
 After the first tx2 PASS, five explicit gpu copy transactions2482..2486 each

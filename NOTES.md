@@ -1,3 +1,12 @@
+NEXT0168 guardedIOSurfaceGPUblit candidate staged: atomicowner/allGPU,
+serializedswaps/retainedpages/ROsource/validatedpaneldestination/cacheflush/
+boundedretirement/fullreadback/CPUfallbackonlyafterretirement. Quarantine
+retainssurfaceandsuppressespanelwrites. DefaultOFF, explicitgpu blit on.
+ActualsourceASanUBSan/fullrect/strided/failuretestsPASS; native768bytes
+shaderreproduces88dab0e0...a4abf382. NeedfullCI(C++Applebuiltinsunavailable
+locally), source/artifactchecks->0101BOOT-only hardwareblittrial.
+BOOT0100/touchON/capture103600 retained. NoUIaccelerationclaimyet.
+
 ACTIVEBOOT0100 SIXNATIVECOPYTRIALSPASS (tx2,2482..2486):1024words each,
 mismatches0/done1/retired1/IRQ2/MMU0/ASfault0/shutdown1/fault0.
 UTC1795125218 synced; privateFWload0/readyA55A; touchON1/slices7 tx2487.

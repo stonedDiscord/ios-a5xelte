@@ -1,0 +1,537 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -37,9 +37,9 @@
+         (bus & A03_GPU_BUS_ENABLE) != 0;
+ }
+ 
+-void a03_gpu_probe(void);
++void a03_gpu_probe_owned(void);
+ void
+-a03_gpu_probe(void)
++a03_gpu_probe_owned(void)
+ {
+     uint32_t force, state, bus, core, mem, sys;
+     if (!a03_gpu_pmu) a03_gpu_pmu = ml_io_map(A03_GPU_PMU_PA, A03_GPU_MAP_SIZE);
+@@ -109,9 +109,9 @@
+     return (a03_gpu_read(base, offset) & mask) == (value & mask);
+ }
+ 
+-void a03_gpu_power(void);
++void a03_gpu_power_owned(void);
+ void
+-a03_gpu_power(void)
++a03_gpu_power_owned(void)
+ {
+     if (a03_gpu_job_poisoned) { printf("A03 GPU: job quarantine; active command refused\n"); return; }
+     uint32_t pd, voltage, force, state, bus;
+@@ -171,7 +171,7 @@
+     printf("A03 GPU power: dvfs voltage=%08x cgm=%08x state=%08x top-mm=%08x tune=%08x\n",
+         a03_gpu_read(a03_gpu_dvfs, 0x2c), a03_gpu_read(a03_gpu_dvfs, 0x34),
+         a03_gpu_read(a03_gpu_dvfs, 0x38), a03_gpu_read(a03_gpu_topdvfs, 0x18), a03_gpu_read(a03_gpu_topdvfs, 0x150));
+-    a03_gpu_probe();
++    a03_gpu_probe_owned();
+ }
+ 
+ /* BOOT0096 measured: top on, C0 asleep, inherited rail selector320 (1V),
+@@ -191,9 +191,9 @@
+     return rate;
+ }
+ 
+-void a03_gpu_clocks(void);
++void a03_gpu_clocks_owned(void);
+ void
+-a03_gpu_clocks(void)
++a03_gpu_clocks_owned(void)
+ {
+     if (a03_gpu_job_poisoned) { printf("A03 GPU: job quarantine; active command refused\n"); return; }
+     uint32_t pd, voltage, force, state, bus, core, mem, sys;
+@@ -245,7 +245,7 @@
+     printf("A03 GPU clocks: enabled GPU_ID=%08x cgm=%08x voltage=%08x; no jobs\n",
+         id, a03_gpu_read(a03_gpu_dvfs, 0x34), a03_gpu_read(a03_gpu_dvfs, 0x2c));
+     if (!id || id == UINT32_MAX) goto rollback;
+-    a03_gpu_probe();
++    a03_gpu_probe_owned();
+     return;
+ rollback:
+     (void)a03_gpu_update(a03_gpu_apb, 12, 1, 0);
+@@ -293,10 +293,53 @@
+ #include <arm/caches_internal.h>
+ #include "a03_gpu_job_layout.h"
+ #include "a03_gpu_copy_layout.h"
++#include "a03_gpu_blit_layout.h"
+ static void *a03_gpu_scratch;
+ static uint64_t a03_gpu_scratch_pa;
+ static unsigned a03_gpu_job_requested;
+ 
++/* Single serialized hardware owner, shared with framebuffer and live probes. */
++static unsigned a03_gpu_owner;
++static void *a03_gpu_blit_memory;
++static uint64_t a03_gpu_blit_physical;
++static uintptr_t a03_gpu_blit_source, a03_gpu_blit_destination;
++static uint64_t a03_gpu_blit_destination_pa, a03_gpu_blit_source_length, a03_gpu_blit_destination_length;
++static unsigned a03_gpu_blit_source_stride,a03_gpu_blit_destination_stride,a03_gpu_blit_width,a03_gpu_blit_height;
++static unsigned a03_gpu_last_pass,a03_gpu_blit_enabled,a03_gpu_blit_frames,a03_gpu_blit_fallbacks;
++static uint64_t a03_gpu_blit_pixels;
++static vm_size_t a03_gpu_memory_size(void) { return a03_gpu_job_requested==3 ? A03_GPU_BLIT_SIZE : A03_GPU_SCRATCH_SIZE; }
++static int a03_gpu_blit_prepare(void)
++{
++    if (!a03_gpu_blit_memory) {
++        void *m=IOMallocContiguous(A03_GPU_BLIT_SIZE,0x4000,NULL);
++        if(!m)return 0;
++        uint64_t pa=kvtophys((vm_offset_t)m);
++        int valid=pa>=0x102000000ULL && pa<=0x17e000000ULL-A03_GPU_BLIT_SIZE && !(pa&0x3fff);
++        for(unsigned off=0;valid&&off<A03_GPU_BLIT_SIZE;off+=4096)
++            if(kvtophys((vm_offset_t)m+off)!=pa+off || kvtophys((vm_offset_t)m+off+4095)!=pa+off+4095)valid=0;
++        if(!valid){IOFreeContiguous(m,A03_GPU_BLIT_SIZE);return 0;}
++        a03_gpu_blit_memory=m;a03_gpu_blit_physical=pa;
++    }
++    if(!a03_gpu_blit_layout(a03_gpu_blit_memory,a03_gpu_blit_physical,
++        a03_gpu_blit_source&4095,a03_gpu_blit_destination_pa&4095,
++        a03_gpu_blit_source_stride,a03_gpu_blit_destination_stride,a03_gpu_blit_width,a03_gpu_blit_height))return 0;
++    uint64_t *q=(uint64_t *)a03_gpu_blit_memory;
++    uintptr_t va=a03_gpu_blit_source&~(uintptr_t)4095;
++    uint64_t bytes=(a03_gpu_blit_source&4095)+a03_gpu_blit_source_length;
++    for(unsigned i=0;(uint64_t)i*4096<bytes;i++) {
++        uint64_t pa=kvtophys(va+(uintptr_t)i*4096);
++        if((pa&4095)||pa<0x102000000ULL||pa>0x17e000000ULL-4096 ||
++            kvtophys(va+(uintptr_t)i*4096+4095)!=pa+4095)return 0;
++        q[0x8000/8+i]=pa|(1ULL<<54)|0x4d7ULL;
++    }
++    if((a03_gpu_blit_destination&4095)!=(a03_gpu_blit_destination_pa&4095))return 0;
++    for(uint64_t off=0;off<a03_gpu_blit_destination_length;off+=4096)
++        if(kvtophys(a03_gpu_blit_destination+off)!=a03_gpu_blit_destination_pa+off)return 0;
++    uint64_t pa=a03_gpu_blit_destination_pa&~4095ULL;
++    bytes=(a03_gpu_blit_destination_pa&4095)+a03_gpu_blit_destination_length;
++    for(unsigned i=0;(uint64_t)i*4096<bytes;i++)q[0xc000/8+i]=(pa+(uint64_t)i*4096)|(1ULL<<54)|0x457ULL;
++    return 1;
++}
+ static int
+ a03_gpu_as_wait(void)
+ {
+@@ -320,6 +363,7 @@
+ static int
+ a03_gpu_private_memory(void)
+ {
++    if (a03_gpu_job_requested == 3) return a03_gpu_blit_prepare();
+     if (!a03_gpu_scratch) {
+         /* NULL physicalAddress avoids IOMallocContiguous's deprecated
+          * below4GiB physical-mask path. Verify every GPU granule ourselves. */
+@@ -350,7 +394,7 @@
+     if (a03_gpu_job_poisoned) return 0;
+     if (!(a03_gpu_read(a03_gpu_regs, 0x18) & 1U) ||
+         !(a03_gpu_read(a03_gpu_regs, 0x1c) & 2U) ||
+-        !(a03_gpu_read(a03_gpu_regs, 0xc4) & (a03_gpu_job_requested == 2 ? 16U : 4U)) ||
++        !(a03_gpu_read(a03_gpu_regs, 0xc4) & (a03_gpu_job_requested >= 2 ? 16U : 4U)) ||
+         a03_gpu_read(a03_gpu_regs, 0x28) ||
+         a03_gpu_read(a03_gpu_regs, 0x1008) ||
+         a03_gpu_read(a03_gpu_regs, 0x2008) ||
+@@ -369,11 +413,16 @@
+         printf("A03 GPU job: owned contiguous scratch unavailable; not submitted\n");
+         return 1;
+     }
++    if(a03_gpu_job_requested==3) {
++        a03_gpu_scratch=a03_gpu_blit_memory;a03_gpu_scratch_pa=a03_gpu_blit_physical;
++        FlushPoC_DcacheRegion(a03_gpu_blit_source,(vm_size_t)a03_gpu_blit_source_length);
++        __asm__ volatile("dsb sy" ::: "memory");
++    }
+     uint32_t old_attr_lo = a03_gpu_read(a03_gpu_regs, 0x2408);
+     uint32_t old_attr_hi = a03_gpu_read(a03_gpu_regs, 0x240c);
+     uint32_t old_cfg_lo = a03_gpu_read(a03_gpu_regs, 0x2430);
+     uint32_t old_cfg_hi = a03_gpu_read(a03_gpu_regs, 0x2434);
+-    FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, A03_GPU_SCRATCH_SIZE);
++    FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, a03_gpu_memory_size());
+     /* AArch64 4KiB translation; noncacheable outer-shareable table reads.
+      * AttrIndex5 normalNC as vendor; CPU/GPU ownership is explicit. */
+     a03_gpu_write(0x2430, 0x21000006U);
+@@ -432,7 +481,7 @@
+     a03_gpu_write(0x2434, old_cfg_hi);
+     a03_gpu_write(0x2418, 1);
+     if (!a03_gpu_as_wait()) goto poison;
+-    FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, A03_GPU_SCRATCH_SIZE);
++    FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, a03_gpu_memory_size());
+     uint32_t exception = *(volatile uint32_t *)((uint8_t *)a03_gpu_scratch + A03_GPU_JOB_OFF);
+     uint64_t output = *(volatile uint64_t *)((uint8_t *)a03_gpu_scratch + A03_GPU_OUTPUT_OFF);
+     int pass = done && exception == 1 && output == A03_GPU_RESULT && !as_fault;
+@@ -447,6 +496,22 @@
+         pass = done && exception == 1 && !as_fault && !mismatches;
+         printf("A03 GPU copy: hardware compute words=1024 mismatches=%u PASS=%d\n",mismatches,pass);
+     }
++    if(a03_gpu_job_requested==3) {
++        __asm__ volatile("dsb sy" ::: "memory");
++        unsigned mismatches=0;
++        if(done && exception==1 && !as_fault) {
++            for(unsigned y=0;y<a03_gpu_blit_height;y++) {
++                const volatile uint32_t *src=(const volatile uint32_t *)(a03_gpu_blit_source+(uint64_t)y*a03_gpu_blit_source_stride);
++                const volatile uint32_t *dst=(const volatile uint32_t *)(a03_gpu_blit_destination+(uint64_t)y*a03_gpu_blit_destination_stride);
++                for(unsigned x=0;x<a03_gpu_blit_width;x++)if(src[x]!=dst[x])mismatches++;
++            }
++        }
++        pass=done && exception==1 && !as_fault && !mismatches;
++        a03_gpu_last_pass=pass;
++        if(a03_gpu_blit_frames<8 || !pass)printf("A03 GPU blit: pixels=%u mismatches=%u done=%d retired=1 PASS=%d\n",
++            a03_gpu_blit_width*a03_gpu_blit_height,mismatches,done,pass);
++    }
++    if(a03_gpu_job_requested!=3)
+     printf("A03 GPU job: submitted=%d done=%d retired=1 irq=%08x mmu=%08x gpu=%08x js=%08x asfault=%08x exception=%08x output=%llx expected=%llx PASS=%d\n",
+         submitted, done, irq, mmu, gpu, js_status, as_fault, exception,
+         (unsigned long long)output, (unsigned long long)A03_GPU_RESULT, pass);
+@@ -458,9 +523,9 @@
+     return 0;
+ }
+ 
+-void a03_gpu_cores(void);
++void a03_gpu_cores_owned(void);
+ void
+-a03_gpu_cores(void)
++a03_gpu_cores_owned(void)
+ {
+     uint32_t pd, voltage;
+     if (a03_gpu_job_poisoned) { printf("A03 GPU cores: prior job quarantine; stop\n"); return; }
+@@ -504,7 +569,7 @@
+         delay(120);
+         powered = a03_gpu_wait_cores(0x140, 0x200, 1);
+     }
+-    printf("A03 GPU cores: on result=%d shader=%08x tiler=%08x l2=%08x pmu=%08x; no jobs\n",
++    if(a03_gpu_job_requested!=3)printf("A03 GPU cores: on result=%d shader=%08x tiler=%08x l2=%08x pmu=%08x; no jobs\n",
+         powered, a03_gpu_read(a03_gpu_regs, 0x140), a03_gpu_read(a03_gpu_regs, 0x150),
+         a03_gpu_read(a03_gpu_regs, 0x160), a03_gpu_read(a03_gpu_pmu, 0x500));
+     if (powered && a03_gpu_job_requested && !a03_gpu_write_value()) return;
+@@ -522,31 +587,110 @@
+         a03_gpu_write(0x50, 0x2968a819U);
+         a03_gpu_write(0x58, override);
+     }
+-    printf("A03 GPU cores: cycle powered=%d shutdown=%d irq=%08x fault=%08x; no jobs\n",
++    if(!off)a03_gpu_job_poisoned=1;
++    if(a03_gpu_job_requested!=3)printf("A03 GPU cores: cycle powered=%d shutdown=%d irq=%08x fault=%08x; no jobs\n",
+         powered, off, a03_gpu_read(a03_gpu_regs, 0x20), a03_gpu_read(a03_gpu_regs, 0x3c));
+ }
+ 
+-void a03_gpu_job(void);
+-void a03_gpu_job(void)
++void a03_gpu_job_owned(void);
++void a03_gpu_job_owned(void)
+ {
+     if (a03_gpu_job_poisoned) {
+         printf("A03 GPU job: quarantined until reboot; stop\n");
+         return;
+     }
+     a03_gpu_job_requested = 1;
+-    a03_gpu_cores();
++    a03_gpu_cores_owned();
+     a03_gpu_job_requested = 0;
+ }
+ 
+-void a03_gpu_copy(void);
+-void a03_gpu_copy(void)
++void a03_gpu_copy_owned(void);
++void a03_gpu_copy_owned(void)
+ {
+     if (a03_gpu_job_poisoned) {
+         printf("A03 GPU copy: quarantined until reboot; stop\n");
+         return;
+     }
+     a03_gpu_job_requested = 2;
+-    a03_gpu_cores();
++    a03_gpu_cores_owned();
+     a03_gpu_job_requested = 0;
+ }
++
++void a03_gpu_probe(void);
++void a03_gpu_probe(void) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE)){printf("A03 GPU: busy; retry later\n");return;}
++    a03_gpu_probe_owned();
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
++
++void a03_gpu_power(void);
++void a03_gpu_power(void) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE)){printf("A03 GPU: busy; retry later\n");return;}
++    a03_gpu_power_owned();
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
++
++void a03_gpu_clocks(void);
++void a03_gpu_clocks(void) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE)){printf("A03 GPU: busy; retry later\n");return;}
++    a03_gpu_clocks_owned();
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
++
++void a03_gpu_cores(void);
++void a03_gpu_cores(void) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE)){printf("A03 GPU: busy; retry later\n");return;}
++    a03_gpu_cores_owned();
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
++
++void a03_gpu_job(void);
++void a03_gpu_job(void) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE)){printf("A03 GPU: busy; retry later\n");return;}
++    a03_gpu_job_owned();
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
++
++void a03_gpu_copy(void);
++void a03_gpu_copy(void) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE)){printf("A03 GPU: busy; retry later\n");return;}
++    a03_gpu_copy_owned();
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
++
++void a03_gpu_blit_control(unsigned enable);
++void a03_gpu_blit_control(unsigned enable) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
++    if(enable<2 && !a03_gpu_job_poisoned)a03_gpu_blit_enabled=enable;
++    printf("A03 GPU blit: enabled=%u frames=%u pixels=%llu fallbacks=%u quarantined=%u\n",a03_gpu_blit_enabled,a03_gpu_blit_frames,(unsigned long long)a03_gpu_blit_pixels,a03_gpu_blit_fallbacks,a03_gpu_job_poisoned);
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
++/* Return1 copied and readback verified,0 safe CPU fallback,-1 possible DMA.
++ * Caller retains source+panel mappings until return; on-1 retain indefinitely
++ * and suppress all further panel writes until reboot. No userspace GPU ABI. */
++int a03_gpu_framebuffer_blit(uintptr_t source,uintptr_t destination,uint64_t physical,
++    unsigned source_stride,unsigned destination_stride,unsigned width,unsigned height);
++int a03_gpu_framebuffer_blit(uintptr_t source,uintptr_t destination,uint64_t physical,
++    unsigned source_stride,unsigned destination_stride,unsigned width,unsigned height)
++{
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return -2;
++    int result=0;
++    if(a03_gpu_job_poisoned){result=-1;goto out;}
++    if(!a03_gpu_blit_enabled)goto out;
++    if(!a03_gpu_blit_geometry(source,destination,physical,source_stride,destination_stride,width,height,
++        &a03_gpu_blit_source_length,&a03_gpu_blit_destination_length))goto fallback;
++    a03_gpu_blit_source=source;a03_gpu_blit_destination=destination;a03_gpu_blit_destination_pa=physical;
++    a03_gpu_blit_source_stride=source_stride;a03_gpu_blit_destination_stride=destination_stride;
++    a03_gpu_blit_width=width;a03_gpu_blit_height=height;
++    void *saved=a03_gpu_scratch;uint64_t saved_pa=a03_gpu_scratch_pa;
++    a03_gpu_job_requested=3;a03_gpu_last_pass=0;
++    a03_gpu_cores_owned();
++    a03_gpu_job_requested=0;a03_gpu_scratch=saved;a03_gpu_scratch_pa=saved_pa;
++    if(a03_gpu_job_poisoned){result=-1;goto out;}
++    if(a03_gpu_last_pass){a03_gpu_blit_frames++;a03_gpu_blit_pixels+=(uint64_t)width*height;result=1;goto out;}
++fallback:
++    a03_gpu_blit_fallbacks++;
++out:
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);return result;
++}
+ #endif
+--- /dev/null
++++ b/bsd/dev/a03_gpu_blit_layout.h
+@@ -0,0 +1,152 @@
++/* Native G57 strided BGRA/u32 copy, generated with Mesa24.3.0.
++ * SHA256 88dab0e057aaf95fb42c64e38e24153c7639487442314ebea89f733ca4abf382; TLS/WLS0,32regs,preloadR60. */
++#ifndef A03_GPU_BLIT_LAYOUT_H
++#define A03_GPU_BLIT_LAYOUT_H
++#include "a03_gpu_copy_layout.h"
++#define A03_GPU_BLIT_SIZE 0x10000U
++#define A03_GPU_BLIT_SPAN 0x800000U
++#define A03_GPU_BLIT_SOURCE_VA 0x04000000U
++#define A03_GPU_BLIT_DEST_VA 0x05000000U
++static const uint64_t a03_g57_blit_code[] = {
++    0x0110c002000210c0ULL,
++    0x0091c100000000c0ULL,
++    0x086080e630000040ULL,
++    0x0090c30000190002ULL,
++    0x009cc30000000043ULL,
++    0x0110c44f7ffffec0ULL,
++    0x00b2c30400c04443ULL,
++    0x0090c300c01c0043ULL,
++    0x00a0c400000a0302ULL,
++    0x00a8c400000144c0ULL,
++    0x0090c50030140004ULL,
++    0x0090c40000140044ULL,
++    0x0090c60000140003ULL,
++    0x00a0c700000a0506ULL,
++    0x00a0c600000a0446ULL,
++    0x0090c80030140003ULL,
++    0x00a0c500000a4508ULL,
++    0x00a0c400000a4448ULL,
++    0x00a1c800200507c0ULL,
++    0x00a8c80000004806ULL,
++    0x00f0c60400c04608ULL,
++    0x00a8c50000004645ULL,
++    0x00a1c600200504c0ULL,
++    0x00a8c60000004608ULL,
++    0x00f0c60400c04846ULL,
++    0x0090c70030140047ULL,
++    0x00a8c50000004745ULL,
++    0x00a8c50000004645ULL,
++    0x0090c40030140044ULL,
++    0x00a8c40000004445ULL,
++    0x00a8c30000004443ULL,
++    0x0090c40030140003ULL,
++    0x0090c30000140043ULL,
++    0x0090c5000014003cULL,
++    0x00a0c600000a0405ULL,
++    0x00a0c500000a0345ULL,
++    0x0090c7003014003cULL,
++    0x00a0c400000a4407ULL,
++    0x00a0c300000a4347ULL,
++    0x00a1c700200506c0ULL,
++    0x00a8c70000004705ULL,
++    0x00f0c50400c04507ULL,
++    0x00a8c40000004544ULL,
++    0x00a1c500200503c0ULL,
++    0x00a8c50000004507ULL,
++    0x00f0c50400c04745ULL,
++    0x0090c60030140046ULL,
++    0x00a8c40000004644ULL,
++    0x00a8c40000004544ULL,
++    0x0090c30030140043ULL,
++    0x00a8c30000004344ULL,
++    0x00a0c400000a0203ULL,
++    0x00a8c4000001447cULL,
++    0x00a8c50000010204ULL,
++    0x00f0c60280c00204ULL,
++    0x0150c4004544c006ULL,
++    0x00a8c50000010204ULL,
++    0x00f0c20280c04204ULL,
++    0x0150c4004544c002ULL,
++    0x0110c500000001c0ULL,
++    0x0150c60005c0c046ULL,
++    0x0150c20045c0c042ULL,
++    0x00a8c30000004643ULL,
++    0x00a8c20000004243ULL,
++    0x00a0c000000a4002ULL,
++    0x00a0c100000a4142ULL,
++    0x00b4c20119c0c844ULL,
++    0x00a8c00000000240ULL,
++    0x00a8c10000004241ULL,
++    0x0110c202000200c0ULL,
++    0x0091c300000000c0ULL,
++    0x106082f468000042ULL,
++    0x00a8c00000004042ULL,
++    0x00a8c10000004143ULL,
++    0x0091c20000000040ULL,
++    0x0091c300000000c0ULL,
++    0x0060808298000042ULL,
++    0x0091c20000000041ULL,
++    0x2091c300000000c0ULL,
++    0x7861400218000042ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++    0x0000000000000000ULL,
++};
++/* Geometry is bounded before arithmetic, division or page-table construction. */
++static int a03_gpu_blit_geometry(uintptr_t source, uintptr_t destination,
++    uint64_t physical, unsigned source_stride, unsigned destination_stride,
++    unsigned width, unsigned height, uint64_t *source_length, uint64_t *destination_length)
++{
++    if (!source || !destination || ((source | destination | physical) & 3) ||
++        !width || width > 720 || !height || height > 1600 ||
++        source_stride < width * 4 || source_stride > 65536 ||
++        destination_stride != 2880 || physical < 0x9e000000ULL ||
++        physical >= 0x9e000000ULL + 4608000) return 0;
++    *source_length = (uint64_t)(height-1)*source_stride + width*4;
++    *destination_length = (uint64_t)(height-1)*destination_stride + width*4;
++    return *source_length <= A03_GPU_BLIT_SPAN - (source & 4095) &&
++        *destination_length <= 0x9e000000ULL + 4608000 - physical &&
++        source <= UINTPTR_MAX - *source_length && destination <= UINTPTR_MAX - *destination_length;
++}
++static int a03_gpu_blit_layout(void *memory, uint64_t physical,
++    unsigned source_offset, unsigned destination_offset, unsigned source_stride,
++    unsigned destination_stride, unsigned width, unsigned height)
++{
++    if (!memory || source_offset >= 4096 || destination_offset >= 4096 ||
++        ((source_offset | destination_offset) & 3) || !width || width > 720 ||
++        !height || height > 1600 || source_stride < width*4 || source_stride > 65536 ||
++        destination_stride < width*4 || destination_stride > 65536 ||
++        (uint64_t)(height-1)*source_stride+width*4 > A03_GPU_BLIT_SPAN-source_offset ||
++        (uint64_t)(height-1)*destination_stride+width*4 > A03_GPU_BLIT_SPAN-destination_offset ||
++        !a03_gpu_copy_layout(memory,physical,1)) return 0;
++    uint64_t *q=(uint64_t *)memory;
++    for(unsigned i=0x8000/8;i<A03_GPU_BLIT_SIZE/8;i++)q[i]=2;
++    q[0x3000/8+2]=q[0x3000/8+3]=2;
++    for(unsigned i=0;i<4;i++) {
++        q[0x2000/8+32+i]=(physical+0x8000+i*4096)|0x403ULL;
++        q[0x2000/8+40+i]=(physical+0xc000+i*4096)|0x403ULL;
++    }
++    uint32_t *job=(uint32_t *)((uint8_t *)memory+0x4000);
++    job[10]=width*height;
++    uint64_t *code=(uint64_t *)((uint8_t *)memory+0x5000);
++    for(unsigned i=0;i<sizeof(a03_g57_blit_code)/8;i++)code[i]=a03_g57_blit_code[i];
++    uint32_t *params=(uint32_t *)((uint8_t *)memory+0x4200);
++    params[0]=A03_GPU_BLIT_SOURCE_VA+source_offset;
++    params[1]=A03_GPU_BLIT_DEST_VA+destination_offset;
++    params[4]=source_stride;params[5]=destination_stride;params[6]=width;
++    return 1;
++}
++#endif
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -616,6 +616,7 @@
+ extern void a03_gpu_cores(void);
+ extern void a03_gpu_job(void);
+ extern void a03_gpu_copy(void);
++extern void a03_gpu_blit_control(unsigned);
+ void a03_live_probe(const char *command) {
+  static unsigned sequence;unsigned id=++sequence;
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+@@ -649,6 +650,9 @@
+  else if(!strcmp(command,"gpu cores"))a03_gpu_cores();
+  else if(!strcmp(command,"gpu job"))a03_gpu_job();
+  else if(!strcmp(command,"gpu copy"))a03_gpu_copy();
++ else if(!strcmp(command,"gpu blit on"))a03_gpu_blit_control(1);
++ else if(!strcmp(command,"gpu blit off"))a03_gpu_blit_control(0);
++ else if(!strcmp(command,"gpu blit"))a03_gpu_blit_control(2);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -249,13 +249,17 @@
+ 	return v;
+ }
+ 
++extern "C" int a03_gpu_framebuffer_blit(uintptr_t,uintptr_t,uint64_t,unsigned,unsigned,unsigned,unsigned);
+ extern "C" void a03_console_panel_quiet(void);
+ static uint32_t sweet_fb_swaps_logged;
++static bool a03_fb_gpu_quarantined;
++static SweetSurface *a03_fb_gpu_quarantined_surface;
+ 
+ /* Copy each enabled layer's surface into the panel memory (no scaling). */
+ void
+ AppleCLCD::swap(const uint8_t *rec)
+ {
++    if(a03_fb_gpu_quarantined)return;
+ 	a03_fb_inc(&a03_display_stats.swapEntered);
+ 	a03_fb_set(&a03_display_stats.swapAt, mach_absolute_time());
+ 	uint32_t mask = get32(rec, 0x104);
+@@ -326,7 +330,14 @@
+ 		if (src != 0 && bpe == 4 && s->pixelFormat == SWEET_FB_FORMAT_BGRA) {
+ 			/* A03: validated GUI pixels take ownership; logs remain on USB. */
+ 			a03_console_panel_quiet();
+-			for (int32_t y = 0; y < h; y++) {
++            int copied=a03_gpu_framebuffer_blit(src+s->offset+(uint64_t)sy*s->bytesPerRow+(uint64_t)sx*4,
++                fPixels+(uint64_t)dy*fRowBytes+(uint64_t)dx*4,
++                fPhys+(uint64_t)dy*fRowBytes+(uint64_t)dx*4,s->bytesPerRow,fRowBytes,(unsigned)w,(unsigned)h);
++            if(copied<0) {
++                if(copied==-1){a03_fb_gpu_quarantined=true;a03_fb_gpu_quarantined_surface=s;IOLog("A03 FB: GPU DMA quarantined; retain surface and suppress panel writes\n");return;}
++                s->release();return; /* other GPU owner: skip frame, never race DMA */
++            }
++            if(!copied)for (int32_t y = 0; y < h; y++) {
+ 				memcpy((void *)(fPixels + (uint64_t)(dy + y) * fRowBytes + (uint64_t)dx * 4),
+ 				    (const void *)(src + s->offset + (uint64_t)(sy + y) * s->bytesPerRow + (uint64_t)sx * 4),
+ 				    (size_t)w * 4);
+@@ -469,7 +480,9 @@
+ 			break;
+ 		}
+ 		memcpy(rec, args->structureInput, sizeof(rec));
++		IOLockLock(fFB->fLock);
+ 		fFB->swap(rec);
++		IOLockUnlock(fFB->fLock);
+ 		break;
+ 	}
+ 	case kSweetFBGetID:
