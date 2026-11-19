@@ -1,5 +1,14 @@
 # DREAMLTE USB bring-up evidence
 
+0234 CI44509055685 dispatched at560236930010a5b7b80065f17100b1bb60ba7248.
+Actual ARM64 compilation, wrapper/EP/resource/CSR/wake/clocks/PIPE/console
+models and exact0233-source patch equality PASS. New resource regression
+rejects pre-command console output. Manifest11sources/9symbols/51strings.
+Preparation research/dreamlte/prepare-0234.py verifies exact run/head and
+packages original BOOT components; never flashes. Download Mode065 ready.
+0233 remains installed until verified0234 image exists. No USB success.
+
+
 ## 0234 removes framebuffer delay in resource setup — 2026-11-19
 
 0233 PIPE change latched but endpoint setup still failed. Pinned Samsung
