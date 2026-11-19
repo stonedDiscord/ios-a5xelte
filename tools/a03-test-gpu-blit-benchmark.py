@@ -34,4 +34,15 @@ for mode in ['cpu','verify','fast']:
  with tempfile.NamedTemporaryFile() as f:
   sys.argv=['benchmark','--log',f.name,'--mode',mode,'--seconds','1'];m.main()
  assert seq[-2:]==['gpu blit verify','gpu blit on']
+seq=[];snapshots=[dict(original),dict(original,enabled=1,verify=0),RuntimeError('sample interrupted'),dict(original)]
+def interrupted_snapshot(*args):
+ value=snapshots.pop(0)
+ if isinstance(value,Exception):raise value
+ return value
+m.snapshot=interrupted_snapshot;m.command=lambda p,l,c:seq.append(c)
+with tempfile.NamedTemporaryFile() as f:
+ sys.argv=['benchmark','--log',f.name,'--mode','fast','--seconds','1']
+ try:m.main();assert False
+ except RuntimeError as error:assert str(error)=='sample interrupted'
+assert seq[-2:]==['gpu blit verify','gpu blit on']
 print('PASS benchmark exact transaction, counter reset/zero-frame handling, mode restoration')
