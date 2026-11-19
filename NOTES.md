@@ -2,6 +2,43 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0232 physical CMU gates enabled; endpoint setup still fails — 2026-11-19
+
+User reports exact prelog-exit snapshot:
+BUSMUX=00000010 USBMUX=00000010 QCH=003f0003
+ACLK=00200000 REF=00200000 SUSP=00200000
+TOPMUX=00000002 DIV=00000007 GATE=00200000
+followed by SWEET USB: endpoint 0 setup failed.
+Pinned cmucal-sfr.c decodes user mux bit4=1; USB mux busy bit7=0;
+ACLK/reference/suspend and top gate CG_VAL21=1; Q-channel enable0 and
+CLOCK_REQ1 both set. TOPMUX selector2 names DIV_PLL_SHARED2_DIV2;
+divider field7 is present. These are configured/enabled readbacks, not
+measurements of clock oscillation, PLL lock, actual rate or DMA activity.
+No evidence here supports blindly enabling these already-enabled gates.
+Current0232 failed-command number/POLL were not supplied in this report;
+0231 cmd2 timeout must not be silently promoted to a same-boot0232 fact.
+Host still no1209:0001 gadget.0232 remains installed; no new flash/build.
+Next audit command/core initialization against pinned Samsung source;
+preserve current boot and all non-BOOT partitions. USB console not working.
+
+
+## 0232 verified and BOOT flashed; clock-tree readback pending — 2026-11-19
+
+Exact CI44498181713 SUCCESS at06cbc9be260d56e6be65e042cd5e96ab151335b3.
+11sources/9symbols/50diagnostics/profile verified PASS. Kernel SHA256
+eac30f38bf278fef6e1fdb53064ca560170884b87bbd36fb02f65806c86ebbe5.
+BOOT shim/out/dreamlte-xnu-0232.img,18,464,784B,SHA256
+cfd6796ea3d702e22c53ef05719ebb1d9327c4774b7ae147aad677a1fc16b9c0.
+Original BOOT components/header/payload/fit/hash PASS. Fresh Download
+Mode063 accepted BOOT100%; Heimdall exit0/reboot. Only BOOT written.
+Artifacts/reviewed manifest/log research/dreamlte/ci-44498181713.
+0232 installed; no host1209:0001 or Download Mode after flash; checker
+fails gadget absence. Requested three CMU prelog-exit lines, or last
+persistent line if earlier stop. This trial adds read-only clock snapshots,
+not a proven endpoint fix. Physical clock reads and USB console unverified.
+Keep current boot visible. No live CI/preparation/flash; no Android restore.
+
+
 User confirms fresh Download Mode ready; host sees04e8:685d device063.
 0232 exact CI44498181713/head06cbc9b still Build in progress. Preparation
 16096 waits exact artifacts; no handshake or flash yet. Preserve fresh mode.
