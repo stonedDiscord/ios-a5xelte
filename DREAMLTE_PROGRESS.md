@@ -1,5 +1,20 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0234 verified and BOOT flashed; timing trial result pending — 2026-11-19
+
+Exact CI44509055685 SUCCESS at560236930010a5b7b80065f17100b1bb60ba7248.
+11sources/9symbols/51diagnostics/profile verified PASS. Kernel SHA256
+fd856fbdb4477fea6813235a5ee4e93b1703e7c817058df5b7695691050615cc.
+BOOT shim/out/dreamlte-xnu-0234.img,18,464,784B,SHA256
+98805c1984e2e9fb281cf43a79422f6b0246be34db875ac8602887d1930ff037.
+Original BOOT components/header/payload/fit/hash PASS. Download Mode065
+accepted BOOT100%; Heimdall exit0/reboot. Only BOOT written.
+Artifacts, manifest and flash log research/dreamlte/ci-44509055685.
+Host immediately post-flash has no1209:0001 or ECM. Physical result pending.
+Requested resources/running or current failed-command/POLL; keep this boot
+visible. No new CI/preparation/flash live. No USB console success claimed.
+
+
 0234 CI44509055685 dispatched at560236930010a5b7b80065f17100b1bb60ba7248.
 Actual ARM64 compilation, wrapper/EP/resource/CSR/wake/clocks/PIPE/console
 models and exact0233-source patch equality PASS. New resource regression
