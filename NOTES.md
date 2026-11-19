@@ -1,3 +1,10 @@
+FOLLOWUP0163: firstCI44591419852 superseded by topDVFS-clock guard followup.
+Source liveDT requires AONEB1bit7 before sharedtopDVFS reads. Addedguard+
+ASanUBSan coverage; never startsharedCPU/MMvoltagecontroller fordiagnostic.
+Read-only0095 baseline18:46UTC sameforce10102/state07000000/AON2bcac1;
+touchON1842slices169events, ioReady1/poisoned0. NoHome/flash/reload.
+Singlecapture1745 gpu-power-baseline-20261119.log1800s from~18:45UTC.
+
 ACTIVE2026-11-19 POWER/CLOCK-FIRST0163 candidate, per user direction.
 Correct0162 C0/top-domain guard; nohardwareGPU_IDclaim. Explicit gpu power
 boundedADI rail observation/noPMICwrites, atomicDownload/ADIownership,

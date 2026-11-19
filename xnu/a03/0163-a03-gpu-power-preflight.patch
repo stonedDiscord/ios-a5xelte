@@ -34,7 +34,7 @@
  }
  
  static int
-@@ -91,4 +96,73 @@
+@@ -91,4 +96,79 @@
          a03_gpu_read(a03_gpu_regs, 0x114), a03_gpu_read(a03_gpu_regs, 0x110),
          a03_gpu_read(a03_gpu_regs, 0x124), a03_gpu_read(a03_gpu_regs, 0x120));
  }
@@ -94,6 +94,12 @@
 +    if (!(bus & A03_GPU_BUS_ENABLE) && !a03_gpu_update(a03_gpu_aon, 0, A03_GPU_BUS_ENABLE, A03_GPU_BUS_ENABLE)) return;
 +    if (!a03_gpu_apb) a03_gpu_apb = ml_io_map(A03_GPU_APB_PA, A03_GPU_MAP_SIZE);
 +    if (!a03_gpu_dvfs) a03_gpu_dvfs = ml_io_map(0x23014000ULL, A03_GPU_MAP_SIZE);
++    /* Live topdvfs node needs AON EB1 bit7; do not start a shared voltage
++     * controller just to collect a GPU snapshot. */
++    if (!(a03_gpu_read(a03_gpu_aon, 4) & (1U << 7))) {
++        printf("A03 GPU power: shared topDVFS clock gated; stop\n");
++        return;
++    }
 +    if (!a03_gpu_topdvfs) a03_gpu_topdvfs = ml_io_map(0x64014000ULL, A03_GPU_MAP_SIZE);
 +    if (!a03_gpu_apb || !a03_gpu_dvfs || !a03_gpu_topdvfs) return;
 +    printf("A03 GPU power: clocks core=%08x mem=%08x sys=%08x qos=%08x\n",

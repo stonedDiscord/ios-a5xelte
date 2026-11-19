@@ -77,9 +77,9 @@ only with separately validated ownership, address translation and completion.
    bounded waits and fault snapshots; then verify actual GPU_ID.
 3. Driver-owned private GPU mappings and one completed offscreen job, with
    actual pixel readback and fault checks. A register read is not rendering.
-4. IOSurface import, cache maintenance, fences and a guarded GPU copy with
-   CPU fallback, followed by an iOS EAGL/CoreAnimation rendering backend.
-5. Verify repeated physical UI frames use that backend and measure latency.
+4. IOSurface import, cache maintenance, fences and a guarded hardware copy
+   to framebuffer with CPU fallback. Full EAGL/Metal remains deferred.
+5. Verify repeated physical UI frames use that copy backend and measure latency.
    A private clear or software Mesa renderer does not satisfy this goal.
 
 ## Userspace audit on 2026-11-18

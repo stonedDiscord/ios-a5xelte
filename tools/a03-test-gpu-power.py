@@ -42,7 +42,7 @@ static void reset(void){
  memset(banks,0,sizeof(banks));memset(maps,0,sizeof(maps));
  a03_gpu_pmu=a03_gpu_aon=a03_gpu_apb=a03_gpu_regs=a03_gpu_dvfs=a03_gpu_topdvfs=0;
  ticks=fail=stuck=pd=0;supply_ok=1;vsel=224;
- banks[1][0]=1<<11;banks[0][0x500/4]=7<<24;
+ banks[1][0]=1<<11;banks[1][1]=1<<7;banks[0][0x500/4]=7<<24;
  banks[2][1]=banks[2][2]=banks[2][3]=1;banks[3][0]=0x70930000;
 }
 int main(void){
@@ -58,6 +58,7 @@ int main(void){
  reset();banks[0][0x2c4/4]=0x02010102;a03_gpu_power();assert(banks[0][0x2c4/4]==0x10102);
  reset();banks[0][0x2c4/4]=0x02010102;banks[0][0x500/4]|=7<<16;
  a03_gpu_power();assert(!maps[2]&&!maps[3]);assert(ticks==2300);assert(banks[0][0x2c4/4]==0x02010102);
+ reset();banks[1][1]=0;a03_gpu_power();assert(!maps[5]&&!maps[3]);
  reset();banks[1][0]=0x002bc2c1;a03_gpu_power();assert(banks[1][0]==0x002bcac1);
  for(unsigned i=1;i<=6;i++){reset();fail=i;a03_gpu_power();}
  for(unsigned i=1;i<=3;i++){reset();banks[2][i]=0;a03_gpu_power();assert(!maps[3]);}
