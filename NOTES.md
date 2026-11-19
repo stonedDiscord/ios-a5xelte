@@ -2,6 +2,10 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0228 CI44477847371 atb7c84d8 dispatched. Preparation76070/script
+research/dreamlte/prepare-0228.py waits exact run then verifies/packages;
+never flashes. Download Mode059 fresh/untouched. Installed0227.
+
 0228 ready for full CI: post-DCTL-reset clear only CLK31,500us/exact
 readback; pre-reset/endpoint CLK/PIPE/TEST snapshots. ARM64 plus modeled
 bit-preservation/persistent-bit/reset/mux/free-clock refusal and all USB

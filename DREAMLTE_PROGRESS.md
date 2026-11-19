@@ -30,6 +30,12 @@
   refusal stop.11sources/6symbols/42strings.0227 own manifest archived.
   Fresh Download Mode059 confirmed; no handshake/flash. Full CI next.
 
+
+- Full0228 CI44477847371 atb7c84d8 dispatched. Preparation76070/script
+  research/dreamlte/prepare-0228.py waits exact head/run, downloads,
+  verifies11sources/6symbols/42strings and packages; never flashes.
+  Fresh Download Mode059 untouched. No physical0228 effect claimed.
+
 ## 2026-11-18:0227 verified and BOOT flashed; continuation trace pending
 
 - Exact CI44331761587 SUCCESS atb11e4f62e81cfb01eeef11d27c1fce7244c473b9.
