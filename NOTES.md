@@ -1,3 +1,10 @@
+ACTIVEBOOT0100 NATIVECOMPUTECOPYPASS tx2:1024words/mismatches0/PASS1,
+submitted1/done1/retired1/IRQ2/MMU0/ASfault0/exception1/coreoff1/fault0.
+CI44620376179/c6b8c85verified;BOOT54b0ca51...5d62fde4. BOOT-onlysuccess.
+Sameall8/1984MiB/ADT0094/cmd599. iohealthy. UTC/FWrestoreunderway,need
+load/startleaveON. Capture103600/54359 soleowner. Noframebufferacceleration
+yet; nextrepeatcopythenIOSurfaceblitwithfallback. Keep0099/0098restores.
+
 FOLLOWUP21:42UTC CI44620376179 stillBuild. Addedreproducible --mesa-build
 primaryv9descriptorbytecheck; PASS plusnativecopyshaderhashrepeat+2BSDARM64.
 BOOT0099touchON656slices/display41swaps36softwarecopies. NoBOOT0100flashyet.

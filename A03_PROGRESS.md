@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0100 first native G57 compute-copy hardware PASS
+
+CI44620376179 SUCCESS exactc6b8c85201bc11af9318780694499dc2b323784b.
+UploadedGPU/AMFI/bothlayoutheaders exactmatch;0167reversecheck/checksum/
+linkedmarkers/SMPPASS. KernelSHA256e3768bd211b39a054e5eea3a9c7088e802ca6e0360853cbc8a0ac4e7ba8f58b3.
+BOOT0100SHA25654b0ca51175418cb88ef409b6dd0059dc27e9e5f7967ef8d0dbe6dd55d62fde4.
+Same0094ADT/cmd599/all8/1984MiB/23reservations/SMP103485000/stockramdiskDT.
+SyncedDownload needed enumeration wait; no flash on first premature detect.
+Then Heimdalldetect/BOOT-onlyupload100percent/success/reboot confirmed.
+
+Actual gpu clocks tx1 enables11/11/31, GPU_ID90910010. gpu copy tx2:
+hardwarecompute1024words/mismatches0/PASS1; submitted1/done1/retired1,
+IRQ2/MMU0/ASfault0/exception1; corepowered1/shutdown1/fault0. Generic output
+field is now code bytes, not WRITE_VALUE output; copy PASS checks source
+and destination arrays. ioReady1/poisoned0. This proves native offscreen
+compute copy, NOT IOSurface/framebuffer acceleration or physicalUI speedup.
+Solecapture103600/session54359 boot0100-gpu-copy-live.log; UTC/FW restoration
+underway. Needload/startleaveON, repeatedcopy, then guarded framebuffer path.
+
 ## 2026-11-19: reproducible primary compute descriptor verification
 
 Added optional --mesa-build to tools/a03-test-gpu-copy-layout.py. It reuses
