@@ -1,16 +1,16 @@
 {
-  "description": "DREAMLTE0237 adds local EP0 capabilities and normal/download reboot after successful control status completion. Hardware untested.",
+  "description": "DREAMLTE0238 accepts non-error IOC/LST transfer completion flags for USB reboot; adds bounded VM page-array allocation/frame-init checkpoints to locate intermittent pre-USB stop, not a proven VM fix.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "5a3ac225e765c532d1fa749c4c268ab8e04e1922842cea9d32b39f6f18bc9554",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "2f5594ac91c08a60202984c412fe513526683ff7041a7b56f86c2763f4cedda5",
+    "bsd/dev/sweet_usb.c": "513adda74973e974fbe997fe5f724e9c7b4c430d5d225bc77fef0350394dcb99",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
     "pexpert/arm/pe_init.c": "55d5b55ebc537818d7192f5b6fc0f9fe3db5556fa212e4ba45a0115bd9ffb997",
     "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469",
-    "osfmk/vm/vm_resident.c": "e4249e31297b7a437fae6d71c1cf558940e65b2a469eef2a77c42179fd75f186",
+    "osfmk/vm/vm_resident.c": "c7195063e3ad562b4d9dcddc4ee4d446d9972a3bff896bcbb7f12092296a7543",
     "osfmk/vm/vm_init.c": "c3b729b905ac311814707a8ce3fdfa26edee831ad2ef414de18d59e77c730c12"
   },
   "strings": [
@@ -70,7 +70,14 @@
     "DREAMLTE USB: prerequisites refused ID=",
     "DREAMLTE USB: isolation mismatch",
     "DREAMLTE USB: reboot flag readback failed",
-    "DREAMLTE USB: reboot %s"
+    "DREAMLTE USB: reboot %s",
+    "DREAMLTE USB: reboot status ep=",
+    "DREAMLTE VM: page array allocate npages=",
+    "DREAMLTE VM: page array allocated",
+    "DREAMLTE VM: page array map va=",
+    "DREAMLTE VM: frame init begin count=",
+    "DREAMLTE VM: frame init i=",
+    "DREAMLTE VM: frame init done count="
   ],
   "symbols": [
     "_dreamlte_log_cursor",

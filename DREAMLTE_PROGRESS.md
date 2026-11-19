@@ -1,5 +1,41 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0237 restart/reconnect works;0238 fixes reboot completion gate — 2026-11-19
+
+User reports last screen DREAMLTE VM: pmap_startup enter, then restarts0237
+and reconnects USB. Host enumerates1209:0001/070; automatic MAC-bound host
+profile supplies192.168.7.1/24 with no manual address/setup command. Exact
+EP0 reboot capability PASS. Full checker EP0/3ping/198bytes XNU UDP PASS.
+Actual USB normal reboot request acknowledged but no reset/re-enumeration
+in120seconds; same070 still passes EP0/ping/199bytes XNU UDP. These private
+logs are in ci-44533145336. No successful reboot command claimed.
+
+Root source defect found:0237 requires XferComplete status==0. Pinned
+Samsung core.h defines BUSERR bit0/SHORT bit1 and normal IOC bit2/LST bit3;
+nonzero is not necessarily error.0238 accepts completion without BUSERR/
+SHORT, prints current reboot completion flags, retains status-before-reset
+and100tick delay/cancellation. Actual ud_event harness now tests all16 flag
+combinations/both reboot modes/reset/disconnect and rejects old0237.
+ARM64 sweet_usb.c and vm_resident.c compile PASS.
+
+Intermittent pre-USB stop is still NOT fixed. New bounded DREAMLTE-only
+checkpoints locate page-array allocation, mapping every2MiB, frame init
+first/every32768pages and completion, instead of guessing a VM workaround.
+No allocator logic, reset retry, watchdog or memory range policy changed.
+Restart and reconnect both occurred, so neither is isolated as the recovery.
+0237 installed;0238 CI/BOOT test next. All non-BOOT partitions preserved.
+
+## 0237 restart/reconnect restores USB; reboot tests next — 2026-11-19
+
+User reports failed0237 boot last visible DREAMLTE VM: pmap_startup enter,
+then confirms restarting the same installed image and plans USB reconnect.
+Host now enumerates1209:0001/070; exact EP0 capability query PASS protocol1
+normal/download. Interface enp0s20f0u3 automatically has192.168.7.1/24,
+without running host setup/address commands. This supersedes blocked state.
+Restart and reconnect were both user actions, so do not isolate which was
+required. Last screen marker does not prove the exact stall instruction.
+Current USB console capture and actual USB reboot tests in progress.
+
 ## 0237 verification blocked on physical screen evidence — 2026-11-19
 
 Revalidated across three consecutive goal turns: no1209:0001, no04e8:685d,

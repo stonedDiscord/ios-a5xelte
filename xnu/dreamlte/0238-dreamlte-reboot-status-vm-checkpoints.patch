@@ -1,0 +1,80 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -1286,7 +1286,13 @@
+ 			break;
+ 		case EP0_STATUS:
+ #if defined(DREAMLTE)
+-			if (dreamlte_reboot_pending && status == 0) {
++			if (dreamlte_reboot_pending) {
++				printf("DREAMLTE USB: reboot status ep=%u flags=%x mode=%u\n",
++				    ep, status, dreamlte_reboot_pending);
++			}
++			/* XferComplete status is a bitmask: IOC/LST are success flags.
++			 * Reject BUSERR/SHORT, not every nonzero status (Samsung core.h). */
++			if (dreamlte_reboot_pending && !(status & 3u)) {
+ 				dreamlte_reboot_mode = dreamlte_reboot_pending;
+ 				dreamlte_reboot_pending = 0;
+ 				dreamlte_reboot_delay = 100;
+--- a/osfmk/vm/vm_resident.c
++++ b/osfmk/vm/vm_resident.c
+@@ -1368,6 +1368,12 @@
+ 		pmap_pre_expand(kernel_pmap, map_addr);
+ #endif
+ 
++#if defined(DREAMLTE)
++		if (might_free && ((map_addr - round_page(addr)) % (2 * 1024 * 1024)) == 0) {
++			kprintf("DREAMLTE VM: page array map va=%p ppn=%x\n",
++			    (void *)map_addr, phys_page);
++		}
++#endif
+ 		kr = pmap_enter(kernel_pmap, map_addr, phys_page,
+ 		    VM_PROT_READ | VM_PROT_WRITE, VM_PROT_NONE,
+ 		    VM_WIMG_USE_DEFAULT, FALSE);
+@@ -1480,7 +1486,15 @@
+ 	npages = (uint_t)(mem_sz / (PAGE_SIZE + sizeof(*vm_pages)));    /* scaled to include the vm_page_ts */
+ 
+ 
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: page array allocate npages=%u bytes=%llu start=%p\n",
++	    npages, (unsigned long long)(npages * sizeof *vm_pages),
++	    (void *)virtual_space_start);
++#endif
+ 	vm_pages = (vm_page_t) pmap_steal_freeable_memory(npages * sizeof *vm_pages);
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: page array allocated %p; frame init next\n", vm_pages);
++#endif
+ 
+ 	/*
+ 	 * Check if we want to initialize pages to a known value
+@@ -1576,6 +1590,9 @@
+ 	vm_delayed_count = 0;
+ 
+ 	absolutetime_to_nanoseconds(mach_absolute_time(), &start_ns);
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: frame init begin count=%u\n", npages);
++#endif
+ 	vm_pages_count = 0;
+ 	for (i = 0; i < npages; i++) {
+ 		/* Did we run out of pages? */
+@@ -1607,6 +1624,11 @@
+ 			assert(phys_page > vm_pages[i - 1].vmp_phys_page);
+ 		}
+ #endif
++#if defined(DREAMLTE)
++		if ((i & 0x7fffu) == 0) {
++			kprintf("DREAMLTE VM: frame init i=%u ppn=%x\n", i, phys_page);
++		}
++#endif
+ 		++vm_pages_count;
+ 		vm_page_init(&vm_pages[i], phys_page, FALSE);
+ 		if (fill) {
+@@ -1616,6 +1638,9 @@
+ 			vm_page_release_startup(&vm_pages[i]);
+ 		}
+ 	}
++#if defined(DREAMLTE)
++	kprintf("DREAMLTE VM: frame init done count=%u\n", vm_pages_count);
++#endif
+ 	vm_page_pages = vm_pages_count; /* used to report to user space */
+ 
+ 	if (!vm_himemory_mode) {

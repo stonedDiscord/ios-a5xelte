@@ -22,9 +22,25 @@ code=r'''
 #define EP0_WAIT_STATUS2 1
 #define EP0_DATA 2
 static uint8_t dma[512];
-static struct { uintptr_t dma; bool data_in,configured; unsigned data_alt,state; } ud;
+static struct { uintptr_t dma; bool data_in,configured; unsigned data_alt,state; void *lock; bool tx_busy; } ud;
 static uint8_t ud_dev_desc[1],ud_cfg_desc[1];
-static unsigned dreamlte_reboot_pending,stalled,starts;
+static unsigned dreamlte_reboot_pending,dreamlte_reboot_mode,dreamlte_reboot_delay,stalled,starts;
+#define DSTS 0
+#define EP_RX 2
+#define EP_TX 3
+#define DEPCMD_SETEPCONFIG 1
+#define EP0_SETUP 0
+#define EP0_WAIT_STATUS3 3
+#define EP0_STATUS 4
+#define TRBCTL_STATUS2 0
+#define TRBCTL_STATUS3 0
+static void ud_rx_done(void) {}
+static void ud_tx_kick_locked(void) {}
+static void lck_mtx_lock(void*p) {(void)p;}
+static void lck_mtx_unlock(void*p) {(void)p;}
+static void ud_start_setup(void) {}
+static void ud_sync(unsigned a,unsigned b) {(void)a;(void)b;}
+static void ud_epcmd(unsigned a,unsigned b,unsigned c,unsigned d,unsigned e) {(void)a;(void)b;(void)c;(void)d;(void)e;}
 static uintptr_t dreamlte_usb_pmu;
 static uint32_t pmu[1024];
 static uint32_t usb_rd(uintptr_t p,unsigned off) {return *(uint32_t*)(p+off);}
@@ -37,9 +53,21 @@ static unsigned ud_string(unsigned i,void*p) {(void)i;(void)p;return 0;}
 static void ud_stall(void) {stalled++;}
 static void ud_start(unsigned e,unsigned b,unsigned n,unsigned c) {(void)e;(void)b;(void)n;(void)c;starts++;}
 '''
-code+='static void\n'+function('ud_setup')+'\nstatic void\n'+function('dreamlte_usb_reboot')+r'''
+code+='static void\n'+function('ud_setup')+'\nstatic void\n'+function('dreamlte_usb_reboot')+'\nstatic void\n'+function('ud_event')+r'''
 int main(void) {
  ud.dma=(uintptr_t)dma;
+ for(unsigned flags=0;flags<16;flags++) for(unsigned mode=1;mode<=2;mode++) {
+  ud.state=EP0_STATUS;dreamlte_reboot_pending=mode;dreamlte_reboot_mode=dreamlte_reboot_delay=0;
+  ud_event((1u<<1)|(1u<<6)|(flags<<12));
+  if(flags&3u) assert(dreamlte_reboot_mode==0 && dreamlte_reboot_delay==0);
+  else assert(dreamlte_reboot_mode==mode && dreamlte_reboot_delay==100 && !dreamlte_reboot_pending);
+ }
+ for(unsigned type=0;type<=1;type++) {
+  dreamlte_reboot_pending=dreamlte_reboot_mode=dreamlte_reboot_delay=2;
+  ud_event(1u|(type<<8));
+  assert(!dreamlte_reboot_pending&&!dreamlte_reboot_mode&&!dreamlte_reboot_delay);
+ }
+
  for(unsigned type=0;type<256;type++) for(unsigned req=0x50;req<=0x51;req++)
  for(unsigned value=0;value<3;value++) for(unsigned idx=0;idx<2;idx++) for(unsigned len=0;len<2;len++) {
   memset(dma,0,sizeof dma);stalled=starts=0;dreamlte_reboot_pending=99;
@@ -66,7 +94,7 @@ with tempfile.TemporaryDirectory() as d:
  p=pathlib.Path(d);(p/'test.c').write_text(code)
  subprocess.run(['cc','-std=c11','-Wall','-Wextra','-Werror',str(p/'test.c'),'-o',str(p/'test')],check=True)
  subprocess.run([str(p/'test')],check=True,stdout=subprocess.DEVNULL)
-event=function('ud_event');assert 'dreamlte_reboot_pending && status == 0' in event
+event=function('ud_event');assert 'dreamlte_reboot_pending && !(status & 3u)' in event
 assert event.index('case EP0_STATUS:') < event.index('dreamlte_reboot_delay = 100;')
 assert event.count('dreamlte_reboot_pending = dreamlte_reboot_mode = dreamlte_reboot_delay = 0;')==2
-print('PASS: actual request validation/PMU helpers; successful status completion gate; reset/disconnect cancellation')
+print('PASS: actual request validation/PMU helpers; all16 completion flag combinations and both modes; reset/disconnect cancellation')
