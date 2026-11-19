@@ -1,3 +1,13 @@
+ACTIVEBOOT0100 SIXNATIVECOPYTRIALSPASS (tx2,2482..2486):1024words each,
+mismatches0/done1/retired1/IRQ2/MMU0/ASfault0/shutdown1/fault0.
+UTC1795125218 synced; privateFWload0/readyA55A; touchON1/slices7 tx2487.
+ioReady1/poisoned0/all8registered actualticks. Capture103600/session54359
+boot0100-gpu-copy-live.log1800s~21:52UTC; revalidatebeforeuse.
+CI44620376179/c6b8c85, BOOT54b0ca51...5d62fde4, kernel e3768bd2...a8f58b3.
+NextIOSurface->framebufferGPUblit withserializedownership/cache/lifetimes/
+retirement+CPUfallback. CurrentframecopiesstillCPU; noUIaccelerationclaim.
+NoHome/nootherpartitionwrite. Keep0100/0099/0098/0097checkpoints.
+
 ACTIVEBOOT0100 NATIVECOMPUTECOPYPASS tx2:1024words/mismatches0/PASS1,
 submitted1/done1/retired1/IRQ2/MMU0/ASfault0/exception1/coreoff1/fault0.
 CI44620376179/c6b8c85verified;BOOT54b0ca51...5d62fde4. BOOT-onlysuccess.

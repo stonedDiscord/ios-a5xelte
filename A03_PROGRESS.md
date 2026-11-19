@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0100 six native copy trials PASS; touch restored
+
+After the first tx2 PASS, five explicit gpu copy transactions2482..2486 each
+read all1024 source and destination words correctly (mismatches0/PASS1),
+submitted1/done1/retired1/IRQ2/MMU0/ASfault0/exception1, shutdown1/fault0.
+This validates repeated offscreen nativeG57 execution and owned allocation
+reuse; it does not test IOSurface imports, display writes or visible speedup.
+
+UTC1795125218 synchronized. Private79104byte firmware stagedvalid0, load0/
+readyA55A/config720x1600; continuous HID tx2480 enabled and tx2487 confirms
+streaming1/slices7/events0. LeaveON. tx2488 ioReady1/poisoned0; tx2489 all8
+registered with nonzero user/system ticks, including A75CPU6/7. NoHome sent.
+SoleconsolePID103600/session54359, boot0100-gpu-copy-live.log (1800seconds
+from approximately21:52UTC). Matching0099/0098/0097restore images retained.
+
+Next milestone: serialize framebuffer/probe GPU ownership, import retained
+IOSurface pages read-only plus validated framebuffer pages read/write, use
+explicit cache ownership/completion, preserve lifetimes until proven DMA
+retirement, and allow CPU fallback only when GPU access has ended. Verify
+actual pixel readback and repeated physical UI frames before acceleration
+or latency claims. Current AppleCLCD::swap still uses CPU row memcpy.
+
 ## 2026-11-19: BOOT0100 first native G57 compute-copy hardware PASS
 
 CI44620376179 SUCCESS exactc6b8c85201bc11af9318780694499dc2b323784b.

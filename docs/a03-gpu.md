@@ -9,7 +9,7 @@ BOOT0100 uses successful CI44620376179 atc6b8c85. Transaction2 reports
 compute words1024/mismatches0/PASS1, submitted1/done1/retired1, JOB_IRQ2/
 MMU0/ASfault0/headerexception1 and clean core shutdown. Both the source and
 destination patterns are checked. This is an isolated offscreen allocation;
-it does not import an IOSurface or write the display framebuffer. The generic
+it does not import an IOSurface or write the display framebuffer. Five further explicit trials (transactions2482..2486) repeat zero mismatches, no faults and clean retirement/shutdown. The generic
 job output field shows code bytes for this mode; the array check is the
 compute-copy acceptance result.
 
