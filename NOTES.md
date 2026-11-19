@@ -1,3 +1,10 @@
+FOLLOWUP22:28UTC BOOT0101 realGPUframes4/pixels4608000 allfullreadbackPASS.
+CPUfallbackhardwarePASS: blitOFFframes4,copies4->32 afteronebounded swipe;
+thenblitONrestoredtx2529. Currentenabled1/frames4/fallback0/quarantine0.
+TouchcontinuousON1099+slices/iohealthy/all8. Threeboundedswipesovertrial,
+noHome. Physicalscreenquestionpending; noFPS/smoothnessclaim. Keepgoalactive.
+Solecapture111070/56476 until~22:50UTC. Currentcheckpoint0101.
+
 ACTIVE22:24UTC BOOT0101 REALIOSurface->PANELGPUBLITPASS! swap1+2 each
 1152000pixels/mismatches0/done1/retired1/PASS1. gpu blit frames2/pixels2304000/
 fallback0/quarantine0. GUIactual720x1600BGRA/stride3072->panel2880. CPUsource

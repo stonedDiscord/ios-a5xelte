@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: four real GPU frames and hardware CPU fallback verified
+
+BOOT0101 actual GPU frames advanced2->4 (4608000 pixels total), each logged
+full1152000-pixel readback/mismatches0/done1/retired1/PASS1. NoGPUfault,
+fallback or quarantine. Source alternates IOSurface2/3 as GUI progresses.
+One bounded synthetic swipe dispatched; input dispatch is not physical proof.
+
+Hardware fallback check: tx2525 gpu blit off atframes4/displaycopies4;
+one bounded swipe then tx2528 displaycopies32/swaps37 proves28 CPU copies
+while GPUframecounter remained4. tx2529 re-enablesGPU1; touchcontinuousON
+1099slices, ioReady1/poisoned0. A subsequent bounded swipe produced no new
+swaps in15seconds; not itself a GPU failure. tx2538 stillenabled1/frames4/
+pixels4608000/fallbacks0/quarantined0 at22:28UTC. NoHome injected. Physical
+screen/touch acceptance remains unanswered. Goalactive; GPUcopybackend and
+CPUfallback proven, visible reliability/latency remain unproven.
+
 ## 2026-11-19: BOOT0101 actual IOSurface-to-framebuffer GPU blits PASS
 
 After GUI page-in completed, backboardd created720x1600 BGRA IOSurface2

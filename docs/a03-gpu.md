@@ -1,14 +1,15 @@
 # A03 GPU acceleration bring-up
 
 BOOT0101 now copies actual IOSurface content into panel memory with the
-native G57 compute shader. First two full720x1600 BGRA frames each pass
+native G57 compute shader. Four full720x1600 BGRA frames each pass
 1152000-pixel source/destination readback with zero mismatches, done1 and
-retired1. Counter: frames2/pixels2304000/fallbacks0/quarantined0.
+retired1. Counter: frames4/pixels4608000/fallbacks0/quarantined0.
 
 CI44625038530 at74e1def, exact uploaded sources/checksums and BOOT-only
 deployment are verified. Source rendering remains on the CPU; no Metal/EAGL
 implementation exists. Full readback is enabled for bring-up; speedup is
-unmeasured. Repeated physical UI acceptance and fallback checks remain
+unmeasured. Hardware CPU fallback also copied28 frames with GPU disabled, then GPU mode
+was restored. Physical UI acceptance and latency measurements remain
 pending before declaring the basic acceleration goal complete.
 
 ## Hardware passive result, 2026-11-19
