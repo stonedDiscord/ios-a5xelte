@@ -2,6 +2,15 @@
 
 ## Active S8 handoff — 2026-11-19
 
+LATEST0229 partial physical: post-reset CLK001b0048->001b0048/PIPE10;
+resource-entry CLK001b0048 immediately before parameter/CMDACT writes.
+Reaches first resource command after successful STARTCFG; no poll/wake/
+timeout/completion supplied yet. Do not infer absent lines or a hang.
+Host no1209:0001 or Download Mode. Asked whether resource-entry stays final
+or copy following result.0229 remains installed; preserve current boot.
+
+
+
 0229 verified and BOOT flashed; active-command wake trace pending — 2026-11-19
 
 Exact CI44483460784 SUCCESS at168c141d7c3170de929f5f0242f2e79c7bea5d5c.

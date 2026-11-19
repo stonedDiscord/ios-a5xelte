@@ -1,5 +1,22 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0229 partial physical trace: resource entry awake — 2026-11-19
+
+User reports:
+
+    DREAMLTE USB: post-reset wake CLK=001b0048->001b0048 PIPE=00000010
+    DREAMLTE USB: resource-entry CLK=001b0048
+
+Post-reset helper again makes no clock change; CLK31 is clear immediately
+before first EP0 transfer-resource parameter/CMDACT writes. In this build
+resource-entry occurs after STARTCFG returns success. No resource-suspend
+poll, in-command wake, completion or timeout result has yet been supplied.
+Do not infer those diagnostics absent, a hang, or a successful wake from
+this partial report. Host recheck finds no1209:0001 or Download Mode.
+Asked whether resource-entry is the final persistent line or what follows.
+0229 remains installed/visible; no new build or phone write selected.
+
+
 ## 0229 verified and BOOT flashed; active-command wake trace pending — 2026-11-19
 
 Exact CI44483460784 SUCCESS at168c141d7c3170de929f5f0242f2e79c7bea5d5c.
