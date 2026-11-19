@@ -1,5 +1,14 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+0236 CI44526044672 dispatched atbf796ffd38b3d065ad7e6da9d51ae761e32643cb.
+Actual ARM64 compile; eight source-derived USB suites including new
+prerequisite preservation/order/refusal checks; RAM reader/sender suite;
+exact0235-source overlay equality PASS. Manifest11sources/9symbols/55strings.
+Preparation research/dreamlte/prepare-0236.py verifies exact head/run,
+source/profile and preserved BOOT components, never flashes. Fresh Download
+Mode requested;0235 installed. New writes and USB operation untested.
+
+
 ## 0235 isolation/reference fields zero;0236 implements prerequisites — 2026-11-19
 
 User reports DREAMLTE PREREQ inherited and prelog-exit both ISOL00000000,
