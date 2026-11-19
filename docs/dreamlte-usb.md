@@ -19,6 +19,13 @@ showed no bus reset or connection until the replug. The 0239 candidate tests
 Samsung's PHY pull-up sequence; see [DREAMLTE_PROGRESS.md](../DREAMLTE_PROGRESS.md)
 for the latest build and hardware evidence.
 
+0239 successfully reaches its USB poller after a manual restart, but can
+stall in page array mapping on its first boot. On the observed restart, the
+device-side log reported a reset and connection; the host still saw no
+attachment until the user replugged the cable. The replugged boot passed
+EP0, ping and XNU console checks. A normal USB reboot was acknowledged, but
+the device did not re-enumerate on the same port within 120 seconds.
+
 ## 0237 USB reconnect and buttonless reboot candidate — 2026-11-19
 
 Previous goal turn established working0236 USB. This turn installs persistent

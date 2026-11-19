@@ -2,6 +2,27 @@
 
 ## Active S8 handoff — 2026-11-19
 
++## 0239 restart passes VM stall; host USB remains unattached
+
+After the first 0239 boot stalled during `pmap_startup` page-array mapping,
+user restarted the same BOOT with the cable left connected. The screen then
+showed these lines:
+`SWEET USB: event 0x00000101`,
+`DREAMLTE USB: DP pullup 1 UTMI=00000460->00000660`,
+`SWEET USB: bus reset`,
+`SWEET USB: event 0x00000201`,
+`SWEET USB: connected, speed 1`,
+followed by `SWEET USB: ue0 rx 0 tx 0 frames`, which keeps repeating.
+User confirms no cable replug since the restart.
+
+At 15:26 UTC the host still had no USB device on port 3, its port state was
+`not attached`, and no ECM network interface/address existed. Thus this
+0239 restart progresses beyond the previously observed VM checkpoint and
+through gadget events; automatic host attachment is not yet verified.
+USB console capture is empty because no USB network exists. The screen's
+`bus reset` is device-side evidence and does not establish successful host
+enumeration. No inference yet about electrical cause or intermittent VM root.
+
 ## 0239 flashed; first boot stalls during page array mapping
 
 CI 44550208083 passed at 326cc843fddb6cfe059b141ffae6f1691c83a4ac.
@@ -20,6 +41,21 @@ stall to page array mapping without identifying the exact call. It precedes
 USB initialization; this boot cannot test the new pull-up sequence.
 User initiated a restart of the same 0239 BOOT with the cable connected.
 The first boot capture was empty; the restart is a separate observation.
+
++The requested replug on this restarted 0239 boot produced device
+1209:0001/075 and automatically restored the host profile address
+192.168.7.1/24. EP0 descriptors/status/configuration, all three pings,
+and XNU UDP console text (163 bytes in the bounded check) PASS. This
+confirms replug recovers this boot; it does not establish automatic attach.
+
+USB normal reboot command on device075 was acknowledged. Captured XNU UDP
+shows request40/51, then `DREAMLTE USB: reboot status ep=1 flags=c mode=1`.
+Host logged disconnect at16:31:48 local and saw neither XNU nor Samsung
+enumeration during the120-second same-port check; tool correctly reported
+normal re-enumeration NOT verified. Current host port is not attached.
+The post-command screen report is pending. Automatic attachment still fails
+on 0239, while USB-requested Download Mode remains physically verified on
+0238; 0239 download mode not yet re-tested.
 
 ## 0239 candidate matches Samsung DP pull-up sequencing — 2026-11-19
 
