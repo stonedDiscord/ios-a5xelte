@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19:0166 committed and CI44615378050 dispatched
+
+Exactd5bc9d2 fullCI44615378050 queued/running forprivateWRITE_VALUEselftest.
+Current0098clock/corepowercheckpointretained;touchcontinuousON839slices,
+ioReady1/poisoned0. Nojobhardwareyet. Singlecapture82938/30907 remainsowner.
+NextsuccessfulCI/source/checksum ->0099BOOT-only->gpu clocks/gpu job,
+thenactualfill/copy/framebufferintegration. Do notmarkgoalcompleteatIDor
+corecycleorprivateWRITE_VALUEalone.0098/0097restoresretained.
+
 ## 2026-11-19:0166 isolated WRITE_VALUE job candidate tested
 
 BOOT0098corepowercycle hardwarePASS remainscheckpoint; privateFWload0/

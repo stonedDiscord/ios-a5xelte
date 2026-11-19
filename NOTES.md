@@ -1,3 +1,9 @@
+ACTIVECI44615378050 exactd5bc9d2 privatejob0166 queued/running.
+BOOT0098corepower powered1/shutdown1 VERIFIED;clocksID90910010;nojobyet.
+LatesttouchON839slices0events,ioReady1/poisoned0. Capture82938/30907.
+NeedexactCI/source/checksum->0099BOOT-only thenclocks/gpu job;restoreUTC/FW/
+touchONafterreboot. Goalnotdone:WRITE_VALUEthenactualfill/copy+framebuffer.
+
 NEXT0166privategpu job candidate tested; BOOT0098corecyclePASSretained.
 Own32KiB/check4KiBcontiguity/AS0JS1ownership/AArch64tables/cacheflush/
 exactresult+IRQ+header;boundedretirement/restoration;quarantineifuncertain,
