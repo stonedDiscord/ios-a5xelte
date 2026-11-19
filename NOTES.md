@@ -2,6 +2,13 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0231 CI44493674078 dispatched at5b94db771f4c1404e3400cded1796cabd85466d9.
+Preparation research/dreamlte/prepare-0231.py waits exact run/head,
+verifies11sources/9symbols/47strings and packages, never flashes.
+Host confirms fresh Download Mode062; no handshake/flash yet.0230 remains
+installed. Await exact build verification, then authorized BOOT-only trial.
+
+
 ## 0230 physical pre-log clock awake;0231 console/bus candidate — 2026-11-19
 
 User reports exact POLL first=001b0048 last=001b0048 exit=001b0048
