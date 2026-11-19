@@ -1,5 +1,12 @@
 # DREAMLTE USB bring-up evidence
 
+0234 bounded host observation completed:60 sysfs samples over120.14s,
+no1209:0001 at any sample. Evidence saved privately in exact-run directory
+host-observation.json. Current physical screen result still pending; no
+reflash/new build. Goal active, not achieved. Next action depends on0234
+resources/running or failed-command/POLL report already requested.
+
+
 ## 0234 host absent; remaining PHY prerequisite audit — 2026-11-19
 
 Previous goal turn made progress:0234 source compiled, exact CI passed and
