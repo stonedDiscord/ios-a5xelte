@@ -2,6 +2,13 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0235 exact CI44518477291 dispatched atc202064b5256360ee698b61d6bc9ebe71df1d19c.
+Preparation research/dreamlte/prepare-0235.py verifies exact head/run,
+source/profile and packages preserved BOOT components; never flashes.
+Download Mode066 ready.0234 installed until verified0235 image is available.
+Physical isolation/reference readbacks and USB console remain unverified.
+
+
 ## 0235 prerequisite probe prepared — 2026-11-19
 
 0234 physical cmd2 timeout/POLL001b0048 all1000/wake0 is recorded.0235
