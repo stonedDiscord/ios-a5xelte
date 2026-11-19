@@ -232,3 +232,11 @@ bytes match actual Mesa-generatedv9packers. ASanUBSanallcounts/permissions/
 canaries+actualruntimefakeDMA success/sourcecorruption/destinationmismatch
 checksPASS;2BSDARM64compilesPASS. Patch0167 isPREPARED ONLY, notstagedin
 A03profile, nohardwarecomputeclaim. Corrected0166 WRITE_VALUE mustpass first.
+
+Reproduce nativecopybinary from configured pinnedMesa24.3build:
+python3 tools/a03-build-g57-copy-shader.py MESA_BUILD NEW_OUTPUT_DIR
+Builder reusesMesa'sactualcompile/linkcommands, rejectsotherMesaversions,
+andchecksderivedcodeSHA256565e07d886d6f111fac39102242d7175f06f0ba5f6f5b52797f8537d0c6814b7.
+ReproductionPASS. LocalglibcC23once_flag/call_oncecollision wasresolved
+onlyinignoredMesacheckout byrenamingMesaemulationidentifiers; noPanfrost
+compilerinstructionlogicchanged. No phonecomputeexecutionclaim.

@@ -1,3 +1,9 @@
+FOLLOWUP21:27UTC correctedCI44617226681 stillBuild; watcher54365.
+Nativecopygeneratorreproducedvia tools/a03-build-g57-copy-shader.py actual
+Mesa24.3compile/linkcommands;SHA565e07d8...0c6814b7 matchesembeddedcode.
+0167remainsOFFPROFILE. Needcorrected0166CI->actualWRITE_VALUEtrialfirst.
+Capture82938/30907 nearing21:30expiry; revalidateownerbeforeconsoleuse.
+
 FOLLOWUP21:24UTC corrected44617226681/6c81044 Build/in_progress.
 0099packer+sourceverifier NOWupdatedcorrectrun/SHA/artifactpaths; earlier
 noteaboutOLDpaths superseded. 0167privateG57compute copy PREPAREDNOTPROFILE.
