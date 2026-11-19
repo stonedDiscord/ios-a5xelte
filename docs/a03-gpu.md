@@ -1,22 +1,15 @@
 # A03 GPU acceleration bring-up
 
-The BOOT0100 compositor still uses CPU copies. Power, leaf clocks, actual
-GPU_ID90910010, core power cycles, WRITE_VALUE execution and a native G57
-1024-u32 compute copy are hardware-verified. IOSurface/framebuffer GPU
-acceleration, EAGL/Metal and GPU-accelerated SpringBoard remain unverified.
+BOOT0101 now copies actual IOSurface content into panel memory with the
+native G57 compute shader. First two full720x1600 BGRA frames each pass
+1152000-pixel source/destination readback with zero mismatches, done1 and
+retired1. Counter: frames2/pixels2304000/fallbacks0/quarantined0.
 
-BOOT0100 uses successful CI44620376179 atc6b8c85. Transaction2 reports
-compute words1024/mismatches0/PASS1, submitted1/done1/retired1, JOB_IRQ2/
-MMU0/ASfault0/headerexception1 and clean core shutdown. Both the source and
-destination patterns are checked. This is an isolated offscreen allocation;
-it does not import an IOSurface or write the display framebuffer. Five further explicit trials (transactions2482..2486) repeat zero mismatches, no faults and clean retirement/shutdown. The generic
-job output field shows code bytes for this mode; the array check is the
-compute-copy acceptance result.
-
-Next is repeatability, then serialized IOSurface-to-framebuffer submission
-with validated physical mappings, cache maintenance, retained lifetimes,
-bounded completion/retirement and CPU fallback only after DMA is retired.
-Repeated real frame use and physical acceptance remain separate gates.
+CI44625038530 at74e1def, exact uploaded sources/checksums and BOOT-only
+deployment are verified. Source rendering remains on the CPU; no Metal/EAGL
+implementation exists. Full readback is enabled for bring-up; speedup is
+unmeasured. Repeated physical UI acceptance and fallback checks remain
+pending before declaring the basic acceleration goal complete.
 
 ## Hardware passive result, 2026-11-19
 

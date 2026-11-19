@@ -1,3 +1,11 @@
+ACTIVE22:24UTC BOOT0101 REALIOSurface->PANELGPUBLITPASS! swap1+2 each
+1152000pixels/mismatches0/done1/retired1/PASS1. gpu blit frames2/pixels2304000/
+fallback0/quarantine0. GUIactual720x1600BGRA/stride3072->panel2880. CPUsource
+renderingunchanged;fullreadbackON(noFPSclaim). iohealthy/touchON561slices.
+NeedrepeatedactualUIframes/physicalacceptance+fallbackcheck. Asyncphysical
+questionpending; noHomeinjection. Capture111070/56476 until~22:50UTC.
+Goalactive, basicbackendworksbutcompletionphysicalgatepending.
+
 FOLLOWUP22:23UTC BOOT0101 clocksID90910010/blitON1, frames0/fallback0/
 quarantine0. GUI26/56initialthreads waitemmc_strategy page-in; IOadvances
 requests4881->8975,notstalled. UTC1795126843 synced;FWload0/A55A; touchON222

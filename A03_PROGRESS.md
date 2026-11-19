@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0101 actual IOSurface-to-framebuffer GPU blits PASS
+
+After GUI page-in completed, backboardd created720x1600 BGRA IOSurface2
+with3072byte stride. Actual swap1 andswap2 each submitted nativeG57 strided
+compute directly from retained IOSurface pages to2880stride panel memory:
+pixels1152000/mismatches0/done1/retired1/PASS1. tx2501/2504 reports enabled1,
+frames2/pixels2304000/fallbacks0/quarantined0. This is actual fullframe GPU
+copy+CPUreadback, beyond the isolated1024word test. CPU still renders source
+content; Metal/EAGL remains absent. Fullreadback remains enabled, so no
+latency/smoothness improvement claimed. Physicalscreenacceptance pending.
+
+tx2502 display swapsentered4/done4/copies2; some swaps had no enabledcopy.
+tx2505 ioReady1/poisoned0; tx2506 continuous touchON/slices561/events0.
+NoHome injected. Current0101 checkpoint retained, capture111070/session56476
+ownsboot0101-gpu-blit-live.log untilapproximately22:50UTC. Needmoreactual
+UIframes/physicalgestureevidence, CPUfallbackhardwarecheck, andmeasure
+before claiming completedvideoacceleration. Userphysicalstatusasyncpending.
+
 ## 2026-11-19: BOOT0101 clocks/blit enabled; GUI still paging in
 
 Actual tx1 gpu clocks enables11/11/31 andID90910010; tx2 gpu blit on
