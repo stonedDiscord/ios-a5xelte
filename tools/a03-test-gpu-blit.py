@@ -10,42 +10,8 @@ layout=''
 for name in ['a03_gpu_job_layout.h','a03_gpu_copy_layout.h','a03_gpu_blit_layout.h']:
  layout+=chr(10).join(l for l in (args.source/'bsd/dev'/name).read_text().splitlines() if not l.startswith('#include'))+chr(10)
 header=r'''
-tests=r'''
-static void reset(unsigned m){
- if(allocation)free(allocation);allocation=0;
- memset(bank,0,sizeof(bank));memset(dest_mem,0x5a,sizeof(dest_mem));
- for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
- mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=0;
- a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
- a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
- a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;
- bank[1][0]=1<<11;bank[0][0x500/4]=7<<24;bank[2][1]=bank[2][2]=0x11;bank[2][3]=0x31;
- bank[3][0]=0x90910010;bank[3][0x100/4]=bank[3][0x110/4]=bank[3][0x120/4]=1;
- bank[3][0x18/4]=1;bank[3][0x1c/4]=2;bank[3][0xc4/4]=20;
- bank[3][0x2408/4]=0x13579bdf;bank[3][0x240c/4]=0x2468ace0;bank[3][0x2430/4]=1;
-}
-static int blit(unsigned w,unsigned h){return a03_gpu_framebuffer_blit((uintptr_t)source_mem,(uintptr_t)dest_mem,0x9e000000,3072,2880,w,h);}
-int main(void){
- reset(0);assert(blit(720,1600)==1&&starts==1&&offs==1&&flushes==3&&!a03_gpu_job_poisoned);
- assert(a03_gpu_scratch==0&&a03_gpu_scratch_pa==0&&a03_gpu_blit_frames==1);
- assert(bank[3][0x2400/4]==0&&bank[3][0x2404/4]==0&&bank[3][0x2430/4]==1&&bank[3][0x2408/4]==0x13579bdf);
- us=flushes=starts=offs=0;assert(blit(37,19)==1&&starts==1&&offs==1);
- for(unsigned m=1;m<=7;m++){
-  reset(m);int r=blit(37,19);assert(r!=1&&!a03_gpu_job_requested&&!a03_gpu_owner);
-  if(m==3||m==5||m==6||m==7){assert(r==-1&&a03_gpu_job_poisoned);unsigned n=writes;assert(blit(37,19)==-1&&writes==n);}
-  if(m==4)assert(r==0&&starts==1&&offs==1);
-  assert(!starts||!frees);
- }
- reset(0);corrupt=1;assert(blit(37,19)==0&&!a03_gpu_job_poisoned);
- reset(0);bad_source=1;assert(blit(37,19)==0&&!starts);
- reset(0);bad_dest=1;assert(blit(37,19)==0&&!starts);
- reset(0);a03_gpu_owner=1;unsigned n=writes;assert(blit(37,19)==-2&&writes==n);a03_gpu_job();assert(writes==n);
- reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);
- for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}
- reset(0);assert(blit(37,1601)==0&&!starts);
- reset(0);if(allocation)free(allocation);return 0;
-}
-'''#include <stdio.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
@@ -124,7 +90,42 @@ static void fake_write(unsigned o,uint32_t v){
  bank[3][o/4]=v;
 }
 '''
-tests='\nstatic void reset(unsigned m){\n if(allocation)free(allocation);allocation=0;\n memset(bank,0,sizeof(bank));memset(dest_mem,0x5a,sizeof(dest_mem));\n for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;\n mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=0;\n a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];\n a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;\n a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;\n bank[1][0]=1<<11;bank[0][0x500/4]=7<<24;bank[2][1]=bank[2][2]=0x11;bank[2][3]=0x31;\n bank[3][0]=0x90910010;bank[3][0x100/4]=bank[3][0x110/4]=bank[3][0x120/4]=1;\n bank[3][0x18/4]=1;bank[3][0x1c/4]=2;bank[3][0xc4/4]=20;\n bank[3][0x2408/4]=0x13579bdf;bank[3][0x240c/4]=0x2468ace0;bank[3][0x2430/4]=1;\n}\nstatic int blit(unsigned w,unsigned h){return a03_gpu_framebuffer_blit((uintptr_t)source_mem,(uintptr_t)dest_mem,0x9e000000,3072,2880,w,h);}\nint main(void){\n reset(0);assert(blit(720,1600)==1&&starts==1&&offs==1&&flushes==3&&!a03_gpu_job_poisoned);\n assert(a03_gpu_scratch==0&&a03_gpu_scratch_pa==0&&a03_gpu_blit_frames==1);\n assert(bank[3][0x2400/4]==0&&bank[3][0x2404/4]==0&&bank[3][0x2430/4]==1&&bank[3][0x2408/4]==0x13579bdf);\n us=flushes=starts=offs=0;assert(blit(37,19)==1&&starts==1&&offs==1);\n for(unsigned m=1;m<=7;m++){\n  reset(m);int r=blit(37,19);assert(r!=1&&!a03_gpu_job_requested&&!a03_gpu_owner);\n  if(m==3||m==5||m==6||m==7){assert(r==-1&&a03_gpu_job_poisoned);unsigned n=writes;assert(blit(37,19)==-1&&writes==n);}\n  if(m==4)assert(r==0&&starts==1&&offs==1);\n  assert(!starts||!frees);\n }\n reset(0);corrupt=1;assert(blit(37,19)==0&&!a03_gpu_job_poisoned);\n reset(0);bad_source=1;assert(blit(37,19)==0&&!starts);\n reset(0);bad_dest=1;assert(blit(37,19)==0&&!starts);\n reset(0);a03_gpu_owner=1;unsigned n=writes;assert(blit(37,19)==-2&&writes==n);a03_gpu_job();assert(writes==n);\n reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);\n for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}\n reset(0);assert(blit(37,1601)==0&&!starts);\n reset(0);if(allocation)free(allocation);return 0;\n}\n'
+tests=r'''
+static void reset(unsigned m){
+ if(allocation)free(allocation);allocation=0;
+ memset(bank,0,sizeof(bank));memset(dest_mem,0x5a,sizeof(dest_mem));
+ for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
+ mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=0;
+ a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
+ a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
+ a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;
+ bank[1][0]=1<<11;bank[0][0x500/4]=7<<24;bank[2][1]=bank[2][2]=0x11;bank[2][3]=0x31;
+ bank[3][0]=0x90910010;bank[3][0x100/4]=bank[3][0x110/4]=bank[3][0x120/4]=1;
+ bank[3][0x18/4]=1;bank[3][0x1c/4]=2;bank[3][0xc4/4]=20;
+ bank[3][0x2408/4]=0x13579bdf;bank[3][0x240c/4]=0x2468ace0;bank[3][0x2430/4]=1;
+}
+static int blit(unsigned w,unsigned h){return a03_gpu_framebuffer_blit((uintptr_t)source_mem,(uintptr_t)dest_mem,0x9e000000,3072,2880,w,h);}
+int main(void){
+ reset(0);assert(blit(720,1600)==1&&starts==1&&offs==1&&flushes==3&&!a03_gpu_job_poisoned);
+ assert(a03_gpu_scratch==0&&a03_gpu_scratch_pa==0&&a03_gpu_blit_frames==1);
+ assert(bank[3][0x2400/4]==0&&bank[3][0x2404/4]==0&&bank[3][0x2430/4]==1&&bank[3][0x2408/4]==0x13579bdf);
+ us=flushes=starts=offs=0;assert(blit(37,19)==1&&starts==1&&offs==1);
+ for(unsigned m=1;m<=7;m++){
+  reset(m);int r=blit(37,19);assert(r!=1&&!a03_gpu_job_requested&&!a03_gpu_owner);
+  if(m==3||m==5||m==6||m==7){assert(r==-1&&a03_gpu_job_poisoned);unsigned n=writes;assert(blit(37,19)==-1&&writes==n);}
+  if(m==4)assert(r==0&&starts==1&&offs==1);
+  assert(!starts||!frees);
+ }
+ reset(0);corrupt=1;assert(blit(37,19)==0&&!a03_gpu_job_poisoned);
+ reset(0);bad_source=1;assert(blit(37,19)==0&&!starts);
+ reset(0);bad_dest=1;assert(blit(37,19)==0&&!starts);
+ reset(0);a03_gpu_owner=1;unsigned n=writes;assert(blit(37,19)==-2&&writes==n);a03_gpu_job();assert(writes==n);
+ reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);
+ for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}
+ reset(0);assert(blit(37,1601)==0&&!starts);
+ reset(0);if(allocation)free(allocation);return 0;
+}
+'''
 with tempfile.TemporaryDirectory(prefix='a03-blit-') as temp:
  temp=Path(temp);c=temp/'test.c';exe=temp/'test';c.write_text(header+layout+src+tests)
  subprocess.run(['clang','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',str(c),'-o',str(exe)],check=True)
