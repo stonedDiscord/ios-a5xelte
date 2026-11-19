@@ -2,6 +2,26 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0238 normal USB reboot passes completion gate; return absent — 2026-11-19
+
+User supplies resources assigned in16/out16 and running DSTS00920001 after0ms,
+DMA882cb1000 from first0238 boot. Host subsequently sees1209:0001/072,
+capability PASS, automatic192.168.7.1/24, exact EP0 and3/3ping PASS. Whether
+user replugged before072 appeared is explicitly requested; do not infer
+spontaneous startup or a replug requirement from this sequence alone.
+
+Actual USB normal command receives successful status. Captured live UDP:
+setup c0 50 0000 8895 len8; setup40 51 0000 8895 len0;
+DREAMLTE USB: reboot status ep=1 flags=c mode=1.
+This physically confirms IOC/LST nonzero success and0238 completion fix.
+Host journal072 disconnected at15:35:50 local; no re-enumeration within
+120seconds. Command correctly returns failure instead of false success.
+Phone reboot screen/current last line requested to distinguish successful
+reset with failed boot/link from an incomplete reset. No download command
+tested yet; no full normal-reboot success. USB unavailable at latest check.
+Private logs ci-44540095593/first-usb-check.log, normal-reboot-1.log and
+normal-reboot-1-console.log.0238 stays installed; no new flash selected.
+
 ## 0238 reaches USB poller with zero traffic — 2026-11-19
 
 User reports SWEET USB: ue0 rx0 tx0 frames on current0238. This proves
