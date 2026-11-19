@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-19: BOOT0096 power-preflight trial flashed
+
+Goal resumed. ExactCI44591622019 kernel packaged with unchanged0094 input
+ADT/599bytecmdline/all8/1984MiB.23liveRAMreservations, exactkernelpayload
+rebuild, uniqueSMPtarget103485000 and stockramdiskDT preservation PASS.
+BOOT SHA256ffceaeca9e464146a52a0914483eb43a495f704db9b4807d0c594706491d754e.
+CDC Download control ->04e8:685d/Heimdalldetect PASS; lowercase boot-only
+upload100percent/success/reboot. Singlecapture54337 awaitsCDC then1800s:
+boot0096-gpu-power-live.log. Need boothealth, UTC/touchrestore and explicit
+gpu power snapshot. No actualpower/clock/GPU_ID/jobs claim yet.0095/0094/
+0093 restores retained; no other partition flashed.
+
 ## 2026-11-19:0163 full kernel build and artifacts verified
 
 CI44591622019 completed SUCCESS at exact

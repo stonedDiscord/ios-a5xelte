@@ -1,3 +1,9 @@
+ACTIVE2026-11-19 BOOT0096 flashed boot-only SUCCESS; capture54337.
+CI44591622019/b8f8f04 verified;BOOTffceaeca...491d754e; exact0094ADT/cmd599/
+all8/1984MiB/SMP103485000/23reservations/stockramdiskDTPASS.
+NeedCDC/boothealth->UTC/privatefwload/touchstartleaveON->gpu power snapshot.
+Noactualpower/clock/GPU_ID/jobsclaim. Restore0095/0094/0093 retained.
+
 ACTIVE2026-11-19 CI44591622019 SUCCESS, exactb8f8f04; artifactsVERIFIED.
 KernelSHA25676f967658ff3406d2ca41751640f4fc69e40ef899511e0fcab35affee2aa5d5b.
 Checksums/uploaded3sources byte-match/0163reverseapply/linkedGPU+A75+SMP+
