@@ -2,6 +2,13 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0233 CI44503956468 dispatched at63349a0f3aae1f34cc282465b28748a9f7a4b193.
+Preparation research/dreamlte/prepare-0233.py waits exact run/head,
+verifies11sources/9symbols/52strings and packages; never flashes.
+User says WHEN READY: signal after image verification; do not assume phone
+is in Download Mode.0232 installed; physical0233 effects remain untested.
+
+
 0233 candidate matches pinned Samsung core.c dwc3_core_config:
 for revisions>=2.50a set GUSB3PIPECTL.DIS_RXDETP3(bit28). Previously
 reported firmware PIPE010c0002 lacks it; saved configured Android dump
