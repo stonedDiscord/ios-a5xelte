@@ -1,5 +1,10 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+User confirms fresh Download Mode ready; host sees04e8:685d device063.
+0232 exact CI44498181713/head06cbc9b still Build in progress. Preparation
+16096 waits exact artifacts; no handshake or flash yet. Preserve fresh mode.
+
+
 0232 CI44498181713 dispatched at06cbc9be260d56e6be65e042cd5e96ab151335b3.
 Preparation research/dreamlte/prepare-0232.py waits exact head/run,
 verifies11sources/9symbols/50strings and packages, never flashes.
