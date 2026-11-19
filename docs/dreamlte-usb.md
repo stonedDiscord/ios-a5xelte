@@ -1,5 +1,35 @@
 # DREAMLTE USB bring-up evidence
 
+## 0229 full fault unchanged; active-wake outcome unreported — 2026-11-19
+
+User reports cmd2 timeout/reg402/PAR0=1/PAR1/2=0; GCTL80e92004
+GSTS3e800000 USB2=40102400 DCTL0 DSTS00520000 EN0;
+CORE PIPE010c0002 HW3=10420085 BUS22220001/300; DCFG80800 HW1=0160c93b;
+EVT82ca6000/000000008/80001000/0 (transcribed high word numerically8);
+TEST0 PHYPIPE10 LINK08000180 UTMI660 CLK801b0048 Q7e00 SEL0.
+No resource suspend/wake lines were included; do not infer they never ran.
+User notes the same failure values repeated six times;0229 did not resolve
+resource setup. Exact CI/source verification repeated PASS. Host no gadget.
+
+Audit finds failure PHY reads occur after timeout print and eight snapshot
+prints. Thus CLK31 at failure does not establish its value during polling;
+console delay can separate those observations. ARM64 object retains actual
+volatile CLK reads and bit31 branch. Next diagnostic captures first/last/
+exit CLK and wake count before any timeout logging, prints one summary
+after the fault dump. No new PHY policy/register write selected.0229 stays
+installed until a verified BOOT-only next trial; preserve current boot.
+
+
+0230 diagnostic captures first/last/exit CLK and sample/wake counts before
+any timeout printing, emits one POLL summary after the fault snapshot.
+Retains0229 one-shot wake policy; adds read-only observations, no new PHY
+register policy. Source-derived model explicitly simulates bit31 changing
+during timeout console output and verifies pre-log samples stay clear.
+ARM64 object compile, wrapper/EP/resource/CSR/wake suites PASS; plain
+patch/full-source equality PASS. Manifest11sources/6symbols/46strings.
+0229 exact source manifest archived. Full CI next;0229 installed.
+
+
 ## 0229 partial physical trace: resource entry awake — 2026-11-19
 
 User reports:

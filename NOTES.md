@@ -2,6 +2,23 @@
 
 ## Active S8 handoff — 2026-11-19
 
+0230 local ARM64/model/patch-equality checks PASS. Adds pre-timeout-log
+first/last/exit CLK,n,wake summary; retains0229 one-shot wake policy.
+Model tests console-time bit31 change preserving captured clear samples.
+11sources/6symbols/46strings; full CI next.0229 installed. No new flash.
+
+
+
+LATEST0229 full fault unchanged: cmd2 active402/PAR0=1, CLK801b0048,
+TEST0/PHYPIPE10, other core/session as0228. Wake lines not included;
+do not infer absent. Verified exact CI source/profile again PASS; no gadget.
+Failure CLK read follows many console prints, so cannot locate bit31 within
+poll loop. Next0230 diagnostic captures first/last/exit CLK and wake count
+before timeout prints, summarizes after dump; no new register policy.
+0229 installed; no new flash yet. Avoid requesting the same full dump.
+
+
+
 LATEST0229 partial physical: post-reset CLK001b0048->001b0048/PIPE10;
 resource-entry CLK001b0048 immediately before parameter/CMDACT writes.
 Reaches first resource command after successful STARTCFG; no poll/wake/

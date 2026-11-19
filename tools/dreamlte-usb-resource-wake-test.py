@@ -23,6 +23,7 @@ code = r'''
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdarg.h>
 typedef uintptr_t vm_offset_t;
 #define DREAMLTE 1
 #define DEPCMD_SETTRANSFRESOURCE 2
@@ -35,6 +36,16 @@ static uint32_t regs[0x10000/4], phyregs[0x100/4];
 static uintptr_t dreamlte_phy;
 static unsigned writes, polls, settles, waits, failures, mode;
 static uint32_t initial;
+static char output[4096];
+static int capture(const char *fmt, ...) {
+    va_list args; va_start(args, fmt);
+    int n = vsnprintf(output + strlen(output), sizeof(output) - strlen(output), fmt, args);
+    va_end(args);
+    /* Model CLK31 changing during timeout console output, after polling. */
+    if (mode == 11 && strstr(fmt, "timeout")) phyregs[4] |= 1u << 31;
+    return n;
+}
+#define printf capture
 static void dwc_wr(unsigned off, uint32_t value) {
     assert(off < sizeof(regs)); regs[off/4] = value; writes++;
 }
@@ -66,16 +77,17 @@ code += r'''
 static void reset(unsigned next) {
     memset(regs, 0, sizeof(regs)); memset(phyregs, 0, sizeof(phyregs));
     writes = polls = settles = waits = failures = 0; mode = next;
+    memset(output, 0, sizeof(output));
     dreamlte_phy = (uintptr_t)phyregs; initial = 0x801b0048;
     phyregs[4] = initial; phyregs[3] = 0x10;
     if (mode == 3) phyregs[0x6c/4] = 1;
     if (mode == 4) phyregs[4] |= 2;
     if (mode == 5) phyregs[3] = 0;
-    if (mode == 7 || mode == 8) phyregs[4] &= ~(1u << 31);
+    if (mode == 7 || mode == 8 || mode == 11) phyregs[4] &= ~(1u << 31);
     if (mode == 9) phyregs[4] = 0xffffffff;
 }
 int main(void) {
-    for (unsigned m = 0; m <= 10; m++) {
+    for (unsigned m = 0; m <= 11; m++) {
         reset(m);
         unsigned ep = m == 6 ? 2 : 0;
         int result = ud_epcmd(ep, 2, 1, 0, 0);
@@ -93,12 +105,18 @@ int main(void) {
                 assert(!settles && !waits);
                 assert(phyregs[4] == (m == 4 ? initial | 2 : m == 9 ? 0xffffffff : initial));
             }
-            if (m == 6 || m == 8) assert(!settles && waits == 1000);
+            if (m == 6 || m == 8 || m == 11) assert(!settles && waits == 1000);
         }
+        if (m == 8 || m == 11) {
+            assert(strstr(output, "DREAMLTE USB POLL: first=001b0048 last=001b0048 exit=001b0048 n=1000 wake=0"));
+            assert(phyregs[4] == (m == 11 ? initial : initial & ~(1u << 31)));
+        }
+        if (m == 1 || m == 10) assert(strstr(output, "n=1000 wake=1"));
+        if (m == 6) assert(!strstr(output, "DREAMLTE USB POLL:"));
         assert(phyregs[3] == (m == 5 ? 0 : 0x10));
         assert(phyregs[0x6c/4] == (m == 3));
     }
-    puts("PASS: actual active-resource wake; immediate/delayed suspend, completion/refusal/persistent/recurrent suspend, unrelated endpoints; one wake maximum and command never reissued");
+    puts("PASS: actual active-resource wake; immediate/delayed suspend, completion/refusal/persistent/recurrent suspend, unrelated endpoints; one wake maximum, command never reissued, pre-log snapshot survives console-time suspend");
 }
 '''
 with tempfile.TemporaryDirectory(prefix='dreamlte-resource-wake-') as tmp:

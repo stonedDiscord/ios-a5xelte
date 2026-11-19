@@ -1,0 +1,47 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -554,6 +554,8 @@
+ 	int resource_clock = ep == 0 && cmd == DEPCMD_SETTRANSFRESOURCE &&
+ 	    p0 == 1 && p1 == 0 && p2 == 0 && dreamlte_phy;
+ 	int resource_woke = 0;
++	uint32_t resource_first = 0, resource_last = 0, resource_exit = 0;
++	unsigned resource_samples = 0;
+ 	if (resource_clock) {
+ 		printf("DREAMLTE USB: resource-entry CLK=%08x\n",
+ 		    usb_rd(dreamlte_phy, 0x10));
+@@ -577,9 +579,12 @@
+ 			return 0;
+ 		}
+ #if defined(DREAMLTE)
+-		if (resource_clock && !resource_woke) {
++		if (resource_clock) {
+ 			uint32_t clk = usb_rd(dreamlte_phy, 0x10);
+-			if (clk & (1u << 31)) {
++			if (!resource_samples) resource_first = clk;
++			resource_last = clk;
++			resource_samples++;
++			if (!resource_woke && (clk & (1u << 31))) {
+ 				resource_woke = 1;
+ 				printf("DREAMLTE USB: resource suspend poll=%u CLK=%08x cmd=%08x\n",
+ 				    (unsigned)i, clk, v);
+@@ -593,9 +598,20 @@
+ #endif
+ 		delay(1);
+ 	}
++#if defined(DREAMLTE)
++	/* Capture before timeout/framebuffer output. The later failure dump
++	 * previously read CLK only after multiple slow console writes.
++	 */
++	if (resource_clock) resource_exit = usb_rd(dreamlte_phy, 0x10);
++#endif
+ 	printf("SWEET USB: ep%u cmd 0x%x timeout\n", ep, cmd & 0xf);
+ #if defined(DREAMLTE)
+ 	dreamlte_usb_ep_failure(ep, cmd);
++	if (resource_clock) {
++		printf("DREAMLTE USB POLL: first=%08x last=%08x exit=%08x n=%u wake=%u\n",
++		    resource_first, resource_last, resource_exit,
++		    resource_samples, (unsigned)resource_woke);
++	}
+ #endif
+ 	return -1;
+ }
