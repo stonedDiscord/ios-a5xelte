@@ -1,5 +1,22 @@
 # DREAMLTE USB bring-up evidence
 
+## 0230 verified and BOOT flashed; pre-log POLL trace pending — 2026-11-19
+
+Exact CI44486941058 SUCCESS at105d9746d00b514d1779bab9cecacbc89c5255f2.
+Resumed exact preparation;11sources/6symbols/46diagnostics/profile PASS.
+Kernel SHA25655f67792aaa1989cda7e7905ba1451b062a51b96c1c8d8fcbbce2f1e57f84644.
+BOOT shim/out/dreamlte-xnu-0230.img,18,464,784B,SHA256
+7fd09f38c3c4f1e8dd4e35794efdb0f1679d78975742e1369efa466e9d45a8e9.
+Original BOOT components/header, payload, partition fit and hash PASS.
+Fresh Download Mode061 accepted BOOT100%; Heimdall exit0/reboot. Only
+BOOT written. First sandbox attempt failed before protocol/device open,
+wrote nothing; authorized host-access retry succeeded. Logs and reviewed
+manifest: research/dreamlte/ci-44486941058. Preparation resume log private.
+Host post-flash no1209:0001 gadget or Download Mode. Requested new POLL
+first/last/exit/n/wake line and any suspend/wake refusal, not old full dump.
+0230 installed; physical effect/USB console unverified. No live CI/flash.
+Keep this boot visible while waiting for its diagnostic evidence.
+
 ## 0229 full fault unchanged; active-wake outcome unreported — 2026-11-19
 
 User reports cmd2 timeout/reg402/PAR0=1/PAR1/2=0; GCTL80e92004
