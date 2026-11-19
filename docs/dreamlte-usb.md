@@ -1,5 +1,19 @@
 # DREAMLTE USB bring-up evidence
 
+## 0233 physical PIPE bit28 latches; endpoint setup still fails — 2026-11-19
+
+User confirms PIPE config010c0002->110c0002. CMU prelog-exit unchanged:
+BUSMUX10 USBMUX10 QCH003f0003; ACLK/REF/SUSP00200000;
+TOPMUX2 DIV7 GATE00200000; endpoint0 setup failed.
+DIS_RXDETP3 setting matches saved Android PIPE state but does not resolve
+endpoint setup. These enabled clock-register settings still do not measure
+oscillation/PLL lock or prove DMA. Current failed-command/POLL not included;
+do not silently treat an earlier build's cmd2 result as a0233 observation.
+Reverified exact0233 CI SUCCESS/source/profile11/9/52 PASS; host no1209:0001
+and no ECM interface.0233 installed. No new build/flash selected pending
+remaining source/command audit. Preserve current boot and protected partitions.
+
+
 ## 0233 verified and BOOT flashed; PIPE trial result pending — 2026-11-19
 
 Exact CI44503956468 SUCCESS at63349a0f3aae1f34cc282465b28748a9f7a4b193.
