@@ -1,3 +1,15 @@
+ACTIVE21:50UTC0113HWfullreadbackPASS; pairedGPUmedian2.153456vsCPU1.579903ms.
+GPUcopyworksbutstillnospeedup. LeftGPUOFFpowered0verify1cachedwarm1/29frames/
+4verifiedcompleted29/0fallbackquarantine;touchON1115events0/storage ready1poison0.
+45sUItrialONEactualGPUframe/noevents;userphysicalreplypending. Sleepcorrelation:
+rawpower1->0thenidle/swaps54;ONEHome->rawpower1/swap55thenCPU63/swaps94.
+Stronglysupportsidledisplaysleepforstaleclock,butrawenums/panelcompletionnot
+proven;PosterBoardcrashloopsalsoexist. No periodicHome/fakeframes installed.
+Sole109705/session30146boot0113-quarter-live.loguntil~22:13UTC. NoactiveCI.
+Validatedcodead0c309CI44820099545;deployment64988fe;latestevidencecommitnext.
+UntestedloadpipelineexperimentPRIVATEgpu-pipeline-work/fullscreen-experiment.c;
+trackedgeneratorrestored. NeedactualGPUbenefit/physicalUIbeforegoalcomplete.
+
 ACTIVE0113quarterBOOT-onlyflashSUCCESS21:42UTC CI44820099545/ad0c309 fullsuccess/
 sixsources/RTC/reverse0180+0181/checksum/SMP/actualASan+methodtestsPASS.
 Kernel484a5f78...9bc0ef/BOOT353872d2...7e3be8; same8cores1984MiB/ADT0094/cmd599.

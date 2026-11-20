@@ -1,5 +1,35 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0113 copy PASS2.15ms; display-power sleep correlation
+
+Actual full720x1600 readbacks PASS0mismatches/done1/retired1, four verified
+beforefast. PairedCPU1.668932/1.579903/1.425058ms; GPU2.178379/2.088370/
+2.153456ms. MediansGPU2.153456vsCPU1.579903ms: still no speedup. All24fast
+replaycopies completed, nofallback/quarantine. Latestbounded45sphysicalUI
+trial added ONEactualGPUframe (28->29),2.660769ms/coldpower0.723692ms,
+execute1.429230ms, nofault;touchON1115slices/events0. Physicalacceptance
+pendinguserreply. RestoredGPUOFF/powered0/verify1/cachedwarm1,29frames/
+4verified/completed29,0fallback/quarantine. Storage ready1/poisoned0.
+
+Direct sleep hypothesis evidence now stronger: rawpowerrequest1 at5731465854,
+then0 at6688243850, swaps stop54/copies52(last6997166155) whilevsynclive.
+GPU alreadyOFF/powered0 atidleinspection. ONEHome dispatch causes new raw
+request1 at8583702959 followedbyswap55/copy53 at8583959284. LaterCPU63/
+swaps94/copies91, request remains1. This correlates iOS power request0 with
+idle cessation and request1 with Home wake. Request enums/completed panel
+power transitions are not independently proven; driver still preserves
+selector12 error/panelbehavior. Thus sleep likely explains at least this
+staleclock episode, not every UI fault. PosterBoard crashloops also remain.
+No periodicHome or fakeclock/frame workaround installed.
+
+Private untested NIR load-pipelining experiment stored only under
+shim/a03/out/gpu-pipeline-work/fullscreen-experiment.c; tracked generator
+restored to validated0180. No newCI or hardwareclaim. NextGPUwork should
+use measured phases (~1.43ms execute + mapping/cache ~0.5ms) and find actual
+benefit without removing cacheclean/retirement/sourceownership. BasicGPU
+copy works, but performance/physicalUI gates remain; goal not complete.
+Solecapture109705/session30146boot0113-quarter-live.log until~22:13UTC.
+
 ## 2026-11-20: coalesced strips/power observer CI success; BOOT0113 trial
 
 CI44820099545 SUCCESS exactad0c30959b4607e032e77799acb8aa30d464f772.

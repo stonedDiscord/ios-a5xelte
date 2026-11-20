@@ -425,3 +425,18 @@ It remains exact-fullscreen only; generic fallback and lifecycle are unchanged.
 0181 independently observes raw iOS16 display-power requests (selector12,
 one scalar). It preserves current return codes and panel behavior; observing
 a request is not evidence of a completed power transition or a freeze fix.
+
+
+BOOT0113 hardware results: coalesced strips pass full readback; three paired
+rounds yield medianGPU2.153ms versus CPU1.580ms. No speedup is established.
+The explicit live UI trial completes one additional GPU frame with no faults,
+but no touch events arrive during that window; physical acceptance is pending.
+GPU copying is left OFF/powered0, verification ON, cached/warm policy retained.
+
+The0181 observer now records a raw power-request sequence1 ->0 during idle,
+with compositor submissions stopping. One explicit Home produces request1
+immediately followed by new CPU frames. This strongly supports display sleep
+as an explanation for the stale clock in that episode. It does not establish
+the enum definitions or a completed panel power transition, and PosterBoard
+crashloops remain a separate issue. The driver still does not blank the panel
+or change the existing selector12 return status. No periodic wake is installed.
