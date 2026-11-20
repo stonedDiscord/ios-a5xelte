@@ -29,7 +29,11 @@ def snapshot(probe,log):
     timing=re.search(r'copy timing cpu=([0-9]+)/([0-9]+)ns gpu=([0-9]+)/([0-9]+)ns',display)
     if not(fields and policy and timing):raise RuntimeError('Missing0169 counters or GPU busy; no measurement')
     keys=['enabled','frames','pixels','fallbacks','quarantined','verify','verified','completed','total_ns','last_ns','cpu_copies','cpu_ns','gpu_copies','gpu_ns']
-    return dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
+    result=dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
+    phases=re.search(r'phases-ns: power=(\d+) prepare=(\d+) cache=(\d+) execute=(\d+) retire=(\d+) verify=(\d+) shutdown=(\d+)',gpu)
+    if phases:
+        result['last_attempt_phases_ns']=dict(zip(['power','prepare','cache','execute','retire','verify','shutdown'],map(int,phases.groups())))
+    return result
 
 
 def report(before,after,mode):
@@ -39,6 +43,8 @@ def report(before,after,mode):
     n=delta['cpu_copies'] if mode=='cpu' else delta['gpu_copies']
     elapsed=delta['cpu_ns'] if mode=='cpu' else delta['gpu_ns']
     delta.update(mode=mode,mean_copy_ms=elapsed/n/1000000 if n else None,quarantined=after['quarantined'])
+    if mode!='cpu' and delta['frames'] and 'last_attempt_phases_ns' in after:
+        delta['last_attempt_phases_ms']={k:v/1000000 for k,v in after['last_attempt_phases_ns'].items()}
     if not n:delta['result']='inconclusive: no actual frame copies'
     elif after['quarantined']:delta['result']='failed: GPU quarantined'
     elif delta['fallbacks']:delta['result']='mixed: GPU fallback occurred; inspect counters before comparing'

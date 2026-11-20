@@ -23,6 +23,13 @@ with tempfile.TemporaryFile() as log:assert m.command(Probe(log),log,'display').
 values=iter(['enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 original_command=m.command;m.command=lambda *args:next(values)
 assert m.snapshot(None,None)['gpu_ns']==123
+values=iter(['enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12 phases-ns: power=1 prepare=2 cache=3 execute=4 retire=5 verify=6 shutdown=7','copy timing cpu=28/280ns gpu=4/123ns'])
+phases=m.snapshot(None,None)['last_attempt_phases_ns']
+assert phases==dict(power=1,prepare=2,cache=3,execute=4,retire=5,verify=6,shutdown=7)
+sample=dict(b,frames=1,gpu_copies=1,gpu_ns=100,last_attempt_phases_ns=phases)
+assert m.report(b,sample,'fast')['last_attempt_phases_ms']['execute']==0.000004
+assert 'last_attempt_phases_ms' not in m.report(b,sample,'cpu')
+assert 'last_attempt_phases_ms' not in m.report(sample,sample,'fast')
 m.command=original_command
 original=dict(b,enabled=1,verify=1)
 for mode in ['cpu','verify','fast']:
