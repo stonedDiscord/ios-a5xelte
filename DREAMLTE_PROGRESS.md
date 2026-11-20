@@ -1,5 +1,19 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0246 passive probe refusal observed on screen — 2026-11-20
+
+User exact screen report:
+`DREAMLTE MUIC: bus not held stable/on; peripheral banks not read`.
+This establishes execution of0246 USB probe/poll helper after the earlier VM
+startup stages. It is the guarded refusal for invalid/busy BUS mux or
+reset-sync gate not manually held on; screen line alone does not identify
+which condition or establish actual clock instability. Peripheral banks were
+not read on this invocation; no route state measured and no writes made.
+Host still absent; journal ends at089disconnect14:28:03. Observer20462
+confirmed live at latest poll. Requested same-boot five-second replug only
+if repeating USB loop reached; otherwise exact unchanged last-line report.
+Need retained clock values and timed trace; both fixes remain unverified.
+
 ## 0246 verified and BOOT flashed; screen checkpoint pending — 2026-11-20
 
 CI44741740589 SUCCESS at fd94fa0be41ec570c243d03a6055cc3b25807007.
