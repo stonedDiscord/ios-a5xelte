@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: four-pixel fullscreen CI success; BOOT0112 trial
+
+CI44817012332 SUCCESS exactf712f5fd9cc4767f04589ca9e6da2fa7bf02b58b.
+SixGPU/replay sources exacttestedmatch, RTC unchanged, reverse0179/checksums/
+SMP/actualsource lifecycle+replay ASanUBSan PASS.
+KernelSHA2564f28bf12b5dad9e2cac052dac24bc9a87dd10d5b5f18eca852f868dafa865da0.
+BOOT0112SHA256f9ab4fab0e643bd5c1c0bca455aaf0dcf1dc3b328ef9040298745df3f1d40d13.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload then
+BOOT-onlyHeimdall uploadsuccess/reboot21:17UTC. Sole session85627 capture
+boot0112-full4-live.log waitsCDC; needclocks/cachedwarm/GPUONverify1/
+FWload/touchON->4fullreadbacks->pairedCPUfast->physicalUI. No0179HWclaimyet.
+
 ## 2026-11-20: four-pixel fullscreen full CI active
 
 21:04UTC CI44817012332 in_progress exactf712f5fd9cc4767f04589ca9e6da2fa7bf02b58b.
