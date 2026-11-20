@@ -1,4 +1,11 @@
-ACTIVE CI44784844777 exact3c22c827b79fe88723cbb638439349c3b6af1071
+ACTIVE BOOT0105tiled flashedBOOT-onlySUCCESS after44784844777/3c22c82
+fullCI/source/reversepatch/checksum/SMP/ASanUBSanPASS. Kernel8f294f4d...e20e0d,
+BOOT40d087fa...954eff. Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
+Capture49304/session69950boot0105-tiled-live.log waitsCDC; no otherreader.
+NeedRTC/status/clocks/blitON/FWload/touchON->4fullframepixelreadbacks->
+repeatedfast/CPU/verifytiming. No tiledhardware/speedupclaimyet.0104restorekept.
+
+PREVIOUS CI44784844777 exact3c22c827b79fe88723cbb638439349c3b6af1071
 17:47UTC stillBuild; livewatch55345. Do not duplicate/restart. BOOT0104
 frames52/verified28/completed52/fallback0/quarantine0/GPUONverify1.
 TouchON1530slices0events; physicalacceptanceasyncpending. SolecapturePID46326

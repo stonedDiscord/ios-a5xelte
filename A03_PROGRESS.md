@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: tiled CI success; BOOT0105 hardware trial
+
+CI44784844777 SUCCESS exact3c22c827b79fe88723cbb638439349c3b6af1071.
+All six uploadedGPU/replay sources match testedcandidate; bothRTC sources
+unchanged from0104.0172reversecheck/checksum/SMP/actualsourceASanUBSanPASS.
+KernelSHA2568f294f4da6e227363b0e494802ffa8dd7e2ef7637ee534a3860aa3c475e20e0d.
+BOOT0105SHA25640d087fa9dd8f19279e4d067a820c0c5ae6464f1d7c9e0e19c0bfd077b954eff.
+Same8cores/1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload reset,
+Heimdalldetected then lowercaseboot upload100percent/success/reboot.
+No otherpartitionflashed. SolecapturePID49304/session69950 waitsCDC in
+boot0105-tiled-live.log. NeedRTC/status/clocks/blitON, privateFWload/touchON,
+fourfullframepixelreadbacks, repeatedfast/CPU/verifymeasurement. No tiled
+hardware success or speedup claim yet;0104 restore retained.
+
 ## 2026-11-20: measured GPU slowdown; tiled dispatch candidate0172
 
 Follow-up17:47UTC: CI44784844777 still Build/in_progress; watcher session55345
