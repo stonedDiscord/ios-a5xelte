@@ -1,4 +1,11 @@
-ACTIVE0109warmHARDWAREPASSfullpixels;fast2.296msvsCPU1.736. Warm1powered1
+ACTIVE0109idle-sleep investigation19:56UTC: userreportsfrozenclockand
+suggestssleep. KernelUTCcorrect/GPUOFFpowered0/quarantine0/vsynclive,
+swaps62copies57stopped; ONEHome->swaps1290copies1285(CPU1270).
+Framebufferdoesnotblankorhandlepowerstate; sleepcouldleaveoldimagevisible.
+HypothesisONLY; needdirectsleepstateorAuto-Lockcontrolledtrial. No periodic
+Home workaround. WideCI44804438707stillBuild;preservegoal/testsequence.
+
+PREVIOUS0109warmHARDWAREPASSfullpixels;fast2.296msvsCPU1.736. Warm1powered1
 NEWwideCI44804438707 exact01e7de1474faf02b8e3c9ee6f9b02c9069929752
 active/watch43210;privategpu-wide-work/artifacts.py+pack0110.py pinexact
 sources/RTC/SHA/run. NeedfullCI->0110->cachedwarm4fullreadbacks->fastCPU.

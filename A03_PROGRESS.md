@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: idle display-sleep hypothesis after another Home wake
+
+User reports clock frozen again on0109, then suggests iOS is sleeping.
+At19:56:19UTC kernelUTC1795204579 matches host; GPUOFF/warm1/powered0,
+frames15/quarantine0. Vsync67570 advances while swaps62/copies57 stopped.
+TouchON3611slices27events. ONEHome dispatch resumes swaps1290/copies1285,
+including1270CPUcopies; kernelUTC1795204624 continues. No timeset/reset.
+This reproduces stopped compositor updates while GPU is off, with Home
+wake recovery. Idle display sleep is now a plausible explanation, not a
+proven GPU hang or an RTC failure. Current framebuffer keeps scanning the
+last panel buffer and implements neither blanking nor display power-state
+handling; an iOS display-off request can therefore look like a frozen
+clock. Need direct sleep-state evidence or a controlled Auto-Lock trial
+before claiming root cause. Do not inject periodic Home or fabricate frames.
+
 ## 2026-11-20: warm hardware PASS2.30ms; sixteen-pixel candidate0177
 
 WideCI44804438707 exact01e7de1474faf02b8e3c9ee6f9b02c9069929752 active;
