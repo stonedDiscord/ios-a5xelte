@@ -4,6 +4,10 @@
 
 ## 0240 page-array pmap diagnostics prepared — 2026-11-20
 
+CI44695365296 dispatched at7ba1affe64c3141e9fca8bf18f4ae9eb614fae40.
+Preparation research/dreamlte/prepare-0240.py waits for this exact run/head,
+then verifies and packages; it never flashes. Process currently building.
+
 Phone remains in Samsung Download Mode 077; 0239 is installed. Completed
 partial local diagnostic edits: removed a duplicate declaration and verified
 that the page-array mapping flag is cleared immediately after the mapping
