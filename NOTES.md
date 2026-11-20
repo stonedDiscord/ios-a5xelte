@@ -1,4 +1,11 @@
 ACTIVE BOOT0106HARDWAREPHASES: fastmean142.160ms; execute137.267ms vs
+NEWcachedCI44791438428 exact7e56be7f05428c9672d45d93fa357f32a79d20e2
+active/watch32994. Privategpu-cache-work/artifacts.py+pack0107.py pinsources/
+RTC/fullSHA/run. NeedfullCI->0107BOOT-only->cached4fullreadbacks->fastCPU.
+Current0106GPUONverify1/frames20/verified12/fallback0/quarantine0; touchON
+987slices12physicalevents+release. Physicalscreenanswerasyncpending.
+
+PREVIOUS BOOT0106HARDWAREPHASES: fastmean142.160ms; execute137.267ms vs
 power0.685/prepare0.296/cache0.396/retire0.011/shutdown0.596ms. Fullreadback
 PASS6frames. Candidate0174explicitcachedpolicy+freshGPUclean/invalidate
 beforeCPU/ASdisable/off;failurequarantine,fourreadbacksperpolicy. Default

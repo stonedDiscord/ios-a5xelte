@@ -2,6 +2,14 @@
 
 ## 2026-11-20: BOOT0106 isolates job execution; cached candidate0174
 
+Exactcachedcandidate7e56be7f05428c9672d45d93fa357f32a79d20e2 builds
+CI44791438428; livewatch32994. Privategpu-cache-work/artifacts.py and
+pack0107.py pinsixsources/RTC/fullSHA/run/reversepatch/checksum. NeedfullCI
+thenBOOT-only0107, explicitcached andfourfullreadbacks beforefast. Current
+0106frames20/verified12/completed20/fallback0/quarantine0/GPUONverify1.
+TouchON987slices includes12physicalcontactevents, down294,1598 through
+342,1340 thenreportrelease; no injectedgesture. PhysicalUIanswerpending.
+
 RTC1795198340 beforeUSB/readonlystatus1795198352. GPUclocksID90910010,
 privateFW79104/load0/A55A/touchrestartON. Firstactualswaps+replay4 each
 full1152000pixels/mismatches0/done1/retired1/verify1/PASS1, verified6.
