@@ -1,3 +1,11 @@
+ACTIVEcandidate0182fullscreen dispatchtile4/8/16/32 (default4) prepared;
+nativev9packers/allpolicy actualASanUBSan/ARM64GPUAMFI/profile128/benchtestsPASS.
+Same shaderbytecode(globalIDs), genericfallback unchanged; tilechanges reset
+fourreadbacks. Needcommit/fullCI->BOOT-only0114->readbacks/pairedperpolicy.
+Current0113GPUOFFpowered0verify1cachedwarm1/29frames4verified0quarantine;
+touchON. Sole109705/session30146boot0113-quarter-live.loguntil~22:13UTC.
+Goalactive; currentGPUmedian2.153vsCPU1.580ms,physicalacceptancepending.
+
 ACTIVE21:50UTC0113HWfullreadbackPASS; pairedGPUmedian2.153456vsCPU1.579903ms.
 GPUcopyworksbutstillnospeedup. LeftGPUOFFpowered0verify1cachedwarm1/29frames/
 4verifiedcompleted29/0fallbackquarantine;touchON1115events0/storage ready1poison0.

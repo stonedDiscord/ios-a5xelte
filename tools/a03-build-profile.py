@@ -183,7 +183,8 @@ def main():
                      '0178-a03-specialized-fullscreen-copy.patch',
                      '0179-a03-four-pixel-fullscreen-copy.patch',
                      '0180-a03-coalesced-fullscreen-strips.patch',
-                     '0181-a03-observe-display-power-requests.patch'):
+                     '0181-a03-observe-display-power-requests.patch',
+                     '0182-a03-explicit-fullscreen-dispatch-tiles.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

@@ -1,0 +1,56 @@
+--- a/bsd/dev/a03_gpu_blit_layout.h
++++ b/bsd/dev/a03_gpu_blit_layout.h
+@@ -156,6 +156,8 @@
+         *destination_length <= 0x9e000000ULL + 4608000 - physical &&
+         source <= UINTPTR_MAX - *source_length && destination <= UINTPTR_MAX - *destination_length;
+ }
++/* Explicit fullscreen-only dispatch policy; generic geometry stays fixed. */
++static unsigned a03_gpu_fullscreen_rows=4;
+ static int a03_gpu_blit_layout(void *memory, uint64_t physical,
+     unsigned source_offset, unsigned destination_offset, unsigned source_stride,
+     unsigned destination_stride, unsigned width, unsigned height)
+@@ -186,7 +188,9 @@
+     params[1]=A03_GPU_BLIT_DEST_VA+destination_offset;
+     params[4]=source_stride;params[5]=destination_stride;params[6]=width;params[7]=height;
+     if(!source_offset && !destination_offset && source_stride==3072 && destination_stride==2880 && width==720 && height==1600) {
+-        job[8]=0x80000c0eU;job[10]=3;job[11]=400;
++        unsigned rows=a03_gpu_fullscreen_rows;
++        if(rows!=4 && rows!=8 && rows!=16 && rows!=32)return 0;
++        job[8]=0x8000000eU|((rows-1)<<10);job[10]=3;job[11]=1600/rows;
+         for(unsigned i=0;i<sizeof(a03_g57_fullscreen_code)/8;i++)code[i]=a03_g57_fullscreen_code[i];
+     }
+     return 1;
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -733,6 +733,10 @@
+ void a03_gpu_blit_control(unsigned enable);
+ void a03_gpu_blit_control(unsigned enable) {
+     if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
++    if(enable>=9 && enable<=12 && !a03_gpu_job_poisoned) {
++        unsigned rows=4U<<(enable-9);
++        if(a03_gpu_fullscreen_rows!=rows){a03_gpu_fullscreen_rows=rows;a03_gpu_blit_verified=0;}
++    }
+     if(enable==7 && !a03_gpu_job_poisoned){a03_gpu_blit_warm=1;a03_gpu_blit_verified=0;}
+     if(enable==0 || enable==6 || enable==8){a03_gpu_warm_stop();if(enable==8)a03_gpu_blit_warm=0;}
+     if(enable<2 && !a03_gpu_job_poisoned)a03_gpu_blit_enabled=enable;
+@@ -742,6 +746,7 @@
+         a03_gpu_blit_cached=enable==5;
+         a03_gpu_blit_verified=0; /* Each policy must earn four readbacks. */
+     }
++    printf("A03 GPU blit: tile-rows=%u; fullscreen-only, four readbacks after change\n",a03_gpu_fullscreen_rows);
+     printf("A03 GPU blit: cached=%u; four readbacks after policy change\n",a03_gpu_blit_cached);
+     printf("A03 GPU blit: warm=%u powered=%u; explicit cold/off releases power\n",a03_gpu_blit_warm,a03_gpu_warm_ready);
+     printf("A03 GPU blit: enabled=%u frames=%u pixels=%llu fallbacks=%u quarantined=%u\n",a03_gpu_blit_enabled,a03_gpu_blit_frames,(unsigned long long)a03_gpu_blit_pixels,a03_gpu_blit_fallbacks,a03_gpu_job_poisoned);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -664,6 +664,10 @@
+  else if(!strcmp(command,"gpu blit uncached"))a03_gpu_blit_control(6);
+  else if(!strcmp(command,"gpu blit warm"))a03_gpu_blit_control(7);
+  else if(!strcmp(command,"gpu blit cold"))a03_gpu_blit_control(8);
++ else if(!strcmp(command,"gpu blit tile4"))a03_gpu_blit_control(9);
++ else if(!strcmp(command,"gpu blit tile8"))a03_gpu_blit_control(10);
++ else if(!strcmp(command,"gpu blit tile16"))a03_gpu_blit_control(11);
++ else if(!strcmp(command,"gpu blit tile32"))a03_gpu_blit_control(12);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

@@ -32,6 +32,8 @@ def snapshot(probe,log):
     result=dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
     cached=re.search(r'A03 GPU blit: cached=(\d+);',gpu)
     if cached:result['cached']=int(cached[1])
+    tile=re.search(r'A03 GPU blit: tile-rows=(\d+);',gpu)
+    if tile:result['tile_rows']=int(tile[1])
     warm=re.search(r'A03 GPU blit: warm=(\d+) powered=(\d+);',gpu)
     if warm:result.update(warm=int(warm[1]),powered=int(warm[2]))
     phases=re.search(r'phases-ns: power=(\d+) prepare=(\d+) cache=(\d+) execute=(\d+) retire=(\d+) verify=(\d+) shutdown=(\d+)',gpu)
@@ -41,6 +43,8 @@ def snapshot(probe,log):
 
 
 def report(before,after,mode):
+    if before.get('tile_rows')!=after.get('tile_rows'):
+        raise RuntimeError('Dispatch tile changed during interval; discard measurement')
     if before.get('cached')!=after.get('cached'):
         raise RuntimeError('Cache policy changed during interval; discard measurement')
     if before.get('warm')!=after.get('warm'):
@@ -52,6 +56,7 @@ def report(before,after,mode):
     elapsed=delta['cpu_ns'] if mode=='cpu' else delta['gpu_ns']
     delta.update(mode=mode,mean_copy_ms=elapsed/n/1000000 if n else None,quarantined=after['quarantined'])
     if 'cached' in after:delta['cached']=after['cached']
+    if 'tile_rows' in after:delta['tile_rows']=after['tile_rows']
     if 'warm' in after:delta.update(warm=after['warm'],powered=after['powered'])
     if mode!='cpu' and delta['frames'] and 'last_attempt_phases_ns' in after:
         delta['last_attempt_phases_ms']={k:v/1000000 for k,v in after['last_attempt_phases_ns'].items()}

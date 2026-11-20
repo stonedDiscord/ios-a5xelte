@@ -29,6 +29,14 @@ int main(void){
  assert(a03_gpu_blit_layout(m,0x120000000ULL,0,0,3072,2880,720,1600));
  assert(j[8]==0x80000c0e&&j[10]==3&&j[11]==400);
  assert(!memcmp((char *)m+0x5000,a03_g57_fullscreen_code,sizeof(a03_g57_fullscreen_code)));
+ for(unsigned rows=4;rows<=32;rows*=2){
+  a03_gpu_fullscreen_rows=rows;
+  assert(a03_gpu_blit_layout(m,0x120000000ULL,0,0,3072,2880,720,1600));
+  assert(j[8]==(0x8000000eU|((rows-1)<<10))&&j[10]==3&&j[11]==1600/rows);
+ }
+ a03_gpu_fullscreen_rows=7;
+ assert(!a03_gpu_blit_layout(m,0x120000000ULL,0,0,3072,2880,720,1600));
+ a03_gpu_fullscreen_rows=4;
  const unsigned variants[][6]={{4,0,3072,2880,720,1600},{0,4,3072,2880,720,1600},{0,0,3076,2880,720,1600},{0,0,3072,2884,720,1600},{0,0,3072,2880,719,1600},{0,0,3072,2880,720,1599}};
  for(unsigned v=0;v<sizeof(variants)/sizeof(variants[0]);v++){
   const unsigned *a=variants[v];
@@ -73,6 +81,9 @@ with tempfile.TemporaryDirectory(prefix='a03-blit-layout-') as temp:
   fixture=fixture.replace('.workgroup_size_x=1,','.workgroup_size_x=16,').replace('.workgroup_size_y=1,','.workgroup_size_y=4,').replace('.workgroup_count_x=720,','.workgroup_count_x=45,').replace('.workgroup_count_y=1600,','.workgroup_count_y=400,')
   fixture=fixture.replace('.workgroup_size_x=16,','.workgroup_size_x=15,').replace('.workgroup_count_x=45,','.workgroup_count_x=3,')
   generic=fixture.replace('3072,2880,720,1600)','3072,2880,719,1599)').replace('.workgroup_size_x=15,','.workgroup_size_x=16,').replace('.workgroup_count_x=3,','.workgroup_count_x=12,')
-  for selected in [fixture,generic]:
+  variants=[fixture,generic]
+  for rows in [8,16,32]:
+   variants.append(fixture.replace('assert(a03_gpu_blit_layout','a03_gpu_fullscreen_rows='+str(rows)+';assert(a03_gpu_blit_layout').replace('.workgroup_size_y=4,','.workgroup_size_y='+str(rows)+',').replace('.workgroup_count_y=400,','.workgroup_count_y='+str(1600//rows)+','))
+  for selected in variants:
    c.write_text(selected);subprocess.run(flags+['-UNDEBUG','-I'+str(ROOT/'tools'),str(c),'-o',str(exe)],cwd=build,check=True);subprocess.run([str(exe)],check=True)
 print('PASS strided blit geometry/mapping guards/shader hash and selected primary Mesa v9 descriptors; no hardware claim')

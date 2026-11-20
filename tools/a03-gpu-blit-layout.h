@@ -156,6 +156,8 @@ static int a03_gpu_blit_geometry(uintptr_t source, uintptr_t destination,
         *destination_length <= 0x9e000000ULL + 4608000 - physical &&
         source <= UINTPTR_MAX - *source_length && destination <= UINTPTR_MAX - *destination_length;
 }
+/* Explicit fullscreen-only dispatch policy; generic geometry stays fixed. */
+static unsigned a03_gpu_fullscreen_rows=4;
 static int a03_gpu_blit_layout(void *memory, uint64_t physical,
     unsigned source_offset, unsigned destination_offset, unsigned source_stride,
     unsigned destination_stride, unsigned width, unsigned height)
@@ -186,7 +188,9 @@ static int a03_gpu_blit_layout(void *memory, uint64_t physical,
     params[1]=A03_GPU_BLIT_DEST_VA+destination_offset;
     params[4]=source_stride;params[5]=destination_stride;params[6]=width;params[7]=height;
     if(!source_offset && !destination_offset && source_stride==3072 && destination_stride==2880 && width==720 && height==1600) {
-        job[8]=0x80000c0eU;job[10]=3;job[11]=400;
+        unsigned rows=a03_gpu_fullscreen_rows;
+        if(rows!=4 && rows!=8 && rows!=16 && rows!=32)return 0;
+        job[8]=0x8000000eU|((rows-1)<<10);job[10]=3;job[11]=1600/rows;
         for(unsigned i=0;i<sizeof(a03_g57_fullscreen_code)/8;i++)code[i]=a03_g57_fullscreen_code[i];
     }
     return 1;

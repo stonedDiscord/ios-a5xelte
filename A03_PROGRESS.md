@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: fullscreen dispatch occupancy candidate0182
+
+Continuation audit: previous turn made progress through BOOT0113 hardware,
+paired timings and power-request correlation; goal remains incomplete because
+GPU copy median2.153ms exceeds CPU1.580ms and physical acceptance is pending.
+Currentcapture109705/session30146 stilllive21:51UTC; noactiveCI atstart.
+
+0182 adds explicit gpu blit tile4/tile8/tile16/tile32, fullscreen only.
+Default remains4; generic masked-tail dispatch unchanged. Exact shader uses
+only global IDs and compiles IDENTICALLY for4 and16 localrows with pinned
+Mesa24.3. Changing tile policy requires four fresh readbacks; owner/quarantine
+and all cacheclean/retirement/lifetime checks remain. Groups15x4/8/16/32
+contain60/120/240/480threads, grid3x400/200/100/50, exact720x1600coverage.
+Nativev9 packers for every tile, actualsource ASanUBSan allpolicies+generic
+fallback, ARM64GPUAMFI, profile128, benchmark regressions PASS. Benchmarks
+reporttile_rows and reject within-interval/acrosspairedround policy changes.
+NeedfullCI->BOOT0114->fourreadbacks perpolicy->pairedtiming, noHWclaimyet.
+
 ## 2026-11-20: BOOT0113 copy PASS2.15ms; display-power sleep correlation
 
 Actual full720x1600 readbacks PASS0mismatches/done1/retired1, four verified

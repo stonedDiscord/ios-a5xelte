@@ -28,6 +28,7 @@ static uint32_t bank[7][4096];
 static unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed,cache_commands;
 static unsigned expect_cached,cache_failure;
 static void check_shader(unsigned specialized);
+static unsigned a03_gpu_fullscreen_rows;
 static uint64_t fake_time;
 static uint64_t mach_absolute_time(void){return ++fake_time;}
 static void absolutetime_to_nanoseconds(uint64_t t,uint64_t *ns){*ns=t*10;}
@@ -115,14 +116,15 @@ static void fake_write(unsigned o,uint32_t v){
   unsigned width=params[6],height=params[7],count=width*height;
   unsigned specialized=params[0]==0x04000000&&params[1]==0x05000000&&params[4]==3072&&params[5]==2880&&width==720&&height==1600;
   unsigned local_x=specialized?15:16,pixels=4;
-  assert(job[8]==(specialized?0x80000c0e:0x80000c0f)&&job[10]==(specialized?3:(width+63)/64)&&job[11]==(height+3)/4);
+  assert(job[8]==(specialized?(0x8000000e|((a03_gpu_fullscreen_rows-1)<<10)):0x80000c0f)&&job[10]==(specialized?3:(width+63)/64)&&job[11]==(specialized?1600/a03_gpu_fullscreen_rows:(height+3)/4));
   check_shader(specialized);
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
+  unsigned rows=specialized?a03_gpu_fullscreen_rows:4;
   unsigned copied=0;
   for(unsigned gy=0;gy<job[11];gy++)for(unsigned gx=0;gx<job[10];gx++)
-  for(unsigned ly=0;ly<4;ly++)for(unsigned lx=0;lx<local_x;lx++)
+  for(unsigned ly=0;ly<rows;ly++)for(unsigned lx=0;lx<local_x;lx++)
   for(unsigned component=0;component<(specialized?16:pixels);component++){
-   unsigned y=gy*4+ly,x=(gx*local_x+lx)*pixels+(specialized?(component/4)*180+component%4:component);
+   unsigned y=gy*rows+ly,x=(gx*local_x+lx)*pixels+(specialized?(component/4)*180+component%4:component);
    if(x>=width||y>=height)continue; /* shader's exact bounds before accesses */
    copied++;
    assert(walk(params[0]+y*params[4]+x*4,0)==source_physical(so+y*params[4]+x*4));
@@ -151,7 +153,7 @@ static void reset(unsigned m){
  memset(gpu_dirty,0x5a,sizeof(gpu_dirty));
  for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
  mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=0;
- cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;
+ cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;a03_gpu_fullscreen_rows=4;
  a03_gpu_blit_warm=a03_gpu_warm_ready=0;a03_gpu_warm_override=0;
  a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
  a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
@@ -239,6 +241,13 @@ int main(void){
  reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_control(7);
  assert(blit(53,17)==1);bank[3][0x200/4]=1;
  us=flushes=starts=0;assert(blit(53,17)==-1&&a03_gpu_job_poisoned&&!offs);
+ for(unsigned policy=9;policy<=12;policy++){
+  reset(0);a03_gpu_blit_verified=8;a03_gpu_blit_control(policy);
+  assert(a03_gpu_fullscreen_rows==(4U<<(policy-9)));
+  assert(a03_gpu_blit_verified==(policy==9?8:0));
+  assert(blit(720,1600)==1&&!a03_gpu_job_poisoned);
+  us=flushes=starts=offs=0;assert(blit(53,17)==1);
+ }
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''
