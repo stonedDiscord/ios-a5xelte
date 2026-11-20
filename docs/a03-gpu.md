@@ -407,3 +407,12 @@ implement panel blanking or display power-state handling, so iOS sleep may
 leave the last clock image visible. That remains a hypothesis pending a
 controlled Auto-Lock Never trial or direct display-power evidence. Do not
 simulate progress with periodic Home presses or repeated old-frame copies.
+
+
+BOOT0111 follow-up: specialized sixteen-pixel copies pass full readback but
+paired medians remain GPU4.100ms vs CPU1.462ms. It is not a speed improvement.
+0179 changes only the exact fullscreen shader to four pixels/thread,15x4
+threads and12x400 groups (128bytes,32regs,TLSWLS0). Neighboring lanes now
+copy contiguous16byte units. Generic4 fallback and all safety checks remain.
+Its SHA256 is c4f0ba76ccd62ed3f455b2dc9d02e85276a54251af66a1a6b39b97c5567d545b.
+Host reproduction/packers/lifecycle/ARM64/profile125 pass; hardware pending.

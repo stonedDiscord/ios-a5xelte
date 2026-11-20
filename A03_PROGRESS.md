@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0111 correctness PASS; four-pixel fullscreen follow-up0179
+
+BOOT0111 full720x1600 GPU copies: zero mismatches/done1/retired1. Eight
+initial verified copies plus paired test completed without fallback/quarantine.
+Three eight-copy rounds CPU1.462235/1.450115/1.623726ms; GPU4.100197/
+3.982745/4.152413ms. MediansCPU1.462235/GPU4.100197ms: no speedup.
+Current GPUOFF/powered0/verify1/cachedwarm1,42frames/18verified/completed42,
+fallback0/quarantine0. Touch firmware79104/load0/A55A, restart streamON.
+
+0179 keeps exact guard but changes fullscreen to four contiguous pixels per
+thread (15x4 threads,12x400groups). This removes the sixteen-pixel per-thread
+stride and extra64bit carry dependency instructions. Binary128bytes/32regs/
+TLSWLS0, SHAc4f0ba76ccd62ed3f455b2dc9d02e85276a54251af66a1a6b39b97c5567d545b.
+Generic masked four-pixel fallback unchanged. NativeMesa reproduction,
+primaryv9 packing/exactguards/actual lifecycleASanUBSan/ARM64GPUAMFI/profile125
+PASS. Needs fullCI and hardware comparison; no performance claim yet.
+Solecapture100435/session31617boot0111-special-live.log until~21:27UTC.
+
 ## 2026-11-20: fullscreen CI success; BOOT0111 trial
 
 CI44813460343 SUCCESS exact8c0fe7cd24e3042d40cd760a139aa31cf93ef55e.

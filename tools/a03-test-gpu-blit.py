@@ -114,8 +114,8 @@ static void fake_write(unsigned o,uint32_t v){
   uint32_t *job=(uint32_t *)((uint8_t *)allocation+0x4000);
   unsigned width=params[6],height=params[7],count=width*height;
   unsigned specialized=params[0]==0x04000000&&params[1]==0x05000000&&params[4]==3072&&params[5]==2880&&width==720&&height==1600;
-  unsigned local_x=specialized?15:16,pixels=specialized?16:4;
-  assert(job[8]==(specialized?0x80000c0e:0x80000c0f)&&job[10]==(specialized?3:(width+63)/64)&&job[11]==(height+3)/4);
+  unsigned local_x=specialized?15:16,pixels=4;
+  assert(job[8]==(specialized?0x80000c0e:0x80000c0f)&&job[10]==(specialized?12:(width+63)/64)&&job[11]==(height+3)/4);
   check_shader(specialized);
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
   unsigned copied=0;

@@ -1,3 +1,11 @@
+ACTIVE0111 hardwarefullreadbackPASS but medianGPU4.100197ms vsCPU1.462235ms.
+GPUOFFpowered0verify1cachedwarm1/42frames18verified0fallbackquarantine;
+touchON/FWload0A55A. Sole100435/session31617boot0111-special-live.log.
+0179four-pixelfullscreen128bytes/15x4/12x400 groups prepared to remove
+sixteenpixelstrideandcarry overhead; nativeMesa/primaryv9/actualASanUBSan/
+ARM64/profile125PASS. Needcommit/fullCI->exactartifacts/pack0112->BOOT-only
+->fourfullreadbacks->pairedCPUfast/physicalUI. Goalactive,nospeedupyet.
+
 ACTIVE0111fullscreen flashedBOOT-onlySUCCESS20:57UTC afterCI44813460343/
 8c0fe7c success/exactsixsources/RTCunchanged/reverse0178/checksum/SMP/
 actualsourceASanUBSanPASS. Kernel43b71b00...a2eefe/BOOT0a51a5cc...e0bfe4.

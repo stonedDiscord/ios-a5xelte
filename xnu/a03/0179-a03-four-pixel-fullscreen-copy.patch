@@ -1,0 +1,78 @@
+--- a/bsd/dev/a03_gpu_blit_layout.h
++++ b/bsd/dev/a03_gpu_blit_layout.h
+@@ -89,54 +89,22 @@
+     0x0000000000000000ULL,
+     0x0000000000000000ULL,
+ };
+-/* Exact full-screen shader SHA256 4fda1c5c52971205f7ad8510eda5ca96faa122ae8e399bdb8a6df29155a96cb6; 15x4 threads, sixteen pixels/thread. */
++/* Exact full-screen shader SHA256 c4f0ba76ccd62ed3f455b2dc9d02e85276a54251af66a1a6b39b97c5567d545b; 15x4 threads, four pixels/thread. */
+ static const uint64_t a03_g57_fullscreen_code[] = {
+-    0x00b4c00119c0c97cULL,
++    0x00b4c00111c0c97cULL,
+     0x0110c100000c00c0ULL,
+     0x00a0c100000a413dULL,
++    0x0110c10400000041ULL,
+     0x00a8c10000000041ULL,
+-    0x0110c20400000001ULL,
+-    0x0110c300000b40c0ULL,
+-    0x00a0c300000a437dULL,
+-    0x00a8c00000004043ULL,
+-    0x0110c30500000000ULL,
+-    0x0091c40000000002ULL,
+-    0x0091c500000000c0ULL,
+-    0x006084f838000044ULL,
+-    0x0091c80000000003ULL,
+-    0x0891c900000000c0ULL,
+-    0x0061440878000048ULL,
+-    0x0110c40400001001ULL,
+-    0x10f0c50400c00204ULL,
+-    0x006084f8b8000044ULL,
+-    0x0110c80500001000ULL,
+-    0x20f0c90400c00308ULL,
+-    0x0061440838000048ULL,
+-    0x0110c40400002001ULL,
+-    0x08f0c50400c00204ULL,
+-    0x006084f878000044ULL,
+-    0x0110c80500002000ULL,
+-    0x10f0c90400c00308ULL,
+-    0x00614408b8000048ULL,
+-    0x0110c10400003041ULL,
+-    0x00f0c20400c04201ULL,
+-    0x0091c40000000041ULL,
+-    0x2091c50000000042ULL,
+-    0x006084f838000044ULL,
+-    0x0110c00500003040ULL,
+-    0x08f0c10400c04300ULL,
+-    0x7861440878000040ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
+-    0x0000000000000000ULL,
++    0x0110c200000b40c0ULL,
++    0x00a0c200000a427dULL,
++    0x0110c20500000042ULL,
++    0x00a8c00000004042ULL,
++    0x0091c20000000041ULL,
++    0x0091c300000000c0ULL,
++    0x006082f838000042ULL,
++    0x0891c100000000c0ULL,
++    0x7861420878000040ULL,
+     0x0000000000000000ULL,
+     0x0000000000000000ULL,
+ };
+@@ -186,7 +154,7 @@
+     params[1]=A03_GPU_BLIT_DEST_VA+destination_offset;
+     params[4]=source_stride;params[5]=destination_stride;params[6]=width;params[7]=height;
+     if(!source_offset && !destination_offset && source_stride==3072 && destination_stride==2880 && width==720 && height==1600) {
+-        job[8]=0x80000c0eU;job[10]=3;job[11]=400;
++        job[8]=0x80000c0eU;job[10]=12;job[11]=400;
+         for(unsigned i=0;i<sizeof(a03_g57_fullscreen_code)/8;i++)code[i]=a03_g57_fullscreen_code[i];
+     }
+     return 1;
