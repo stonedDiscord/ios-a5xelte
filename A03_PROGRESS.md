@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: stock512MHz full CI active
+
+22:45UTC CI44831543349 in_progress exactce9bc57ce4f8e159a743183a2122181d8e20b2da.
+No duplicate/restart. Privategpu-rate-work/artifacts.py+pack0116.py pinexact
+run/sixsources/RTC/reverse0184/checksum/SMP. Needfullsuccess->actualDMA+
+ratehelperASan->BOOT-only0116->idleexplicit512/fourreadbacks/pairedCPUfast
+and384restore. Current0115GPUOFFpowered0/impldef0/tile4/verify1cachedwarm1/
+touchON. Sole118404/session97962until~23:07UTC; renewbeforeexpiryifCIwaiting.
+
 ## 2026-11-20: cache policy hardware PASS, no gain; stock512MHz candidate0184
 
 BOOT0115 impldef/cacheall/writealloc eachfourreadbacks+paired3rounds PASS,
