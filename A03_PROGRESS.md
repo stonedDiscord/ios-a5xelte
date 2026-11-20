@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: vector hardware PASS3.54ms; warmownershipcandidate0176
+
+BOOT0108actualswaps+replay4 eachfull1152000pixels/mismatches0/done1/
+retired1/verify1/PASS1. Fast8-copymean3.541731ms (execute1.680307ms),
+CPU1.405543ms. Vector improvescachedscalar6.170ms butCPUstillfaster.
+Power0.748230+shutdown0.579192ms dominate remainingfixedoverhead; mapping
+0.155346/cache0.288230/retire0.032653ms. No speedupoverCPUclaim.
+Current27GPUframes/31104000pixels/verified19/completed27/fallback0/
+quarantine0. GPUOFFverify1/cached1whileoptimizing. Physical42touch events
+precededstreamstop(valid14packet); explicitrestartconfirmsON.
+
+0176 explicitgpu blit warm/cold defaultcold keepscoresononlyafterowned
+cachedjob+cacheclean+ASretirement+successfulreadback/completion. Eachnext
+jobrechecksownership/rail/topology/faults; staleownershipquarantines.
+OFF/cold/uncached explicitlyshutdownownedcores/restoresoverride; uncertain
+DMA skips shutdown. No voltage/ratechange. HostASanUBSan warmreuse/
+off/cold/uncachedshutdown/quarantinerejection+ARM64GPUAMFI/profile122PASS.
+NeedfullCI->0109->warmcached4fullreadbacks->fastCPUtiming/physicalUI.
+Solecapture76088/session37152boot0108-vector-live.log. Goalactive.
+
 ## 2026-11-20: vector CI success; BOOT0108 trial
 
 CI44794488664 SUCCESS exact734646c9f2f438ccf0417b747600060288829c7f.

@@ -1,4 +1,11 @@
-ACTIVE0108vector flashedBOOT-onlySUCCESS after44794488664/734646c fullCI/
+ACTIVE0108vectorHARDWAREPASSfullpixels;fast3.542ms(execute1.680)vsCPU1.406.
+Power+off1.327msoverhead. GPU27/verified19/fallback0/quarantine0;leftGPUOFF/
+verify1/cached1. Touchstoppedvalid14after42events,restartONconfirmed.
+0176explicitwarmownership(defaultcold)prepared,ASanUBSan/ARM64/profile122
+PASS. NeedfullCI->0109->warmcached4fullreadbacks->fastCPU/physicalUI.
+Capture76088/session37152soleowner. Goalactive,nospeedupoverCPUyet.
+
+PREVIOUS0108vector flashedBOOT-onlySUCCESS after44794488664/734646c fullCI/
 exactsource/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel2f995b2b...25307e/
 BOOT2f656a8d...ec6983; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
 Solecapture76088/session37152boot0108-vector-live.log waitsCDC. Needclocks/

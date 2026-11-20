@@ -148,6 +148,7 @@ static void reset(unsigned m){
  for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
  mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=0;
  cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;
+ a03_gpu_blit_warm=a03_gpu_warm_ready=0;a03_gpu_warm_override=0;
  a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
  a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
  a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;a03_gpu_blit_verified=0;a03_gpu_blit_verify=1;a03_gpu_blit_completed=0;a03_gpu_blit_ns=0;
@@ -214,6 +215,26 @@ int main(void){
  for(unsigned i=0;i<4;i++){us=flushes=starts=offs=0;assert(blit(53,17)==1);}
  assert(a03_gpu_blit_verified==4);us=flushes=starts=offs=0;corrupt=1;
  a03_gpu_blit_control(6);expect_cached=0;assert(blit(53,17)==0);
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_control(7);
+ assert(blit(720,1600)==1&&a03_gpu_warm_ready&&!offs);
+ assert(bank[3][0x140/4]==1&&bank[3][0x150/4]==1&&bank[3][0x160/4]==1);
+ assert(!bank[3][0x2400/4]&&!bank[3][0x2404/4]);
+ us=flushes=starts=0;assert(blit(53,17)==1&&a03_gpu_warm_ready&&!offs);
+ a03_gpu_blit_control(0);assert(!a03_gpu_warm_ready&&offs==1&&!a03_gpu_blit_enabled);
+ assert(!bank[3][0x140/4]&&!bank[3][0x150/4]&&!bank[3][0x160/4]);
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_control(7);
+ assert(blit(53,17)==1);a03_gpu_blit_control(8);
+ assert(!a03_gpu_blit_warm&&!a03_gpu_warm_ready&&offs==1);
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_control(7);
+ assert(blit(53,17)==1);a03_gpu_blit_control(6);
+ assert(!a03_gpu_blit_cached&&!a03_gpu_warm_ready&&offs==1);
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_control(7);
+ assert(blit(53,17)==1);us=flushes=starts=0;cache_failure=1;
+ assert(blit(53,17)==-1&&a03_gpu_job_poisoned&&!offs);
+ unsigned before=writes;a03_gpu_blit_control(0);assert(writes==before);
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_control(7);
+ assert(blit(53,17)==1);bank[3][0x200/4]=1;
+ us=flushes=starts=0;assert(blit(53,17)==-1&&a03_gpu_job_poisoned&&!offs);
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''
