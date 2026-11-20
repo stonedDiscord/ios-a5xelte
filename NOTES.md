@@ -1,3 +1,11 @@
+ACTIVE21:54UTC CI44824395202/exact2dc47e3ed8171a73e85c91ba42b5eb6dfbe41771
+in_progress0182dispatchtiles. No duplicate. Privategpu-tiles-work/artifacts.py+
+pack0114.py pinexactrun/sixsources/RTC/reverse0182/checksum/SMP. Needfullsuccess
+->actualASan/pack0114->BOOT-only->fourreadbacks eachtile->pairedCPUfast.
+Current0113GPUOFFpowered0verify1cachedwarm1/29frames4verified0quarantine;
+touchON. Sole109705/session30146boot0113-quarter-live.loguntil~22:13UTC.
+Goalactive; 2.153msGPUvs1.580CPU,physicalUIpending.
+
 ACTIVEcandidate0182fullscreen dispatchtile4/8/16/32 (default4) prepared;
 nativev9packers/allpolicy actualASanUBSan/ARM64GPUAMFI/profile128/benchtestsPASS.
 Same shaderbytecode(globalIDs), genericfallback unchanged; tilechanges reset

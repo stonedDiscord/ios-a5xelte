@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: dispatch tile full CI active
+
+21:54UTC CI44824395202 in_progress exact2dc47e3ed8171a73e85c91ba42b5eb6dfbe41771.
+No duplicate/restart. Privategpu-tiles-work/artifacts.py+pack0114.py pinexact
+run/sixsources/RTC/reverse0182/checksum/SMP. NeedfullCI->BOOT-only0114->four
+readbacks for eachtile4/8/16/32 thenpairedtimings. Defaulttile4 unchanged.
+Current0113GPUOFFpowered0verify1cachedwarm1/29frames4verified0quarantine,
+touchON. Sole109705/session30146until~22:13UTC; renewbeforeexpiryifneeded.
+
 ## 2026-11-20: fullscreen dispatch occupancy candidate0182
 
 Continuation audit: previous turn made progress through BOOT0113 hardware,
