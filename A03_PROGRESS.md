@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 local /23:27UTC Nov20: native16K validation CI active
+
+CI44836868623 in_progress exacte8e3dee4d9ffa018199d2f6e975516606fbf9ce5.
+No duplicate/restart. Privategpu-map16-work/artifacts.py+pack0118.py pinexact
+run/sixsources/RTC/reverse0186/checksum/SMP. Needfullsuccess->actualASan/
+BOOT-only0118->fullreadbacks+pairedrates/mappingphasetimings->restore384.
+Current0117GPUOFFpowered0/384/verify1impldef0tile4cachedwarm1/touchON. Sole
+125084/session54578boot0117-clean-live.loguntil~23:49UTC;renewifneeded.
+
 ## 2026-11-21 local /23:26UTC Nov20: clean source HW PASS; native16K validation0186
 
 BOOT0117 sourceCleanPoC fullframepasses;384/512eachfourreadbacks+paired3rounds
