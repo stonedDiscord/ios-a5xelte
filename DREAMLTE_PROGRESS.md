@@ -1,5 +1,37 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0245 same-boot replug trace and data checks recovered — 2026-11-20
+
+User completed controlled replug. Host enumerates high-speed1209:0001
+as device088 at13:55:16local; interface192.168.7.1/24 present. Read-only
+retained console retrieval PASS:424,892bytes in private
+ci-44735061683/restart-replug-retained-console.log. EP0 checks,3/3ICMP
+request/reply exchanges,and163bytes identifiable XNU UDP5140 text PASS;
+see restart-replug-usb-check.log and restart-replug-live-console.log.
+Observer99471 completed before reconnect; its no-device result is superseded
+by the subsequent authoritative enumeration and transfers. No reboot/flash.
+
+Trace proves0245 initialU0 handler enabled PHYUTMI460->660 with successful
+readback before reset; RX_DET also executes its action. Nevertheless boot
+then connects full-speed1 and enters U3/suspend3,remaining there through five
+poll snapshots with DCTL80000000 and UTMI660. No wakeup captured. Replug
+produces high-speed0 connection,subsequent reset/high-speed reconnection,
+and configuration DCFG00080938. New link actions ran but did not fix this
+observed automatic-attachment failure. Final configuredUTMI660 reflects
+U0 re-enabling bit9 after high-speed conndone cleared it,as pinned Samsung
+source requests. Do not label readback failure or stopped controller.
+
+Next USB investigation: external MUIC routing versus DWC3 reconnect sequence.
+No live MUIC CONTROL1 measurement exists; historical Android80->89 remains
+only a lead. Pinned clock source additionally identifies BUSC+2108 reset-sync
+gate besides+2050/+201c/+2018; CG_VALbit21,MANUALbit20,automaticbit28.
+BUSC+120 mux busybit7/selectbit4;QCH+3020 enablebit0/requestbit1.
+Need source-backed clock/pin checks and bounded I2C read of CONTROL1 before
+assuming a route value or writing the switch. No I2C/route writes attempted.
+Keep installed0245/device088 live for the next authorized BOOT transition.
+VM stall near expansion remains separate and unresolved; the following
+comparison boot reached USB. Both original goal requirements remain open.
+
 ## 0245 comparison boot reaches USB suspend — 2026-11-20
 
 Following the requested comparison restart, user reports exact screen line:
