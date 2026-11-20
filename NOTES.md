@@ -11,8 +11,10 @@ Kernel SHA256:9078242d4ea830b64a9a729ca781e83b365532590a7e4368cd5ff8ea0ac8ac3f.
 BOOT shim/out/dreamlte-xnu-0245.img,18,466,832bytes,SHA256:
 5193e66b2d68c1b0fb5291891514341d3d425083d78c2d9d707957d95265e736.
 Live0244 USB Download transition PASS without buttons to device087.
-Heimdall BOOT-only upload100%,exit0,rebooted. Initial host check no XNU;
-read-only observer started. Physical checkpoint pending; preserve this boot
+Heimdall BOOT-only upload100%,exit0,rebooted;087disconnect13:40:07local.
+Host still sees no XNU/Samsung; journal ends at that disconnect. Requested
+exact physical last screen line before any restart/replug. Read-only USB
+observer8565 active. Physical checkpoint pending; preserve this boot
 before restart/replug. New event handling is hardware-unverified; no fix
 claimed for either automatic USB or sporadic VM stall. Private logs and
 manifest under ci-44735061683.
