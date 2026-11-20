@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: warm hardware PASS2.30ms; sixteen-pixel candidate0177
+
+BOOT0109RTC1795203422/status1795203436;clocksID90910010/cachedwarmON.
+FW79104/load0/A55A/touchrestartON. Actualswaps+replay4 full1152000pixels
+mismatches0/done1/retired1/verify1/PASS1. Warm1/powered1/verified6.
+Fast8mean2.296048ms vsCPU1.735884ms;lastpower0.040730/prepare0.265346/
+cache0.388769/execute1.572807/retire0.039653/shutdown0.001076ms.
+ExplicitGPUOFFconfirmspowered0/noquarantine;CPUmodeleft. Warmownership
+works butstillnospeedupoverCPU. GPU15frames/verified7/fallback0/quarantine0.
+
+0177sixteenpixels/threadfour128bitloads/stores plusboundedscalartails;
+full720x1600dispatch3x400groups.1920bytes32regsTLSWLS0/preloadR60R61,
+SHA498d013b19f1df298970a639929e3d1180974eb05fc5c5b602a763b6d331ad15.
+NativeMesa reproduction/primaryv9packers/ASanUBSan lifecycleandtailguards/
+ARM64GPUAMFI/profile123PASS. NeedfullCI->0110->cachedwarm4fullreadbacks
+->fastCPUcomparison/physicalUIacceptance. Current0109GPUOFFverify1/warm1
+powered0/cached1/touchON. Solecapture81787/session58307.
+
 ## 2026-11-20: retained-power CI success; BOOT0109 trial
 
 CI44801549767 SUCCESS exact6948d5ead5fe0dce4d2594ea56e4af96a5b7911e.

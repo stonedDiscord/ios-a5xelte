@@ -1,4 +1,11 @@
-ACTIVE0109warm flashedBOOT-onlySUCCESS after44801549767/6948d5e fullCI/
+ACTIVE0109warmHARDWAREPASSfullpixels;fast2.296msvsCPU1.736. Warm1powered1
+duringcopies,explicitOFFpowered0PASS/noquarantine. GPU15/verified7/fallback0.
+LeftGPUOFFverify1/cached1/warm1powered0/touchON. Solecapture81787/58307.
+0177sixteenpixels/thread1920bytes32regsTLS0 nativeMesa/v9/ASanUBSan/ARM64/
+profile123PASS. NeedfullCI->0110->cachedwarm4readbacks->fastCPU/physicalUI.
+Goalactive,nospeedupoverCPUclaim.
+
+PREVIOUS0109warm flashedBOOT-onlySUCCESS after44801549767/6948d5e fullCI/
 exactsource/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel8914aba6...eac43f/
 BOOT387e4bd0...5e64a1; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
 Solecapture81787/session58307boot0109-warm-live.log waitsCDC. Needclocks/

@@ -178,7 +178,8 @@ def main():
                      '0173-a03-gpu-copy-phase-timings.patch',
                      '0174-a03-explicit-cached-framebuffer-policy.patch',
                      '0175-a03-vectorized-four-pixel-copy.patch',
-                     '0176-a03-explicit-warm-gpu-ownership.patch'):
+                     '0176-a03-explicit-warm-gpu-ownership.patch',
+                     '0177-a03-sixteen-pixel-vector-copy.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
