@@ -2,6 +2,21 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0240 verified and BOOT flashed; screen evidence pending — 2026-11-20
+
+Exact CI44695365296 SUCCESS at7ba1affe64c3141e9fca8bf18f4ae9eb614fae40.
+12 source files,11 linked symbols,84 diagnostics and profile PASS.
+Kernel SHA256:71d37b4134b68accedaded112e116a918eaffe00dca59fc9e2dcf2e6f1a488e3.
+BOOT shim/out/dreamlte-xnu-0240.img,18,466,832 bytes,SHA256:
+004d71e12d5720d5577508c9e4ebfebcc5a86635d15e15ea5ef5997b88c81126.
+Original BOOT header/components,payload and partition fit verified.
+Heimdall used Download Mode077,wrote only BOOT100%,exit0 and rebooted.
+First25second host observation sees no XNU/Samsung USB or ECM interface;
+journal ends with077 disconnect at08:47:20 local. Exact last screen line
+requested; do not restart/replug before this observation.0240 installed.
+New checkpoints are diagnostic only. VM reliability and normal-reboot
+USB attachment remain unresolved. No live build/preparation/flash remains.
+
 ## 0240 page-array pmap diagnostics prepared — 2026-11-20
 
 CI44695365296 dispatched at7ba1affe64c3141e9fca8bf18f4ae9eb614fae40.
