@@ -1,3 +1,12 @@
+ACTIVE0111fullscreen flashedBOOT-onlySUCCESS20:57UTC afterCI44813460343/
+8c0fe7c success/exactsixsources/RTCunchanged/reverse0178/checksum/SMP/
+actualsourceASanUBSanPASS. Kernel43b71b00...a2eefe/BOOT0a51a5cc...e0bfe4.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. NEWsolecapture/session31617
+boot0111-special-live.log waitsCDC. Needclocks/cachedwarm/GPUONverify1/
+FWload/touchON->fourfullreadbacks->pairedCPUfast->physicalUI. Nospeedclaim.
+0110CPU continued46854+ afterHome BUTPosterBoardcrashloop, so submissions
+arenotphysicalUIhealthproof. Sleep hypothesis remains; Auto-Lockreplypending.
+
 ACTIVE20:55UTC CI44813460343/8c0fe7cd24e3042d40cd760a139aa31cf93ef55e
 still Build; live20:53:58bsd/skywalk compilation. No duplicate/restart.
 NEWsolecapture99894/session67407boot0110-specialwait-live.loguntil~21:24UTC;

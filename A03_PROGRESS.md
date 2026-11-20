@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: fullscreen CI success; BOOT0111 trial
+
+CI44813460343 SUCCESS exact8c0fe7cd24e3042d40cd760a139aa31cf93ef55e.
+SixGPU/replay sources exact tested match; RTC sources unchanged. Reverse0178,
+checksums/SMP/actualsource lifecycle+replay ASanUBSan PASS.
+KernelSHA25643b71b0051688134e59a4e659c018095b212b5a3796a4f682f65b4f2d7a2eefe.
+BOOT0111SHA2560a51a5cca00d5461f17b11da445fd8a4646f47fee10ae74b612ca22664e0bfe4.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. Synced Download, Heimdall
+lowercaseboot uploadsuccess/reboot20:57UTC. Nootherpartitionflashed.
+Sole capture session31617 boot0111-special-live.log waitsCDC. Needclocks/
+cachedwarm/GPUONverify1/FWload/touchON->4fullreadbacks->pairedCPUfast.
+
+Important idle follow-up: CPU submissions continued46854+ after Home while
+GPUOFF, but PosterBoard repeatedly crashes and respawns. Frame progression
+alone is not healthy physicalUI proof. Sleep may explain initial stopped
+submissions; do not claim all apparent freezes are sleep or rootcause fixed.
+
 ## 2026-11-20: fullscreen CI building; capture renewed
 
 20:55UTC CI44813460343 exact8c0fe7c still Build/in_progress. Live log
