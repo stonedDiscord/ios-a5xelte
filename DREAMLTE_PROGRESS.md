@@ -1,5 +1,13 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0242 exact diagnostic CI dispatched — 2026-11-20
+
+CI44711756509 dispatched at583266032fdd7e97effb14e4904302ed671a4078.
+Private prepare-0242.py waits exact run/head,verifies and packages;never
+flashes.0241/device080 remains live; preserve connection for USB Download
+Mode when the next verified image is ready. User confirms0241 enumeration followed a cable replug; automatic USB
+attachment remains broken. No new reboot/flash this step.
+
 ## 0241 repeats1280 stop; restart retained console recovered — 2026-11-20
 
 User reports the same last line again,verbatim:
