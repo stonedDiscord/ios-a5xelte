@@ -1,3 +1,10 @@
+ACTIVE0117cleanBOOT-onlyflashSUCCESS23:18UTCNov20 CI44834205541/0aeb872 success/
+sixsources/RTC/reverse0185/checksum/SMP/actualDMA+rate+replayASanPASS.
+Kernel3262a1d4...0b3e2c/BOOTba7c925d...89231e; same8cores1984MiB/ADT0094/cmd599.
+NEWsolecapture/session54578boot0117-clean-live.logwaitsCDC. Needclocks/cachedwarm/
+FWload/touchON/acceptedframe->GPUOFF->ratebenchmark384/512/fourreadbacks+paired
+->384restore/physicalUI. Goalactive; no0185hardwareclaimyet.
+
 ACTIVE23:06UTCNov20 CI44834205541/exact0aeb87285006e112783b5e47bd01e81ef2344591
 in_progress0185sourceCleanPoC. No duplicate. Privategpu-clean-work/artifacts.py+
 pack0117.py pinexactrun/sixsources/RTC/reverse0185/checksum/SMP. Needfullsuccess
