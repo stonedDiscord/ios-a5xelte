@@ -1,5 +1,28 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: boot-time clock reset measured; retained RTC candidate0171
+
+User requires correct time at boot without USB. Fresh single-owner capture
+clock-20261120.log tx1 measured UTC553 (January1970), not merely a timezone
+offset. Explicit tx2 corrected calendar to1795188867=2026-11-20 15:34:27UTC;
+this was volatile only and does NOT satisfy autonomous boot-time setting.
+No USB auto-sync feature added. No reboot/flash/partition write yet.
+
+0171 wires PEGetUTCTimeOfDay to the SC2730 retained RTC at ADI64200000,
+slavewindow20000/RTC200 from live DT and stock rtc-sc27xx/spi-sprd-adi.
+Independent of console bootarg, USB connection, userspace and host clock.
+Only ADI bus clock/read-command transactions; no PMIC time/alarm/reset or
+storage writes. Shared ADI ownership; bounded double-snapshot consistency,
+power-reset marker rejection, field/date bounds; no fabricated fallback date.
+Actual source ASan/UBSan tests PASS (rollover, reset, maps/read failures,
+ownership,2020..2099); USB C exactCIflagsARM64 compilePASS. Platform C++
+local compile blocked by known Apple typed-allocation builtins; fullCI
+required. Hardware retained date/bootwithoutUSB still UNVERIFIED.
+
+Replay CI44632519909 succeeded exact7e4ea5b; no0103 deployed here. Current
+boot has reset since prior notes; do not assume old capture/touch/GPUstate.
+Clock capture started with host access session8921 for600seconds.
+
 ## 2026-11-19: ten actual2D GPUframes; replayCI44632519909 active
 
 BOOT0102frames10/pixels11520000/verified10/completed10/fallback0/quarantine0.

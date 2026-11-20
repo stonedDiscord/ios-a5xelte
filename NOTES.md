@@ -1,4 +1,13 @@
-ACTIVECI44632519909 exact7e4ea5b replay0170 queued. Privateexactartifact/
+ACTIVE2026-11-20 clock task: user requires boot-time UTC WITHOUT USB.
+Measured UTC553/January1970 at tx1; volatile tx2 host correction1795188867
+only a temporary repair.0171 retainedSC2730 RTC ->PEGetUTCTimeOfDay prepared,
+independentofconsole/cable. Read-onlyPMIC/noRTCset/alarm/storagewrites.
+ActualASanUBSan/ARM64USBcompilePASS; fullXcode/hardwaregatepending.
+NeedfullCI->BOOT-only->retainedRTCUTC beforeanyhostsync->cablefreeboot.
+IfretainedRTCinvalid, do not claim fixed or inventdate; measureandreassess.
+Currentboothasreset; staleGPU/touch/capturestatebelowisnotcurrentevidence.
+
+PREVIOUSCI44632519909 exact7e4ea5b replay0170 nowSUCCESS. Privateexactartifact/
 sourceverifier/pack0103ready. BOOT0102now10real2DGPUframes/11520000pixels,
 verified10/completed10/fallback0/quarantine0; touchON985slices27physicalevents.
 NeedreplayCI->0103->CPU/fast/verify sameframe measurement. Physicalacceptance

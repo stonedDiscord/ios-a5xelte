@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G bring-up
 
+2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host
+sync repairs only the running calendar. User requires autonomous time on
+boot without USB. Candidate0171 connects XNU PEGetUTCTimeOfDay directly to
+retained SC2730 RTC via the existing serialized ADI transport, independent
+of console enable/cable/userspace. It performs no RTC/alarm/reset writes.
+Bounded consistent snapshots and reset/date validation pass host tests;
+full Xcode build and hardware/cable-free reboot validation remain pending.
+Do not treat volatile USB sync or host tests as proof of this fix.
+
 2026-11-18 BOOT0094 hardware follow-up supersedes candidate status below:
 fullCI44398834193 succeeded; BOOT-only flash succeeded. Policyrequested1
 and all8 init/SGI verified; first measured interval puts90.7percent of busy

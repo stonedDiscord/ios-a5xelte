@@ -1,0 +1,73 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -181,9 +181,49 @@
+  __sync_lock_release(&adi_runtime_busy);
+  return ok;
+ }
++/* SC2730 retained UTC, using the live SM-A035G DT and stock rtc-sc27xx
++ * register layout. No RTC, alarm, reset or PMIC configuration writes.
++ * Caller holds the shared ADI lock. Read commands use existing adi_read. */
++static int
++a03_rtc_snapshot(uint64_t *utc)
++{
++ uint32_t power, after, sec, min, hour, day;
++ uint64_t previous = 0;
++ int have_previous = 0;
++ for (unsigned attempt = 0; attempt < 4; attempt++) {
++  if (!adi_read(0x25c, &power) || power == 0x96 ||
++      !adi_read(0x20c, &day) || !adi_read(0x208, &hour) ||
++      !adi_read(0x204, &min) || !adi_read(0x200, &sec) ||
++      !adi_read(0x25c, &after) || power != after) return 0;
++  /* Reject corrupt/reserved bits rather than mask them into a date. */
++  if (sec > 59 || min > 59 || hour > 23 || day > 65535) return 0;
++  uint64_t value = (((uint64_t)day * 24 + hour) * 60 + min) * 60 + sec;
++  if (value < 1577836800ULL || value > 4102444799ULL) return 0;
++  /* Two identical complete samples reject mixed fields during rollover. */
++  if (have_previous && previous == value) { *utc = value; return 1; }
++  previous = value; have_previous = 1;
++ }
++ return 0;
++}
++
++/* Retained time is independent of console enable and cable presence. */
++int a03_rtc_get_utc(uint64_t *);
++int a03_rtc_get_utc(uint64_t *utc) {
++ if (!utc || !__sync_bool_compare_and_swap(&adi_runtime_busy, 0, 1)) return 0;
++ int ok = 0;
++ vm_offset_t aon = ml_io_map(0x64000000, 0x1000);
++ if (aon) {
++  /* ADI_EB only; no PHY, pinmux, reset or PMIC writes. */
++  update(aon, 0x008, 0, 1u << 9);
++  if (!adi) adi = ml_io_map(0x64200000, 0x40000);
++  if (adi) ok = a03_rtc_snapshot(utc);
++ }
++ __sync_lock_release(&adi_runtime_busy);
++ return ok;
++}
+ static int usb_supply(void) {
+  uint32_t pd,vol,after_pd,after_vol;
+- adi=ml_io_map(0x64200000,0x40000);
++ if (!adi) adi=ml_io_map(0x64200000,0x40000);
+  if(!adi || !adi_read(0x19e8,&pd) || !adi_read(0x19ec,&vol))return 0;
+  printf("A03 USB supply: before pd=%04x vol=%04x\n",pd,vol);
+  /* SC2730: 1.2V + selector*10mV. Board DT requests 3.3V = 210. */
+--- a/iokit/Kernel/IOPlatformExpert.cpp
++++ b/iokit/Kernel/IOPlatformExpert.cpp
+@@ -1360,6 +1360,17 @@
+ void
+ PEGetUTCTimeOfDay(clock_sec_t * secs, clock_usec_t * usecs)
+ {
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++ uint64_t utc;
++ extern int a03_rtc_get_utc(uint64_t *);
++ if (a03_rtc_get_utc(&utc)) {
++  *secs = (clock_sec_t)utc; *usecs = 0;
++  kprintf("A03 RTC: retained UTC=%llu; no USB required\n", (unsigned long long)utc);
++  return;
++ }
++ kprintf("A03 RTC: retained UTC unavailable; no fabricated date\n");
++#endif
++
+ 	clock_nsec_t    nsecs = 0;
+ 
+ 	*secs = 0;
