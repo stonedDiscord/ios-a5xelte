@@ -1,5 +1,16 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0245 host observation completed; physical checkpoint pending — 2026-11-20
+
+Read-only observer8565 completed (exit0); its final private log records no
+USB devices. Fresh lsusb/interface/kernel-journal checks still find no S8;
+last phone event remains Download device087 disconnect13:40:07local.
+User says “ok its back in”; this does not establish enumeration, current
+screen checkpoint, or which physical action occurred. Requested exact last
+screen line and clarification of cable reconnect, keeping this boot running.
+Do not infer a VM stall or successful USB event handling without that evidence.
+Neither automatic attachment nor sporadic VM startup reliability is fixed.
+
 ## 0245 verified and BOOT flashed — 2026-11-20
 
 CI44735061683 SUCCESS at f7240e63a858b8c302f369a12373c7e277998a3c.
@@ -12,7 +23,7 @@ Live0244 USB Download transition PASS without buttons to device087.
 Heimdall BOOT-only upload100%,exit0,rebooted;087disconnect13:40:07local.
 Host still sees no XNU/Samsung; journal ends at that disconnect. Requested
 exact physical last screen line before any restart/replug. Read-only USB
-observer8565 active. Physical checkpoint pending; preserve this boot
+observer8565 completed without enumeration (see newer entry). Preserve this boot
 before restart/replug. New event handling is hardware-unverified; no fix
 claimed for either automatic USB or sporadic VM stall. Private logs and
 manifest under ci-44735061683.
