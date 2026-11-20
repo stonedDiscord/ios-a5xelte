@@ -3,6 +3,16 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0242 host follow-up; preserve current screen evidence — 2026-11-20
+
+Host recheck still finds no XNU1209:0001 or Samsung04e8:685d. Port3
+journal ends at device081 disconnect10:52:07local. Preparation and flash
+processes are terminal; no build or transfer remains to wait on. No new
+reset,replug or partition write. Last screen checkpoint remains pending;
+without it,VM failure and USB attachment failure cannot be distinguished.
+Preserve installed0242 and this boot until that observation arrives. Both
+reliability requirements remain unresolved.
+
 ## 0242 verified and BOOT flashed; screen checkpoint pending — 2026-11-20
 
 Exact CI44711756509 SUCCESS at583266032fdd7e97effb14e4904302ed671a4078.
