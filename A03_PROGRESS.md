@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: paired replay baseline; wider CI still active
+
+New tools/a03-gpu-paired-benchmark.py alternatesCPU/fast acrossrounds,
+requiresexactreplaycount, nofallback/quarantine/mixedmode/warmup, restored
+modeandstablecache/powerpolicy. HostrejectiontestsPASS;commit26a89f1.
+Actual0109three8-copyrounds: CPU1.871149/1.608086/1.612682ms;
+GPU2.327408/2.323322/2.899240ms. MedianCPU1.612682/GPU2.327408ms;
+GPUdoesnotyetbeatCPU. GPU39frames/verified7/completed39/fallback0/
+quarantine0, GPUOFFpowered0verify1restored. TouchON7020slices1096events.
+20:13UTC CI44804438707 stillBuild/in_progress;watch43210/job136524622008
+confirmedactive, logsBlobNotFound. Do notduplicate. Same0110nextgate.
+
 ## 2026-11-20: wider-copy build remains live; capture handoff
 
 20:04UTC CI44804438707/exact01e7de1474faf02b8e3c9ee6f9b02c9069929752

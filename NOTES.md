@@ -1,4 +1,10 @@
 ACTIVE20:04UTCwideCI44804438707/01e7de1stillBuild(job136524622008);
+UPDATE20:13sameCIstillBuild/watch43210/logsBlobNotFound. Newpairedhelper
+26a89f1hosttestsPASS;actual0109CPUmedian1.612682ms/GPU2.327408msacross
+three8-copyrounds. GPU39/verified7/fallback0/quarantine0;GPUOFFpowered0/
+verify1/cachedwarm1/touchON7020slices1096eventsrestored. Goalnotcomplete.
+
+PREVIOUS20:04UTCwideCI44804438707/01e7de1stillBuild(job136524622008);
 watch43210. LogsBlobNotFoundNOTjobfailure. Waitsamejob,no duplicate.
 NEWsolecapture91908/session21336boot0109-widewait-live.loguntil~20:34UTC;
 old81787deliberatelystopped. GPUOFFpowered0verify1/cachedwarm1/touchON.
