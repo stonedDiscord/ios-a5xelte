@@ -1,4 +1,11 @@
 ACTIVE0109warmHARDWAREPASSfullpixels;fast2.296msvsCPU1.736. Warm1powered1
+NEWwideCI44804438707 exact01e7de1474faf02b8e3c9ee6f9b02c9069929752
+active/watch43210;privategpu-wide-work/artifacts.py+pack0110.py pinexact
+sources/RTC/SHA/run. NeedfullCI->0110->cachedwarm4fullreadbacks->fastCPU.
+0109leftGPUOFFpowered0verify1/cached1/warm1/touchON676slices15events.
+Capture81787/session58307soleowneruntil~20:06UTC;revalidatebeforeuse.
+
+PREVIOUS0109warmHARDWAREPASSfullpixels;fast2.296msvsCPU1.736. Warm1powered1
 duringcopies,explicitOFFpowered0PASS/noquarantine. GPU15/verified7/fallback0.
 LeftGPUOFFverify1/cached1/warm1powered0/touchON. Solecapture81787/58307.
 0177sixteenpixels/thread1920bytes32regsTLS0 nativeMesa/v9/ASanUBSan/ARM64/
