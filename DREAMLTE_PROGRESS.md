@@ -1,5 +1,32 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0247 passive gate correction prepared; 0246 restart trace recovered — 2026-11-20
+
+0246 first boot recovered after replug as device090:425057 retained bytes,
+EP0,3/3ping and163bytes identifiable XNU UDP PASS. Normal USB reboot was
+acknowledged;090disconnected14:31:49local. User reported
+`DREAMLTE USB ATTACH: type=3 link=3 info=0003`; requested same-boot replug
+completed. Device091 now enumerates;425177 retained bytes recovered in
+ci-44741740589/normal-replug-retained-console.log. EP0,3/3ping,163bytes
+XNU UDP PASS (normal-replug-usb-check.log,normal-replug-live-console.log).
+Both boots completed page-array mapping; neither exercised expansion markers.
+Normal restart trace: initialU0/reset/full-speed1/RX_DET5/U3suspend3,three
+suspended polls with DCTL80000000,UTMI660,then replug high-speed0/config.
+Automatic attachment and sporadic VM startup stalls remain unresolved.
+
+Both traces capture BUS10,PCLK/SCLK/GPIO/SYNC00200000,QCH003f0003.
+Pinned Samsung3cfb914 cal-if/ra.c ra_get_gate uses CG_VAL when MANUAL=1,
+otherwise !ENABLE_AUTOMATIC_CLKGATING. Thus00200000 is enabled;0246's
+manual-only predicate was overly strict,not evidence of an off/unstable clock.
+0247 accepts CG_VAL21=1 with MANUAL20=1 or AUTOMATIC28=0; rejectsffffffff.
+Keeps all stable-bus/mapping guards and passive configuration-only reads;
+no clock/pin/controller writes or I2C traffic. Refusal wording corrected.
+Actual helper23328cases PASS across every gate-bit combination/invalid/busy/
+unmapped banks; five USB suites PASS; ARM64 syntax+real object PASS.
+Plain git apply to exact0246 reproduces source;all12hashes PASS;168patches.
+Device091 remains live for authorized USB Download transition after exact
+CI verification and original-header packaging. No0247 flash yet.
+
 ## 0246 passive probe refusal observed on screen — 2026-11-20
 
 User exact screen report:

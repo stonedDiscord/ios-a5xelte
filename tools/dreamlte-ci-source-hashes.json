@@ -1,10 +1,10 @@
 {
-  "description": "DREAMLTE0246 observes correct PERIC1 USI13 MUIC access prerequisites without I2C traffic; scopes expansion checkpoints to page-array mapping.",
+  "description": "DREAMLTE0247 recognizes Samsung manual and automatic held-on gate semantics in passive MUIC preflight; no clock writes or I2C traffic.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "5a3ac225e765c532d1fa749c4c268ab8e04e1922842cea9d32b39f6f18bc9554",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "6bf49e9a7c4534ebea12c15e45f003e9556c305382967b223d2edd7c29c104a1",
+    "bsd/dev/sweet_usb.c": "fdae685249462938d594a7ba94ea03e44ed112c3c07aa8a35ebf3b56cf46f665",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
@@ -110,7 +110,7 @@
     "DREAMLTE USB: link DP pullup readback failed",
     "DREAMLTE USB: wakeup DP pullup readback failed",
     "DREAMLTE MUIC %s: BUS=%08x PCLK=%08x SCLK=%08x GPIO=%08x QCH=%08x SYNC=%08x",
-    "DREAMLTE MUIC: bus not held stable/on; peripheral banks not read",
+    "DREAMLTE MUIC: bus preflight refused; peripheral banks not read",
     "DREAMLTE MUIC %s: GPE5 CON=%08x DAT=%08x PUD=%08x",
     "DREAMLTE MUIC: GPIO gate not held on; pins not read",
     "DREAMLTE MUIC %s: CTL=%08x CONF=%08x AUTO=%08x ADDR=%08x",
