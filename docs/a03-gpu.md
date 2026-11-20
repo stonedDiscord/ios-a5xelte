@@ -1,5 +1,43 @@
 # A03 GPU acceleration bring-up
 
+## Cached hardware checkpoint and remaining work
+
+BOOT0107 from CI44791438428 (7e56be7) passes repeated full-frame pixel
+readback with cached GPU mappings and explicit clean/invalidate completion.
+The eight-copy fast mean is 6.170 ms, versus 142.160 ms with uncached
+mappings on BOOT0106. CPU replay copies still take 1.673 ms. This proves
+a large improvement to the GPU path; it does not yet prove acceleration
+over the CPU backend or sustained physical UI reliability.
+
+Phase measurements place about 137 ms of the uncached path in execution,
+with CPU cache maintenance, page-table preparation and power transitions
+each below 1 ms. Cached execution falls to about 4.277 ms; total copy
+latency still includes mapping, power-up/shutdown and completion.
+Full CPU pixel verification is a separate, expensive bring-up check.
+
+The explicit `gpu blit cached` / `gpu blit uncached` policy defaults to
+uncached and resets four-frame pixel qualification when changed. Cached
+descriptor, code and pixel mappings use the pinned vendor's AttrIndex0;
+page-table walks use writeback/read-allocate policy. Source CPU flushing
+is preserved. After slot retirement, a fresh GPU clean-and-invalidate
+completion is mandatory before readback, AS disable, CPU fallback or core
+shutdown. A timeout, stale completion, reset or fault quarantines retained
+memory and the IOSurface. Host tests hide dirty GPU writes until completion.
+
+Candidate0175 copies four pixels per thread using native 128-bit loads and
+stores, with exact bounds and scalar tails. The pinned Mesa compiler
+reproduces its 640-byte binary, 32 registers, no TLS/WLS and X/Y preloads.
+Primary v9 descriptor checks and source lifecycle tests cover offsets,
+all tail lengths across group boundaries, noncontiguous pages and cache
+failure quarantine. CI44794488664 builds 734646c; hardware validation is
+still required. The running phone is left in CPU-copy mode while building.
+
+A stale clock on BOOT0106 was a stopped display image: kernel UTC matched
+the host. GPU OFF plus one Home press resumed thousands of CPU frame
+copies, and the user confirmed the clock updated. Later physical input
+resumed CPU frames after idle without another Home. This combined wake
+does not isolate the cause or establish a permanent freeze fix.
+
 ## Current measurement, 2026-11-20
 
 BOOT0104 includes the bounded accepted-compositor-frame replay command.
