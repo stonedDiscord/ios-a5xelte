@@ -1,5 +1,17 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0243 reaches USB poller; host enumeration absent — 2026-11-20
+
+User reports no raw/locked fields on screen,then gives exact last line:
+`SWEET USB: ue0 rx 0 tx 0 frames`. This establishes that this0243 boot
+passed VM startup and reached the USB polling loop; the current failure is
+not the earlier pre-USB PVH checkpoint. It does not establish repeated VM
+reliability. Host recheck still finds no XNU/Samsung device and no new USB
+journal entry after083 disconnect11:22:26local,despite preceding user replug.
+Requested a controlled five-second unplug/reconnect without restarting and
+any new physical USB event/reset/connected lines. Retained log retrieval
+requires enumeration. No host reset,flash or partition write performed.
+
 ## 0243 user replug; host still absent — 2026-11-20
 
 User reports cable replug. Host lsusb still sees neither XNU1209:0001 nor
