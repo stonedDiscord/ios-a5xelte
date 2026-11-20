@@ -1,5 +1,28 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: measured GPU slowdown; tiled dispatch candidate0172
+
+BOOT0104 fresh single-owner boot0104-gpu-resume.log confirms GPU initially
+OFF, 35 CPU copies, healthy storage. Explicit clocks reads ID90910010,
+then blitON and four accepted-frame replays each pass all1152000 pixels,
+done1/retired1/mismatches0. Eight-copy replay measurements: fast GPU
+139.005807ms/copy, CPU1.665466ms/copy, verified GPU211.629668ms/copy.
+No fallback/quarantine. These are synchronous copy timings including
+scheduling/cache/power overhead, not FPS or physical animation proof.
+Current GPU path is substantially slower; acceleration goal remains active.
+
+Candidate0172 replaces1152000 one-thread workgroups with18000 groups of
+16x4 threads for720x1600. Native Mesa24.3 shader masks padded X/Y lanes
+against exact width/height, including clipped rectangles.256bytes/32regs/
+TLSWLS0/preloadR60R61; SHA03409e893339415bbdbe0bc83449712e009f783866bc5c0986c9137ccfb73e0b.
+Primary v9 descriptor byte comparison with assertions explicitly enabled,
+actual lifecycle ASanUBSan (strided/offset/noncontiguous/fault/quarantine),
+actual BSD ARM64 flags and118-patch profile stage PASS. FullCI and hardware
+correctness/performance remain required; no tiled hardware claim yet.
+Private79104byte touchFW re-staged/load0/A55A; first stream stopped on
+startup packet, restart confirms streaming1/slices1. No Home/reboot/flash.
+
+
 ## 2026-11-20: BOOT0104 initializes UTC from the hardware RTC
 
 Full CI44765816216 passed at 44d482d49f951cd782f1c4f454ebeb645b0030a8.

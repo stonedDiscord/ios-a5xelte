@@ -90,7 +90,9 @@ static void fake_write(unsigned o,uint32_t v){
   if(mode==4||mode==6){bank[3][0x18e0/4]=1;bank[3][0x1010/4]=2;return;}
   if(mode==5){bank[3][0x1000/4]=0x20000;bank[3][0x2000/4]=1;return;}
   uint32_t *params=(uint32_t *)((uint8_t *)allocation+0x4200);
-  unsigned width=((uint32_t *)((uint8_t *)allocation+0x4000))[10],height=((uint32_t *)((uint8_t *)allocation+0x4000))[11],count=width*height;
+  uint32_t *job=(uint32_t *)((uint8_t *)allocation+0x4000);
+  unsigned width=params[6],height=params[7],count=width*height;
+  assert(job[8]==0x80000c0f&&job[10]==(width+15)/16&&job[11]==(height+3)/4);
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
   for(unsigned i=0;i<count;i++){
    unsigned y=i/width,x=i%width;

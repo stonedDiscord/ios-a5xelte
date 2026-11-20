@@ -1,4 +1,14 @@
-ACTIVE BOOT0104 passed CI44765816216 and flashed to `boot`. XNU read the
+ACTIVE GPU2026-11-20: BOOT0104 replay4 full1152000pixelsPASS. First real
+same-frame benchmark8copies: fast139.006ms, CPU1.665ms, verify211.630ms.
+No fallback/quarantine; current GPU is slower, goal NOT complete.0172
+16x4 bounded tiled shader prepared (18000groups vs1152000); nativeMesa/
+v9packers(assertionsON)/ASanUBSan/ARM64/profile118PASS. NeedfullCI->exact
+source/artifact->0105BOOT-only->4fullreadbacks->repeatedCPU/fast/verify
+measurement->physicalUIacceptance. Capture91083 ownsboot0104-gpu-resume.log
+1800seconds from~17:30UTC; revalidate before using. TouchFWload0/A55A,
+restartstreamON verified. GPUON/verify1 restored. NoHome/reboot/flash.
+
+PREVIOUS BOOT0104 passed CI44765816216 and flashed to `boot`. XNU read the
 SC2730 UTC1795195136 before USB setup. First read-only status1795195137.
 No host time correction on 0104. Capture30364 boot0104-rtc-verified.log.
 User unplugged restart and physical display confirmation pending.

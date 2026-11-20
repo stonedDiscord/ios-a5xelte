@@ -17,7 +17,13 @@ int main(void){
  void *m=aligned_alloc(0x4000,A03_GPU_BLIT_SIZE);assert(m);
  assert(a03_gpu_blit_layout(m,0x120000000ULL,124,2884,3072,2880,720,1598));
  uint64_t *q=m;uint32_t *j=(uint32_t *)((char *)m+0x4000),*p=(uint32_t *)((char *)m+0x4200);
- assert(j[4]==0x10008&&j[10]==720&&j[11]==1598&&p[0]==0x400007c&&p[1]==0x5000b44&&p[4]==3072&&p[5]==2880&&p[6]==720);
+ assert(j[4]==0x10008&&j[8]==0x80000c0f&&j[10]==45&&j[11]==400&&p[0]==0x400007c&&p[1]==0x5000b44&&p[4]==3072&&p[5]==2880&&p[6]==720&&p[7]==1598);
+ /* Ceil dispatch and exact shader bounds for every width and sampled heights. */
+ for(unsigned w=1;w<=720;w++)for(unsigned h=1;h<=1600;h+=17){
+  assert(a03_gpu_blit_layout(m,0x120000000ULL,0,0,3072,2880,w,h));
+  assert(j[10]==(w+15)/16&&j[11]==(h+3)/4&&p[6]==w&&p[7]==h);
+ }
+ assert(a03_gpu_blit_layout(m,0x120000000ULL,124,2884,3072,2880,720,1598));
  assert(q[0x3000/8+2]==2&&q[0x3000/8+3]==2);
  for(unsigned i=0;i<4;i++){assert(q[0x2000/8+32+i]==(0x120008000ULL+i*4096+0x403));assert(q[0x2000/8+40+i]==(0x12000c000ULL+i*4096+0x403));}
  for(unsigned i=0x8000/8;i<0x10000/8;i++)assert(q[i]==2);
@@ -51,5 +57,6 @@ with tempfile.TemporaryDirectory(prefix='a03-blit-layout-') as temp:
   tree=ast.parse(primary)
   fixture=next(n.args[0].value for n in ast.walk(tree) if isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr=='write_text' and n.args and isinstance(n.args[0],ast.Constant) and isinstance(n.args[0].value,str) and 'MALI_COMPUTE_PAYLOAD p=' in n.args[0].value)
   fixture=fixture.replace('a03-gpu-copy-layout.h','a03-gpu-blit-layout.h').replace('a03_gpu_copy_layout(mem,0x120000000ULL,1024)','a03_gpu_blit_layout(mem,0x120000000ULL,0,0,3072,2880,720,1600)').replace('A03_GPU_SCRATCH_SIZE','A03_GPU_BLIT_SIZE').replace('.workgroup_count_x=1024','.workgroup_count_x=720').replace('.workgroup_count_y=1,','.workgroup_count_y=1600,').replace('.r48_r63=0x1000','.r48_r63=0x3000')
-  c.write_text(fixture);subprocess.run(flags+['-I'+str(ROOT/'tools'),str(c),'-o',str(exe)],cwd=build,check=True);subprocess.run([str(exe)],check=True)
+  fixture=fixture.replace('.workgroup_size_x=1,','.workgroup_size_x=16,').replace('.workgroup_size_y=1,','.workgroup_size_y=4,').replace('.workgroup_count_x=720,','.workgroup_count_x=45,').replace('.workgroup_count_y=1600,','.workgroup_count_y=400,')
+  c.write_text(fixture);subprocess.run(flags+['-UNDEBUG','-I'+str(ROOT/'tools'),str(c),'-o',str(exe)],cwd=build,check=True);subprocess.run([str(exe)],check=True)
 print('PASS strided blit geometry/mapping guards/shader hash and selected primary Mesa v9 descriptors; no hardware claim')
