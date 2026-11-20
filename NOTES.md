@@ -1,4 +1,13 @@
-ACTIVE0108vectorHARDWAREPASSfullpixels;fast3.542ms(execute1.680)vsCPU1.406.
+ACTIVE0109warm flashedBOOT-onlySUCCESS after44801549767/6948d5e fullCI/
+exactsource/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel8914aba6...eac43f/
+BOOT387e4bd0...5e64a1; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
+Solecapture81787/session58307boot0109-warm-live.log waitsCDC. Needclocks/
+cached/warm/GPUONverify1/FWload/touchON->4fullreadbacks->fastCPUtiming/
+explicitOFFpowerrelease. No warmhardwareclaimyet.
+Privategpu-wide-work16pixels/threadpreparedOFFPROFILE/nativeMesa/v9/
+ASanUBSanPASS;useonlyifwarmstillneedsspeed. No wideCIyet.
+
+PREVIOUS0108vectorHARDWAREPASSfullpixels;fast3.542ms(execute1.680)vsCPU1.406.
 NEWwarmCI44801549767 exact6948d5ead5fe0dce4d2594ea56e4af96a5b7911e
 active/watch43109. Privategpu-warm-work/artifacts.py+pack0109.py pinexact
 sources/RTC/SHA/run. NeedfullCI->0109->cachedwarm4fullreadbacks->fastCPU.

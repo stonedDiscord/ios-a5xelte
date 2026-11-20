@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: retained-power CI success; BOOT0109 trial
+
+CI44801549767 SUCCESS exact6948d5ead5fe0dce4d2594ea56e4af96a5b7911e.
+AllsixGPU/replay sourcesexacttestedmatch;RTCunchanged.0176reversecheck/
+checksum/SMP/actualsourceASanUBSanPASS.
+KernelSHA2568914aba61a1e82340141e4f6ded9f20631f23b1aa98deb561c4efea9fdeac43f.
+BOOT0109SHA256387e4bd016df228d9d6bc58b9302932aba0bfa6efc6f8c995f55d5b3f55e64a1.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload then
+Heimdalllowercaseboot uploadsuccess/reboot. Nootherpartitionflashed.
+SolecapturePID81787/session58307boot0109-warm-live.log waitsCDC. Need
+clocks/cached/warm/GPUONverify1/FWload/touchON->4fullreadbacks->fastCPU
+timingandexplicitOFFpowershutdown. No warmhardwareclaimyet.
+
+Privatewidecandidate16pixels/thread1920bytes32regs/TLSWLS0 prepared
+offprofile ingpu-wide-work; nativeMesa/primaryv9/actuallifecyclePASS.
+Useonlyifwarmtimingstillneedsimprovement; no newCIforwideyet.
+
 ## 2026-11-20: vector hardware PASS3.54ms; warmownershipcandidate0176
 
 WarmCI44801549767 exact6948d5ead5fe0dce4d2594ea56e4af96a5b7911e active;
