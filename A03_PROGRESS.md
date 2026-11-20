@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: wider-copy build remains live; capture handoff
+
+20:04UTC CI44804438707/exact01e7de1474faf02b8e3c9ee6f9b02c9069929752
+still Build/in_progress (job136524622008), watcher43210. Live log endpoint
+returnsBlobNotFound whilejobAPIcontinuesactive; thisisnotterminalfailure.
+Do notduplicate/restart. Benchreplaycheckebc9559nowrequiresrequestedcount
+exactlycopied/noquarantine before reporting; hosttestsPASS.
+Oldcapture81787stoppeddeliberatelybeforeexpiry; soleNEWcapture91908/
+session21336boot0109-widewait-live.loguntil~20:34UTC. GPUOFFpowered0/
+verify1/cachedwarm1/touchON last3119slices15events. Continueexactbuild
+->artifacts.py/pack0110.py->BOOT-only0110->fourfullreadbacks->fastCPU
+alternatingcomparison. Goalactive; currenthardware2.296msnotyetbeatsCPU.
+
 ## 2026-11-20: idle display-sleep hypothesis after another Home wake
 
 User reports clock frozen again on0109, then suggests iOS is sleeping.

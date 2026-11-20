@@ -1,4 +1,11 @@
-ACTIVE0109idle-sleep investigation19:56UTC: userreportsfrozenclockand
+ACTIVE20:04UTCwideCI44804438707/01e7de1stillBuild(job136524622008);
+watch43210. LogsBlobNotFoundNOTjobfailure. Waitsamejob,no duplicate.
+NEWsolecapture91908/session21336boot0109-widewait-live.loguntil~20:34UTC;
+old81787deliberatelystopped. GPUOFFpowered0verify1/cachedwarm1/touchON.
+Benchreplayexactcountcheckebc9559PASS. NeedCI->verify/pack0110->BOOT-only
+->cachedwarm4fullreadbacks->alternatingfastCPU. Goalactive.
+
+PREVIOUS0109idle-sleep investigation19:56UTC: userreportsfrozenclockand
 suggestssleep. KernelUTCcorrect/GPUOFFpowered0/quarantine0/vsynclive,
 swaps62copies57stopped; ONEHome->swaps1290copies1285(CPU1270).
 Framebufferdoesnotblankorhandlepowerstate; sleepcouldleaveoldimagevisible.
