@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: vector CI success; BOOT0108 trial
+
+CI44794488664 SUCCESS exact734646c9f2f438ccf0417b747600060288829c7f.
+AllsixuploadedGPU/replay sourcesmatchtestedcandidate;RTCunchanged.0175
+reversecheck/checksum/SMP/actualsourceASanUBSan(fullframe/tail1..70)PASS.
+KernelSHA2562f995b2b448cfb01455c1278622b030ed91b4fdb4b34c239c1d050ea2d25307e.
+BOOT0108SHA2562f656a8de10618f2343b7e6622754a02a359dd96e6ba6fdbfa7433e447ec6983.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload then
+Heimdalllowercaseboot uploadsuccess/reboot. Nootherpartitionflashed.
+SolecapturePID76088/session37152boot0108-vector-live.log waitsCDC. Need
+clocks/cachedGPUONverify1/FWload/touchON->4fullreadbacks->fastCPUtiming.
+No vectorhardwareclaimyet.0107CPUwakecheckpointretained.
+
 ## 2026-11-20: BOOT0107 physical UI resumes after one Home
 
 19:01UTCvectorCI44794488664 remainsBuild/in_progress; livejoblog6.3MiB

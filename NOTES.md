@@ -1,4 +1,11 @@
-ACTIVE0107userconfirmsUIworksafterONEHome18:53UTC. GPUalreadyOFF;stale
+ACTIVE0108vector flashedBOOT-onlySUCCESS after44794488664/734646c fullCI/
+exactsource/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel2f995b2b...25307e/
+BOOT2f656a8d...ec6983; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
+Solecapture76088/session37152boot0108-vector-live.log waitsCDC. Needclocks/
+cachedGPUONverify1/FWload/touchON->4fullreadbacks->fastCPUcomparison.
+No vectorhardwareclaimyet;0107CPUwakecheckpointretained.
+
+PREVIOUS0107userconfirmsUIworksafterONEHome18:53UTC. GPUalreadyOFF;stale
 NEWcapture71717/session74884boot0107-vectorwait-live.loguntil~19:31UTC;
 old57854deliberatelystoppedbeforeexpiry. VectorCI44794488664stillBuild
 19:01UTC;livejoblogcompiles18:58:59,optionalpatchskiperrorsNOTcompiler
