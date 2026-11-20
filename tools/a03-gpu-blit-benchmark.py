@@ -38,6 +38,8 @@ def snapshot(probe,log):
     result=dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
     cached=re.search(r'A03 GPU blit: cached=(\d+);',gpu)
     if cached:result['cached']=int(cached[1])
+    clock=re.search(r'A03 GPU blit: clock-mhz=(\d+);',gpu)
+    if clock:result['clock_mhz']=int(clock[1])
     attr=re.search(r'A03 GPU blit: memattr=(\d+);',gpu)
     if attr:result['memattr']=int(attr[1])
     tile=re.search(r'A03 GPU blit: tile-rows=(\d+);',gpu)
@@ -51,6 +53,8 @@ def snapshot(probe,log):
 
 
 def report(before,after,mode):
+    if before.get('clock_mhz')!=after.get('clock_mhz'):
+        raise RuntimeError('GPU clock policy changed during interval; discard measurement')
     if before.get('memattr')!=after.get('memattr'):
         raise RuntimeError('Pixel cache attribute changed during interval; discard measurement')
     if before.get('tile_rows')!=after.get('tile_rows'):
@@ -66,6 +70,7 @@ def report(before,after,mode):
     elapsed=delta['cpu_ns'] if mode=='cpu' else delta['gpu_ns']
     delta.update(mode=mode,mean_copy_ms=elapsed/n/1000000 if n else None,quarantined=after['quarantined'])
     if 'cached' in after:delta['cached']=after['cached']
+    if 'clock_mhz' in after:delta['clock_mhz']=after['clock_mhz']
     if 'memattr' in after:delta['memattr']=after['memattr']
     if 'tile_rows' in after:delta['tile_rows']=after['tile_rows']
     if 'warm' in after:delta.update(warm=after['warm'],powered=after['powered'])

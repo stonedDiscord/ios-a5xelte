@@ -154,7 +154,7 @@ static void reset(unsigned m){
  memset(gpu_dirty,0x5a,sizeof(gpu_dirty));
  for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
  mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=0;
- cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;a03_gpu_blit_memattr=0;a03_gpu_fullscreen_rows=4;
+ cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;a03_gpu_blit_memattr=0;a03_gpu_clock_selector=1;a03_gpu_fullscreen_rows=4;
  a03_gpu_blit_warm=a03_gpu_warm_ready=0;a03_gpu_warm_override=0;
  a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
  a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
@@ -257,6 +257,9 @@ int main(void){
   us=flushes=starts=0;cache_failure=1;assert(blit(53,17)==-1&&a03_gpu_job_poisoned);
   unsigned prior=a03_gpu_blit_memattr;a03_gpu_blit_control(policy==13?14:13);assert(a03_gpu_blit_memattr==prior);
  }
+ reset(0);a03_gpu_clock_selector=2;bank[2][1]=bank[2][2]=0x21;
+ assert(blit(720,1600)==1&&!a03_gpu_job_poisoned);
+ reset(0);a03_gpu_clock_selector=2;assert(blit(720,1600)==0&&!starts);
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''

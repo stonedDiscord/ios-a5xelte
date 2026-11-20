@@ -1,0 +1,91 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -310,6 +310,7 @@
+ static unsigned a03_gpu_blit_verify=1,a03_gpu_blit_verified,a03_gpu_blit_completed;
+ static uint64_t a03_gpu_blit_ns,a03_gpu_blit_last_ns;
+ static unsigned a03_gpu_blit_cached;
++static unsigned a03_gpu_clock_selector=1; /* explicit384/512MHz TWPLL source */
+ static unsigned a03_gpu_blit_memattr; /* vendor index0 impldef,1 forcecacheall,2 writealloc */
+ static unsigned a03_gpu_blit_warm,a03_gpu_warm_ready;
+ static uint32_t a03_gpu_warm_override;
+@@ -613,8 +614,8 @@
+     if (!a03_gpu_domain_accessible(a03_gpu_read(a03_gpu_pmu, 0x2c4),
+         a03_gpu_read(a03_gpu_pmu, 0x500), a03_gpu_read(a03_gpu_aon, 0)) ||
+         a03_gpu_read(a03_gpu_regs, 0) != 0x90910010U ||
+-        (a03_gpu_read(a03_gpu_apb, 4) & 0x771U) != 0x11U ||
+-        (a03_gpu_read(a03_gpu_apb, 8) & 0x771U) != 0x11U ||
++        (a03_gpu_read(a03_gpu_apb, 4) & 0x771U) != ((a03_gpu_clock_selector<<4)|1U) ||
++        (a03_gpu_read(a03_gpu_apb, 8) & 0x771U) != ((a03_gpu_clock_selector<<4)|1U) ||
+         (a03_gpu_read(a03_gpu_apb, 12) & 0x71U) != 0x31U) return;
+     /* Exact one-core topology and all high/ready/transition masks off. */
+     for (unsigned i = 0; i < 3; i++) {
+@@ -731,9 +732,50 @@
+     __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
+ }
+ 
++/* Caller holds shared owner. Only switch known TWPLL parents with cores,
++ * L2, tiler and AS0 completely off. No PMIC/PLL/DVFS programming. */
++static void a03_gpu_clock_rate(unsigned selector) {
++    if((selector!=1 && selector!=2) || a03_gpu_job_poisoned || a03_gpu_blit_enabled || a03_gpu_warm_ready ||
++       !a03_gpu_regs || !a03_gpu_apb || !a03_gpu_dvfs || !a03_gpu_pll || !a03_gpu_pmu || !a03_gpu_aon)return;
++    uint32_t pd,voltage;
++    if(!a03_gpu_supply_status(&pd,&voltage) || (pd&8) || (voltage&0x1ff)!=320)return;
++    if(!a03_gpu_domain_accessible(a03_gpu_read(a03_gpu_pmu,0x2c4),a03_gpu_read(a03_gpu_pmu,0x500),a03_gpu_read(a03_gpu_aon,0)))return;
++    uint32_t pll0=a03_gpu_read(a03_gpu_pll,0);
++    uint64_t parent=a03_gpu_twpll_rate(pll0,a03_gpu_read(a03_gpu_pll,4),a03_gpu_read(a03_gpu_pll,8));
++    if(!(pll0&(1U<<18)) || parent<1535000000ULL || parent>1537000000ULL ||
++       (a03_gpu_read(a03_gpu_dvfs,0x38)&0x80000U) || a03_gpu_read(a03_gpu_regs,0)!=0x90910010U ||
++       !a03_gpu_slot_idle() || a03_gpu_read(a03_gpu_regs,0x2400) || a03_gpu_read(a03_gpu_regs,0x2404) ||
++       a03_gpu_read(a03_gpu_regs,0x2428) || a03_gpu_read(a03_gpu_regs,0x241c) ||
++       a03_gpu_read(a03_gpu_regs,0x2000) || (a03_gpu_read(a03_gpu_regs,0x20)&0x181U))return;
++    for(unsigned i=0;i<3;i++)if(a03_gpu_read(a03_gpu_regs,0x140+i*16) || a03_gpu_read(a03_gpu_regs,0x144+i*16) ||
++       a03_gpu_read(a03_gpu_regs,0x200+i*16) || a03_gpu_read(a03_gpu_regs,0x204+i*16))return;
++    uint32_t oldcore=a03_gpu_read(a03_gpu_apb,4),oldmem=a03_gpu_read(a03_gpu_apb,8),oldsys=a03_gpu_read(a03_gpu_apb,12);
++    uint32_t expected=(a03_gpu_clock_selector<<4)|1U;
++    if((oldcore&0x771U)!=expected || (oldmem&0x771U)!=expected || (oldsys&0x71U)!=0x31U)return;
++    if(selector==a03_gpu_clock_selector)return;
++    int ok=a03_gpu_update(a03_gpu_apb,12,1,0) && a03_gpu_update(a03_gpu_apb,8,1,0) && a03_gpu_update(a03_gpu_apb,4,1,0);
++    if(ok)ok=a03_gpu_update(a03_gpu_apb,4,0x70,selector<<4) && a03_gpu_update(a03_gpu_apb,8,0x70,selector<<4);
++    if(ok)ok=a03_gpu_update(a03_gpu_apb,4,1,1) && a03_gpu_update(a03_gpu_apb,8,1,1) && a03_gpu_update(a03_gpu_apb,12,1,1);
++    delay(400);
++    if(ok && a03_gpu_read(a03_gpu_regs,0)==0x90910010U) {
++        a03_gpu_clock_selector=selector;a03_gpu_blit_verified=0;return;
++    }
++    /* No DMA exists. Restore selector/gates only; quarantine if restoration
++     * cannot be proven. Reserved bits are never written intentionally. */
++    int restored=a03_gpu_update(a03_gpu_apb,12,1,0);
++    restored=a03_gpu_update(a03_gpu_apb,8,1,0)&&restored;
++    restored=a03_gpu_update(a03_gpu_apb,4,1,0)&&restored;
++    restored=a03_gpu_update(a03_gpu_apb,4,0x70,oldcore)&&restored;
++    restored=a03_gpu_update(a03_gpu_apb,8,0x70,oldmem)&&restored;
++    restored=a03_gpu_update(a03_gpu_apb,4,1,oldcore)&&restored;
++    restored=a03_gpu_update(a03_gpu_apb,8,1,oldmem)&&restored;
++    restored=a03_gpu_update(a03_gpu_apb,12,1,oldsys)&&restored;
++    if(!restored)a03_gpu_job_poisoned=1;
++}
+ void a03_gpu_blit_control(unsigned enable);
+ void a03_gpu_blit_control(unsigned enable) {
+     if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
++    if(enable==16 || enable==17)a03_gpu_clock_rate(enable==16?1:2);
+     if(enable>=13 && enable<=15 && !a03_gpu_job_poisoned && a03_gpu_blit_memattr!=enable-13) {
+         a03_gpu_blit_memattr=enable-13;a03_gpu_blit_verified=0;
+     }
+@@ -750,6 +792,7 @@
+         a03_gpu_blit_cached=enable==5;
+         a03_gpu_blit_verified=0; /* Each policy must earn four readbacks. */
+     }
++    printf("A03 GPU blit: clock-mhz=%u; explicit384/512MHz, sys divide4\n",a03_gpu_clock_selector==2?512:384);
+     printf("A03 GPU blit: memattr=%u; pixel mappings only, cached mode required\n",a03_gpu_blit_memattr);
+     printf("A03 GPU blit: tile-rows=%u; fullscreen-only, four readbacks after change\n",a03_gpu_fullscreen_rows);
+     printf("A03 GPU blit: cached=%u; four readbacks after policy change\n",a03_gpu_blit_cached);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -671,6 +671,8 @@
+  else if(!strcmp(command,"gpu blit impldef"))a03_gpu_blit_control(13);
+  else if(!strcmp(command,"gpu blit cacheall"))a03_gpu_blit_control(14);
+  else if(!strcmp(command,"gpu blit writealloc"))a03_gpu_blit_control(15);
++ else if(!strcmp(command,"gpu blit rate384"))a03_gpu_blit_control(16);
++ else if(!strcmp(command,"gpu blit rate512"))a03_gpu_blit_control(17);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

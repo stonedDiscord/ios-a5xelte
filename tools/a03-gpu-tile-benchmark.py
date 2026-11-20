@@ -39,7 +39,7 @@ def qualified(before,after,tile):
         raise RuntimeError('Fault or fallback during tile qualification')
     if after['verified']-before['verified']<4 or after['completed']-before['completed']<4:
         raise RuntimeError('Tile did not earn four fresh readbacks')
-    for key in ['cached','warm','memattr']:
+    for key in ['cached','warm','memattr','clock_mhz']:
         if before.get(key)!=after.get(key):raise RuntimeError('Policy changed during qualification')
 
 
@@ -82,7 +82,7 @@ def main():
             blit.command(probe,log,'gpu blit '+('verify' if original['verify'] else 'fast'))
             blit.command(probe,log,'gpu blit '+('on' if original['enabled'] else 'off'))
             restored=blit.snapshot(probe,log)
-            if any(restored.get(k)!=original.get(k) for k in ['enabled','verify','tile_rows','cached','warm','memattr']):
+            if any(restored.get(k)!=original.get(k) for k in ['enabled','verify','tile_rows','cached','warm','memattr','clock_mhz']):
                 raise RuntimeError('Original tile/mode restoration not confirmed; inspect live status')
             print('Original dispatch tile and GPU mode restored.',flush=True)
     print(json.dumps(dict(note='Accepted-frame synchronous copy latency, not physical FPS',tiles=results),indent=2))

@@ -1,3 +1,13 @@
+ACTIVE0115allcachepoliciesHWreadback+pairedPASS0fallbackquarantine;GPU~2.19-2.33ms
+CPU~1.43-1.71ms. No cachegain; leftimpldef0/tile4/GPUOFFpowered0verify1cachedwarm1,
+89completed/verified0(resetrestore),touchON. Sole118404/session97962until~23:07UTC.
+0184explicitstock384/512MHzidleparentpolicy prepareddefault384; nativeSamsung
+clocksource/liveDToppreview, exactinherited1Vrail(noPMICwrite), noPLL/DVFStable
+writes. Idle/coreoff/AS/fault/PLLguards+maskedgate/selectorrollbackASanPASS;
+actualDMAfake512/ARM64/profile130/benchtestsPASS. Needcommit/fullCI->artifact/
+pack0116->BOOT-only->fourreadbacks512->pairedrates->restore/physicalUI.
+Goalactive; noGPUoverCPUspeedupyet.
+
 ACTIVE0115memattrBOOT-onlyflashSUCCESS22:36UTC CI44828092327/3ed3ad3 fullsuccess/
 sixsources/RTC/reverse0183/checksum/SMP/actualASanPASS. Kernelb760ef93...3e9338/
 BOOT8c195289...adc345; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.

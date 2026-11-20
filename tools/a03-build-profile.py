@@ -185,7 +185,8 @@ def main():
                      '0180-a03-coalesced-fullscreen-strips.patch',
                      '0181-a03-observe-display-power-requests.patch',
                      '0182-a03-explicit-fullscreen-dispatch-tiles.patch',
-                     '0183-a03-explicit-pixel-cache-attributes.patch'):
+                     '0183-a03-explicit-pixel-cache-attributes.patch',
+                     '0184-a03-explicit-512mhz-idle-clock-policy.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

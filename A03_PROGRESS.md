@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: cache policy hardware PASS, no gain; stock512MHz candidate0184
+
+BOOT0115 impldef/cacheall/writealloc eachfourreadbacks+paired3rounds PASS,
+0fallback/quarantine. GPUmedians2.213971/2.191000/2.325096ms vsCPU1.428730/
+1.535543/1.713596ms. No meaningful cachepolicygain; restoredimpldef0/tile4/
+GPUOFFpowered0verify1cachedwarm1,89completed/verified0(resetpolicyrestore),
+touchON695events0/storage ready1poison0. Sole118404/session97962 until~23:07UTC.
+
+0184 explicitrate384/rate512 candidate changes ONLY GPUcore/mem parentselector
+1(TWPLL/4)->2(TWPLL/3), keeps sysdivide4. Native b48e9dd ums9230-clk.c1590
+parents and liveDT OPP512MHz750mV establish stockrate; inheritedrail still
+exact1V validated, nevermodified. NoPLL/PMIC/DVFS-table writes. Requires
+GPUOFF/no warmowner, allcores/L2/tileroff, idleJS/AS0/cleanIRQ, validatedPLL/
+rail/domain/knownleafselectors. Gatesclosed beforeselectorschanged then
+vendorenableorder, readbackID; failedstage rollsback masks, uncertainrestore
+quarantines. Default384 unchanged, ratechange resetsfourreadbacks.
+ActualhelperASanUBSan coversallsupplyvalues,liveowner/core/AS/fault/PLL guards,
+eachwritefailure/rollback and quarantine; actualDMA at512fake-MMIO/mismatched
+selector rejection, ARM64GPUAMFI/profile130/benchmark regressions PASS.
+NeedfullCI/hardware512correctness+pairedcomparison+restore, no speedclaimyet.
+
 ## 2026-11-20: pixel cache policy CI success; BOOT0115 trial
 
 CI44828092327 SUCCESS exact3ed3ad339ce0b4edfe23c50370dd8e2134ae9c1e.

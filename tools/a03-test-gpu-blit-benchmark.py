@@ -44,6 +44,12 @@ values=iter(['A03 GPU blit: tile-rows=16; enabled=1 frames=4 pixels=4608000 fall
 assert m.snapshot(None,None)['tile_rows']==16
 values=iter(['A03 GPU blit: memattr=2; enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 assert m.snapshot(None,None)['memattr']==2
+values=iter(['A03 GPU blit: clock-mhz=512; enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
+assert m.snapshot(None,None)['clock_mhz']==512
+assert m.report(dict(b,clock_mhz=512),dict(b,clock_mhz=512,gpu_copies=1,gpu_ns=100),'fast')['clock_mhz']==512
+try:m.report(dict(b,clock_mhz=384),dict(b,clock_mhz=512),'fast');assert False
+except RuntimeError as error:assert 'GPU clock policy changed' in str(error)
+
 assert m.report(dict(b,memattr=2),dict(b,memattr=2,gpu_copies=1,gpu_ns=100),'fast')['memattr']==2
 try:m.report(dict(b,memattr=0),dict(b,memattr=1),'fast');assert False
 except RuntimeError as error:assert 'Pixel cache attribute changed' in str(error)
