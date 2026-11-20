@@ -5,9 +5,10 @@ sync repairs only the running calendar. User requires autonomous time on
 boot without USB. Candidate0171 connects XNU PEGetUTCTimeOfDay directly to
 retained SC2730 RTC via the existing serialized ADI transport, independent
 of console enable/cable/userspace. It performs no RTC/alarm/reset writes.
-Bounded consistent snapshots and reset/date validation pass host tests;
-full Xcode build and hardware/cable-free reboot validation remain pending.
-Do not treat volatile USB sync or host tests as proof of this fix.
+Bounded snapshot and reset/date tests passed. CI44765816216 built BOOT0104,
+which read November 20, 2026 at 17:18:56 UTC from the RTC before USB setup
+and used it to initialize the calendar. A physically unplugged restart and
+the local time shown on the screen are still awaiting confirmation.
 
 2026-11-18 BOOT0094 hardware follow-up supersedes candidate status below:
 fullCI44398834193 succeeded; BOOT-only flash succeeded. Policyrequested1

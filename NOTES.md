@@ -1,4 +1,9 @@
-ACTIVECI44765816216 exact44d482d retainedRTC0171 compiling/fullXcodegate.
+ACTIVE BOOT0104 passed CI44765816216 and flashed to `boot`. XNU read the
+SC2730 UTC1795195136 before USB setup. First read-only status1795195137.
+No host time correction on 0104. Capture30364 boot0104-rtc-verified.log.
+User unplugged restart and physical display confirmation pending.
+
+PREVIOUSCI44765816216 exact44d482d retainedRTC0171 passed full Xcode.
 Private0104packerready; neveruseoldHEAD44765753773. HookC/C++linkagePASS.
 Needexactartifact/checksum/source->0104BOOT-only->readRTCbeforehostsync.
 

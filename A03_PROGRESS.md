@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0104 initializes UTC from the hardware RTC
+
+Full CI44765816216 passed at 44d482d49f951cd782f1c4f454ebeb645b0030a8.
+Both RTC sources matched, reverse patch and checksum verified, with the
+same eight CPU, 1984 MiB, stock ramdisk and DT configuration. Kernel
+SHA256 28d9ad7870e05d4430dd007b90a2ad7ef2662c6f828219019a7eb5403e6171fc.
+BOOT SHA256 d0a453c7a6fedf95352d0c734c2a0ff07a9c9a13520a6cc4c3875c60f0fd6dd4.
+Heimdall rejected uppercase `BOOT` before transfer. After returning to
+Download, lowercase `boot` uploaded successfully and rebooted.
+
+In boot0104-rtc-verified.log, XNU read RTC UTC1795195136 (November 20,
+2026 at 17:18:56 UTC) before USB supply setup. The first USB transaction
+was read-only `time status` and returned UTC1795195137. No host time set
+on this boot. Launchd started with the correct date and UTC-8 presentation.
+Physical restart unplugged and local display confirmation are pending.
+The old status message describes the USB setter and predates the RTC reader.
+
 ## 2026-11-20: boot-time clock reset measured; retained RTC candidate0171
 
 User requires correct time at boot without USB. Fresh single-owner capture
