@@ -1,5 +1,21 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0245 physical VM checkpoint reported — 2026-11-20
+
+User's exact last screen report: `DREAMLTE VM: pmap pte missing: expand begins`.
+Installed source emits `pmap pte missing; expand begin` immediately before
+pmap_unlock and pmap_expand in pmap_enter_options_addr during page-array
+mapping. Host still absent. This boot has not supplied evidence of reaching
+USB initialization; do not count it as an automatic-attachment failure.
+The marker does not prove entry into pmap_expand or identify a held lock.
+Source review: expansion takes shared/exclusive pmap locks, may allocate a
+translation table and wait for pages, initializes it and publishes its TTE.
+No single branch is established as the cause by the last visible marker.
+Requested one restart of installed0245 with cable left attached; exact last
+line needed, and preserve any resulting USB loop before replug. No new flash.
+Prior screen-evidence blocker resolved; comparison restart pending. Sporadic
+VM failure reproduced observationally;0245 USB change remains untested.
+
 ## 0245 hardware diagnosis blocked on screen evidence — 2026-11-20
 
 Three consecutive goal turns confirm the same checkpoint blocker: no host
