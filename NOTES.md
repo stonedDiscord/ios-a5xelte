@@ -2,6 +2,16 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0244 corrected CI and preparation active — 2026-11-20
+
+Exact CI44730637160 is building at e474689a7646ea4a6230fa83e90e87223f9a5881,
+including the corrected reboot host-model dependency. Private
+prepare-0244-retry.py (session61685) waits for this exact run, verifies
+artifacts and packages BOOT; it never flashes. Do not reuse the failed
+44728041768 preparation. Host confirms installed0243/device084 still live.
+Preserve it for USB Download transition after successful verification.
+Both sporadic VM startup stalls and automatic USB attachment remain open.
+
 ## 0244 kernel compiled; CI model dependency corrected — 2026-11-20
 
 CI44728041768 at14f999c compiled the kernel but FAILED profile verification:
