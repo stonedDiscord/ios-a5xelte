@@ -1,0 +1,74 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -1275,11 +1275,36 @@
+ 	printf("SWEET USB: ue0 192.168.7.2/24 %s (err %d)\n", err ? "NOT configured" : "up", err);
+ }
+ 
++#if defined(DREAMLTE)
++/* Read-only attachment trace. Keep all event/PHY decisions in ud_event
++ * unchanged while observing Samsung's link-state and wakeup events. */
++static void
++dreamlte_usb_attach_snapshot(const char *reason, uint32_t ev)
++{
++	printf("DREAMLTE USB ATTACH: %s t=%llu event=%08x DSTS=%08x DCTL=%08x DCFG=%08x UTMI=%08x LINK=%08x\n",
++	    reason, (unsigned long long)mach_absolute_time(), ev,
++	    dwc_rd(DSTS), dwc_rd(DCTL), dwc_rd(DCFG),
++	    usb_rd(dreamlte_phy, 0x08), usb_rd(dreamlte_phy, 0x04));
++}
++#endif
++
+ static void
+ ud_event(uint32_t ev)
+ {
+ 	if (ev & 1) {                   /* device event */
+ 		uint32_t type = (ev >> 8) & 0xf;
++#if defined(DREAMLTE)
++		static unsigned attach_events;
++		/* evtinfo is bits31:16; link-state occupies its low nibble.
++		 * Bound output independently of the endpoint-event trace budget. */
++		if (attach_events++ < 64) {
++			dreamlte_usb_attach_snapshot("device", ev);
++			if (type == 3 || type == 4) {
++				printf("DREAMLTE USB ATTACH: type=%u link=%u info=%04x\n",
++				    type, (ev >> 16) & 0xf, ev >> 16);
++			}
++		}
++#endif
+ 		if (type == 1) {        /* USB reset */
+ #if defined(DREAMLTE)
+ 			dreamlte_reboot_pending = dreamlte_reboot_mode = dreamlte_reboot_delay = 0;
+@@ -1404,6 +1429,9 @@
+ 			dwc_wr(GEVNTCOUNT, count);
+ 		}
+ 		if ((++ticks % 30000) == 0) {
++#if defined(DREAMLTE)
++			dreamlte_usb_attach_snapshot("poll", 0);
++#endif
+ 			printf("SWEET USB: ue0 rx %llu tx %llu frames\n", ud.rx_frames, ud.tx_frames);
+ 		}
+ #if defined(DREAMLTE)
+@@ -1563,8 +1591,14 @@
+ 	/* High speed, address 0 */
+ 	uint32_t dcfg = dwc_rd(DCFG) & ~(7u | (0x7fu << 3));
+ 	dwc_wr(DCFG, dcfg | 0);
++#if defined(DREAMLTE)
++	/* Samsung gadget.c also enables link-state(bit3) and wakeup(bit4).
++	 * Capture these events without changing their PHY/endpoint behavior. */
++	dwc_wr(DEVTEN, 0x1f);
++#else
+ 	/* Events: disconnect, USB reset, connect done */
+ 	dwc_wr(DEVTEN, 0x7);
++#endif
+ 
+ 	/* EP0: S8 forces USB2; donor retains its original initial packet size. */
+ #if defined(DREAMLTE)
+@@ -1615,6 +1649,9 @@
+ 		return;
+ 	}
+ #endif
++#if defined(DREAMLTE)
++	dreamlte_usb_attach_snapshot("before-run", 0);
++#endif
+ 	dwc_wr(DCTL, dwc_rd(DCTL) | DCTL_RUN_STOP);
+ 	for (i = 0; i < 500 && (dwc_rd(DSTS) & DSTS_DEVCTRLHLT); i++) {
+ 		delay(1000);

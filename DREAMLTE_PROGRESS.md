@@ -1,5 +1,17 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0244 USB attachment trace prepared — 2026-11-20
+
+New0244 overlay enables Samsung DEVTEN link-state/wakeup bits3/4 and
+captures the first64device events independently of endpoint tracing. Each
+snapshot records mach_absolute_time,event,DSTS,DCTL,DCFG,PHY UTMI/LINK;
+periodic30,000poll snapshots and before-RUN snapshot provide idle context.
+No link-state/wakeup PHY action is added; no VM mapping/lock change.
+Actual ARM64 syntax and object compile PASS. Exact0243 CI USB source plus
+new patch applies with zero fuzz/offset and matches compiled/manifest input.
+165patch profile staged. Preserve live0243/device084 until verified build
+ready. Startup reliability and automatic attachment remain unresolved.
+
 ## 0243 controlled replug recovers USB; retained snapshot PASS — 2026-11-20
 
 After requested five-second unplug/reconnect,user reports replugged. Host
