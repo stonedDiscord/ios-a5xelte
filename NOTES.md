@@ -2,6 +2,18 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0243 user replug; host still absent — 2026-11-20
+
+User reports cable replug. Host lsusb still sees neither XNU1209:0001 nor
+Samsung04e8:685d; kernel journal still ends at device083 disconnect at
+11:22:26 local. No retained console can be read in this state. Exact0243
+screen checkpoint,including any raw/locked fields,requested again because
+no0243 screen report is recorded yet. The earlier paj=2bfd report belongs
+to0242 and must not be attributed to0243. No host reset,flash or partition
+write performed. Preserve current boot pending physical evidence; startup
+reliability and automatic USB attachment remain unresolved.
+
+
 
 ## 0243 verified and BOOT flashed; physical checkpoint pending — 2026-11-20
 
