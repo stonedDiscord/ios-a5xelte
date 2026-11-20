@@ -40,6 +40,11 @@ assert m.report(b,sample,'fast')['last_attempt_phases_ms']['execute']==0.000004
 assert 'last_attempt_phases_ms' not in m.report(b,sample,'cpu')
 assert 'last_attempt_phases_ms' not in m.report(sample,sample,'fast')
 m.command=original_command
+for reply,valid in [('A03 REPLAY: requested=4 copied=4 elapsed-ns=100 quarantined=0',True),('A03 REPLAY: no accepted frame or quarantined',False),('A03 REPLAY: requested=4 copied=3 elapsed-ns=100 quarantined=0',False),('A03 REPLAY: requested=4 copied=4 elapsed-ns=100 quarantined=1',False)]:
+ m.command=lambda *args:reply
+ try:assert m.replay(None,None,4)==100;assert valid
+ except RuntimeError:assert not valid
+m.command=original_command
 original=dict(b,enabled=1,verify=1)
 for mode in ['cpu','verify','fast']:
  seq=[];snapshots=[dict(original),dict(original,enabled=int(mode!='cpu'),verify=int(mode=='verify') if mode!='cpu' else 1),dict(original,enabled=int(mode!='cpu'),verify=int(mode=='verify') if mode!='cpu' else 1),dict(original)]
@@ -63,7 +68,7 @@ with tempfile.NamedTemporaryFile() as f:
  except RuntimeError as error:assert str(error)=='sample interrupted'
 assert seq[-2:]==['gpu blit verify','gpu blit on']
 seq=[];snapshots=[dict(original),dict(original,enabled=0),dict(original,enabled=0,cpu_copies=4,cpu_ns=40000000),dict(original)]
-m.snapshot=lambda *args:snapshots.pop(0);m.command=lambda p,l,c:seq.append(c) or ''
+m.snapshot=lambda *args:snapshots.pop(0);m.command=lambda p,l,c:seq.append(c) or ('A03 REPLAY: requested=4 copied=4 elapsed-ns=40000000 quarantined=0' if c=='display replay 4' else '')
 with tempfile.NamedTemporaryFile() as f:
  sys.argv=['benchmark','--log',f.name,'--mode','cpu','--replay','4'];m.main()
 assert 'display replay 4' in seq and seq[-2:]==['gpu blit verify','gpu blit on']

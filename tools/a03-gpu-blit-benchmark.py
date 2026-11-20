@@ -63,6 +63,17 @@ def report(before,after,mode):
     return delta
 
 
+def replay(probe,log,count):
+    reply=command(probe,log,'display replay '+str(count))
+    print(reply,end='',flush=True)
+    result=re.search(r'A03 REPLAY: requested=(\d+) copied=(\d+) elapsed-ns=(\d+) quarantined=(\d+)',reply)
+    if not result:raise RuntimeError('Replay did not report completed copies; discard measurement')
+    requested,copied,elapsed,quarantined=map(int,result.groups())
+    if requested!=count or copied!=count or quarantined:
+        raise RuntimeError('Replay count or quarantine check failed; discard measurement')
+    return elapsed
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--log',type=Path,required=True)
     p.add_argument('--mode',choices=['cpu','verify','fast'],required=True)
@@ -79,7 +90,7 @@ def main():
             if before['enabled']!=(a.mode!='cpu'):raise RuntimeError('Mode did not take effect')
             if a.mode!='cpu' and before['verify']!=(a.mode=='verify'):raise RuntimeError('Verification policy did not take effect')
             if a.replay:
-                print(command(probe,log,'display replay '+str(a.replay)),end='',flush=True)
+                replay(probe,log,a.replay)
             else:
                 print('Measuring '+a.mode+' for '+str(a.seconds)+' seconds; use the phone now.',flush=True)
                 time.sleep(a.seconds)
