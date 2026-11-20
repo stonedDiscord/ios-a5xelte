@@ -2,6 +2,21 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0245 comparison boot reaches USB suspend — 2026-11-20
+
+Following the requested comparison restart, user reports exact screen line:
+`DREAMLTE USB ATTACH: type=3 link=3 info=0003`.
+This boot passed VM startup far enough to handle USB link-state events;
+link3 is suspend. Fresh host lsusb and kernel journal still show no device
+or enumeration attempt since Download087 disconnected. The0245 event change
+has not established automatic attachment on this comparison boot. Need the
+retained trace to verify whether its new DP actions ran and read back.
+Requested five-second cable unplug/reconnect once, preserving the current
+boot, to retrieve its startup trace. No new firmware or partition writes.
+The earlier pre-USB expansion-checkpoint stall and this USB suspend are
+separate observations; neither issue is fixed. Read-only bounded observer
+session99471 started for the requested reconnect; inspect its handle.
+
 ## 0245 physical VM checkpoint reported — 2026-11-20
 
 User's exact last screen report: `DREAMLTE VM: pmap pte missing: expand begins`.
