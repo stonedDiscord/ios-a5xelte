@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: four-pixel fullscreen full CI active
+
+21:04UTC CI44817012332 in_progress exactf712f5fd9cc4767f04589ca9e6da2fa7bf02b58b.
+Do not duplicate/restart. Privategpu-full4-work/artifacts.py+pack0112.py
+prepared; same sixsources/RTC/checksum/reverse0179/SMP gates. BOOT0111
+GPUOFFpowered0/verify1cachedwarm1,42frames18verified0fallback/quarantine.
+Swaps70/copies66 stop again during idle while vsync24568 continues;
+CPU24/GPU42. No Home injected this time; Auto-Lock Never user reply pending.
+Capture100435/session31617 until~21:27UTC. Need exactCI->0112 and measured
+benefit/physicalUI acceptance. Goal active, speedup not demonstrated.
+
 ## 2026-11-20: BOOT0111 correctness PASS; four-pixel fullscreen follow-up0179
 
 BOOT0111 full720x1600 GPU copies: zero mismatches/done1/retired1. Eight
