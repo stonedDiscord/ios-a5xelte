@@ -17,8 +17,8 @@ User reports the same last line again,verbatim:
 `DREAMLTE VM: pmap enter count=1280 va=0xffffffff034fee000 pa=0x882bec000`.
 This0241 boot stopped before USB; retained EP0 cannot recover it. User
 acknowledges requested restart. A subsequent boot enumerates device080 at
-10:29:16local; whether the cable was replugged is explicitly pending user
-confirmation,so automatic attachment is not claimed. Actual0241 retained
+10:29:16local. User subsequently confirms a cable replug was required;
+automatic attachment is not claimed. Actual0241 retained
 EP0 retrieval PASS,292,601bytes saved privately in ci-44707721507/
 restart-retained-console.log. Exact EP0,3/3ping and163bytes XNU UDP PASS.
 The successful restart maps5,745,696byte page array with contiguous physical

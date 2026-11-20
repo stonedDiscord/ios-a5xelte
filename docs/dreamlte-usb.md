@@ -1033,3 +1033,21 @@ do not change the UDP cursor or print setup messages into the same log.
 Older builds stall these requests. This helps diagnose attachment failure;
 it does not recover logs from a boot that never reaches USB, or persist logs
 across a reset.
+
+### 0242 source review: link-state handling remains a lead
+
+The same pinned Samsung `drivers/usb/dwc3/gadget.c` enables link-state
+change and wakeup events (DEVTEN bits3/4) alongside reset/connect/disconnect.
+For `is_not_vbus_pad`, its link-state handler enables the PHY DP pullup on
+U0, RX_DET (USB2 early suspend), and RESUME; its wakeup handler disables it.
+U3 suspends the gadget and does not itself enable the pullup. The current
+S8 XNU driver enables only DEVTEN=0x7 and handles neither event. This is a
+concrete source difference, not evidence that either event occurred during
+the failed attachment. The recovered0241 trace cannot observe events that
+were disabled. The unrelated revision workarounds for controllers older
+than2.50a/1.83a do not apply to the observed2.80a controller.
+
+0242 changes VM tracing only. Before a USB behavior trial, capture link-state
+and wakeup evidence with the cable left attached, and keep external MUIC
+routing as a separate unresolved possibility. A replug recovery alone does
+not distinguish these mechanisms.
