@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: coalesced strips/power observer CI success; BOOT0113 trial
+
+CI44820099545 SUCCESS exactad0c30959b4607e032e77799acb8aa30d464f772.
+Sixsources exacttestedmatch, RTCunchanged, reverse0180+0181/checksum/SMP/
+actualsource lifecycle+replayASanUBSan+displaymethodtests PASS.
+KernelSHA256484a5f787a39116022b8fb1c3f6ab7a886ec71b884443899a43f7de9769bc0ef.
+BOOT0113SHA256353872d2202069d8dd05967b58027a7068b6faaf2ca7589422874100697e3be8.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload, BOOT-only
+Heimdall uploadsuccess/reboot21:42UTC. Sole session30146 capture
+boot0113-quarter-live.log waitsCDC. Needclocks/cachedwarm/GPUONverify1/
+FWload/touchON->fourfullreadbacks->pairedCPUfast/physicalUI. Also display
+probe now reports raw power requests; no sleep or0180hardwareclaimyet.
+
 ## 2026-11-20: coalesced strips/power observer full CI active
 
 21:25UTC CI44820099545 in_progress exactad0c30959b4607e032e77799acb8aa30d464f772.
