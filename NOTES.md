@@ -1,3 +1,10 @@
+ACTIVE23:06UTCNov20 CI44834205541/exact0aeb87285006e112783b5e47bd01e81ef2344591
+in_progress0185sourceCleanPoC. No duplicate. Privategpu-clean-work/artifacts.py+
+pack0117.py pinexactrun/sixsources/RTC/reverse0185/checksum/SMP. Needfullsuccess
+->actualASan->BOOT-only0117->fourreadbacks/paired384and512->restore.
+Current0116restored384/GPUOFFpowered0verify1impldef0tile4cachedwarm1touchON.
+Sole122100/session86364boot0116-rate-live.loguntil~23:30UTC.Goalactive.
+
 ACTIVE23:05UTC0116HW384/512PASSreadbacks+paired0fault;GPUmedians2.193/2.128ms
 CPU1.667/1.663ms,smallrateeffect. Restored384APB11/11/31/GPUOFFpowered0verify1/
 impldef0tile4cachedwarm1/60completedverified0(reset),touchON/storagehealthy.

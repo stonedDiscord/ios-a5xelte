@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 local /23:06UTC Nov20: source clean CI active
+
+CI44834205541 in_progress exact0aeb87285006e112783b5e47bd01e81ef2344591.
+No duplicate/restart. Privategpu-clean-work/artifacts.py+pack0117.py pinexact
+run/sixsources/RTC/reverse0185/checksum/SMP. Needfullsuccess->actualDMA/rate
+ASan->BOOT-only0117->fullreadbacks/paired384and512comparison. Current0116
+restored384/GPUOFFpowered0/verify1/impldef0tile4cachedwarm1/touchON. Sole
+122100/session86364boot0116-rate-live.loguntil~23:30UTC;renewifneeded.
+
 ## 2026-11-21 local / 2026-11-20 23:05UTC: stock512MHz hardware PASS; clean source0185
 
 BOOT0116 both384/512MHz eachfourfreshreadbacks+paired3rounds8copiesPASS,
