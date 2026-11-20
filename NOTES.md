@@ -1,3 +1,10 @@
+ACTIVE22:20UTC CI44828092327 exact3ed3ad339ce0b4edfe23c50370dd8e2134ae9c1e
+queued0183pixelcacheattributes. No duplicate. Privategpu-memattr-work/artifacts.py+
+pack0115.py pinexactrun/sixsources/RTC/reverse0183/checksum/SMP. Needfullsuccess
+->actualASan->BOOT-only0115->fourreadbacks+pairedimpldef/cacheall/writealloc.
+Current0114GPUOFFpowered0tile4verify1cachedwarm1/touchON. Sole114370/session7470
+boot0114-tiles-live.loguntil~22:41UTC. Goalactive,nospeedupyet.
+
 ACTIVE0114alltilesHWreadback+pairedPASS0fallbackquarantine;GPUmedians4/8/16/32
 rows=2.186/2.205/2.208/2.255ms, CPU~1.4-1.7ms. tile4best/default. LeftGPUOFF
 powered0verify1tile4cachedwarm1/120completed/verified0(resetrestore),touchON.

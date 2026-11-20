@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: pixel cache attribute CI active
+
+22:20UTC CI44828092327 queued exact3ed3ad339ce0b4edfe23c50370dd8e2134ae9c1e.
+No duplicate/restart. Privategpu-memattr-work/artifacts.py+pack0115.py pinexact
+run/sixsources/RTC/reverse0183/checksum/SMP. Needfullsuccess->actualASan/
+BOOT-only0115->fourreadbacksperimpldef/cacheall/writealloc->pairedCPUfast.
+Current0114GPUOFFpowered0tile4verify1cachedwarm1/touchON;sole114370/session7470
+until~22:41UTC. Goalactive; dispatchsizetrialnotfasterthanCPU.
+
 ## 2026-11-20: tile hardware comparison PASS, no speed gain; cache attribute0183
 
 BOOT0114 alltiles4/8/16/32 eachpassedfourfreshfullreadbacks+threepaired8copy
