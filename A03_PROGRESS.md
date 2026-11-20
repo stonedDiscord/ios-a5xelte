@@ -1,5 +1,13 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: fullscreen candidate committed; full CI active
+
+Commit8c0fe7cd24e3042d40cd760a139aa31cf93ef55e pushed. CI44813460343
+started20:40UTC, in_progress. Do not duplicate/restart. Private exact-run
+verifier/pack0111 prepared under gpu-special-work; require full success,
+six-source/RTC comparison, reverse0178, checksums/SMP/actualsource ASanUBSan
+before BOOT-only trial. Candidate host tests PASS; hardware still untested.
+
 ## 2026-11-20: BOOT0110 correctness passes, performance rejected; fullscreen candidate0178
 
 BOOT0110 completed full720x1600 readbacks with zero mismatches and retirement

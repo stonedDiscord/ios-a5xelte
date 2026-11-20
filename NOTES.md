@@ -1,3 +1,9 @@
+ACTIVE20:40UTC CI44813460343 in_progress exact8c0fe7cd24e3042d40cd760a139aa31cf93ef55e
+(fullscreen0178). No duplicate/restart. Private gpu-special-work/artifacts.py
+and pack0111.py pin run/SHA/sources/RTC. Await fullsuccess then BOOT-only0111,
+four fullreadbacks and pairedCPUfast. Host lifecycle/replay/primaryv9/native
+Mesa/ARM64/profile124 all PASS. Current0110 GPUOFFpowered0/touchON.
+
 ACTIVE0110 hardware full-frame readback PASS but GPU median4.070764ms vs
 CPU1.675600ms (three paired8-copy rounds); generic16 optimization rejected.
 GPUOFF/powered0/verify1/cachedwarm1,41frames/17verified/0fallback/quarantine.
