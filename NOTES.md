@@ -1,4 +1,11 @@
-ACTIVE BOOT0106HARDWAREPHASES: fastmean142.160ms; execute137.267ms vs
+ACTIVE0106screenfreeze18:20UTC: host/kerneltimeagree1795198810, stale
+clock/swaps24/copies20. GPUOFF+ONEHome=>687newCPUcopies; userconfirmsclock
+updated. LeaveGPUOFF/verify1/touchON. CombinedwakeisnotcausalGPUfixproof.
+CachedCI44791438428 exact7e56be7 stillBuild;watch32994. Needexactsuccess
+->verify/0107BOOT-only->restoretouch->cached4verifiedframes->fastCPUtiming.
+Capture52314/session97698soleowneruntil~18:42UTC. PhysicalGPUUIgatepending.
+
+PREVIOUS BOOT0106HARDWAREPHASES: fastmean142.160ms; execute137.267ms vs
 NEWcachedCI44791438428 exact7e56be7f05428c9672d45d93fa357f32a79d20e2
 active/watch32994. Privategpu-cache-work/artifacts.py+pack0107.py pinsources/
 RTC/fullSHA/run. NeedfullCI->0107BOOT-only->cached4fullreadbacks->fastCPU.

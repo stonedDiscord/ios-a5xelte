@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: frozen clock confirmed; CPU-copy wake restores screen
+
+User reports frozen/blank/corrupt UI, clock about3minutesbehind. At18:20:10UTC
+kernelreadonlytime1795198810 matcheshost exactly; displayedclockisstale.
+Vsync28277done, swaps24/copies20 unchanged, GPUframes20/verified12/
+quarantine0; touchstream1332slices21events andstoragehealthy. SB26/main
+andBB56/main waitmachmsg; no pendingGPUjob. GPUfaultnotestablished.
+ExplicitGPUOFF thenONEinputhome down/up (dispatchresult0). Subsequently
+swaps711/copies707, including687CPUcopies whileGPUframesremain20. User
+confirmsclockupdated. No hosttimeset/reboot/flash. This combinedintervention
+doesnotisolateGPUmodefromHomewake or establishpermanentfreezefix. Leave
+CPUcopiesenabled(GPUOFF), verify1/touchON forusableUI whilecachedCIbuilds.
+Physicalinput/UIacceptanceisnotcompleteforGPUmode.
+
 ## 2026-11-20: BOOT0106 isolates job execution; cached candidate0174
 
 Exactcachedcandidate7e56be7f05428c9672d45d93fa357f32a79d20e2 builds
