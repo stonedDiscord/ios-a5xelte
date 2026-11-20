@@ -1,4 +1,11 @@
-ACTIVE BOOT0105tiled HARDWAREPASS full1152000pixels/noerrors; BUTfast
+ACTIVE BOOT0106phase flashedBOOT-onlySUCCESS after44788043452/a59bd6a
+fullCI/source/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel881e7b39...b0cdda/
+BOOTa4133cfc...6af387; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
+Solecapture52314/session97698boot0106-phase-live.log waitingCDC. Needclocks/
+blitON/FWload/touchON->4verifiedframes->fastreplayphases. Bench65539f9retains
+lastphases. SweetCPUidlelatency0=>delaymayblock, awaitingcausalmeasurement.
+
+PREVIOUS BOOT0105tiled HARDWAREPASS full1152000pixels/noerrors; BUTfast
 NEWphaseCI44788043452 exacta59bd6a49500d42472d3a62ade7bedb5b68cd7f0
 active/watch54706. Privategpu-phase-work/artifacts.py+pack0106.py pinsource/
 run/SHA. Waitsamejob->verify->BOOT-only0106->phasebreakdown. Capture49304/

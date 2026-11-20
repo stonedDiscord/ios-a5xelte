@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: phase CI success; BOOT0106 measurement trial
+
+CI44788043452 SUCCESS exacta59bd6a49500d42472d3a62ade7bedb5b68cd7f0.
+All six GPU/replay sources exactlymatch testedcandidate; RTC sources
+unchanged.0173reversecheck/checksum/SMP/actualsourceASanUBSanPASS.
+KernelSHA256881e7b39461d413328f53a23aa8eb18871a963d9c48660758f82329b06b0cdda.
+BOOT0106SHA256a4133cfc42af540f7ced8acdfeb04589a054e443cf0d6b4d1297086df16af387.
+Same8cores/1984MiB/ADT0094/cmd599/stockramdiskDT; syncedDownload then
+Heimdalllowercaseboot upload100percent/success/reboot. Nootherpartition
+flashed. SolecapturePID52314/session97698boot0106-phase-live.log waitsCDC.
+NeedRTC/status/clocks/blitON/FWload/touchON->4verifiedframes->fastreplay
+phasebreakdown. Benchmarknowretains last-attempt phases separately from
+batchmeans (hosttest65539f9PASS). Sourcefinding: SweetCPU leavespowergate
+latencyzero, soGPUdelay calls mayblock; causalhardwareevidencepending.
+
 ## 2026-11-20: BOOT0105 tiled hardware PASS, no speedup; phase candidate0173
 
 PhaseCI44788043452 exacta59bd6a49500d42472d3a62ade7bedb5b68cd7f0 nowactive;
