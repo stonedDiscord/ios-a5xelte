@@ -3,6 +3,14 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0243 exact CI building — 2026-11-20
+
+CI44715311214 in_progress at e6e463fa5eb34448aba98a4b3eb250e98b0a7dc5.
+Private prepare-0243.py waits exact successful run,verifies and packages;
+it never flashes.0242 remains installed; requested comparison restart and
+screen/replug evidence pending. Both startup reliability and automatic USB
+remain unresolved. New0243 trace is diagnostic only.
+
 ## 0242 physical stop at PVH lock acquisition;0243 snapshot prepared — 2026-11-20
 
 User's exact last screen line: `DREAMLTE VM: pvh lock begin paj=2bfd`.
