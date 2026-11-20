@@ -2,6 +2,13 @@
 
 ## 2026-11-20: measured GPU slowdown; tiled dispatch candidate0172
 
+Exact candidate3c22c827b79fe88723cbb638439349c3b6af1071 is building in
+CI44784844777 (macos26intel). Private gpu-tiled-work/artifacts.py and
+pack0105.py pin run/fullSHA, verify all six GPU/replay sources plus unchanged
+RTC sources, reverse patch and artifact checksums before BOOT packaging.
+Expanded fakeDMA iterates actual16x4 groups including padded edge lanes;
+lifecycle ASanUBSan and replay bounds repeat PASS. No new flash yet.
+
 BOOT0104 fresh single-owner boot0104-gpu-resume.log confirms GPU initially
 OFF, 35 CPU copies, healthy storage. Explicit clocks reads ID90910010,
 then blitON and four accepted-frame replays each pass all1152000 pixels,

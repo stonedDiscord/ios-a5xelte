@@ -1,4 +1,9 @@
-ACTIVE GPU2026-11-20: BOOT0104 replay4 full1152000pixelsPASS. First real
+ACTIVE CI44784844777 exact3c22c827b79fe88723cbb638439349c3b6af1071
+Build in progress. Privategpu-tiled-work/artifacts.py+pack0105.py pinexact
+run/SHA/source/checksum/reversepatch/unchangedRTC. NeedfullCI->0105trial.
+Expanded16x4paddedDMA/replayASanUBSanPASS. No newflash;0104stillGPUONverify1.
+
+PREVIOUS GPU2026-11-20: BOOT0104 replay4 full1152000pixelsPASS. First real
 same-frame benchmark8copies: fast139.006ms, CPU1.665ms, verify211.630ms.
 No fallback/quarantine; current GPU is slower, goal NOT complete.0172
 16x4 bounded tiled shader prepared (18000groups vs1152000); nativeMesa/

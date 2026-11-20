@@ -94,13 +94,18 @@ static void fake_write(unsigned o,uint32_t v){
   unsigned width=params[6],height=params[7],count=width*height;
   assert(job[8]==0x80000c0f&&job[10]==(width+15)/16&&job[11]==(height+3)/4);
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
-  for(unsigned i=0;i<count;i++){
-   unsigned y=i/width,x=i%width;
+  unsigned copied=0;
+  for(unsigned gy=0;gy<job[11];gy++)for(unsigned gx=0;gx<job[10];gx++)
+  for(unsigned ly=0;ly<4;ly++)for(unsigned lx=0;lx<16;lx++){
+   unsigned y=gy*4+ly,x=gx*16+lx;
+   if(x>=width||y>=height)continue; /* shader's exact bounds before accesses */
+   copied++;
    assert(walk(params[0]+y*params[4]+x*4,0)==source_physical(so+y*params[4]+x*4));
    assert(walk(params[1]+y*params[5]+x*4,1)==0x9e000000ULL+doff+y*params[5]+x*4);
 
    *(uint32_t *)(dest_mem+doff+y*params[5]+x*4)=*(uint32_t *)(source_mem+so+y*params[4]+x*4);
   }
+  assert(copied==count);
   if(corrupt)*(uint32_t *)(dest_mem+doff)^=1;
 
   *(uint32_t *)((uint8_t*)allocation+0x4000)=1;
