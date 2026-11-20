@@ -3,6 +3,24 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0241 verified and BOOT flashed; screen evidence pending — 2026-11-20
+
+Exact CI44707721507 SUCCESS at7cb2d6780f59bdfe59648f67df1728fbdfd8b797.
+12 source files,11 linked symbols,84 linked diagnostics and profile PASS.
+Kernel SHA256:4fa1d3ada6cbf4b3242f9530ca48b98b8c9dc1277376b0c02abb820d3cce8b25.
+BOOT shim/out/dreamlte-xnu-0241.img,18,466,832bytes,SHA256:
+3c31bf0c15e1d4eadc1f0d03d90c453c90b8600cf0155758f82d9535c10c5765.
+Original header/components,payload and partition fit verified. Live0240
+USB Download Mode transition PASS to same port/device079 without buttons.
+Heimdall wrote BOOT only100%,exit0,rebooted at10:24:31local. First30second
+host observation sees no XNU or Samsung USB; journal ends with079 disconnect.
+Requested exact screen line before restart/replug.0241 now installed; preserve
+this boot pending that evidence. Retained-console retrieval not yet physically
+tested; no VM or automatic USB attachment fix claimed. Private preparation,
+manifest,download-transition and flash logs under ci-44707721507.
+Next: if USB poller,replug once then retrieve retained startup trace; if VM
+stall,record its exact marker before requesting a comparison restart.
+
 ## 0241 pending; 0240 USB remains verified — 2026-11-20
 
 Repeated live0240 check after replug: exact EP0 PASS,3/3ping PASS,
