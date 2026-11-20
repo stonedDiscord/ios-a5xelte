@@ -1,5 +1,18 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0244 verified and BOOT flashed — 2026-11-20
+
+CI44730637160 SUCCESS at e474689a7646ea4a6230fa83e90e87223f9a5881.
+Preparation61685 exit0:12compiled sources,11linked symbols,92diagnostics
+and profile PASS; original BOOT header/components/payload/partition fit PASS.
+Kernel SHA256:8cb57e9cb52015fb91236b8f5a3a8fc236feaee9dbf1b2b41887d8bb1b408fde.
+BOOT shim/out/dreamlte-xnu-0244.img,18,466,832bytes,SHA256:
+3649adb3956f67bac91054691e90d7fa3c067bbc8d125345004cb51324d161c0.
+Live0243 USB Download transition PASS to same port/device085 without buttons.
+Heimdall BOOT-only upload100%,exit0,rebooted. Physical checkpoint and
+cable-attached enumeration pending; preserve this boot for timed trace.
+No VM or automatic USB fix claimed. Private logs under ci-44730637160.
+
 ## 0244 corrected CI and preparation active — 2026-11-20
 
 Exact CI44730637160 is building at e474689a7646ea4a6230fa83e90e87223f9a5881,
