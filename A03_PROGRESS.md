@@ -2,6 +2,14 @@
 
 ## 2026-11-20: BOOT0107 physical UI resumes after one Home
 
+19:01UTCvectorCI44794488664 remainsBuild/in_progress; livejoblog6.3MiB
+confirmscompilationthrough18:58:59. Literalerrorlinesareknownoptional
+alreadyapplieddonorpatchskips, notcompilerfailures. Do notduplicate.
+Oldcapture57854endeddeliberatelybeforeexpiry; soleNEWcapture71717/
+session74884boot0107-vectorwait-live.log ownsconsoleuntil~19:31UTC.
+GPUOFFverify1/cached1/touchON, last5152slices1670events;CPUframecopies
+continue. Expandedtailtestae8377b andcachedresultsdocc83bccc pushed.
+
 User reports frozen/blank duringcachedlivewindow. At18:53UTCGPUwasalready
 OFF(afterbenchmarkrestoration), frames18/quarantine0; display61swaps/
 56copiesunchanged, touch4034slices1658events, iohealthyandcorrectUTC.

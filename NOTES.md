@@ -1,4 +1,10 @@
 ACTIVE0107userconfirmsUIworksafterONEHome18:53UTC. GPUalreadyOFF;stale
+NEWcapture71717/session74884boot0107-vectorwait-live.loguntil~19:31UTC;
+old57854deliberatelystoppedbeforeexpiry. VectorCI44794488664stillBuild
+19:01UTC;livejoblogcompiles18:58:59,optionalpatchskiperrorsNOTcompiler
+failure. Waitsame40061watch. GPUOFFverify1/cached1/touchON/CPUframesadvance.
+
+PREVIOUS0107userconfirmsUIworksafterONEHome18:53UTC. GPUalreadyOFF;stale
 swaps61/copies56->585/580, CPU562/GPU18/quarantine0. TouchON4092slices/
 1670events. Homewakeproven,notGPUfreezeetiology/permanentidlefix. Leave
 GPUOFFverify1. VectorCI44794488664/734646c stillBuild18:54;watch40061.
