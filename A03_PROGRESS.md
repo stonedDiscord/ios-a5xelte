@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: pixel cache policy CI success; BOOT0115 trial
+
+CI44828092327 SUCCESS exact3ed3ad339ce0b4edfe23c50370dd8e2134ae9c1e.
+Sixsourcesexactmatch/RTCunchanged/reverse0183/checksum/SMP/actualsource
+lifecycle+replayASanUBSanPASS.
+KernelSHA256b760ef93d481c06a2a1ccf85fd270758aa76503f8f8e42974a58238ace3e9338.
+BOOT0115SHA2568c195289534641bb48f0693df6041206348fc2e125d77612c43bab0493adc345.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload thenBOOT-only
+Heimdall uploadsuccess/reboot22:36UTC. Sole session97962capture
+boot0115-memattr-live.logwaitsCDC. Needclocks/cachedwarm/GPUONverify1/FWload/
+touchON/acceptedframe->a03-gpu-memattr-benchmark.py (fourfreshreadbacksper
+policy+paired3rounds8copies+restore). Hosthelper0530738PASS. No0183HWclaimyet.
+
 ## 2026-11-20: pixel cache attribute CI active
 
 22:20UTC CI44828092327 queued exact3ed3ad339ce0b4edfe23c50370dd8e2134ae9c1e.
