@@ -2,6 +2,9 @@
 
 ## 0241 retained startup console diagnostic prepared — 2026-11-20
 
+CI44707721507 dispatched at7cb2d6780f59bdfe59648f67df1728fbdfd8b797.
+Private prepare-0241.py waits exact run/head,verifies and packages;never flashes.
+
 Current0240/device078 remains live after replug: EP0,3/3ping and163bytes
 XNU UDP PASS on repeat check. No new reset or flash. Added read-only EP0
 requests52(metadata,DLOG+little-endian length) and53(explicit offset,1..512
