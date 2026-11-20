@@ -1,0 +1,38 @@
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -69,6 +69,7 @@
+     uint64_t vsyncEntered, vsyncDone, vsyncAt;
+     uint64_t swapEntered, swapDone, swapAt, copies, copyAt;
+     uint64_t cpuCopies,cpuNs,gpuCopies,gpuNs;
++    uint64_t powerRequests,powerAt,lastPowerRequest;
+     uint64_t notifyAttempt, notifyOK, notifyError, notifySkipped, notifyAt, lastError;
+ };
+ static A03DisplayStats a03_display_stats;
+@@ -85,6 +86,8 @@
+         a03_fb_read(&s->swapEntered), a03_fb_read(&s->swapDone), a03_fb_read(&s->swapAt),
+         a03_fb_read(&s->copies), a03_fb_read(&s->copyAt));
+     IOLog("A03 DISPLAY copy timing cpu=%llu/%lluns gpu=%llu/%lluns\n",a03_fb_read(&s->cpuCopies),a03_fb_read(&s->cpuNs),a03_fb_read(&s->gpuCopies),a03_fb_read(&s->gpuNs));
++    IOLog("A03 DISPLAY power requests=%llu last-value=%llu last=%llu; observed requests only\n",
++        a03_fb_read(&s->powerRequests),a03_fb_read(&s->lastPowerRequest),a03_fb_read(&s->powerAt));
+     IOLog("A03 DISPLAY notify attempts=%llu ok=%llu errors=%llu skipped=%llu last=%llu error=0x%llx\n",
+         a03_fb_read(&s->notifyAttempt), a03_fb_read(&s->notifyOK), a03_fb_read(&s->notifyError),
+         a03_fb_read(&s->notifySkipped), a03_fb_read(&s->notifyAt), a03_fb_read(&s->lastError));
+@@ -463,6 +466,18 @@
+     __unused void *reference)
+ {
+ 	if (args == NULL) return kIOReturnBadArgument;
++    /* Matching iOS16 IOMobileFramebuffer _kern_RequestPowerChange sends
++     * selector12, one scalar and no output. Observe before existing shape
++     * validation, preserving its error result and panel behavior. This is
++     * a request, not proof of sleep or a completed power transition. */
++    if(selector==12 && args->scalarInputCount==1 && args->scalarOutputCount==0 && args->scalarInput) {
++        A03DisplayStats *s=&a03_display_stats;
++        uint64_t value=args->scalarInput[0],old=a03_fb_read(&s->lastPowerRequest);
++        a03_fb_set(&s->lastPowerRequest,value);a03_fb_set(&s->powerAt,mach_absolute_time());
++        a03_fb_inc(&s->powerRequests);
++        if(a03_fb_read(&s->powerRequests)<=8 || value!=old)
++            IOLog("A03 FB: power request value=%llu (observed, not applied)\n",value);
++    }
+ 	uint32_t expectedIn = 0, expectedOut = 0;
+ 	switch (selector) {
+ 	case kSweetFBGetLayerDefaultSurface: expectedIn = 2; expectedOut = 1; break;

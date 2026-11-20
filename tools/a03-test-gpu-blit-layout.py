@@ -5,7 +5,7 @@ import argparse,hashlib,json,re,shlex,subprocess,tempfile
 ROOT=Path(__file__).resolve().parents[1]
 p=argparse.ArgumentParser(description=__doc__);p.add_argument('--mesa-build',type=Path);a=p.parse_args()
 header=(ROOT/'tools/a03-gpu-blit-layout.h').read_text()
-for name,count,pattern in [('blit',80,r'SHA256 ([0-9a-f]{64})'),('fullscreen',16,r'Exact full-screen shader SHA256 ([0-9a-f]{64})')]:
+for name,count,pattern in [('blit',80,r'SHA256 ([0-9a-f]{64})'),('fullscreen',48,r'Exact full-screen shader SHA256 ([0-9a-f]{64})')]:
  body=header.split('a03_g57_'+name+'_code[] = {',1)[1].split('};',1)[0]
  words=[int(x,16) for x in re.findall(r'0x([0-9a-f]{16})ULL,',body)]
  assert len(words)==count,(name,len(words))
@@ -27,7 +27,7 @@ int main(void){
  }
  /* Specialized dispatch is selected only for the complete exact ABI. */
  assert(a03_gpu_blit_layout(m,0x120000000ULL,0,0,3072,2880,720,1600));
- assert(j[8]==0x80000c0e&&j[10]==12&&j[11]==400);
+ assert(j[8]==0x80000c0e&&j[10]==3&&j[11]==400);
  assert(!memcmp((char *)m+0x5000,a03_g57_fullscreen_code,sizeof(a03_g57_fullscreen_code)));
  const unsigned variants[][6]={{4,0,3072,2880,720,1600},{0,4,3072,2880,720,1600},{0,0,3076,2880,720,1600},{0,0,3072,2884,720,1600},{0,0,3072,2880,719,1600},{0,0,3072,2880,720,1599}};
  for(unsigned v=0;v<sizeof(variants)/sizeof(variants[0]);v++){
@@ -71,7 +71,7 @@ with tempfile.TemporaryDirectory(prefix='a03-blit-layout-') as temp:
   fixture=next(n.args[0].value for n in ast.walk(tree) if isinstance(n,ast.Call) and isinstance(n.func,ast.Attribute) and n.func.attr=='write_text' and n.args and isinstance(n.args[0],ast.Constant) and isinstance(n.args[0].value,str) and 'MALI_COMPUTE_PAYLOAD p=' in n.args[0].value)
   fixture=fixture.replace('a03-gpu-copy-layout.h','a03-gpu-blit-layout.h').replace('a03_gpu_copy_layout(mem,0x120000000ULL,1024)','a03_gpu_blit_layout(mem,0x120000000ULL,0,0,3072,2880,720,1600)').replace('A03_GPU_SCRATCH_SIZE','A03_GPU_BLIT_SIZE').replace('.workgroup_count_x=1024','.workgroup_count_x=720').replace('.workgroup_count_y=1,','.workgroup_count_y=1600,').replace('.r48_r63=0x1000','.r48_r63=0x3000')
   fixture=fixture.replace('.workgroup_size_x=1,','.workgroup_size_x=16,').replace('.workgroup_size_y=1,','.workgroup_size_y=4,').replace('.workgroup_count_x=720,','.workgroup_count_x=45,').replace('.workgroup_count_y=1600,','.workgroup_count_y=400,')
-  fixture=fixture.replace('.workgroup_size_x=16,','.workgroup_size_x=15,').replace('.workgroup_count_x=45,','.workgroup_count_x=12,')
+  fixture=fixture.replace('.workgroup_size_x=16,','.workgroup_size_x=15,').replace('.workgroup_count_x=45,','.workgroup_count_x=3,')
   generic=fixture.replace('3072,2880,720,1600)','3072,2880,719,1599)').replace('.workgroup_size_x=15,','.workgroup_size_x=16,').replace('.workgroup_count_x=3,','.workgroup_count_x=12,')
   for selected in [fixture,generic]:
    c.write_text(selected);subprocess.run(flags+['-UNDEBUG','-I'+str(ROOT/'tools'),str(c),'-o',str(exe)],cwd=build,check=True);subprocess.run([str(exe)],check=True)

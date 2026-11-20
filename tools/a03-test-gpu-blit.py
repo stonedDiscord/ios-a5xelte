@@ -115,14 +115,14 @@ static void fake_write(unsigned o,uint32_t v){
   unsigned width=params[6],height=params[7],count=width*height;
   unsigned specialized=params[0]==0x04000000&&params[1]==0x05000000&&params[4]==3072&&params[5]==2880&&width==720&&height==1600;
   unsigned local_x=specialized?15:16,pixels=4;
-  assert(job[8]==(specialized?0x80000c0e:0x80000c0f)&&job[10]==(specialized?12:(width+63)/64)&&job[11]==(height+3)/4);
+  assert(job[8]==(specialized?0x80000c0e:0x80000c0f)&&job[10]==(specialized?3:(width+63)/64)&&job[11]==(height+3)/4);
   check_shader(specialized);
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
   unsigned copied=0;
   for(unsigned gy=0;gy<job[11];gy++)for(unsigned gx=0;gx<job[10];gx++)
   for(unsigned ly=0;ly<4;ly++)for(unsigned lx=0;lx<local_x;lx++)
-  for(unsigned component=0;component<pixels;component++){
-   unsigned y=gy*4+ly,x=(gx*local_x+lx)*pixels+component;
+  for(unsigned component=0;component<(specialized?16:pixels);component++){
+   unsigned y=gy*4+ly,x=(gx*local_x+lx)*pixels+(specialized?(component/4)*180+component%4:component);
    if(x>=width||y>=height)continue; /* shader's exact bounds before accesses */
    copied++;
    assert(walk(params[0]+y*params[4]+x*4,0)==source_physical(so+y*params[4]+x*4));

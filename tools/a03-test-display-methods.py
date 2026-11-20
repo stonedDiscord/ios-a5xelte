@@ -1,22 +1,33 @@
 #!/usr/bin/env python3
 """Exercise actual patched display external methods with host IOKit stubs."""
 from pathlib import Path
-import subprocess,tempfile
+import argparse,subprocess,tempfile
 root=Path(__file__).resolve().parent.parent
-patch=(root/'xnu/a03/0123-a03-opt-in-ios16-display-surface.patch').read_text()
-part=patch.split('+++ b/iokit/Kernel/arm/SweetFramebuffer.cpp\n',1)[1].split('--- ',1)[0]
-p='\n'.join(x[1:] for x in part.splitlines() if x.startswith('+'))
-# Apply every contextual hunk before extracting the actual method body.
-with tempfile.TemporaryDirectory() as d:
- q=Path(d)/'iokit/Kernel/arm/SweetFramebuffer.cpp';q.parent.mkdir(parents=True);q.write_text(p+'\n')
- subprocess.run(['git','apply',str(root/'xnu/a03/0127-a03-default-surface-dimensions.patch')],cwd=d,check=True)
- p=q.read_text()
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--source',type=Path)
+args=parser.parse_args()
+if args.source:
+ p=(args.source/'iokit/Kernel/arm/SweetFramebuffer.cpp').read_text()
+else:
+ patch=(root/'xnu/a03/0123-a03-opt-in-ios16-display-surface.patch').read_text()
+ part=patch.split('+++ b/iokit/Kernel/arm/SweetFramebuffer.cpp\n',1)[1].split('--- ',1)[0]
+ p='\n'.join(x[1:] for x in part.splitlines() if x.startswith('+'))
+ with tempfile.TemporaryDirectory() as d:
+  q=Path(d)/'iokit/Kernel/arm/SweetFramebuffer.cpp';q.parent.mkdir(parents=True);q.write_text(p+'\n')
+  subprocess.run(['git','apply',str(root/'xnu/a03/0127-a03-default-surface-dimensions.patch')],cwd=d,check=True)
+  p=q.read_text()
 start=p.index('static uint64_t sweet_fb_logged;');src=p[start:p.rindex('#endif')]
 pre=r'''
 #include <cassert>
 #include <cstdint>
 #include <cstring>
 #include <cstdio>
+struct A03DisplayStats {uint64_t powerRequests=0,powerAt=0,lastPowerRequest=0;};
+static A03DisplayStats a03_display_stats;
+static uint64_t a03_fb_read(const uint64_t *p){return *p;}
+static void a03_fb_inc(uint64_t *p){++*p;}
+static void a03_fb_set(uint64_t *p,uint64_t v){*p=v;}
+static uint64_t mach_absolute_time(){return 1234;}
 using std::memcpy;
 #define __unused __attribute__((unused))
 #define APPLE_KEXT_OVERRIDE
@@ -49,5 +60,13 @@ a.structureInputSize=0;a.scalarInputCount=4;in[0]=10;in[1]=11;in[2]=5;assert(cal
 a.scalarInputCount=0;assert(call(999)==kIOReturnUnsupported);
 puts("A03 actual external method: exact scalar shapes, canvas-dimension defaults, swap400/null guards, notifications and unknown selector propagation PASS");}
 '''
+if args.source and 'powerRequests' in src:
+ tests=tests.replace('puts("A03 actual', r"""
+ a.scalarInput=in;a.scalarInputCount=1;a.scalarOutputCount=0;in[0]=2;
+ assert(call(12)==kIOReturnBadArgument&&a03_display_stats.powerRequests==1&&a03_display_stats.lastPowerRequest==2&&a03_display_stats.powerAt==1234);
+ in[0]=0;assert(call(12)==kIOReturnBadArgument&&a03_display_stats.powerRequests==2&&a03_display_stats.lastPowerRequest==0);
+ a.scalarInput=nullptr;assert(call(12)==kIOReturnBadArgument&&a03_display_stats.powerRequests==2);
+ a.scalarInput=in;a.scalarInputCount=0;assert(call(12)==kIOReturnUnsupported&&a03_display_stats.powerRequests==2);
+ puts("A03 actual""")
 with tempfile.TemporaryDirectory() as d:
- p=Path(d);(p/'t.cpp').write_text(pre+src+tests);subprocess.run(['c++','-std=c++17','-Wall','-Wextra','-Wno-unused-variable','-Werror',str(p/'t.cpp'),'-o',str(p/'t')],check=True);subprocess.run([str(p/'t')],check=True)
+ p=Path(d);(p/'t.cpp').write_text(pre+src+tests);subprocess.run(['c++','-std=c++17','-Wall','-Wextra','-Wno-unused-variable','-Wno-unused-function','-Werror',str(p/'t.cpp'),'-o',str(p/'t')],check=True);subprocess.run([str(p/'t')],check=True)

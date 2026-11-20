@@ -1,3 +1,12 @@
+ACTIVE0112HWfullreadbackPASS9verified;pairedGPUmedian2.230663ms vsCPU1.668356ms,
+stillnospeedup. GPUrestoreverify1ONafterbenchmark; turnOFF/powered0beforeidle.
+TouchON. Sole106124/session85627boot0112-full4-live.loguntil~21:48UTC.
+0180coalescedquarters384bytes/15x4/3x400 candidate+0181readonlypowerrequest
+observer(selector12 rawscalar/time/counter;keepsbadargument/panelbehavior).
+NativeMesa/primaryv9/actualASanUBSan/ARM64GPUAMFI/profile127/methodtestsPASS.
+Needcommit/fullCI->artifactgates/pack0113->BOOT-only->4fullreadbacks->paired/
+physicalUI. Needactualpowerrequestcorrelationforsleephypothesis. Goalactive.
+
 ACTIVE0112full4BOOT-onlyflashSUCCESS21:17UTC afterCI44817012332/f712f5f
 exactsource/RTC/checksum/reverse0179/SMP/actualASanUBSanPASS. Kernel4f28bf12...
 865da0/BOOTf9ab4fab...d40d13; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.

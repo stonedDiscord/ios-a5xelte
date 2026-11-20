@@ -416,3 +416,12 @@ threads and12x400 groups (128bytes,32regs,TLSWLS0). Neighboring lanes now
 copy contiguous16byte units. Generic4 fallback and all safety checks remain.
 Its SHA256 is c4f0ba76ccd62ed3f455b2dc9d02e85276a54251af66a1a6b39b97c5567d545b.
 Host reproduction/packers/lifecycle/ARM64/profile125 pass; hardware pending.
+
+
+BOOT0112 hardware: full readbacks pass; paired GPU median2.231ms versus
+CPU1.668ms. 0180 tests four coalesced180pixel strips per row, reusing each
+thread across four strips while preserving contiguous accesses among lanes.
+It remains exact-fullscreen only; generic fallback and lifecycle are unchanged.
+0181 independently observes raw iOS16 display-power requests (selector12,
+one scalar). It preserves current return codes and panel behavior; observing
+a request is not evidence of a completed power transition or a freeze fix.

@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0112 fullreadback PASS2.23ms; coalesced strips0180/power observer0181
+
+BOOT0112 actual720x1600 readbacks zero mismatches/done1/retired1, nine
+verified copies before fast. Paired CPU1.668356/1.684567/1.503557ms;
+GPU2.262365/2.147485/2.230663ms, medianGPU2.230663 vsCPU1.668356ms.
+Four-pixel fullscreen improves0111GPU4.10ms but remains slower than CPU.
+No fallback/quarantine; touchFW79104/load0/A55A/restart streamON. Need
+GPUOFF/powered0 verified before leaving measurement. Sole106124/session85627
+boot0112-full4-live.log until~21:48UTC.
+
+0180 exact fullscreen coalesced strips candidate: each15x4 thread copies
+four16byte chunks separated by720bytes (180pixels),3x400groups; covers
+720pixels exactly without partial tails. Unlike0110/0111 neighboring lanes
+remain contiguous. Binary384bytes32regsTLSWLS0, SHAe7fa80c57d8b6affccca27f7e3e7f2ba7c11631d0fa76d778b3e799c2d3fe60e.
+PrimaryMesa/actualASanUBSan/ARM64GPUAMFI/profile127 PASS; nohardwareclaim.
+
+0181 observes selector12 one-scalar/no-output display-power requests before
+existing shape validation; preserves return status/panel behavior. Matching
+20A362 cache symbol _kern_RequestPowerChange at1ad7db4ec sends selector12 via
+_IOConnectCallScalarMethod (stub1af7f9018 ->18e147574). Requests recorded as
+raw values/timestamps/counter, no assumed enum or sleep-completion claim.
+Actual method host test covers valid0/2, malformed/null, preserved errors;
+replay regressionPASS. Need fullCI and real request/freeze correlation.
+
 ## 2026-11-20: four-pixel fullscreen CI success; BOOT0112 trial
 
 CI44817012332 SUCCESS exactf712f5fd9cc4767f04589ca9e6da2fa7bf02b58b.
