@@ -1,4 +1,11 @@
 ACTIVE0108vectorHARDWAREPASSfullpixels;fast3.542ms(execute1.680)vsCPU1.406.
+NEWwarmCI44801549767 exact6948d5ead5fe0dce4d2594ea56e4af96a5b7911e
+active/watch43109. Privategpu-warm-work/artifacts.py+pack0109.py pinexact
+sources/RTC/SHA/run. NeedfullCI->0109->cachedwarm4fullreadbacks->fastCPU.
+Current0108GPUOFFverify1/cached1/touchrestartON;capture76088/session37152
+until~19:45UTC. NospeedupoverCPUorGPUphysicalacceptanceclaimyet.
+
+PREVIOUS0108vectorHARDWAREPASSfullpixels;fast3.542ms(execute1.680)vsCPU1.406.
 Power+off1.327msoverhead. GPU27/verified19/fallback0/quarantine0;leftGPUOFF/
 verify1/cached1. Touchstoppedvalid14after42events,restartONconfirmed.
 0176explicitwarmownership(defaultcold)prepared,ASanUBSan/ARM64/profile122

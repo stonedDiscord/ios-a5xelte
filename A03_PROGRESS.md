@@ -2,6 +2,12 @@
 
 ## 2026-11-20: vector hardware PASS3.54ms; warmownershipcandidate0176
 
+WarmCI44801549767 exact6948d5ead5fe0dce4d2594ea56e4af96a5b7911e active;
+watch43109. Privategpu-warm-work/artifacts.py+pack0109.py pinfullSHA/run/
+sixsources/RTC/reversepatch/checksum. NeedfullCI->0109->explicitcachedwarm
+GPUONverify1->4fullreadbacks->fastCPUcomparison. Current0108GPUOFFverify1/
+cached1/touchrestartON. Capture76088/session37152until~19:45UTC;revalidate.
+
 BOOT0108actualswaps+replay4 eachfull1152000pixels/mismatches0/done1/
 retired1/verify1/PASS1. Fast8-copymean3.541731ms (execute1.680307ms),
 CPU1.405543ms. Vector improvescachedscalar6.170ms butCPUstillfaster.
