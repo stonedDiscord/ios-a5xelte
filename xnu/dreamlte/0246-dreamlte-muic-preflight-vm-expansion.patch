@@ -1,0 +1,231 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -116,6 +116,62 @@
+ 	printf("DREAMLTE CMU %s: TOPMUX=%08x DIV=%08x GATE=%08x\n", stage, v->mux, v->div, v->gate);
+ 	printf("DREAMLTE PREREQ %s: ISOL=%08x REFSEL=%08x\n", stage, v->isolation, v->refsel);
+ }
++/* MUIC access preflight only. Pinned Samsung3cfb914 and live DT:
++ * 10970000 uses rate_hsi2c=0x121 (PERIC1_BUS user mux) and
++ * gate_hsi2c=0x110 (USI13), NOT BUSC HSI2CDF. Do not send I2C traffic,
++ * change clocks/pins, or read TRANS_STATUS (its DONE bit clears on read).
++ * Require stable, explicitly enabled manual gates before touching either
++ * peripheral bank. A refusal is useful evidence, not a route measurement.
++ */
++static vm_offset_t dreamlte_muic_cmu, dreamlte_muic_gpio, dreamlte_muic_i2c;
++static bool
++dreamlte_muic_gate_ready(uint32_t gate)
++{
++	return gate != 0xffffffffu &&
++	    (gate & ((1u << 21) | (1u << 20))) == ((1u << 21) | (1u << 20)) &&
++	    !(gate & (1u << 28));
++}
++static void
++dreamlte_muic_preflight(const char *stage)
++{
++	if (!dreamlte_muic_cmu) return;
++	uint32_t bus = usb_rd(dreamlte_muic_cmu, 0x100);
++	uint32_t pclk = usb_rd(dreamlte_muic_cmu, 0x20cc);
++	uint32_t sclk = usb_rd(dreamlte_muic_cmu, 0x20d0);
++	uint32_t gpio = usb_rd(dreamlte_muic_cmu, 0x2028);
++	uint32_t qch = usb_rd(dreamlte_muic_cmu, 0x3068);
++	uint32_t sync = usb_rd(dreamlte_muic_cmu, 0x2044);
++	printf("DREAMLTE MUIC %s: BUS=%08x PCLK=%08x SCLK=%08x GPIO=%08x QCH=%08x SYNC=%08x\n",
++	    stage, bus, pclk, sclk, gpio, qch, sync);
++	if (bus == 0xffffffffu || (bus & (1u << 7)) ||
++	    !dreamlte_muic_gate_ready(sync)) {
++		printf("DREAMLTE MUIC: bus not held stable/on; peripheral banks not read\n");
++		return;
++	}
++	if (dreamlte_muic_gate_ready(gpio) && dreamlte_muic_gpio) {
++		/* Pinned pinctrl-exynos: PERIC1 GPE5 bank0xc0; FUNC0, DAT4,
++		 * PUD8. SDA/SCL pins6/7 expect function2, as live hsi2c32-bus. */
++		printf("DREAMLTE MUIC %s: GPE5 CON=%08x DAT=%08x PUD=%08x\n", stage,
++		    usb_rd(dreamlte_muic_gpio, 0xc0),
++		    usb_rd(dreamlte_muic_gpio, 0xc4),
++		    usb_rd(dreamlte_muic_gpio, 0xc8));
++	} else {
++		printf("DREAMLTE MUIC: GPIO gate not held on; pins not read\n");
++	}
++	if (dreamlte_muic_gate_ready(pclk) && dreamlte_muic_i2c) {
++		/* Register configuration only; no FIFO data, IRQ or transfer
++		 * status read, and no writes even if firmware state is unusable. */
++		printf("DREAMLTE MUIC %s: CTL=%08x CONF=%08x AUTO=%08x ADDR=%08x\n", stage,
++		    usb_rd(dreamlte_muic_i2c, 0x00), usb_rd(dreamlte_muic_i2c, 0x40),
++		    usb_rd(dreamlte_muic_i2c, 0x44), usb_rd(dreamlte_muic_i2c, 0x70));
++		printf("DREAMLTE MUIC %s: FS1=%08x FS2=%08x FS3=%08x SLA=%08x\n", stage,
++		    usb_rd(dreamlte_muic_i2c, 0x60), usb_rd(dreamlte_muic_i2c, 0x64),
++		    usb_rd(dreamlte_muic_i2c, 0x68), usb_rd(dreamlte_muic_i2c, 0x6c));
++	} else {
++		printf("DREAMLTE MUIC: I2C gate not held on; controller not read\n");
++	}
++}
++
+ /* Samsung CAL exynos_cal_usbphy_q_ch(enable=1), before DCTL reset.
+  * Only the measured primary PIPE-clock selection is supported here. Do not
+  * change the port mux, PLL/reference tuning, power domains or clock rates.
+@@ -433,6 +489,10 @@
+ 	dreamlte_usb_refsel = ml_io_map(0x10e50070, 0x10);
+ 	if (!dreamlte_fsys_cmu || !dreamlte_top_cmu ||
+ 	    !dreamlte_usb_pmu || !dreamlte_usb_refsel) return;
++	dreamlte_muic_cmu = ml_io_map(0x10800000, 0x4000);
++	dreamlte_muic_gpio = ml_io_map(0x10980000, 0x1000);
++	dreamlte_muic_i2c = ml_io_map(0x10970000, 0x1000);
++	dreamlte_muic_preflight("inherited");
+ 	struct dreamlte_usb_clocks inherited;
+ 	dreamlte_usb_clocks_capture(&inherited);
+ 	dreamlte_usb_clocks_print("inherited", &inherited);
+@@ -1449,6 +1509,7 @@
+ 		if ((++ticks % 30000) == 0) {
+ #if defined(DREAMLTE)
+ 			dreamlte_usb_attach_snapshot("poll", 0);
++			if (ticks <= 90000) dreamlte_muic_preflight("poll");
+ #endif
+ 			printf("SWEET USB: ue0 rx %llu tx %llu frames\n", ud.rx_frames, ud.tx_frames);
+ 		}
+--- a/osfmk/arm/pmap/pmap.c
++++ b/osfmk/arm/pmap/pmap.c
+@@ -353,6 +353,12 @@
+ #if defined(DREAMLTE)
+ extern boolean_t dreamlte_pmap_array_mapping;
+ extern unsigned int dreamlte_pmap_array_enter_count;
++static boolean_t
++dreamlte_pmap_expand_diag(pmap_t pmap)
++{
++	return dreamlte_pmap_array_mapping && pmap == kernel_pmap;
++}
++
+ #endif
+ extern vm_offset_t     static_memory_end;
+ 
+@@ -3493,10 +3499,16 @@
+ 	unsigned int level,
+ 	unsigned int options)
+ {
++	boolean_t dreamlte_tt_diag = FALSE;
++#if defined(DREAMLTE)
++	dreamlte_tt_diag = dreamlte_pmap_expand_diag(pmap);
++#endif
+ 	pmap_paddr_t pa;
+ 	*ttp = NULL;
+ 
++	if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt alloc lock begin level=%u\n", level);
+ 	pmap_lock(pmap, PMAP_LOCK_EXCLUSIVE);
++	if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt alloc lock acquired\n");
+ 	if ((tt_free_entry_t *)pmap->tt_entry_free != NULL) {
+ 		tt_free_entry_t *tt_free_cur, *tt_free_next;
+ 
+@@ -3507,6 +3519,7 @@
+ 		pmap->tt_entry_free = (tt_entry_t *)tt_free_next;
+ 	}
+ 	pmap_unlock(pmap, PMAP_LOCK_EXCLUSIVE);
++	if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt free-list result=%p\n", *ttp);
+ 
+ 	if (*ttp == NULL) {
+ 		pt_desc_t       *ptdp;
+@@ -3514,20 +3527,25 @@
+ 		/*
+ 		 *  Allocate a VM page for the level x page table entries.
+ 		 */
++		if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt page alloc begin\n");
+ 		while (pmap_pages_alloc_zeroed(&pa, PAGE_SIZE, ((options & PMAP_TT_ALLOCATE_NOWAIT)? PMAP_PAGES_ALLOCATE_NOWAIT : 0)) != KERN_SUCCESS) {
+ 			if (options & PMAP_OPTIONS_NOWAIT) {
+ 				return KERN_RESOURCE_SHORTAGE;
+ 			}
++			if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt page wait\n");
+ 			VM_PAGE_WAIT();
+ 		}
+ 
++		if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt page allocated pa=%llx; ptd begin\n", (unsigned long long)pa);
+ 		while ((ptdp = ptd_alloc(pmap)) == NULL) {
+ 			if (options & PMAP_OPTIONS_NOWAIT) {
+ 				pmap_pages_free(pa, PAGE_SIZE);
+ 				return KERN_RESOURCE_SHORTAGE;
+ 			}
++			if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt ptd wait\n");
+ 			VM_PAGE_WAIT();
+ 		}
++		if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt ptd allocated=%p\n", ptdp);
+ 
+ 		if (level < pt_attr_leaf_level(pmap_get_pt_attr(pmap))) {
+ 			OSAddAtomic64(1, &alloc_ttepages_count);
+@@ -3541,6 +3559,7 @@
+ 
+ 		PMAP_ZINFO_PALLOC(pmap, PAGE_SIZE);
+ 
++		if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt pvh publish begin\n");
+ 		pvh_update_head_unlocked(pai_to_pvh(pa_index(pa)), ptdp, PVH_TYPE_PTDP);
+ 		/* Clear all PVH flags when using a page for a PTD to avoid tripping unexpected page flag usage checks. */
+ 		pvh_set_flags(pai_to_pvh(pa_index(pa)), 0);
+@@ -3566,6 +3585,7 @@
+ 	assert(*ttp);
+ #endif
+ 
++	if (dreamlte_tt_diag) kprintf("DREAMLTE VM: tt alloc returned=%p\n", *ttp);
+ 	return KERN_SUCCESS;
+ }
+ 
+@@ -5950,6 +5970,7 @@
+ 		/* Must unlock to expand the pmap. */
+ 		pmap_unlock(pmap, lock_mode);
+ 
++		if (dreamlte_diag_detail) kprintf("DREAMLTE VM: expand caller unlocked\n");
+ 		kr = pmap_expand(pmap, v, options, pt_attr_leaf_level(pt_attr));
+ 		if (dreamlte_diag_detail) {
+ 			kprintf("DREAMLTE VM: pmap expand returned kr=%d\n", kr);
+@@ -6824,6 +6845,11 @@
+ 	unsigned int options,
+ 	unsigned int level)
+ {
++	boolean_t dreamlte_expand_diag = FALSE;
++#if defined(DREAMLTE)
++	dreamlte_expand_diag = dreamlte_pmap_expand_diag(pmap);
++#endif
++	if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand entered va=%p level=%u\n", (void *)v, level);
+ 	__unused const pt_attr_t * const pt_attr = pmap_get_pt_attr(pmap);
+ 
+ 	if (__improbable((v < pmap->min) || (v >= pmap->max))) {
+@@ -6838,12 +6864,15 @@
+ 	tt_p =  (tt_entry_t *)NULL;
+ 
+ 	for (; ttlevel < level; ttlevel++) {
++		if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand shared lock begin level=%u\n", ttlevel);
+ 		if (!pmap_lock_preempt(pmap, PMAP_LOCK_SHARED)) {
+ 			return KERN_ABORTED;
+ 		}
+ 
++		if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand shared lock acquired\n");
+ 		if (pmap_ttne(pmap, ttlevel + 1, v) == PT_ENTRY_NULL) {
+ 			pmap_unlock(pmap, PMAP_LOCK_SHARED);
++			if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand tt allocate begin\n");
+ 			while (pmap_tt_allocate(pmap, &tt_p, ttlevel + 1, ((options & PMAP_TT_ALLOCATE_NOWAIT)? PMAP_PAGES_ALLOCATE_NOWAIT : 0)) != KERN_SUCCESS) {
+ 				if (options & PMAP_OPTIONS_NOWAIT) {
+ 					return KERN_RESOURCE_SHORTAGE;
+@@ -6858,15 +6887,20 @@
+ #endif
+ 			}
+ 
++			if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand tt allocated=%p; exclusive lock begin\n", tt_p);
+ 			if (!pmap_lock_preempt(pmap, PMAP_LOCK_EXCLUSIVE)) {
+ 				pmap_tt_deallocate(pmap, tt_p, ttlevel + 1);
+ 				return KERN_ABORTED;
+ 			}
+ 
++			if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand exclusive lock acquired\n");
+ 			if ((pmap_ttne(pmap, ttlevel + 1, v) == PT_ENTRY_NULL)) {
++				if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand pte init begin\n");
+ 				pmap_init_pte_page(pmap, (pt_entry_t *) tt_p, v, ttlevel + 1, FALSE);
++				if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand pte init returned; translate begin\n");
+ 				pa = kvtophys_nofail((vm_offset_t)tt_p);
+ 				tte_p = pmap_ttne(pmap, ttlevel, v);
++				if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand publish ttep=%p pa=%llx\n", tte_p, (unsigned long long)pa);
+ 				*tte_p = (pa & ARM_TTE_TABLE_MASK) | ARM_TTE_TYPE_TABLE | ARM_TTE_VALID;
+ 				PMAP_TRACE(4 + ttlevel, PMAP_CODE(PMAP__TTE), VM_KERNEL_ADDRHIDE(pmap), VM_KERNEL_ADDRHIDE(v & ~pt_attr_ln_offmask(pt_attr, ttlevel)),
+ 				    VM_KERNEL_ADDRHIDE((v & ~pt_attr_ln_offmask(pt_attr, ttlevel)) + pt_attr_ln_size(pt_attr, ttlevel)), *tte_p);
+@@ -6884,6 +6918,7 @@
+ 		}
+ 	}
+ 
++	if (dreamlte_expand_diag) kprintf("DREAMLTE VM: expand complete\n");
+ 	return KERN_SUCCESS;
+ }
+ 

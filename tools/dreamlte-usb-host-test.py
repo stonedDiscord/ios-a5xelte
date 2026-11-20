@@ -43,6 +43,7 @@ if 'DREAMLTE USB: session LINK=' in source:
 code = r'''
 #include <assert.h>
 #include <stdint.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 typedef uintptr_t vm_offset_t;
@@ -54,6 +55,8 @@ static unsigned maps, starts, phy_reads;
 static unsigned delays, ignore_retention, force_suspend_readback;
 static int mode;
 static vm_offset_t ml_io_map(uintptr_t pa, unsigned size) {
+    if ((pa == 0x10800000 && size == 0x4000) ||
+        ((pa == 0x10980000 || pa == 0x10970000) && size == 0x1000)) return (uintptr_t)core;
     if ((pa == 0x16480000 && size == 0x1000) || (pa == 0x10e50070 && size == 0x10)) return (uintptr_t)core;
     if ((pa == 0x11000000 && size == 0x4000) || (pa == 0x15a80000 && size == 0x3000)) return (uintptr_t)core;
     maps++;
@@ -100,6 +103,10 @@ code += 'static void\n' + function('dreamlte_usb_vbus') + '\n'
 code += re.search(r'struct dreamlte_usb_clocks \{[^}]+\};', source).group() + '\n'
 code += 'static void\n' + function('dreamlte_usb_clocks_capture') + '\n'
 code += 'static void\n' + function('dreamlte_usb_clocks_print') + '\n'
+if 'dreamlte_muic_preflight' in source:
+    code += 'static vm_offset_t dreamlte_muic_cmu, dreamlte_muic_gpio, dreamlte_muic_i2c;\n'
+    code += 'static bool\n' + function('dreamlte_muic_gate_ready') + '\n'
+    code += 'static void\n' + function('dreamlte_muic_preflight') + '\n'
 code += 'static void\n' + function('sweet_usb_probe') + '\n'
 code += r'''
 static void reset(void) {

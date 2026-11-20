@@ -1,5 +1,34 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0246 passive MUIC preflight and VM expansion checkpoints prepared — 2026-11-20
+
+Correction to earlier clock lead: live DT hsi2c@10970000 uses
+rate_hsi2c0x121=UMUX_CLKCMU_PERIC1_BUS and gate_hsi2c0x110=GATE_USI13.
+BUSC HSI2CDF is not this MUIC bus; earlier BUSC offset suggestions must not
+be used. No registers from that incorrect lead were programmed.
+Pinned Samsung3cfb914658ab077aef9ed500aa4a583782971fbf sources identify
+PERIC1 CMU10800000: BUS user mux100,USI13 PCLK20cc/SCLK20d0,
+GPIO PCLK2028,reset-sync BUSP2044,QCH USI13 3068. GPE5 bankc0
+in GPIO10980000 uses pins6/7,function2 per live hsi2c32-bus.
+
+0246 adds inherited/first-three-poll passive clock/configuration snapshots.
+GPIO/I2C reads require stable BUS mux and reset-sync plus respective gate
+CG_VAL21+MANUAL20 set,automatic28 clear; otherwise log refusal. No clock,
+pin,controller or MUIC writes; no I2C traffic, FIFO, IRQ or TRANS_STATUS read.
+No live CONTROL1 measurement or routing fix claimed. Added scoped page-array
+pmap expansion checkpoints after caller unlock, shared/exclusive locks,
+TT free list/page/PTD allocation, PTE initialization and publication.
+VM lock/allocation semantics unchanged; extra logging can affect timing.
+
+ARM64 syntax and real object compilation PASS for both modified sources.
+Five USB host suites PASS (host harness includes actual new helper).
+Actual passive-helper6912cases PASS: unmapped,gated,unstable paths refuse
+peripheral reads; every read offset allowlisted. Plain git apply on exact0245
+artifact reproduces compile input; all12source hashes PASS;167patch profile.
+Private validation files under research/dreamlte/0246-*. Installed0245 USB
+still enumerates device088; preserve for next BOOT transition after CI passes.
+Neither sporadic VM startup stalls nor automatic USB attachment is fixed.
+
 ## 0245 same-boot replug trace and data checks recovered — 2026-11-20
 
 User completed controlled replug. Host enumerates high-speed1209:0001

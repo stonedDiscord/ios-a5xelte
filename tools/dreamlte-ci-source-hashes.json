@@ -1,10 +1,10 @@
 {
-  "description": "DREAMLTE0244 captures bounded USB link-state/wakeup events and timed attachment snapshots; no PHY handling or VM semantics change.",
+  "description": "DREAMLTE0246 observes correct PERIC1 USI13 MUIC access prerequisites without I2C traffic; scopes expansion checkpoints to page-array mapping.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "5a3ac225e765c532d1fa749c4c268ab8e04e1922842cea9d32b39f6f18bc9554",
     "pexpert/arm/pe_serial.c": "42854c94830be5c3512508ecf8e3c5a2e65ff815e0576fd142957b06b425da0f",
-    "bsd/dev/sweet_usb.c": "39a349c7d3d89f55b1e3203e37c176e7bf0785221e5e0756ca9cd5ecbf899749",
+    "bsd/dev/sweet_usb.c": "6bf49e9a7c4534ebea12c15e45f003e9556c305382967b223d2edd7c29c104a1",
     "bsd/kern/bsd_init.c": "b6db3cceaad769cde821c993ea90de64284351b46b7ccf4ca405aea8c94cf0b8",
     "pexpert/pexpert/arm64/A5XELTE.h": "a30be1df0ef4b417c621a8b03a8c789e35da7ad8eda52723b79b48c888ec0ae4",
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
@@ -12,7 +12,7 @@
     "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469",
     "osfmk/vm/vm_resident.c": "7e21de2b99db24fb73e8cef9d290066704397cae66310e32422b19890e9a2f11",
     "osfmk/vm/vm_init.c": "c3b729b905ac311814707a8ce3fdfa26edee831ad2ef414de18d59e77c730c12",
-    "osfmk/arm/pmap/pmap.c": "dfd0da65a2043e6fdaae71491136a06808dac148060d2ea7aaf2c0052e916d09"
+    "osfmk/arm/pmap/pmap.c": "164beeb24de9100f3adecb89bb0c0111c134c003157ca2189b3f6b5089700f41"
   },
   "strings": [
     "DREAMLTE IOKIT: zalloc lockdown enter",
@@ -108,7 +108,35 @@
     "DREAMLTE USB ATTACH: %s t=%llu event=%08x DSTS=%08x DCTL=%08x DCFG=%08x UTMI=%08x LINK=%08x",
     "DREAMLTE USB ATTACH: type=%u link=%u info=%04x",
     "DREAMLTE USB: link DP pullup readback failed",
-    "DREAMLTE USB: wakeup DP pullup readback failed"
+    "DREAMLTE USB: wakeup DP pullup readback failed",
+    "DREAMLTE MUIC %s: BUS=%08x PCLK=%08x SCLK=%08x GPIO=%08x QCH=%08x SYNC=%08x",
+    "DREAMLTE MUIC: bus not held stable/on; peripheral banks not read",
+    "DREAMLTE MUIC %s: GPE5 CON=%08x DAT=%08x PUD=%08x",
+    "DREAMLTE MUIC: GPIO gate not held on; pins not read",
+    "DREAMLTE MUIC %s: CTL=%08x CONF=%08x AUTO=%08x ADDR=%08x",
+    "DREAMLTE MUIC %s: FS1=%08x FS2=%08x FS3=%08x SLA=%08x",
+    "DREAMLTE MUIC: I2C gate not held on; controller not read",
+    "DREAMLTE VM: tt alloc lock begin level=%u",
+    "DREAMLTE VM: tt alloc lock acquired",
+    "DREAMLTE VM: tt free-list result=%p",
+    "DREAMLTE VM: tt page alloc begin",
+    "DREAMLTE VM: tt page wait",
+    "DREAMLTE VM: tt page allocated pa=%llx; ptd begin",
+    "DREAMLTE VM: tt ptd wait",
+    "DREAMLTE VM: tt ptd allocated=%p",
+    "DREAMLTE VM: tt pvh publish begin",
+    "DREAMLTE VM: tt alloc returned=%p",
+    "DREAMLTE VM: expand caller unlocked",
+    "DREAMLTE VM: expand entered va=%p level=%u",
+    "DREAMLTE VM: expand shared lock begin level=%u",
+    "DREAMLTE VM: expand shared lock acquired",
+    "DREAMLTE VM: expand tt allocate begin",
+    "DREAMLTE VM: expand tt allocated=%p; exclusive lock begin",
+    "DREAMLTE VM: expand exclusive lock acquired",
+    "DREAMLTE VM: expand pte init begin",
+    "DREAMLTE VM: expand pte init returned; translate begin",
+    "DREAMLTE VM: expand publish ttep=%p pa=%llx",
+    "DREAMLTE VM: expand complete"
   ],
   "symbols": [
     "_dreamlte_log_cursor",
