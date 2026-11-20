@@ -1051,3 +1051,25 @@ than2.50a/1.83a do not apply to the observed2.80a controller.
 and wakeup evidence with the cable left attached, and keep external MUIC
 routing as a separate unresolved possibility. A replug recovery alone does
 not distinguish these mechanisms.
+
+### 0244 attachment event capture
+
+0243 retained output confirms initial full-speed connect and a long idle
+period before the replug/high-speed recovery. A successful VM lock snapshot
+is not evidence about a failed startup.0244 keeps all existing PHY and EP0
+handling, enabling only the missing DEVTEN link-state/wakeup event sources
+(bits3/4, yielding0x1f). Their handlers are observational in this trial.
+
+The first64device events receive an independent attachment snapshot; its
+budget is separate from the first200generic events. Link-state(type3) logs
+event_info bits31:16 and its low-nibble link state; wakeup is type4. Snapshots
+also occur before RUN_STOP and every30,000poll iterations. The `t` field is
+raw mach_absolute_time ticks,not milliseconds; compare order/deltas without
+assuming a tick rate. MMIO reads include DSTS,DCTL,DCFG,PHYUTMI and PHYLINK.
+No MUIC/I2C transaction or forced reconnection is added.
+
+Test the boot with the cable attached first. Record the host journal and
+physical last line before any replug. If the USB poller runs without host
+enumeration,controlled replug can recover this same boot's retained log.
+Only its timed events can distinguish link-state progression from idle;
+a missing event does not independently prove a MUIC routing failure.
