@@ -1,4 +1,11 @@
-ACTIVE0106screenfreeze18:20UTC: host/kerneltimeagree1795198810, stale
+ACTIVE0107cached flashedBOOT-onlySUCCESS after44791438428/7e56be7 fullCI/
+source/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel3628a0c9...74d0dc6/
+BOOT44ad2a36...1c37155; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
+Solecapture57854/session79767boot0107-cache-live.log waitsCDC. Needclocks/
+FWload/touchON/explicitcachedGPUONverify1->4fullreadbacks->fastCPUtiming.
+Nocachedhardwareclaimyet.0106CPUwakecheckpointretained.
+
+PREVIOUS0106screenfreeze18:20UTC: host/kerneltimeagree1795198810, stale
 FOLLOWUP18:26CPUcopies7544,total7564; physicalinputresumesnewframesafter
 idlewithoutanotherHome, touchON2585slices277events. GPUstaysOFFframes20.
 Notificationsattempt0whileframesadvance=>notsoleprovenfreeze cause.

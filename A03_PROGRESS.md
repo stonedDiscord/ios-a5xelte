@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: cached CI success; BOOT0107 trial
+
+CI44791438428 SUCCESS exact7e56be7f05428c9672d45d93fa357f32a79d20e2.
+SixGPU/replay sources matchtestedcandidate; RTCsourcesunchanged.0174
+reversecheck/checksum/SMP/actualsourcecachedDMAASanUBSanPASS.
+KernelSHA2563628a0c95fe89a79522528eb6fff261b8c9d0ea5a9a49521bc7eb743174d0dc6.
+BOOT0107SHA25644ad2a360a37b405ac3730be13b1e15bab2f77a07289dc50fbf1934a11c37155.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload then
+Heimdalllowercaseboot uploadsuccess/reboot. Nootherpartitionflashed.
+SolecapturePID57854/session79767boot0107-cache-live.log waitsCDC. Need
+RTC/status/clocks/FWload/touchON, explicitcached+GPUONverify1, four
+fullframereadbacks, thenfast/CPUcomparisons. No cachedhardwareclaimyet.
+0106CPUmode/userconfirmedclockwake checkpointretained.
+
 ## 2026-11-20: frozen clock confirmed; CPU-copy wake restores screen
 
 CPU-onlyfollowup18:26UTC: copies707->3096->6016->7141, thenidleandnew
