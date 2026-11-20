@@ -2,6 +2,16 @@
 
 ## 2026-11-20: measured GPU slowdown; tiled dispatch candidate0172
 
+Follow-up17:47UTC: CI44784844777 still Build/in_progress; watcher session55345
+is live, not a failed or stopped run. Do not dispatch a duplicate. Retained
+baseline8-copy rounds CPU2.171803/1.717081ms, fast138.139721/138.472221ms,
+verify231.813774/289.190476ms in privategpu-tiled-work/baseline-results.json.
+Current0104 frames52/pixels59904000/verified28/completed52/fallback0/
+quarantine0; GPUON/verify1. Touchstream1530slices/events0, so no newphysical
+gesture evidence. SolecapturePID46326/session91083 stilllive. Negative
+primary-packer fixture rejects intentionally wrong group size. Candidate
+3c22c82, expandedtest/handoff91f7fa9, GPUdoc10031ec pushed. Goalactive.
+
 Exact candidate3c22c827b79fe88723cbb638439349c3b6af1071 is building in
 CI44784844777 (macos26intel). Private gpu-tiled-work/artifacts.py and
 pack0105.py pin run/fullSHA, verify all six GPU/replay sources plus unchanged
