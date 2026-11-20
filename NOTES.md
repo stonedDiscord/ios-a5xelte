@@ -2,6 +2,22 @@
 
 ## Active S8 handoff — 2026-11-19
 
+
+## 0241 retained startup console diagnostic prepared — 2026-11-20
+
+Current0240/device078 remains live after replug: EP0,3/3ping and163bytes
+XNU UDP PASS on repeat check. No new reset or flash. Added read-only EP0
+requests52(metadata,DLOG+little-endian length) and53(explicit offset,1..512
+bytes) to retrieve the reserved append-only2MiB startup console after a
+replug. Independent offsets do not consume UDP state; these reads suppress
+their own setup printf to avoid filling the trace. Host snapshots length
+once and rejects short reads/invalid metadata. Arbitrary memory inaccessible.
+Actual console readers/request helper pass full-buffer,64KiB offset and
+invalid length/offset tests; reboot completion/cancellation suite PASS.
+ARM64 syntax and actual object compilation PASS. This is diagnostic only,
+not a VM or USB attachment fix. Next exact CI,verify/package and BOOT trial;
+then retrieve full startup evidence after any required replug.
+
 ## 0240 cable replug restores verified USB — 2026-11-20
 
 After reporting the USB poller on restarted0240,user confirms cable replug

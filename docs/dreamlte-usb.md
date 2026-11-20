@@ -1006,3 +1006,20 @@ but it cannot explain a boot that has not reached USB initialization.
 the host still sees no USB device; preserve that boot for the user's exact
 last screen line before restarting or replugging. Do not infer CONTROL1's
 current value or program it from this source review alone.
+
+### Retained console EP0 (0241 diagnostic)
+
+`sudo python3 tools/dreamlte-usb-console.py research/dreamlte/PRIVATE.log`
+reads the current boot's reserved append-only console after USB enumeration,
+including startup text already consumed by the UDP sender. Output must not
+exist. Keep these logs ignored; they can contain device details.
+
+Vendor IN request52,value0,index8895,length8 returns `DLOG` and a32-bit
+little-endian length (maximum2MiB). Request53 uses value=offset low16,
+index=offset high16 and length1..512. It copies only from the existing bounded
+console reader; out-of-range offsets/lengths stall. EOF returns zero bytes.
+The host snapshots metadata once and reads exactly that many bytes. Reads
+do not change the UDP cursor or print setup messages into the same log.
+Older builds stall these requests. This helps diagnose attachment failure;
+it does not recover logs from a boot that never reaches USB, or persist logs
+across a reset.

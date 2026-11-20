@@ -39,6 +39,7 @@ static uint32_t usb_rd(vm_offset_t base, unsigned off) {
 '''
 code += 'uint64_t\n' + function(early, 'dreamlte_console_position') + '\n'
 code += 'uint32_t\n' + function(early, 'dreamlte_console_copy') + '\n'
+code += 'static int\n' + function(usb, 'dreamlte_usb_console_read') + '\n'
 code += 'static void\n' + function(usb, 'dreamlte_usb_core_timing') + '\n'
 code += r'''
 #include <sys/socket.h>
@@ -110,6 +111,28 @@ int main(void) {
     assert(!dreamlte_console_copy(&pos, out, 1400));
     pos = UINT64_MAX;
     assert(!dreamlte_console_copy(&pos, out, 1400) && pos == UINT64_MAX);
+    unsigned char reply[514];
+    memset(reply, 0x55, sizeof(reply));
+    assert(dreamlte_usb_console_read(0x52, 0, 0x8895, 8, reply) == 8);
+    assert(!memcmp(reply, "DLOG\0\0\40\0", 8));
+    assert(reply[8] == 0x55);
+    for (uint32_t offset = 0; offset < sizeof(buffer); offset += 511) {
+        memset(reply, 0x55, sizeof(reply));
+        uint32_t want = sizeof(buffer) - offset;
+        if (want > 512) want = 512;
+        assert(dreamlte_usb_console_read(0x53, offset & 65535, offset >> 16, 512, reply) == (int)want);
+        assert(!memcmp(reply, buffer + offset, want) && reply[want] == 0x55);
+    }
+    assert(dreamlte_usb_console_read(0x53, 0, 32, 512, reply) == 0);
+    for (unsigned length = 0; length < 1024; length++) {
+        if (length != 8) assert(dreamlte_usb_console_read(0x52, 0, 0x8895, length, reply) == -1);
+        if (!length || length > 512) assert(dreamlte_usb_console_read(0x53, 0, 0, length, reply) == -1);
+    }
+    assert(dreamlte_usb_console_read(0x52, 1, 0x8895, 8, reply) == -1);
+    assert(dreamlte_usb_console_read(0x52, 0, 0, 8, reply) == -1);
+    assert(dreamlte_usb_console_read(0x53, 1, 32, 512, reply) == -1);
+    assert(dreamlte_usb_console_read(0x53, 65535, 65535, 512, reply) == -1);
+    assert(dreamlte_usb_console_read(0x54, 0, 0, 8, reply) == -1);
     for (unsigned i = 0; i < 34; i++) {
         uint32_t bus = i == 32 ? 0x22220001u : i == 33 ? 0x22220009u : 1u << i;
         memset(regs, 0, sizeof(regs));

@@ -1,0 +1,52 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -874,6 +874,28 @@
+ }
+ 
+ #if defined(DREAMLTE)
++/* Read only the reserved append-only boot console, never arbitrary RAM.
++ * Independent offsets leave the UDP reader untouched. The host snapshots
++ * length once so later console output cannot extend a download forever. */
++extern uint32_t dreamlte_console_copy(uint64_t *pos, char *out, uint32_t max);
++extern uint64_t dreamlte_console_position(void);
++static int
++dreamlte_usb_console_read(uint8_t req, uint16_t value, uint16_t index,
++    uint16_t length, uint8_t *data)
++{
++	if (req == 0x52) {
++		if (value != 0 || index != 0x8895 || length != 8) return -1;
++		uint64_t end = dreamlte_console_position();
++		if (end > 0x200000u) return -1;
++		memcpy(data, "DLOG", 4);
++		for (unsigned i = 0; i < 4; i++) data[4 + i] = (uint8_t)(end >> (8 * i));
++		return 8;
++	}
++	uint64_t pos = ((uint32_t)index << 16) | value;
++	if (req != 0x53 || length == 0 || length > 512 || pos > 0x200000u) return -1;
++	return (int)dreamlte_console_copy(&pos, (char *)data, length);
++}
++
+ /* Local EP0 requests; reset only after successful control status completion. */
+ static unsigned dreamlte_reboot_pending, dreamlte_reboot_mode, dreamlte_reboot_delay;
+ static void
+@@ -961,11 +983,19 @@
+ 	uint32_t n = 0;
+ 	bool ok = true;
+ 
++#if defined(DREAMLTE)
++	/* Console reads must not append to the console they are retrieving. */
++	if (!(type == 0xc0 && (req == 0x52 || req == 0x53)))
++#endif
+ 	printf("SWEET USB: setup %02x %02x %04x %04x len %u\n", type, req, value, index, length);
+ 	ud.data_in = (type & 0x80) != 0;
+ #if defined(DREAMLTE)
+ 	dreamlte_reboot_pending = 0;
+-	if (type == 0xc0 && req == 0x50 && value == 0 && index == 0x8895 && length == 8) {
++	if (type == 0xc0 && (req == 0x52 || req == 0x53)) {
++		int count = dreamlte_usb_console_read(req, value, index, length, data);
++		ok = count >= 0;
++		if (ok) n = (uint32_t)count;
++	} else if (type == 0xc0 && req == 0x50 && value == 0 && index == 0x8895 && length == 8) {
+ 		memcpy(data, "DUSB\1\3\0\0", 8); n = 8;
+ 	} else if (type == 0x40 && req == 0x51 && value <= 1 && index == 0x8895 && length == 0) {
+ 		dreamlte_reboot_pending = value + 1;
