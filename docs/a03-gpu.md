@@ -355,3 +355,55 @@ readback defaults on; explicit gpu blit fast omits it after four successful
 verified frames. gpu blit verify restores full checks. Completion, MMU fault
 and retirement checks always apply. Counters report verified/completed frames
 and CPU/GPU copy nanoseconds. Candidate tests do not prove speedup.
+
+
+## 2026-11-20 measured framebuffer-copy status
+
+This is GPU-assisted framebuffer copying. CoreAnimation still renders the
+source surfaces on the CPU; Metal/EAGL support is outside this milestone.
+All timings below are synchronous copy latency, including scheduling, cache
+maintenance and setup, rather than physical frame rate.
+
+| BOOT | Copy policy | Measured GPU latency | CPU comparison |
+| --- | --- | --- | --- |
+| 0106 | uncached scalar | 142.160 ms | CPU faster |
+| 0107 | cached scalar, fresh GPU cache clean | 6.170 ms | 1.673 ms |
+| 0108 | cached four-pixel vectors | 3.542 ms | 1.406 ms |
+| 0109 | four-pixel vectors, explicit retained power | 2.327 ms median, three rounds | 1.613 ms median |
+| 0110 | generic sixteen-pixel vectors, retained power | 4.071 ms median, three rounds | 1.676 ms median |
+
+BOOT0110 full720x1600 readbacks pass with zero mismatches, completed jobs and
+retirement. Its generic sixteen-pixel shader is rejected as a performance
+optimization. GPU copying remains opt-in and currently OFF. It has not yet
+shown a speed benefit over the CPU.
+
+0178 restores the bounded generic four-pixel shader and adds an exact
+fullscreen shader with fixed GPU VAs04000000/05000000, source stride3072,
+destination stride2880, offsets0, dimensions720x1600. It dispatches3x400
+workgroups of15x4 threads, each copying16 pixels. Any guard mismatch uses
+the generic shader and its masked tails. The specialized384byte binary has
+32 registers, no TLS/WLS, and SHA256
+4fda1c5c52971205f7ad8510eda5ca96faa122ae8e399bdb8a6df29155a96cb6.
+
+Reproduce both binaries using the pinned native Mesa24.3.0 build:
+
+    python3 tools/a03-build-g57-copy-shader.py MESA_BUILD NEW_GENERIC --blit
+    python3 tools/a03-build-g57-copy-shader.py MESA_BUILD NEW_FULLSCREEN --fullscreen
+    python3 tools/a03-test-gpu-blit-layout.py --mesa-build MESA_BUILD
+    python3 tools/a03-test-gpu-blit.py --source PATCHED_XNU
+
+Host checks cover separate shader identities, exact specialized guards,
+generic dispatch/tails, primary Mesa v9 descriptor packing, full page-table
+translation, cached writes hidden until GPU clean completion, source ownership,
+retirement/quarantine, and warm power ownership. They are not evidence of
+0178 hardware performance. Exact commit8c0fe7cd24e3042d40cd760a139aa31cf93ef55e
+is building in CI44813460343. Require artifact/source verification, BOOT-only
+test, four full readbacks, paired CPU/GPU timings and physical UI acceptance.
+
+A stale clock is a separate investigation. While GPU copying is OFF and
+powered0, vsync and kernel time continue but compositor submissions can stop.
+One explicit Home resumes CPU frames. The current framebuffer does not
+implement panel blanking or display power-state handling, so iOS sleep may
+leave the last clock image visible. That remains a hypothesis pending a
+controlled Auto-Lock Never trial or direct display-power evidence. Do not
+simulate progress with periodic Home presses or repeated old-frame copies.
