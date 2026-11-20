@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: cached hardware PASS and22x gain; vector candidate0175
+
+BOOT0107 retainedRTC1795199519/status1795199529, clocksID90910010.
+Explicitcached1+GPUONverify1. FW79104/load0/A55A andtouchrestartON.
+Actualswaps1/2+replay4 eachfull1152000pixels/mismatches0/done1/retired1/
+verify1/PASS1. Cachedpolicyfreshcleancompletionrequired byeveryPASS.
+Fast8copies6.170024msmean; lastpower0.697807/prepare0.242384/cache0.392807/
+execute4.276961/retire0.032230/verify0.002961/shutdown0.591884ms. About22x
+faster thanuncached142.160ms, BUTCPU1.672600ms stillfaster. GoalNOTcomplete.
+Current18GPUframes/20736000pixels/verified10/completed18/fallback0/
+quarantine0; GPUOFFverify1/cached1leftwhileoptimizing; touchON713slices.
+
+0175nativeG57vectorcopymovesfourpixels/thread via128bitload/store, exact
+width/heightguardsandscalar1..3tail. Workgroups12x400 forfullframe.
+640bytes/32regs/TLSWLS0/preloadR60R61;SHA9412d199dcb1f8f71a8144e3e4b45036ad6ce045d2c8c07adc3d2d73e890625c.
+PinnedMesareproduction/primaryv9packers(assertionsON),actualsourceASanUBSan
+paddedgroups/offset53x17/noncontiguous/fault/cacheclean/quarantinePASS.
+ActualGPU+AMFIARM64compile/profile121PASS. NeedfullCI->0108BOOT-only->
+cachedfourfullreadbacks->fastCPUcompareandphysicalUIacceptance. No vector
+hardwareclaimyet. Solecapture57854/session79767boot0107-cache-live.log.
+
 ## 2026-11-20: cached CI success; BOOT0107 trial
 
 CI44791438428 SUCCESS exact7e56be7f05428c9672d45d93fa357f32a79d20e2.

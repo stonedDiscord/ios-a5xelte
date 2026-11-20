@@ -1,4 +1,11 @@
-ACTIVE0107cached flashedBOOT-onlySUCCESS after44791438428/7e56be7 fullCI/
+ACTIVE0107cachedHARDWAREPASS!6fullframeszeroerrors;fast6.170ms vsuncached
+142.160ms(22x), BUTCPU1.673msstillfaster. GPU18frames/verified10/fallback0/
+quarantine0. LeftGPUOFFverify1/cached1/touchON713slices; capture57854/79767.
+0175fourpixels/thread128bitvector+scalartails640bytes/32regs prepared;
+nativeMesa/v9packers/actualASanUBSan/ARM64/profile121PASS. NeedfullCI->0108
+->cached4verifiedfullframes->fastCPUcompare/physicalUI. Goalnotcomplete.
+
+PREVIOUS0107cached flashedBOOT-onlySUCCESS after44791438428/7e56be7 fullCI/
 source/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel3628a0c9...74d0dc6/
 BOOT44ad2a36...1c37155; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
 Solecapture57854/session79767boot0107-cache-live.log waitsCDC. Needclocks/
