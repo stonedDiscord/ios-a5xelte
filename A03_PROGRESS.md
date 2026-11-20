@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: coalesced strips/power observer full CI active
+
+21:25UTC CI44820099545 in_progress exactad0c30959b4607e032e77799acb8aa30d464f772.
+No duplicate/restart. Privategpu-quarter-work/artifacts.py+pack0113.py pin
+run/SHA/sixsources/RTC/reverse0180+0181/checksum/SMP before BOOT-only0113.
+BOOT0112 now explicitlyGPUOFF/powered0,verify1cachedwarm1,33frames9verified/
+completed33,0fallback/quarantine;touchON. Lastfast execute1.469769ms, whole
+2.172038ms. Current bestpairedGPUmedian2.230663vsCPU1.668356: stillslower.
+Solecapture106124/session85627boot0112-full4-live.log until~21:48UTC.
+Goalactive; needhardware0180timing/physicalUI and0181sleeprequestevidence.
+
 ## 2026-11-20: BOOT0112 fullreadback PASS2.23ms; coalesced strips0180/power observer0181
 
 BOOT0112 actual720x1600 readbacks zero mismatches/done1/retired1, nine

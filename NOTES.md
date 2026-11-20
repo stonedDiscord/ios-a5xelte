@@ -1,3 +1,12 @@
+ACTIVE21:25UTC CI44820099545/exactad0c30959b4607e032e77799acb8aa30d464f772
+in_progress0180coalescedstrips+0181readonlypowerrequestobserver. No duplicate.
+Privategpu-quarter-work/artifacts.py+pack0113.py pinexactrun/sixsources/RTC/
+reverse0180+0181/checksum/SMP. Needfullsuccess->actualASan/methodtests->BOOT-only
+0113->fourfullreadbacks->pairedCPUfast/physicalUI+rawpowerrequestcorrelation.
+0112leftGPUOFFpowered0verify1cachedwarm1/33frames9verifiedcompleted33/0quarantine,
+touchON. Sole106124/session85627boot0112-full4-live.loguntil~21:48UTC.
+CurrentbestGPUmedian2.230663vsCPU1.668356ms; goalactive/nospeedupyet.
+
 ACTIVE0112HWfullreadbackPASS9verified;pairedGPUmedian2.230663ms vsCPU1.668356ms,
 stillnospeedup. GPUrestoreverify1ONafterbenchmark; turnOFF/powered0beforeidle.
 TouchON. Sole106124/session85627boot0112-full4-live.loguntil~21:48UTC.
