@@ -1,3 +1,14 @@
+ACTIVE20:55UTC CI44813460343/8c0fe7cd24e3042d40cd760a139aa31cf93ef55e
+still Build; live20:53:58bsd/skywalk compilation. No duplicate/restart.
+NEWsolecapture99894/session67407boot0110-specialwait-live.loguntil~21:24UTC;
+old95247deliberatelystopped. GPUOFFpowered0verify1cachedwarm1,41frames/
+17verified/0quarantine;touchON5110events0. ONEHome20:38->CPU46854copies by
+20:55, no further input. Sleep/Auto-Lock Never user observation pending.
+Host0178nativeMesa/primaryv9/actualASanUBSan reruns PASS. Await exactCI
+success then privategpu-special-work/artifacts.py+pack0111.py->source/RTC/
+checksum/SMP/actualASan->BOOT-only0111->fourfullreadbacks->paired/physicalUI.
+Goalactive; no GPU speedup yet. Currenthardwaregeneric16 slowerthanCPU.
+
 ACTIVE20:40UTC CI44813460343 in_progress exact8c0fe7cd24e3042d40cd760a139aa31cf93ef55e
 (fullscreen0178). No duplicate/restart. Private gpu-special-work/artifacts.py
 and pack0111.py pin run/SHA/sources/RTC. Await fullsuccess then BOOT-only0111,

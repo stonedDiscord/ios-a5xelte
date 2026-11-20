@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: fullscreen CI building; capture renewed
+
+20:55UTC CI44813460343 exact8c0fe7c still Build/in_progress. Live log
+20:53:58 confirms compilation in bsd/skywalk; no duplicate/restart. Native
+Mesa/primaryv9 and actualsource ASanUBSan rerun PASS. No0178 hardware claim.
+CPU compositor continues after one20:38Home: swaps46899/copies46895/CPU46854,
+GPU41unchangedOFF/powered0/quarantine0. TouchON5110slices/events0. This is
+frame-submission evidence, not a fresh physical screen acknowledgement.
+Old reader95247 deliberately stopped before expiry. Sole new reader99894/
+session67407 -> boot0110-specialwait-live.log until~21:24UTC. Need CI exact
+success->gpu-special-work/artifacts.py+pack0111.py->source/checksum/SMP/
+actualsourceASanUBSan->BOOT-only0111->fourfullreadbacks->pairedCPUfast.
+User Auto-Lock Never observation pending; sleep remains hypothesis.
+
 ## 2026-11-20: fullscreen candidate committed; full CI active
 
 Commit8c0fe7cd24e3042d40cd760a139aa31cf93ef55e pushed. CI44813460343
