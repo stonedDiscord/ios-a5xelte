@@ -1,0 +1,179 @@
+--- a/osfmk/arm/pmap/pmap.c
++++ b/osfmk/arm/pmap/pmap.c
+@@ -350,6 +350,10 @@
+ 
+ extern vm_offset_t     virtual_space_start;     /* Next available kernel VA */
+ extern vm_offset_t     virtual_space_end;       /* End of kernel address space */
++#if defined(DREAMLTE)
++extern boolean_t dreamlte_pmap_array_mapping;
++extern unsigned int dreamlte_pmap_array_enter_count;
++#endif
+ extern vm_offset_t     static_memory_end;
+ 
+ extern const vm_map_address_t physmap_base;
+@@ -5846,6 +5850,22 @@
+ 	volatile uint16_t *refcnt;
+ 	volatile uint16_t *wiredcnt;
+ 	pv_free_list_t *local_pv_free;
++	boolean_t dreamlte_diag_detail = FALSE;
++#if defined(DREAMLTE)
++	boolean_t dreamlte_diag = dreamlte_pmap_array_mapping && pmap == kernel_pmap;
++	unsigned int dreamlte_diag_index = 0;
++	if (dreamlte_diag) {
++		dreamlte_diag_index = dreamlte_pmap_array_enter_count++;
++		dreamlte_diag_detail = dreamlte_diag_index == 0;
++		if ((dreamlte_diag_index & 0x3fu) == 0) {
++			kprintf("DREAMLTE VM: pmap enter count=%u va=%p pa=%p\n",
++			    dreamlte_diag_index, (void *)v, (void *)pa);
++		}
++		if (dreamlte_diag_detail) {
++			kprintf("DREAMLTE VM: pmap enter first begin\n");
++		}
++	}
++#endif
+ 
+ 	validate_pmap_mutable(pmap);
+ 
+@@ -5904,8 +5924,14 @@
+ 		lock_mode = PMAP_LOCK_EXCLUSIVE;
+ 	}
+ 
++	if (dreamlte_diag_detail) {
++		kprintf("DREAMLTE VM: pmap lock begin\n");
++	}
+ 	if (!pmap_lock_preempt(pmap, lock_mode)) {
+ 		return KERN_ABORTED;
++	}
++	if (dreamlte_diag_detail) {
++		kprintf("DREAMLTE VM: pmap lock acquired\n");
+ 	}
+ 
+ 	/*
+@@ -5914,10 +5940,16 @@
+ 	 *	pages to map one VM page.
+ 	 */
+ 	while ((pte_p = pmap_pte(pmap, v)) == PT_ENTRY_NULL) {
++		if (dreamlte_diag_detail) {
++			kprintf("DREAMLTE VM: pmap pte missing; expand begin\n");
++		}
+ 		/* Must unlock to expand the pmap. */
+ 		pmap_unlock(pmap, lock_mode);
+ 
+ 		kr = pmap_expand(pmap, v, options, pt_attr_leaf_level(pt_attr));
++		if (dreamlte_diag_detail) {
++			kprintf("DREAMLTE VM: pmap expand returned kr=%d\n", kr);
++		}
+ 
+ 		if (kr != KERN_SUCCESS) {
+ 			return kr;
+@@ -5926,6 +5958,9 @@
+ 		if (!pmap_lock_preempt(pmap, lock_mode)) {
+ 			return KERN_ABORTED;
+ 		}
++	}
++	if (dreamlte_diag_detail) {
++		kprintf("DREAMLTE VM: pte lookup complete ptep=%p\n", pte_p);
+ 	}
+ 
+ 	if (options & PMAP_OPTIONS_NOENTER) {
+@@ -6042,7 +6077,13 @@
+ 
+ 			pai = pa_index(pa);
+ 
++			if (dreamlte_diag_detail) {
++				kprintf("DREAMLTE VM: pvh lock begin pai=%x\n", pai);
++			}
+ 			pvh_lock(pai);
++			if (dreamlte_diag_detail) {
++				kprintf("DREAMLTE VM: pvh lock acquired\n");
++			}
+ 
+ 			/*
+ 			 * Make sure that the current per-cpu PV free list has
+@@ -6060,6 +6101,9 @@
+ 			const bool allocation_required = !pvh_test_type(pv_h, PVH_TYPE_NULL) &&
+ 			    !(pvh_test_type(pv_h, PVH_TYPE_PTEP) && pvh_ptep(pv_h) == pte_p);
+ 
++			if (dreamlte_diag_detail && allocation_required) {
++				kprintf("DREAMLTE VM: pv allocation begin free=%u\n", local_pv_free->count);
++			}
+ 			if (__improbable(allocation_required && (local_pv_free->count < 2))) {
+ 				pv_entry_t *new_pve_p[2] = {PV_ENTRY_NULL};
+ 				int new_allocated_pves = 0;
+@@ -6089,6 +6133,9 @@
+ 					pv_free(new_pve_p[i]);
+ 				}
+ 			}
++			if (dreamlte_diag_detail && allocation_required) {
++				kprintf("DREAMLTE VM: pv allocation returned status=%u\n", pv_status);
++			}
+ 
+ 			if (pv_status == PV_ALLOC_FAIL) {
+ 				pvh_unlock(pai);
+@@ -6132,8 +6179,13 @@
+ #endif
+ 
+ 
+-
++			if (dreamlte_diag_detail) {
++				kprintf("DREAMLTE VM: pte commit begin\n");
++			}
+ 			committed = pmap_enter_pte(pmap, pte_p, &spte, pte, v);
++			if (dreamlte_diag_detail) {
++				kprintf("DREAMLTE VM: pte commit returned committed=%u\n", committed);
++			}
+ 			if (!committed) {
+ 				pvh_unlock(pai);
+ 				continue;
+@@ -6313,6 +6365,9 @@
+ 		panic("pmap_enter(): over-unwire of ptdp %p for pte %p", ptep_get_ptd(pte_p), pte_p);
+ 	}
+ 
++	if (dreamlte_diag_detail) {
++		kprintf("DREAMLTE VM: pmap enter first complete\n");
++	}
+ 	pmap_unlock(pmap, lock_mode);
+ 
+ 	if (__improbable(ro_va && kr == KERN_SUCCESS)) {
+--- a/osfmk/vm/vm_resident.c
++++ b/osfmk/vm/vm_resident.c
+@@ -308,6 +308,10 @@
+ #endif
+ 
+ SECURITY_READ_ONLY_LATE(vm_page_t) vm_pages = VM_PAGE_NULL;
++#if defined(DREAMLTE)
++boolean_t dreamlte_pmap_array_mapping;
++unsigned int dreamlte_pmap_array_enter_count;
++#endif
+ SECURITY_READ_ONLY_LATE(vm_page_t) vm_page_array_beginning_addr;
+ vm_page_t                          vm_page_array_ending_addr;
+ 
+@@ -1335,6 +1339,14 @@
+ 	 * Allocate and map physical pages to back the new virtual space.
+ 	 */
+ 	map_addr = round_page(addr);
++#if defined(DREAMLTE)
++	if (might_free) {
++		dreamlte_pmap_array_mapping = TRUE;
++		dreamlte_pmap_array_enter_count = 0;
++		kprintf("DREAMLTE VM: page array pmap mapping begin va=%p bytes=%llu\n",
++		    (void *)addr, (unsigned long long)size);
++	}
++#endif
+ 	while (map_addr < addr + size) {
+ #if defined(__x86_64__)
+ 		/*
+@@ -1390,6 +1402,13 @@
+ 		vm_page_wire_count++;
+ 		vm_page_stolen_count++;
+ 	}
++
++#if defined(DREAMLTE)
++	if (might_free) {
++		dreamlte_pmap_array_mapping = FALSE;
++		kprintf("DREAMLTE VM: page array pmap mapping done\n");
++	}
++#endif
+ 
+ #if defined(__x86_64__)
+ 	/*

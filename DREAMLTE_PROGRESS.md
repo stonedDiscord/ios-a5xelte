@@ -1,5 +1,21 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0240 page-array pmap diagnostics prepared — 2026-11-20
+
+Phone remains in Samsung Download Mode 077; 0239 is installed. Completed
+partial local diagnostic edits: removed a duplicate declaration and verified
+that the page-array mapping flag is cleared immediately after the mapping
+loop. Only the freeable page-array allocation enables diagnostics. Detailed
+checkpoints cover the first pmap entry; progress prints every 64 entries.
+No mapping, allocator, USB or MUIC behavior is intentionally changed.
+Overlay applies with zero fuzz to exact CI44550208083 sources and reproduces
+the reviewed inputs byte for byte. ARM64 syntax checks and local object
+compilation of pmap.c and vm_resident.c pass using system clang and exact
+0239 CI compile flags. These checks do not establish hardware reliability.
+0240 source hashes, linked diagnostic and symbol requirements updated.
+Next: exact S8 CI build, content verification, preserved-component packaging,
+and authorized BOOT-only trial. VM stall and USB automatic return unresolved.
+
 ## 0239 USB Download Mode verified; normal reboot still needs replug
 
 After the first 0239 boot stalled during `pmap_startup` page-array mapping,

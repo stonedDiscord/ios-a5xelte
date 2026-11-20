@@ -1,5 +1,5 @@
 {
-  "description": "DREAMLTE0239 matches pinned Samsung DP pull-up sequencing before RUN and on USB reset/connect; changes only PHYUTMI bit9. Candidate for reboot attachment; not hardware verified.",
+  "description": "DREAMLTE0240 adds page-array-only pmap checkpoints to narrow intermittent VM startup stalls. Diagnostic candidate; no VM reliability or USB attachment fix claimed.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "5a3ac225e765c532d1fa749c4c268ab8e04e1922842cea9d32b39f6f18bc9554",
@@ -10,8 +10,9 @@
     "osfmk/arm64/start.s": "69246efc9e3a208c0434a3ad37639780087158ac2fcc314e1816b9503e26340d",
     "pexpert/arm/pe_init.c": "55d5b55ebc537818d7192f5b6fc0f9fe3db5556fa212e4ba45a0115bd9ffb997",
     "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469",
-    "osfmk/vm/vm_resident.c": "c7195063e3ad562b4d9dcddc4ee4d446d9972a3bff896bcbb7f12092296a7543",
-    "osfmk/vm/vm_init.c": "c3b729b905ac311814707a8ce3fdfa26edee831ad2ef414de18d59e77c730c12"
+    "osfmk/vm/vm_resident.c": "7e21de2b99db24fb73e8cef9d290066704397cae66310e32422b19890e9a2f11",
+    "osfmk/vm/vm_init.c": "c3b729b905ac311814707a8ce3fdfa26edee831ad2ef414de18d59e77c730c12",
+    "osfmk/arm/pmap/pmap.c": "aa7a704ef5812bf62c7e29a9cd259e3c4bb6bf256e4b90798ce137f10e87c2c2"
   },
   "strings": [
     "DREAMLTE IOKIT: zalloc lockdown enter",
@@ -81,7 +82,23 @@
     "DREAMLTE USB: DP pullup %u UTMI=",
     "DREAMLTE USB: start DP pullup readback failed",
     "DREAMLTE USB: reset DP pullup readback failed",
-    "DREAMLTE USB: connect DP pullup readback failed"
+    "DREAMLTE USB: connect DP pullup readback failed",
+    "DREAMLTE VM: pmap enter count=%u va=%p pa=%p",
+    "DREAMLTE VM: pmap enter first begin",
+    "DREAMLTE VM: pmap lock begin",
+    "DREAMLTE VM: pmap lock acquired",
+    "DREAMLTE VM: pmap pte missing; expand begin",
+    "DREAMLTE VM: pmap expand returned kr=%d",
+    "DREAMLTE VM: pte lookup complete ptep=%p",
+    "DREAMLTE VM: pvh lock begin pai=%x",
+    "DREAMLTE VM: pvh lock acquired",
+    "DREAMLTE VM: pv allocation begin free=%u",
+    "DREAMLTE VM: pv allocation returned status=%u",
+    "DREAMLTE VM: pte commit begin",
+    "DREAMLTE VM: pte commit returned committed=%u",
+    "DREAMLTE VM: pmap enter first complete",
+    "DREAMLTE VM: page array pmap mapping begin va=%p bytes=%llu",
+    "DREAMLTE VM: page array pmap mapping done"
   ],
   "symbols": [
     "_dreamlte_log_cursor",
@@ -92,6 +109,8 @@
     "_sweet_early_putc",
     "_dreamlte_console_position",
     "_dreamlte_console_copy",
-    "_ud_log_thread"
+    "_ud_log_thread",
+    "_dreamlte_pmap_array_mapping",
+    "_dreamlte_pmap_array_enter_count"
   ]
 }
