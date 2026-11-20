@@ -1,5 +1,17 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0240 restart reaches USB poller without host attachment — 2026-11-20
+
+User confirms restarting installed0240,then reports
+`SWEET USB: ue0 rx 0 tx 0 frames`.
+This separate boot progressed beyond page-array mapping into the USB poller;
+the earlier first-boot pmap stop did not recur on this restart. It does not
+establish reliable startup or working USB. Host sees no1209:0001/noECM,
+and no new port3 USB journal entries. Requested one cable replug without
+another restart to isolate attachment recovery and obtain console evidence.
+No new build,flash or partition write.0240 remains installed. USB Download
+Mode passed on0239; automatic USB return after reboot remains unresolved.
+
 ## 0240 physical stop in later page-array pmap calls — 2026-11-20
 
 User reports last visible line verbatim:
