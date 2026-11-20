@@ -1,5 +1,45 @@
 # A03 GPU acceleration bring-up
 
+## Current measurement, 2026-11-20
+
+BOOT0104 includes the bounded accepted-compositor-frame replay command.
+Four initial full-frame replays each passed all 1,152,000 source/destination
+pixel comparisons. The first eight-copy measurements were 139.006 ms per
+fast GPU copy, 211.630 ms with full readback, and 1.665 ms for CPU copies.
+Repeated baseline rounds measured fast GPU 138.140/138.472 ms and CPU
+2.172/1.717 ms. No fallback or quarantine occurred. These measurements
+include synchronous scheduling, mapping, cache and power overhead; they
+measure copies, not visible animation FPS. The existing path is slower than
+CPU copies, so hardware execution alone does not complete acceleration.
+
+Candidate0172 changes the shader from one-thread groups to 16x4 groups,
+reducing full-frame workgroups from 1,152,000 to 18,000. Exact width/height
+checks mask padded edge lanes before memory access. The native Mesa24.3
+compiler reproduces the 256-byte shader, with no TLS/WLS, 32 registers and
+global X/Y preloads. Primary v9 packers match with C assertions explicitly
+enabled; a negative fixture confirms a mismatched group descriptor fails.
+Host lifecycle tests cover padded groups, clipped/offset and noncontiguous
+sources, retirement, faults and quarantine. CI44784844777 builds exact
+3c22c827b79fe88723cbb638439349c3b6af1071. Hardware correctness and a
+repeated latency comparison remain required before enabling it as normal
+operation. Physical UI acceptance remains separate.
+
+Reproduce the shader using an existing pinned Mesa24.3 native build:
+
+```sh
+python3 tools/a03-build-g57-copy-shader.py MESA_BUILD NEW_OUTPUT_DIR --blit
+python3 tools/a03-test-gpu-blit-layout.py --mesa-build MESA_BUILD
+```
+
+With a single existing console reader and an accepted compositor frame,
+run `tools/a03-gpu-blit-benchmark.py --log LOG --mode cpu --replay 8`,
+then repeat for `verify` and `fast`. The helper restores the original
+enable/readback policy after each measurement. Fast mode still requires
+four successful full-readback frames first. Replays are diagnostic copies
+of an accepted frame, not evidence of new physical UI input or animation.
+
+## Earlier framebuffer checkpoint
+
 BOOT0101 now copies actual IOSurface content into panel memory with the
 native G57 compute shader. Four full720x1600 BGRA frames each pass
 1152000-pixel source/destination readback with zero mismatches, done1 and
