@@ -172,6 +172,15 @@ int main(void){
  assert(a03_gpu_framebuffer_blit((uintptr_t)source_mem+124,(uintptr_t)dest_mem+2884,0x9e000b44,3072,2880,53,17)==1);
  assert(dest_mem[2883]==0x5a&&dest_mem[2884+53*4]==0x5a);
  assert(!memcmp(source_mem+124,dest_mem+2884,53*4));
+ /* Exercise all vector tail lengths on both sides of a 64-pixel group. */
+ for(unsigned width=1;width<=70;width++){
+  reset(0);expect_cached=1;a03_gpu_blit_control(5);
+  assert(a03_gpu_framebuffer_blit((uintptr_t)source_mem+124,(uintptr_t)dest_mem+2884,0x9e000b44,3072,2880,width,5)==1);
+  for(unsigned y=0;y<5;y++){
+   assert(!memcmp(source_mem+124+y*3072,dest_mem+2884+y*2880,width*4));
+   assert(dest_mem[2883+y*2880]==0x5a&&dest_mem[2884+y*2880+width*4]==0x5a);
+  }
+ }
  reset(0);corrupt=1;assert(blit(37,19)==0&&!a03_gpu_job_poisoned);
  reset(0);bad_source=1;assert(blit(37,19)==0&&!starts);
  reset(0);bad_source=2;assert(blit(37,19)==0&&!starts);
