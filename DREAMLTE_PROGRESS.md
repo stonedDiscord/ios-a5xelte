@@ -1,5 +1,16 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0245 exact CI and preparation active — 2026-11-20
+
+CI44735061683 is in_progress at f7240e63a858b8c302f369a12373c7e277998a3c.
+Private prepare-0245.py(session84497) waits exact successful run,downloads,
+verifies compiled sources/linked diagnostics/profile and packages BOOT;
+never flashes. Preserve live0244/device086 for USB Download transition.
+Earlier dispatch44734724436 selected older8021b68 while push was still
+running; detected head mismatch,cancelled and confirmed cancelled. No
+artifact from it used. Exact remote head confirmed before correct dispatch.
+Both sporadic VM startup stalls and automatic USB remain unresolved.
+
 ## 0244 timed trace recovered;0245 event handling prepared — 2026-11-20
 
 Controlled replug enumerates high-speed device086 at13:15:22local. Retained
