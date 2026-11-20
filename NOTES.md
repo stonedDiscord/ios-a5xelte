@@ -3,6 +3,15 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0241 host follow-up still awaits screen checkpoint — 2026-11-20
+
+Rechecked current host state: no XNU1209:0001 or Samsung04e8:685d;
+USB journal still ends at device079 disconnect after the0241 flash.
+No new reset,replug or partition write. Previous turn made concrete progress
+by installing verified0241; this follow-up cannot distinguish a VM stop from
+USB attachment failure without the pending physical screen report. Preserve
+installed0241 and its current boot. Both goal requirements remain unresolved.
+
 ## 0241 verified and BOOT flashed; screen evidence pending — 2026-11-20
 
 Exact CI44707721507 SUCCESS at7cb2d6780f59bdfe59648f67df1728fbdfd8b797.
