@@ -1,3 +1,11 @@
+ACTIVE23:05UTC0116HW384/512PASSreadbacks+paired0fault;GPUmedians2.193/2.128ms
+CPU1.667/1.663ms,smallrateeffect. Restored384APB11/11/31/GPUOFFpowered0verify1/
+impldef0tile4cachedwarm1/60completedverified0(reset),touchON/storagehealthy.
+Sole122100/session86364boot0116-rate-live.loguntil~23:30UTC.
+0185ONLYsourceCPUFlushPoC->CleanPoC (GPURO/NX,dc cvac+dsbsy); alljobflush/GPU
+CLEAN_INV/retirementguardsremain. ActualASanDMA+rate/ARM64PASS;needfullCI/
+BOOT-only0117/readback+pairedcomparison. Goalactive,nospeedupyet.
+
 ACTIVE0116rateBOOT-onlyflashSUCCESS22:59UTC CI44831543349/ce9bc57 success/sixsources/
 RTC/reverse0184/checksum/SMP/actualDMA+ratehelperASanPASS. Kernel1a1ca22b...afe5dc/
 BOOT80632772...a618c2; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.

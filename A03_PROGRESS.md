@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 local / 2026-11-20 23:05UTC: stock512MHz hardware PASS; clean source0185
+
+BOOT0116 both384/512MHz eachfourfreshreadbacks+paired3rounds8copiesPASS,
+0fallback/quarantine. GPUmedians2.192980/2.127711ms vsCPU1.667466/1.663303ms.
+512effectsmall; lastshaderexecute1.335ms vs3841.386ms. NoCPUoverGPUbenefit.
+Restored384/GPUOFFpowered0/verify1/impldef0/tile4/cachedwarm1. Passiveprobe
+confirmsAPB11/11/31.60completed/verified0(resetrestore),touchON643events0,
+storageready1poison0. Sole122100/session86364boot0116-rate-live.loguntil~23:30UTC.
+
+0185 replacesONLY sourceCPUFlushPoC withCleanPoC: sourceGPUmappingisRO/NX,
+so CPU cache invalidation is unnecessary forGPU ownership. Kernel'snative
+nonAppleimplementation emitsdc cvac+dsbsy. Descriptor/job CPUflush, GPUfresh
+CLEAN_INV completion, readback/retirement/quarantine remainunchanged. No
+skippedsourceclean or coherencyassumption. ActualsourceASanDMA+ratehelper/
+ARM64GPUAMFI PASS; fullCI/hardwaretimingrequired. Goalstillactive.
+
 ## 2026-11-20: stock512MHz CI success; BOOT0116 trial
 
 CI44831543349 SUCCESS exactce9bc57ce4f8e159a743183a2122181d8e20b2da.

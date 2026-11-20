@@ -1,0 +1,19 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -6,6 +6,7 @@
+ #include <kern/clock.h>
+ #include <machine/machine_routines.h>
+ extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
++extern void CleanPoC_DcacheRegion(vm_offset_t, size_t);
+ 
+ #define A03_GPU_PMU_PA 0x64020000ULL
+ #define A03_GPU_AON_PA 0x64000000ULL
+@@ -438,7 +439,7 @@
+     a03_gpu_blit_mark(2);
+     if(a03_gpu_job_requested==3) {
+         a03_gpu_scratch=a03_gpu_blit_memory;a03_gpu_scratch_pa=a03_gpu_blit_physical;
+-        FlushPoC_DcacheRegion(a03_gpu_blit_source,(vm_size_t)a03_gpu_blit_source_length);
++        CleanPoC_DcacheRegion(a03_gpu_blit_source,(size_t)a03_gpu_blit_source_length);
+         __asm__ volatile("dsb sy" ::: "memory");
+     }
+     uint32_t old_attr_lo = a03_gpu_read(a03_gpu_regs, 0x2408);

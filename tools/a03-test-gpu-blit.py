@@ -59,6 +59,10 @@ uint64_t kvtophys(vm_offset_t p){
  return 0x120000000ULL+p-(uintptr_t)allocation+((mode==2&&p>(uintptr_t)allocation+0x2000)?0x4000:0);
 }
 static void FlushPoC_DcacheRegion(vm_offset_t p,vm_size_t n){assert((p==(uintptr_t)allocation&&n==0x10000)||(p>=(uintptr_t)source_mem&&p+n<=(uintptr_t)source_mem+sizeof(source_mem)));flushes++;}
+static void CleanPoC_DcacheRegion(vm_offset_t p,size_t n){
+ assert(p>=(uintptr_t)source_mem&&p+n<=(uintptr_t)source_mem+sizeof(source_mem));
+ flushes++;
+}
 static uint32_t fake_read(vm_offset_t b,unsigned o){
  assert(o<0x4000);if(b==(uintptr_t)bank[3]&&o==0x2428){
   if((mode==3&&updates==1)||(mode==7&&updates>=2))return 1;
@@ -271,6 +275,6 @@ static void check_shader(unsigned specialized){
 }
 '''
  temp=Path(temp);c=temp/'test.c';exe=temp/'test';c.write_text(header+layout+check+src+tests)
- subprocess.run(['clang','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',str(c),'-o',str(exe)],check=True)
+ subprocess.run(['clang','-std=c11','-Wall','-Wextra','-Werror','-Wno-unused-function','-fsanitize=address,undefined',str(c),'-o',str(exe)],check=True)
  subprocess.run([str(exe)],check=True)
 print('PASS actual blit geometry/page ownership/strided readback, allocation/AS/timeout/fault/retirement/quarantine/busy; ASan/UBSan, no hardware claim')
