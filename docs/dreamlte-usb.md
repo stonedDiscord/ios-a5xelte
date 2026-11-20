@@ -988,3 +988,21 @@ or ping alone is not a console pass. A full bounded capture waits its window;
 remains. The receiver has actual loopback UDP tests, including split markers,
 wrong peer, unrelated traffic, empty datagrams and silence. This host test
 is not evidence of phone delivery;0233 has not enumerated at latest check.
+
+
+### 0240 follow-up: external data routing remains a hypothesis
+
+Pinned Samsung source `3cfb914658ab077aef9ed500aa4a583782971fbf`,
+`drivers/muic/universal/muic_regmap_max77865.c`, describes CONTROL1
+register0x19: D+ uses bits5:3 and D- bits2:0. Its COM_VALUE macro produces
+COM_OPEN=0x80 and COM_USB_AP=0x89. `drivers/mfd/max77865.c` creates the MUIC
+client at7-bit I2C address0x25 (0x4a>>1). These are source definitions,
+not measurements of the current XNU boot. The private local copies are
+under research/dreamlte/usb-linux; no I2C transaction has been attempted.
+
+A routing problem could explain why a cable replug restores enumeration,
+but it cannot explain a boot that has not reached USB initialization.
+0240 therefore adds scoped pmap checkpoints first. After BOOT flash,
+the host still sees no USB device; preserve that boot for the user's exact
+last screen line before restarting or replugging. Do not infer CONTROL1's
+current value or program it from this source review alone.

@@ -1,5 +1,17 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0240 follow-up host check — 2026-11-20
+
+Rechecked after flash: no1209:0001,no04e8:685d,noECM. Host journal still
+ends at Download077 disconnect. No live CI/preparation remains. Previous
+turn made progress:0240 was built,verified,flashed and committed. Current
+physical screen report remains pending; no reboot/replug or new flash.
+Pinned MUIC source review documented in docs/dreamlte-usb.md as a possible
+USB routing lead,not a live register measurement or established cause.
+Source COM_OPEN=0x80,COM_USB_AP=0x89,CONTROL1=0x19,MUIC7-bit address0x25.
+No I2C writes attempted. Goal remains incomplete: USB Download Mode was
+physically verified on0239; automatic USB return after reboot still fails.
+
 ## 0240 verified and BOOT flashed; screen evidence pending — 2026-11-20
 
 Exact CI44695365296 SUCCESS at7ba1affe64c3141e9fca8bf18f4ae9eb614fae40.
