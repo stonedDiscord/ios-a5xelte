@@ -3,6 +3,22 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0242 verified and BOOT flashed; screen checkpoint pending — 2026-11-20
+
+Exact CI44711756509 SUCCESS at583266032fdd7e97effb14e4904302ed671a4078.
+12 source files,11 symbols,89 linked diagnostics/profile PASS.
+Kernel SHA256:0024cc2cc0a8cbe65cec400130d6830419d3652a1d2ad1c09261924d26dcb689.
+BOOT shim/out/dreamlte-xnu-0242.img,18,466,832bytes,SHA256:
+c4e844d1421209943c83cffd516e8dfe4159ba1147f604e46f49483fe3f530e9.
+Original header/components,payload and partition fit verified. Live0241
+USB Download transition PASS without buttons to device081 on same port.
+Heimdall BOOT-only upload100%,exit0; reboot/disconnect10:52:07local.
+First25second host observation: no XNU/Samsung USB; journal ends at081
+disconnect. Exact screen checkpoint requested before restart/replug.
+0242 is diagnostic only; no VM or automatic USB fix established. Preserve
+this boot pending screen evidence. Private preparation/verification/transition/
+flash logs under ci-44711756509. User confirms0241 needed cable replug.
+
 ## 0242 exact diagnostic CI dispatched — 2026-11-20
 
 CI44711756509 dispatched at583266032fdd7e97effb14e4904302ed671a4078.
