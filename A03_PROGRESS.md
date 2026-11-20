@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 local /23:51UTC Nov20: native16K validation CI success; BOOT0118 trial
+
+CI44836868623 SUCCESS exacte8e3dee4d9ffa018199d2f6e975516606fbf9ce5.
+Sixsourcesexactmatch/RTCunchanged/reverse0186/checksum/SMP/actualDMA+rate+
+replayASanUBSanPASS.
+KernelSHA2568e5a69be32acfbf1dd7d88b839ba06250b007775d5c860371c98d543e0eeec11.
+BOOT0118SHA256bbb51c88e7ea48d5dbbe017a98eec5859fb99890fb2ad3e4226d3c4b761e70da.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload thenBOOT-only
+Heimdalluploadsuccess/reboot23:51UTC. Sole session2940captureboot0118-map16-live.log
+waitsCDC. Needclocks/cachedwarm/FWload/touchON/acceptedframe->GPUOFF->ratebenchmark
+384/512(eachfourreadbacks+paired3rounds8copies)->restore384/physicalUI.
+
 ## 2026-11-21 local /23:47UTC Nov20: mapping CI still live; capture renewed
 
 CI44836868623/e8e3dee remainsBuild; live23:46:13compileroutput confirmsprogress.
