@@ -1,5 +1,15 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0244 physical link-state suspend before replug — 2026-11-20
+
+User reports exact screen line:
+`DREAMLTE USB ATTACH: type=3 link=3 info=003`.
+This establishes USB device-event handling after VM startup on this boot;
+link3 is U3/suspend. It does not prove why host attachment failed or fix
+sporadic VM stalls. Host remains absent. Requested controlled five-second
+unplug/reconnect without restart to recover this same boot's timed trace.
+Preserve exact reported info spelling; source formats four hexadecimal digits.
+
 ## 0244 verified and BOOT flashed — 2026-11-20
 
 CI44730637160 SUCCESS at e474689a7646ea4a6230fa83e90e87223f9a5881.
