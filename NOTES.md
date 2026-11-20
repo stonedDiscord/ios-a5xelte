@@ -2,6 +2,18 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0240 blocked on physical screen evidence — 2026-11-20
+
+Third consecutive post-flash check confirms the same blocker: no XNU or
+Samsung USB,noECM; journal ends with077 disconnect. CI and preparation are
+terminal; no flash process remains.0240 is installed and must be preserved
+until its last visible screen checkpoint is reported. Without that evidence
+we cannot distinguish a pre-USB VM stall from a USB attachment failure or
+select a justified next trial. Routing source review yielded a hypothesis,
+not a demonstrated fix. Goal blocked pending screen report or restored USB;
+not complete. USB Download Mode passed on0239; automatic reboot attachment
+remains unresolved. No partition writes or new reboot attempts this check.
+
 ## 0240 follow-up host check — 2026-11-20
 
 Rechecked after flash: no1209:0001,no04e8:685d,noECM. Host journal still
