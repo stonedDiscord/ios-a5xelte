@@ -11,9 +11,12 @@ Kernel SHA256:8cb57e9cb52015fb91236b8f5a3a8fc236feaee9dbf1b2b41887d8bb1b408fde.
 BOOT shim/out/dreamlte-xnu-0244.img,18,466,832bytes,SHA256:
 3649adb3956f67bac91054691e90d7fa3c067bbc8d125345004cb51324d161c0.
 Live0243 USB Download transition PASS to same port/device085 without buttons.
-Heimdall BOOT-only upload100%,exit0,rebooted. Physical checkpoint and
-cable-attached enumeration pending; preserve this boot for timed trace.
-No VM or automatic USB fix claimed. Private logs under ci-44730637160.
+Heimdall BOOT-only upload100%,exit0,rebooted;085disconnected13:11:30local.
+Initial host observation finds no XNU/Samsung enumeration; journal ends at
+that disconnect. Requested exact physical last line before restart/replug.
+Read-only120second observer session89157 records USB identity changes.
+Preserve this boot for timed trace. No VM or automatic USB fix claimed.
+Private logs under ci-44730637160.
 
 ## 0244 corrected CI and preparation active — 2026-11-20
 
