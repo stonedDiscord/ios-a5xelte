@@ -1,8 +1,8 @@
 # DREAMLTE USB bring-up evidence
 
-## Current status: 0238 hardware, 0239 in CI
+## Current status: 0239 hardware
 
-Build 0238 verified buttonless entry to Samsung Download Mode on the S8:
+Build 0239 verified buttonless entry to Samsung Download Mode on the S8:
 
 ```sh
 sudo python3 tools/dreamlte-usb-reboot.py download --timeout 30
@@ -12,19 +12,21 @@ Run this from the working XNU USB connection. The tool checks that the
 same physical port returns as Samsung `04e8:685d`. The transition writes
 no partitions. XNU console output is only available while XNU is running.
 
-The normal reboot command also restarted the phone, but USB did not return
-within 120 seconds. A cable replug on that same boot restored enumeration,
-automatic host IP configuration, ping and XNU console output. The console
-showed no bus reset or connection until the replug. The 0239 candidate tests
-Samsung's PHY pull-up sequence; see [DREAMLTE_PROGRESS.md](../DREAMLTE_PROGRESS.md)
-for the latest build and hardware evidence.
+On 0238, a normal reboot was acknowledged, but USB did not return within
+120 seconds. A cable replug on that boot restored enumeration, host IP,
+ping and XNU console output. Its console showed no bus reset or connection
+until the replug. On 0239, the normal reboot also failed to restore USB
+within 120 seconds; replug restored the link and its console showed 198
+bytes. See [DREAMLTE_PROGRESS.md](../DREAMLTE_PROGRESS.md) for the evidence.
 
 0239 successfully reaches its USB poller after a manual restart, but can
 stall in page array mapping on its first boot. On the observed restart, the
 device-side log reported a reset and connection; the host still saw no
 attachment until the user replugged the cable. The replugged boot passed
 EP0, ping and XNU console checks. A normal USB reboot was acknowledged, but
-the device did not re-enumerate on the same port within 120 seconds.
+the device did not re-enumerate on the same port within 120 seconds. After
+replugging, the USB Download Mode command also passed on 0239 and the same
+physical port returned as `04e8:685d` without button input.
 
 ## 0237 USB reconnect and buttonless reboot candidate — 2026-11-19
 

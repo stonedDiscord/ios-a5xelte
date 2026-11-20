@@ -1,6 +1,6 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
-+## 0239 restart passes VM stall; host USB remains unattached
+## 0239 USB Download Mode verified; normal reboot still needs replug
 
 After the first 0239 boot stalled during `pmap_startup` page-array mapping,
 user restarted the same BOOT with the cable left connected. The screen then
@@ -13,13 +13,11 @@ showed these lines:
 followed by `SWEET USB: ue0 rx 0 tx 0 frames`, which keeps repeating.
 User confirms no cable replug since the restart.
 
-At 15:26 UTC the host still had no USB device on port 3, its port state was
-`not attached`, and no ECM network interface/address existed. Thus this
-0239 restart progresses beyond the previously observed VM checkpoint and
-through gadget events; automatic host attachment is not yet verified.
-USB console capture is empty because no USB network exists. The screen's
-`bus reset` is device-side evidence and does not establish successful host
-enumeration. No inference yet about electrical cause or intermittent VM root.
+Before replug, the host saw no USB device on port 3. The user then replugged
+the cable; device 075 enumerated and the host profile supplied
+192.168.7.1/24. EP0 descriptors/status/configuration, three pings and XNU
+UDP console text (163 bytes) passed. This demonstrates recovery after replug,
+not automatic host attachment.
 
 ## 0239 flashed; first boot stalls during page array mapping
 
@@ -40,28 +38,31 @@ USB initialization; this boot cannot test the new pull-up sequence.
 User initiated a restart of the same 0239 BOOT with the cable connected.
 The first boot capture was empty; the restart is a separate observation.
 
-+The requested replug on this restarted 0239 boot produced device
-1209:0001/075 and automatically restored the host profile address
-192.168.7.1/24. EP0 descriptors/status/configuration, all three pings,
-and XNU UDP console text (163 bytes in the bounded check) PASS. This
-confirms replug recovers this boot; it does not establish automatic attach.
-
 USB normal reboot command on device075 was acknowledged. Captured XNU UDP
 shows request40/51, then `DREAMLTE USB: reboot status ep=1 flags=c mode=1`.
 Host logged disconnect at16:31:48 local and saw neither XNU nor Samsung
 enumeration during the120-second same-port check; tool correctly reported
-normal re-enumeration NOT verified. Current host port is not attached.
-The post-command screen report is pending. Automatic attachment still fails
-on 0239, while USB-requested Download Mode remains physically verified on
-0238; 0239 download mode not yet re-tested.
+normal re-enumeration NOT verified. The cable was subsequently replugged,
+restoring device 076 and the host address; EP0/ping/console checks passed
+again (198 console bytes). This confirms the failure is specifically the
+normal reboot's automatic USB return on this trial.
+
+From that replugged 0239 session, `download --timeout 45` was acknowledged
+and the same physical port enumerated Samsung `04e8:685d` device 077 in
+Download Mode. This is a verified buttonless transition on 0239; no partition
+was written for the mode transition. Host currently sees Download Mode 077.
+Automatic USB attachment after a normal reboot remains unresolved. First
+0239 boot also stalled in page-array mapping; a manual restart progressed
+past that checkpoint on this trial, so the intermittent VM stall remains
+unresolved as well.
 
 ## 0239 candidate matches Samsung DP pull-up sequencing — 2026-11-19
 
 0239 exact CI44550208083 dispatched at326cc843fddb6cfe059b141ffae6f1691c83a4ac.
 Preparation research/dreamlte/prepare-0239.py waits exact run/head and verifies
 sources/profile/preserved BOOT components; never flashes. Download074 ready
-from verified USB command.0238 installed; ten USB suites and RAM console
-suite PASS;0239 hardware untested. No button request or new partition write.
+from verified USB command. Ten USB suites and RAM console suite PASS.
+0238 was installed at dispatch; later hardware outcomes are recorded above.
 
 
 
@@ -74,9 +75,10 @@ setup before endpoints remains. No clock/PLL/CMU/port switch, timer retry,
 watchdog or external MUIC programming. This is an unproven attachment fix.
 Actual ARM64 compile, source-derived131072 field-preservation cases and
 invalid/mismatch refusal PASS. Reboot event suite remains PASS. Exact0238
-patch application equals compiled0239 input. Full CI/BOOT trial next.
-Current Download074 reached entirely by USB command, ready for BOOT-only
-test without buttons.0238 installed until verified new image exists.
+patch application equals compiled0239 input. CI and BOOT trial outcomes are
+recorded above: Download Mode passes without buttons; normal reboot does not
+restore host USB automatically. First boot intermittent page-array stall
+also remains under investigation.
 
 ## 0238 USB Download Mode VERIFIED; normal boot attachment needs replug — 2026-11-19
 
