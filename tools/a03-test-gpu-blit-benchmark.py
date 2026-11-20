@@ -25,6 +25,11 @@ original_command=m.command;m.command=lambda *args:next(values)
 assert m.snapshot(None,None)['gpu_ns']==123
 values=iter(['enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12 phases-ns: power=1 prepare=2 cache=3 execute=4 retire=5 verify=6 shutdown=7','copy timing cpu=28/280ns gpu=4/123ns'])
 phases=m.snapshot(None,None)['last_attempt_phases_ns']
+values=iter(['A03 GPU blit: cached=1; four readbacks after policy change enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
+assert m.snapshot(None,None)['cached']==1
+assert m.report(dict(b,cached=1),dict(b,cached=1,gpu_copies=1,gpu_ns=100),'fast')['cached']==1
+try:m.report(dict(b,cached=0),dict(b,cached=1),'fast');assert False
+except RuntimeError as error:assert 'Cache policy changed' in str(error)
 assert phases==dict(power=1,prepare=2,cache=3,execute=4,retire=5,verify=6,shutdown=7)
 sample=dict(b,frames=1,gpu_copies=1,gpu_ns=100,last_attempt_phases_ns=phases)
 assert m.report(b,sample,'fast')['last_attempt_phases_ms']['execute']==0.000004
