@@ -1,0 +1,65 @@
+--- a/osfmk/arm/pmap/pmap.c
++++ b/osfmk/arm/pmap/pmap.c
+@@ -5856,13 +5856,17 @@
+ 	unsigned int dreamlte_diag_index = 0;
+ 	if (dreamlte_diag) {
+ 		dreamlte_diag_index = dreamlte_pmap_array_enter_count++;
+-		dreamlte_diag_detail = dreamlte_diag_index == 0;
+-		if ((dreamlte_diag_index & 0x3fu) == 0) {
++		/* Scope detailed output to the repeatedly reported 1280 interval.
++		 * Include the preceding 64 calls and following 128; counts are attempts,
++		 * not pages, because the public wrapper can retry. */
++		dreamlte_diag_detail = dreamlte_diag_index == 0 ||
++		    (dreamlte_diag_index >= 1216 && dreamlte_diag_index < 1408);
++		if (dreamlte_diag_detail || (dreamlte_diag_index & 0x3fu) == 0) {
+ 			kprintf("DREAMLTE VM: pmap enter count=%u va=%p pa=%p\n",
+ 			    dreamlte_diag_index, (void *)v, (void *)pa);
+ 		}
+ 		if (dreamlte_diag_detail) {
+-			kprintf("DREAMLTE VM: pmap enter first begin\n");
++			kprintf("DREAMLTE VM: pmap detail begin\n");
+ 		}
+ 	}
+ #endif
+@@ -6203,7 +6207,13 @@
+ 			if (!had_valid_mapping) {
+ 				pv_entry_t *new_pve_p = PV_ENTRY_NULL;
+ 				int pve_ptep_idx = 0;
++				if (dreamlte_diag_detail) {
++					kprintf("DREAMLTE VM: pv insert begin\n");
++				}
+ 				pv_status = pmap_enter_pv(pmap, pte_p, pai, options, lock_mode, &new_pve_p, &pve_ptep_idx);
++				if (dreamlte_diag_detail) {
++					kprintf("DREAMLTE VM: pv insert returned status=%u\n", pv_status);
++				}
+ 				/* We did all the allocations up top. So this shouldn't be able to fail. */
+ 				if (pv_status != PV_ALLOC_SUCCESS) {
+ 					panic("%s: unexpected pmap_enter_pv ret code: %d. new_pve_p=%p pmap=%p",
+@@ -6242,7 +6252,13 @@
+ 				}
+ 			}
+ 
++			if (dreamlte_diag_detail) {
++				kprintf("DREAMLTE VM: pvh unlock begin\n");
++			}
+ 			pvh_unlock(pai);
++			if (dreamlte_diag_detail) {
++				kprintf("DREAMLTE VM: pvh unlock complete attr=%x\n", pp_attr_bits);
++			}
+ 
+ 			if (pp_attr_bits != 0) {
+ 				ppattr_pa_set_bits(pa, pp_attr_bits);
+@@ -6366,9 +6382,12 @@
+ 	}
+ 
+ 	if (dreamlte_diag_detail) {
+-		kprintf("DREAMLTE VM: pmap enter first complete\n");
++		kprintf("DREAMLTE VM: pmap unlock begin kr=%d\n", kr);
+ 	}
+ 	pmap_unlock(pmap, lock_mode);
++	if (dreamlte_diag_detail) {
++		kprintf("DREAMLTE VM: pmap detail returned kr=%d\n", kr);
++	}
+ 
+ 	if (__improbable(ro_va && kr == KERN_SUCCESS)) {
+ 		pmap_phys_write_disable(v);

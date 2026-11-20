@@ -3,6 +3,30 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0241 repeats1280 stop; restart retained console recovered — 2026-11-20
+
+User reports the same last line again,verbatim:
+`DREAMLTE VM: pmap enter count=1280 va=0xffffffff034fee000 pa=0x882bec000`.
+This0241 boot stopped before USB; retained EP0 cannot recover it. User
+acknowledges requested restart. A subsequent boot enumerates device080 at
+10:29:16local; whether the cable was replugged is explicitly pending user
+confirmation,so automatic attachment is not claimed. Actual0241 retained
+EP0 retrieval PASS,292,601bytes saved privately in ci-44707721507/
+restart-retained-console.log. Exact EP0,3/3ping and163bytes XNU UDP PASS.
+The successful restart maps5,745,696byte page array with contiguous physical
+pages; count1280 VA0xfffffff0579ee000 PA0x882bef000,then1344 and mapping done.
+USB inherited isolation0,REFSEL00080000,PHY CLK801b0049,UTMI00000060;
+prerequisites/wake/endpoints pass. Trace contains resets/speed1 then speed0
+and host setup; it has no timestamp proving when any cable action occurred.
+
+Prepared0242 diagnostic: detailed stages for attempts1216..1407 plus first
+entry,including PV insertion,PVH unlock and pmap unlock/return. No mapping
+semantics changed; per-attempt logs distinguish the previous64-call interval.
+Actual ARM64 syntax/object compile PASS; exact0241 pmap source plus0242
+patch matches compiled input with zero fuzz/offset.163-patch profile staged.
+VM cause and automatic attachment still unresolved. Preserve live080 pending
+next verified trial; do not claim the new trace is a fix.
+
 ## 0241 host follow-up still awaits screen checkpoint — 2026-11-20
 
 Rechecked current host state: no XNU1209:0001 or Samsung04e8:685d;

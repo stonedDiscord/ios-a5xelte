@@ -1,5 +1,5 @@
 {
-  "description": "DREAMLTE0241 adds bounded read-only EP0 access to the retained startup console after replug. Diagnostics only; VM reliability and automatic USB attachment remain unresolved.",
+  "description": "DREAMLTE0242 scopes detailed pmap stages to attempts1216..1407 around repeated1280 stalls; diagnostic only.0241 retained EP0 console preserved.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "5a3ac225e765c532d1fa749c4c268ab8e04e1922842cea9d32b39f6f18bc9554",
@@ -12,7 +12,7 @@
     "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469",
     "osfmk/vm/vm_resident.c": "7e21de2b99db24fb73e8cef9d290066704397cae66310e32422b19890e9a2f11",
     "osfmk/vm/vm_init.c": "c3b729b905ac311814707a8ce3fdfa26edee831ad2ef414de18d59e77c730c12",
-    "osfmk/arm/pmap/pmap.c": "aa7a704ef5812bf62c7e29a9cd259e3c4bb6bf256e4b90798ce137f10e87c2c2"
+    "osfmk/arm/pmap/pmap.c": "654f2ef8a3069dc7ac8bded64e9f221ff3c69dfab0aa251aa5b4216f0a4fd18a"
   },
   "strings": [
     "DREAMLTE IOKIT: zalloc lockdown enter",
@@ -84,7 +84,6 @@
     "DREAMLTE USB: reset DP pullup readback failed",
     "DREAMLTE USB: connect DP pullup readback failed",
     "DREAMLTE VM: pmap enter count=%u va=%p pa=%p",
-    "DREAMLTE VM: pmap enter first begin",
     "DREAMLTE VM: pmap lock begin",
     "DREAMLTE VM: pmap lock acquired",
     "DREAMLTE VM: pmap pte missing; expand begin",
@@ -96,9 +95,15 @@
     "DREAMLTE VM: pv allocation returned status=%u",
     "DREAMLTE VM: pte commit begin",
     "DREAMLTE VM: pte commit returned committed=%u",
-    "DREAMLTE VM: pmap enter first complete",
     "DREAMLTE VM: page array pmap mapping begin va=%p bytes=%llu",
-    "DREAMLTE VM: page array pmap mapping done"
+    "DREAMLTE VM: page array pmap mapping done",
+    "DREAMLTE VM: pmap detail begin",
+    "DREAMLTE VM: pv insert begin",
+    "DREAMLTE VM: pv insert returned status=%u",
+    "DREAMLTE VM: pvh unlock begin",
+    "DREAMLTE VM: pvh unlock complete attr=%x",
+    "DREAMLTE VM: pmap unlock begin kr=%d",
+    "DREAMLTE VM: pmap detail returned kr=%d"
   ],
   "symbols": [
     "_dreamlte_log_cursor",
