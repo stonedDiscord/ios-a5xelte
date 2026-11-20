@@ -3,6 +3,22 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0243 verified and BOOT flashed; physical checkpoint pending — 2026-11-20
+
+CI44715311214 SUCCESS at e6e463fa5eb34448aba98a4b3eb250e98b0a7dc5.
+12source files,11symbols,90linked diagnostics/profile PASS. Exact0242 CI
+pmap source plus0243 patch matches compiled/manifest input,zero offset/fuzz.
+Kernel SHA256:361b28ee53c52eee2b3085941d32dd2cbc3c9a48c2d7c3a9a9648a0992788efd.
+BOOT shim/out/dreamlte-xnu-0243.img,18,466,832bytes,SHA256:
+462b9ce89d827ca3adddd48ba7e4ff25d5ad1723556f367cc43f9c7b88b5930b.
+Original header/components,payload/partition fit PASS. USB Download Mode
+transition from0242 PASS without buttons to device083. Heimdall BOOT-only
+upload100%,exit0,rebooted. Host journal083 disconnect11:22:26local; initial
+25second observation sees no XNU/Samsung USB and subsequent journal still
+ends there. Requested precise screen line including raw/locked fields before
+any reset/replug. Preserve this boot pending that evidence. Private logs and
+manifest under ci-44715311214. No VM or automatic USB fix claimed.
+
 ## 0242 comparison boot and replug: retained log PASS — 2026-11-20
 
 After requested comparison restart,user reports cable replug. Host enumerates
