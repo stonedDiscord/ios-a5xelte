@@ -1,5 +1,27 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0243 controlled replug recovers USB; retained snapshot PASS — 2026-11-20
+
+After requested five-second unplug/reconnect,user reports replugged. Host
+XNU1209:0001 enumerates high-speed device084 at11:50:33local on port3.
+Retained console saved:423,315bytes in private ci-44715311214/
+replug-retained-console.log. Exact EP0,3/3ping and163bytes identifiable
+XNU UDP console PASS; check log replug-usb-check.log. No reset/flash issued.
+
+This0243 boot passes pai2bfd:raw=0,locked=0,acquired,PTE committed,
+PV inserted status0,unlocked and pmap returned0. All188captured raw PVH
+snapshots show locked=0. This successful boot cannot explain the earlier
+0242 stall or establish repeated startup reliability. The diagnostics were
+present in retained output even though no longer visible on screen.
+
+USB trace again shows initial full-speed connection,then46zero-frame poll
+reports before high-speed resets/connect and setup traffic. Trace lacks
+per-line timestamps; do not assign an exact cable boundary. Host enumeration
+followed controlled replug; automatic attachment is still unresolved.
+Preserve live0243/device084 for subsequent evidence-backed trials. Next USB
+step: bounded link-state/wakeup event capture before changing PHY behavior,
+with external MUIC routing still a separate hypothesis. No VM fix claimed.
+
 ## 0243 reaches USB poller; host enumeration absent — 2026-11-20
 
 User reports no raw/locked fields on screen,then gives exact last line:
