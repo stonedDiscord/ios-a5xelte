@@ -3,6 +3,25 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0242 comparison boot and replug: retained log PASS — 2026-11-20
+
+After requested comparison restart,user reports cable replug. Host enumerates
+XNU device082 on port3 at11:13:02local; host ECM address configured. Exact
+EP0,3/3ping and198bytes identifiable XNU UDP PASS. Retained EP0 console
+PASS,403,980bytes saved privately under ci-44711756509/restart-retained-console.log.
+This boot passes pai=2bfd at attempt1295,PA0x882bfd000,VA0xfffffff02e3fd000:
+pvh acquired,PTE committed,PV inserted,status0,unlock completed,return0.
+Page-array mapping/frame initialization complete. This proves the same
+physical-page lock can pass,not why the previous boot stopped.
+
+USB trace shows reset/full-speed conndone then six zero-frame poll reports
+before subsequent reset/high-speed conndone and setup traffic. Host had no
+new enumeration until replug. Trace has no timestamps and cannot prove the
+exact cable boundary,but captures the pre-enumeration idle period missing
+from the previous0241 trace. Automatic attachment is not fixed. Preserve
+live082 for USB Download Mode when verified0243 is ready; exact CI still
+running. No reset or flash initiated by this host check.
+
 ## 0243 exact CI building — 2026-11-20
 
 CI44715311214 in_progress at e6e463fa5eb34448aba98a4b3eb250e98b0a7dc5.
