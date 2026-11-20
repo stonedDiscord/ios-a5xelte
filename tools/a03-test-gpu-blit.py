@@ -27,6 +27,7 @@ typedef unsigned long vm_size_t;
 static uint32_t bank[7][4096];
 static unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed,cache_commands;
 static unsigned expect_cached,cache_failure;
+static void check_shader(unsigned specialized);
 static uint64_t fake_time;
 static uint64_t mach_absolute_time(void){return ++fake_time;}
 static void absolutetime_to_nanoseconds(uint64_t t,uint64_t *ns){*ns=t*10;}
@@ -112,13 +113,16 @@ static void fake_write(unsigned o,uint32_t v){
   uint32_t *params=(uint32_t *)((uint8_t *)allocation+0x4200);
   uint32_t *job=(uint32_t *)((uint8_t *)allocation+0x4000);
   unsigned width=params[6],height=params[7],count=width*height;
-  assert(job[8]==0x80000c0f&&job[10]==(width+255)/256&&job[11]==(height+3)/4);
+  unsigned specialized=params[0]==0x04000000&&params[1]==0x05000000&&params[4]==3072&&params[5]==2880&&width==720&&height==1600;
+  unsigned local_x=specialized?15:16,pixels=specialized?16:4;
+  assert(job[8]==(specialized?0x80000c0e:0x80000c0f)&&job[10]==(specialized?3:(width+63)/64)&&job[11]==(height+3)/4);
+  check_shader(specialized);
   unsigned so=params[0]-0x04000000,doff=params[1]-0x05000000;
   unsigned copied=0;
   for(unsigned gy=0;gy<job[11];gy++)for(unsigned gx=0;gx<job[10];gx++)
-  for(unsigned ly=0;ly<4;ly++)for(unsigned lx=0;lx<16;lx++)
-  for(unsigned component=0;component<16;component++){
-   unsigned y=gy*4+ly,x=(gx*16+lx)*16+component;
+  for(unsigned ly=0;ly<4;ly++)for(unsigned lx=0;lx<local_x;lx++)
+  for(unsigned component=0;component<pixels;component++){
+   unsigned y=gy*4+ly,x=(gx*local_x+lx)*pixels+component;
    if(x>=width||y>=height)continue; /* shader's exact bounds before accesses */
    copied++;
    assert(walk(params[0]+y*params[4]+x*4,0)==source_physical(so+y*params[4]+x*4));
@@ -239,7 +243,13 @@ int main(void){
 }
 '''
 with tempfile.TemporaryDirectory(prefix='a03-blit-') as temp:
- temp=Path(temp);c=temp/'test.c';exe=temp/'test';c.write_text(header+layout+src+tests)
+ check=r'''
+static void check_shader(unsigned specialized){
+ const void *expected=specialized?(const void *)a03_g57_fullscreen_code:(const void *)a03_g57_blit_code;
+ assert(!memcmp((uint8_t *)allocation+0x5000,expected,specialized?sizeof(a03_g57_fullscreen_code):sizeof(a03_g57_blit_code)));
+}
+'''
+ temp=Path(temp);c=temp/'test.c';exe=temp/'test';c.write_text(header+layout+check+src+tests)
  subprocess.run(['clang','-std=c11','-Wall','-Wextra','-Werror','-fsanitize=address,undefined',str(c),'-o',str(exe)],check=True)
  subprocess.run([str(exe)],check=True)
 print('PASS actual blit geometry/page ownership/strided readback, allocation/AS/timeout/fault/retirement/quarantine/busy; ASan/UBSan, no hardware claim')

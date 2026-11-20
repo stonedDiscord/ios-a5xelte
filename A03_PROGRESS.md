@@ -1,5 +1,30 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0110 correctness passes, performance rejected; fullscreen candidate0178
+
+BOOT0110 completed full720x1600 readbacks with zero mismatches and retirement
+confirmed. Three paired eight-copy rounds: GPU4.070764/4.002437/4.075817ms;
+CPU1.675600/1.919673/1.420379ms. Median GPU4.070764 vs CPU1.675600ms.
+Generic sixteen-pixel shader is slower than0175 four-pixel shader; reject it
+as a performance improvement. Left GPU OFF, powered0, verify1, cached/warm1;
+frames41/verified17/completed41, fallbacks0/quarantine0.
+
+20:35–20:39UTC live follow-up: GPU remains OFF/powered0, touch streaming1,
+1249slices/events0, storage ready1/poisoned0. Vsync advances while swaps77/
+copies73 stay stopped. Kernel UTC1795207079 agrees with host. ONE explicit
+Home (no timeset) resumes swaps734/copies730, CPU copies32->689; GPU stays41.
+Sleep remains plausible, not proven: no display-power observation yet.
+Requested a controlled user Auto-Lock Never trial; do not periodically Home.
+
+Candidate0178 restores generic four-pixel masked-tail shader and adds a
+separate384byte exact720x1600 shader: source offset0/stride3072, destination
+offset0/stride2880;15x4 threads,16pixels/thread,3x400 groups, aligned128bit
+loads/stores,32regs/TLSWLS0. All other geometry retains bounded generic4.
+Both binaries reproduce with pinned Mesa24.3; shader hashes, dispatch/guard
+variants and independent primaryv9 packers pass. Actual GPU/AMFI ARM64
+cross-compiles and profile124 pass. Actualsource lifecycle/replay ASan/UBSan and benchmark regression tests
+PASS; no hardware or speed claim for0178. Goal remains active.
+
 ## 2026-11-20: sixteen-pixel CI success; BOOT0110 trial
 
 CI44804438707 SUCCESS exact01e7de1474faf02b8e3c9ee6f9b02c9069929752.

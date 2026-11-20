@@ -1,3 +1,15 @@
+ACTIVE0110 hardware full-frame readback PASS but GPU median4.070764ms vs
+CPU1.675600ms (three paired8-copy rounds); generic16 optimization rejected.
+GPUOFF/powered0/verify1/cachedwarm1,41frames/17verified/0fallback/quarantine.
+20:39UTC ONEHome resumes swaps77->734/copies73->730 (CPU32->689), kernel
+UTC correct. Sleep plausible, not proven; controlled Auto-Lock Never asked.
+Solecapture95247/session20771boot0110-wide-live.log expires~20:58UTC.
+Candidate0178 exactfullscreen384bytes/15x4/16pixels with generic4 fallback;
+nativeMesa reproduction/both primaryv9 descriptor paths/ARM64/profile124
+PASS. Lifecycle/replay ASanUBSan and benchmark tests PASS; need fullCI->verify/pack0111
+->BOOT-only->fourfullreadbacks->pairedCPUfast->physicalUI trial. No speedup
+or goal-complete claim. Preserve0110/0109 and all ownership/cache safety.
+
 ACTIVE0110wide flashedBOOT-onlySUCCESS after44804438707/01e7de1 fullCI/
 source/checksum/reversepatch/SMP/ASanUBSanPASS. Kernelec18bec3...d73eff/
 BOOTe16aec53...bb793; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
