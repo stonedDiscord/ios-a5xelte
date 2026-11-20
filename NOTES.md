@@ -2,6 +2,15 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0246 exact CI and preparation active — 2026-11-20
+
+CI44741740589 in_progress at fd94fa0be41ec570c243d03a6055cc3b25807007.
+Push completed and remote head matched before workflow dispatch. Private
+prepare-0246.py(session93473) waits exact successful run,checks content and
+packages original-header BOOT; never flashes. Keep0245/device088 live for
+USB Download transition only after verified packaging. No new phone write.
+Both goal requirements remain open; new diagnostics are not fixes.
+
 ## 0246 passive MUIC preflight and VM expansion checkpoints prepared — 2026-11-20
 
 Correction to earlier clock lead: live DT hsi2c@10970000 uses
