@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0106 isolates job execution; cached candidate0174
+
+RTC1795198340 beforeUSB/readonlystatus1795198352. GPUclocksID90910010,
+privateFW79104/load0/A55A/touchrestartON. Firstactualswaps+replay4 each
+full1152000pixels/mismatches0/done1/retired1/verify1/PASS1, verified6.
+Fast8-copymean142.159783ms. Lastphasepower0.684576/prepare0.296384/
+cache0.395576/execute137.267230/retire0.010923/verify0.001153/
+shutdown0.596000ms. Fullreadbacklast176.855576ms separately. Thusmapping/
+sourcecache/power areNOTdominant; executioninterval(includingpollwaits) is.
+
+0174explicit gpu blit cached/uncached defaultsuncached. Cachedmode uses
+pinnedvendorAttrIndex0 fordescriptor/code/source/destination and vendor
+writeback/readallocatePTwalks. SourceCPUflush remains. AfterJSretirement,
+requirefreshGPUCLEAN_INV_CACHES(cmd8)/IRQbit17 beforeASdisable/readback/
+coreoff; timeout/stalebit/reset/fault quarantinesretainedmemory+surface.
+Policychangesresetfour-readbackqualification eveniffastrequested.
+StatefulhostDMA hidescachedwritesuntilclean, checkspermissions/fullframe/
+strided/failure/quarantine/repeatedreuse;ASanUBSanPASS. ActualGPU+AMFI
+ARM64compilePASS;120profilePASS. NeedfullCI->0107->cached4fullreadbacks
+thenfast/CPUcomparison. No cachedhardware/speedupclaimyet. Current0106
+GPUONverify1/touchON remains;solecapture52314/session97698.
+
 ## 2026-11-20: phase CI success; BOOT0106 measurement trial
 
 CI44788043452 SUCCESS exacta59bd6a49500d42472d3a62ade7bedb5b68cd7f0.

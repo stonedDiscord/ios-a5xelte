@@ -1,0 +1,102 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -309,6 +309,7 @@
+ static uint64_t a03_gpu_blit_pixels;
+ static unsigned a03_gpu_blit_verify=1,a03_gpu_blit_verified,a03_gpu_blit_completed;
+ static uint64_t a03_gpu_blit_ns,a03_gpu_blit_last_ns;
++static unsigned a03_gpu_blit_cached;
+ static uint64_t a03_gpu_blit_phase[8];
+ static void a03_gpu_blit_mark(unsigned phase) {
+     if(a03_gpu_job_requested==3)a03_gpu_blit_phase[phase]=mach_absolute_time();
+@@ -335,20 +336,25 @@
+         a03_gpu_blit_source&4095,a03_gpu_blit_destination_pa&4095,
+         a03_gpu_blit_source_stride,a03_gpu_blit_destination_stride,a03_gpu_blit_width,a03_gpu_blit_height))return 0;
+     uint64_t *q=(uint64_t *)a03_gpu_blit_memory;
++    if(a03_gpu_blit_cached) {
++        /* Cache descriptor/parameters and executable code as well as pixels. */
++        q[0x3000/8]=(a03_gpu_blit_physical+0x4000)|(1ULL<<54)|0x443ULL;
++        q[0x3000/8+1]=(a03_gpu_blit_physical+0x5000)|0x4c3ULL;
++    }
+     uintptr_t va=a03_gpu_blit_source&~(uintptr_t)4095;
+     uint64_t bytes=(a03_gpu_blit_source&4095)+a03_gpu_blit_source_length;
+     for(unsigned i=0;(uint64_t)i*4096<bytes;i++) {
+         uint64_t pa=kvtophys(va+(uintptr_t)i*4096);
+         if((pa&4095)||pa<0x102000000ULL||pa>0x17e000000ULL-4096 ||
+             kvtophys(va+(uintptr_t)i*4096+4095)!=pa+4095)return 0;
+-        q[0x8000/8+i]=pa|(1ULL<<54)|0x4d7ULL;
++        q[0x8000/8+i]=pa|(1ULL<<54)|(a03_gpu_blit_cached?0x4c3ULL:0x4d7ULL);
+     }
+     if((a03_gpu_blit_destination&4095)!=(a03_gpu_blit_destination_pa&4095))return 0;
+     for(uint64_t off=0;off<a03_gpu_blit_destination_length;off+=4096)
+         if(kvtophys(a03_gpu_blit_destination+off)!=a03_gpu_blit_destination_pa+off)return 0;
+     uint64_t pa=a03_gpu_blit_destination_pa&~4095ULL;
+     bytes=(a03_gpu_blit_destination_pa&4095)+a03_gpu_blit_destination_length;
+-    for(unsigned i=0;(uint64_t)i*4096<bytes;i++)q[0xc000/8+i]=(pa+(uint64_t)i*4096)|(1ULL<<54)|0x457ULL;
++    for(unsigned i=0;(uint64_t)i*4096<bytes;i++)q[0xc000/8+i]=(pa+(uint64_t)i*4096)|(1ULL<<54)|(a03_gpu_blit_cached?0x443ULL:0x457ULL);
+     return 1;
+ }
+ static int
+@@ -436,10 +442,13 @@
+     uint32_t old_cfg_lo = a03_gpu_read(a03_gpu_regs, 0x2430);
+     uint32_t old_cfg_hi = a03_gpu_read(a03_gpu_regs, 0x2434);
+     FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, a03_gpu_memory_size());
++    if(a03_gpu_job_requested==3 && a03_gpu_blit_cached)
++        a03_gpu_write(0x24,(1U<<17)|(1U<<8)); /* stale clean/reset IRQs */
+     a03_gpu_blit_mark(3);
+     /* AArch64 4KiB translation; noncacheable outer-shareable table reads.
+      * AttrIndex5 normalNC as vendor; CPU/GPU ownership is explicit. */
+-    a03_gpu_write(0x2430, 0x21000006U);
++    /* Vendor cached PT walks: writeback + read allocate + outer shareable. */
++    a03_gpu_write(0x2430, a03_gpu_job_requested==3 && a03_gpu_blit_cached ? 0x62000006U : 0x21000006U);
+     a03_gpu_write(0x2434, 0);
+     a03_gpu_write(0x2400, (uint32_t)a03_gpu_scratch_pa);
+     a03_gpu_write(0x2404, (uint32_t)(a03_gpu_scratch_pa >> 32));
+@@ -481,6 +490,25 @@
+         delay(10);
+     }
+     if (!idle || !a03_gpu_as_wait()) goto poison;
++    /* AttrIndex0 is the pinned vendor implementation-defined cache policy.
++     * Clean AND invalidate GPU caches before CPU reads, AS retirement or
++     * core shutdown. A missing fresh completion retains mappings and the
++     * source surface through the existing quarantine path. */
++    if(submitted && a03_gpu_job_requested==3 && a03_gpu_blit_cached) {
++        if(a03_gpu_read(a03_gpu_regs,0x20)&0x181U)goto poison;
++        a03_gpu_write(0x24,1U<<17);
++        if(a03_gpu_read(a03_gpu_regs,0x20)&(1U<<17))goto poison;
++        a03_gpu_write(0x30,8);
++        int clean=0;
++        for(unsigned i=0;i<2000;i++) {
++            uint32_t raw=a03_gpu_read(a03_gpu_regs,0x20);
++            if(raw&0x181U)goto poison;
++            if(raw&(1U<<17)){clean=1;break;}
++            delay(10);
++        }
++        if(!clean)goto poison;
++        a03_gpu_write(0x24,1U<<17);
++    }
+     /* Disable translation and wait before restoring the original AS config.
+      * Retain allocation permanently after any submission; never free DMA
+      * memory due merely to a software timeout or a changed output canary. */
+@@ -684,6 +712,11 @@
+     if(enable<2 && !a03_gpu_job_poisoned)a03_gpu_blit_enabled=enable;
+     if(enable==3)a03_gpu_blit_verify=0;
+     if(enable==4)a03_gpu_blit_verify=1;
++    if((enable==5 || enable==6) && !a03_gpu_job_poisoned && a03_gpu_blit_cached!=(enable==5)) {
++        a03_gpu_blit_cached=enable==5;
++        a03_gpu_blit_verified=0; /* Each policy must earn four readbacks. */
++    }
++    printf("A03 GPU blit: cached=%u; four readbacks after policy change\n",a03_gpu_blit_cached);
+     printf("A03 GPU blit: enabled=%u frames=%u pixels=%llu fallbacks=%u quarantined=%u\n",a03_gpu_blit_enabled,a03_gpu_blit_frames,(unsigned long long)a03_gpu_blit_pixels,a03_gpu_blit_fallbacks,a03_gpu_job_poisoned);
+     printf("A03 GPU blit: verify=%u verified=%u completed=%u total-ns=%llu last-ns=%llu\n",a03_gpu_blit_verify,a03_gpu_blit_verified,a03_gpu_blit_completed,(unsigned long long)a03_gpu_blit_ns,(unsigned long long)a03_gpu_blit_last_ns);
+     printf("A03 GPU phases-ns: power=%llu prepare=%llu cache=%llu execute=%llu retire=%llu verify=%llu shutdown=%llu (last attempt includes scheduling)\n",(unsigned long long)a03_gpu_blit_phase_ns(0),(unsigned long long)a03_gpu_blit_phase_ns(1),(unsigned long long)a03_gpu_blit_phase_ns(2),(unsigned long long)a03_gpu_blit_phase_ns(3),(unsigned long long)a03_gpu_blit_phase_ns(4),(unsigned long long)a03_gpu_blit_phase_ns(5),(unsigned long long)a03_gpu_blit_phase_ns(6));
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -660,6 +660,8 @@
+ 
+  else if(!strcmp(command,"gpu blit fast"))a03_gpu_blit_control(3);
+  else if(!strcmp(command,"gpu blit verify"))a03_gpu_blit_control(4);
++ else if(!strcmp(command,"gpu blit cached"))a03_gpu_blit_control(5);
++ else if(!strcmp(command,"gpu blit uncached"))a03_gpu_blit_control(6);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

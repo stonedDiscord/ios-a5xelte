@@ -25,7 +25,8 @@ header=r'''
 typedef uintptr_t vm_offset_t;
 typedef unsigned long vm_size_t;
 static uint32_t bank[7][4096];
-static unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed;
+static unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed,cache_commands;
+static unsigned expect_cached,cache_failure;
 static uint64_t fake_time;
 static uint64_t mach_absolute_time(void){return ++fake_time;}
 static void absolutetime_to_nanoseconds(uint64_t t,uint64_t *ns){*ns=t*10;}
@@ -39,6 +40,7 @@ static void delay(unsigned n){us+=n;assert(us<2000000);}
 int a03_gpu_supply_status(uint32_t*p,uint32_t*v){*p=0;*v=320;return 1;}
 static uint8_t source_mem[0x800000] __attribute__((aligned(16384)));
 static uint8_t dest_mem[0x468000] __attribute__((aligned(16384)));
+static uint8_t gpu_dirty[0x468000]; /* cached writes invisible until clean */
 static unsigned bad_source,bad_dest,corrupt,noncontiguous;
 static uint64_t source_physical(uintptr_t offset){return 0x140000000ULL+(noncontiguous?((offset&~4095ULL)*2+(offset&4095)):offset);}
 vm_offset_t ml_io_map(vm_offset_t p,vm_size_t n){(void)p;(void)n;return 0;}
@@ -68,10 +70,24 @@ static uint64_t walk(uint32_t va,int writable){
   if(level<3){uint64_t next=d&0x000000fffffff000ULL;assert(next>=pa&&next<pa+0x10000);root=(uint64_t *)((uint8_t *)allocation+next-pa);}
  }
  assert(d&(1ULL<<54));assert((d&0xc0)==(writable?0x40:0xc0));
+ assert(((d>>2)&7)==(expect_cached?0:5));
  return (d&0x000000fffffff000ULL)+(va&4095);
 }
 static void fake_write(unsigned o,uint32_t v){
  assert(o<0x3000);writes++;
+ if(o==0x24){
+  assert(v==((1U<<17)|(1U<<8))||v==(1U<<17));
+  if(cache_failure!=2)bank[3][0x20/4]&=~v;
+  return;
+ }
+ if(o==0x30){
+  assert(v==8&&expect_cached&&starts&&bank[3][0x2400/4]);
+  cache_commands++;
+  if(cache_failure==3)bank[3][0x20/4]|=1;
+  else if(cache_failure==4)bank[3][0x20/4]|=1U<<8;
+  else if(cache_failure!=1){memcpy(dest_mem,gpu_dirty,sizeof(dest_mem));bank[3][0x20/4]|=1U<<17;}
+  return;
+ }
  if(o==0x50){assert(v==0x2968a819);return;}
  if(o==0x58){bank[3][o/4]=v;return;}
  if(o==0x190){bank[3][0x150/4]=bank[3][0x160/4]=1;return;}
@@ -82,7 +98,11 @@ static void fake_write(unsigned o,uint32_t v){
  if(o==0x2418){assert(v==1);updates++;return;}
  if(o==0x1004){assert(v==0x20002);bank[3][0x1000/4]&=~v;return;}
  if(o==0x18e0&&v==1){
-  starts++;assert(((uint32_t *)((uint8_t*)allocation+0x4000))[4]==0x10008);assert(flushes==2&&bank[3][0x2430/4]==0x21000006);
+  starts++;assert(((uint32_t *)((uint8_t*)allocation+0x4000))[4]==0x10008);assert(flushes==2&&bank[3][0x2430/4]==(expect_cached?0x62000006:0x21000006));
+  uint64_t *scratch=(uint64_t *)allocation;
+  assert(((scratch[0x3000/8]>>2)&7)==(expect_cached?0:5));
+  assert(((scratch[0x3000/8+1]>>2)&7)==(expect_cached?0:5));
+  assert(!(scratch[0x3000/8+1]&(1ULL<<54)));
   assert(bank[3][0x2400/4]==0x20000000&&bank[3][0x2404/4]==1);
   assert(bank[3][0x2408/4]==0x888d8f88&&bank[3][0x240c/4]==0x4c8d);
   assert(bank[3][0x18c0/4]==0x2000000&&bank[3][0x18d8/4]==0x83300);
@@ -103,10 +123,10 @@ static void fake_write(unsigned o,uint32_t v){
    assert(walk(params[0]+y*params[4]+x*4,0)==source_physical(so+y*params[4]+x*4));
    assert(walk(params[1]+y*params[5]+x*4,1)==0x9e000000ULL+doff+y*params[5]+x*4);
 
-   *(uint32_t *)(dest_mem+doff+y*params[5]+x*4)=*(uint32_t *)(source_mem+so+y*params[4]+x*4);
+   *(uint32_t *)((expect_cached?gpu_dirty:dest_mem)+doff+y*params[5]+x*4)=*(uint32_t *)(source_mem+so+y*params[4]+x*4);
   }
   assert(copied==count);
-  if(corrupt)*(uint32_t *)(dest_mem+doff)^=1;
+  if(corrupt)*(uint32_t *)((expect_cached?gpu_dirty:dest_mem)+doff)^=1;
 
   *(uint32_t *)((uint8_t*)allocation+0x4000)=1;
   if(mode==8)*(uint64_t *)((uint8_t*)allocation+0x5000)=0xa5a55a5adeadbeefULL;
@@ -123,8 +143,10 @@ tests=r'''
 static void reset(unsigned m){
  if(allocation)free(allocation);allocation=0;
  memset(bank,0,sizeof(bank));memset(dest_mem,0x5a,sizeof(dest_mem));
+ memset(gpu_dirty,0x5a,sizeof(gpu_dirty));
  for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
  mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=0;
+ cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;
  a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
  a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
  a03_gpu_blit_memory=0;a03_gpu_blit_physical=0;a03_gpu_blit_enabled=1;a03_gpu_blit_frames=0;a03_gpu_blit_verified=0;a03_gpu_blit_verify=1;a03_gpu_blit_completed=0;a03_gpu_blit_ns=0;
@@ -166,6 +188,22 @@ int main(void){
  assert(a03_gpu_blit_last_ns==80);
  us=flushes=starts=offs=0;corrupt=1;assert(blit(37,19)==1&&a03_gpu_blit_verified==4); /* completed, deliberately not pixel-verified */
  a03_gpu_blit_control(4);assert(a03_gpu_blit_verify);us=flushes=starts=offs=0;corrupt=1;assert(blit(37,19)==0);
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);assert(a03_gpu_blit_cached);
+ assert(blit(720,1600)==1&&cache_commands==1&&offs==1&&!a03_gpu_job_poisoned);
+ for(unsigned i=0;i<3;i++){us=flushes=starts=offs=0;assert(blit(53,17)==1);}
+ assert(a03_gpu_blit_verified==4);a03_gpu_blit_control(6);expect_cached=0;
+ assert(!a03_gpu_blit_verified&&!a03_gpu_blit_cached);
+ for(unsigned failure=1;failure<=4;failure++){
+  reset(0);expect_cached=1;a03_gpu_blit_control(5);cache_failure=failure;
+  if(failure==2)bank[3][0x20/4]=1U<<17;
+  assert(blit(53,17)==-1&&a03_gpu_job_poisoned&&!offs);
+  assert(bank[3][0x2400/4]); /* mapping retained until cache ownership proven */
+  unsigned before=writes;assert(blit(53,17)==-1&&writes==before);
+ }
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_verify=0;
+ for(unsigned i=0;i<4;i++){us=flushes=starts=offs=0;assert(blit(53,17)==1);}
+ assert(a03_gpu_blit_verified==4);us=flushes=starts=offs=0;corrupt=1;
+ a03_gpu_blit_control(6);expect_cached=0;assert(blit(53,17)==0);
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''

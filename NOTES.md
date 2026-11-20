@@ -1,4 +1,12 @@
-ACTIVE BOOT0106phase flashedBOOT-onlySUCCESS after44788043452/a59bd6a
+ACTIVE BOOT0106HARDWAREPHASES: fastmean142.160ms; execute137.267ms vs
+power0.685/prepare0.296/cache0.396/retire0.011/shutdown0.596ms. Fullreadback
+PASS6frames. Candidate0174explicitcachedpolicy+freshGPUclean/invalidate
+beforeCPU/ASdisable/off;failurequarantine,fourreadbacksperpolicy. Default
+uncached. StatefuldirtyDMA/ASanUBSan/ARM64/profile120PASS. NeedfullCI->0107
+->cached4verifiedfullframes->fast/CPUcompare. Current0106GPUONverify1/
+touchON;capture52314/session97698soleowner. No speedupclaim.
+
+PREVIOUS BOOT0106phase flashedBOOT-onlySUCCESS after44788043452/a59bd6a
 fullCI/source/checksum/reversepatch/SMP/ASanUBSanPASS. Kernel881e7b39...b0cdda/
 BOOTa4133cfc...6af387; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
 Solecapture52314/session97698boot0106-phase-live.log waitingCDC. Needclocks/
