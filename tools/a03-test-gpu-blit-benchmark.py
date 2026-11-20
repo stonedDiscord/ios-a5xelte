@@ -29,6 +29,12 @@ values=iter(['A03 GPU blit: cached=1; four readbacks after policy change enabled
 assert m.snapshot(None,None)['cached']==1
 values=iter(['A03 GPU blit: cached=1; A03 GPU blit: warm=1 powered=1; enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 assert m.snapshot(None,None)['powered']==1
+values=iter(['A03 GPU blit: tile-rows=16; enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
+assert m.snapshot(None,None)['tile_rows']==16
+assert m.report(dict(b,tile_rows=16),dict(b,tile_rows=16,gpu_copies=1,gpu_ns=100),'fast')['tile_rows']==16
+try:m.report(dict(b,tile_rows=4),dict(b,tile_rows=16),'fast');assert False
+except RuntimeError as error:assert 'Dispatch tile changed' in str(error)
+
 try:m.report(dict(b,warm=0),dict(b,warm=1,powered=1),'fast');assert False
 except RuntimeError as error:assert 'Power policy changed' in str(error)
 assert m.report(dict(b,cached=1),dict(b,cached=1,gpu_copies=1,gpu_ns=100),'fast')['cached']==1
