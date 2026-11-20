@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0105 tiled hardware PASS, no speedup; phase candidate0173
+
+CDC enumerated after normalstartupdelay. RTC1795197038 beforeUSB and
+firstreadonlystatus1795197061; nohostsync. ExplicitclocksID90910010 and
+blitON/verify1. PrivateFW79104staged/load0/A55A/config720x1600; initial
+startupreportstoppedstream, restartconfirmsON. Actual compositor swaps1/2
+plusreplay4 allfull1152000pixels/mismatches0/done1/retired1/PASS1.
+
+Eight-copy fast138.576740ms then139.406908ms; CPU1.410130/1.400726ms;
+verify225.107048ms. No meaningful improvement over0104; workgroup scheduling
+was NOT established as the limitingfactor. Currentframes33/pixels38016000/
+verified17/completed33/fallback0/quarantine0/GPUONverify1. TouchON661slices/
+events0; ioReady1/poisoned0. Physicalscreenacceptancepending, noHomeinjected.
+
+0173 adds last-attempt phase intervals for power/preparation/sourcecache/
+ASandjob/retirement/readback/shutdown, underexistingowner. No newGPUwrites
+or changedDMApolicy. ActualASanUBSan lifecycle/phaseinterval checks and
+actualARM64GPU+AMFIcompile/profile119PASS. NeedfullCI->0106->phasehardware
+measurement to identify bottleneck before cache/power policy changes.
+Capture49304/session69950boot0105-tiled-live.log remains soleowner.
+
 ## 2026-11-20: tiled CI success; BOOT0105 hardware trial
 
 CI44784844777 SUCCESS exact3c22c827b79fe88723cbb638439349c3b6af1071.

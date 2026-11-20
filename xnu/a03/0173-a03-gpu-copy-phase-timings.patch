@@ -1,0 +1,84 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -309,6 +309,15 @@
+ static uint64_t a03_gpu_blit_pixels;
+ static unsigned a03_gpu_blit_verify=1,a03_gpu_blit_verified,a03_gpu_blit_completed;
+ static uint64_t a03_gpu_blit_ns,a03_gpu_blit_last_ns;
++static uint64_t a03_gpu_blit_phase[8];
++static void a03_gpu_blit_mark(unsigned phase) {
++    if(a03_gpu_job_requested==3)a03_gpu_blit_phase[phase]=mach_absolute_time();
++}
++static uint64_t a03_gpu_blit_phase_ns(unsigned phase) {
++    uint64_t a=a03_gpu_blit_phase[phase],b=a03_gpu_blit_phase[phase+1],ns=0;
++    if(a && b>=a)absolutetime_to_nanoseconds(b-a,&ns);
++    return ns;
++}
+ static vm_size_t a03_gpu_memory_size(void) { return a03_gpu_job_requested==3 ? A03_GPU_BLIT_SIZE : A03_GPU_SCRATCH_SIZE; }
+ static int a03_gpu_blit_prepare(void)
+ {
+@@ -411,10 +420,12 @@
+         printf("A03 GPU job: inherited AS/slot/IRQ ownership; not submitted\n");
+         return 1;
+     }
++    a03_gpu_blit_mark(1);
+     if (!a03_gpu_private_memory()) {
+         printf("A03 GPU job: owned contiguous scratch unavailable; not submitted\n");
+         return 1;
+     }
++    a03_gpu_blit_mark(2);
+     if(a03_gpu_job_requested==3) {
+         a03_gpu_scratch=a03_gpu_blit_memory;a03_gpu_scratch_pa=a03_gpu_blit_physical;
+         FlushPoC_DcacheRegion(a03_gpu_blit_source,(vm_size_t)a03_gpu_blit_source_length);
+@@ -425,6 +436,7 @@
+     uint32_t old_cfg_lo = a03_gpu_read(a03_gpu_regs, 0x2430);
+     uint32_t old_cfg_hi = a03_gpu_read(a03_gpu_regs, 0x2434);
+     FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, a03_gpu_memory_size());
++    a03_gpu_blit_mark(3);
+     /* AArch64 4KiB translation; noncacheable outer-shareable table reads.
+      * AttrIndex5 normalNC as vendor; CPU/GPU ownership is explicit. */
+     a03_gpu_write(0x2430, 0x21000006U);
+@@ -454,6 +466,7 @@
+             delay(10);
+         }
+     }
++    a03_gpu_blit_mark(4);
+     /* Snapshot status before acknowledging. Never call a timeout success. */
+     uint32_t js_status = a03_gpu_read(a03_gpu_regs, 0x18a4);
+     uint32_t as_fault = a03_gpu_read(a03_gpu_regs, 0x241c);
+@@ -484,6 +497,7 @@
+     a03_gpu_write(0x2418, 1);
+     if (!a03_gpu_as_wait()) goto poison;
+     FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, a03_gpu_memory_size());
++    a03_gpu_blit_mark(5);
+     uint32_t exception = *(volatile uint32_t *)((uint8_t *)a03_gpu_scratch + A03_GPU_JOB_OFF);
+     uint64_t output = *(volatile uint64_t *)((uint8_t *)a03_gpu_scratch + A03_GPU_OUTPUT_OFF);
+     int pass = done && exception == 1 && output == A03_GPU_RESULT && !as_fault;
+@@ -516,6 +530,7 @@
+         if(a03_gpu_blit_frames<8 || !pass)printf("A03 GPU blit: pixels=%u mismatches=%u done=%d retired=1 verify=%u PASS=%d\n",
+             a03_gpu_blit_width*a03_gpu_blit_height,mismatches,done,verify,pass);
+     }
++    a03_gpu_blit_mark(6);
+     if(a03_gpu_job_requested!=3)
+     printf("A03 GPU job: submitted=%d done=%d retired=1 irq=%08x mmu=%08x gpu=%08x js=%08x asfault=%08x exception=%08x output=%llx expected=%llx PASS=%d\n",
+         submitted, done, irq, mmu, gpu, js_status, as_fault, exception,
+@@ -671,6 +686,7 @@
+     if(enable==4)a03_gpu_blit_verify=1;
+     printf("A03 GPU blit: enabled=%u frames=%u pixels=%llu fallbacks=%u quarantined=%u\n",a03_gpu_blit_enabled,a03_gpu_blit_frames,(unsigned long long)a03_gpu_blit_pixels,a03_gpu_blit_fallbacks,a03_gpu_job_poisoned);
+     printf("A03 GPU blit: verify=%u verified=%u completed=%u total-ns=%llu last-ns=%llu\n",a03_gpu_blit_verify,a03_gpu_blit_verified,a03_gpu_blit_completed,(unsigned long long)a03_gpu_blit_ns,(unsigned long long)a03_gpu_blit_last_ns);
++    printf("A03 GPU phases-ns: power=%llu prepare=%llu cache=%llu execute=%llu retire=%llu verify=%llu shutdown=%llu (last attempt includes scheduling)\n",(unsigned long long)a03_gpu_blit_phase_ns(0),(unsigned long long)a03_gpu_blit_phase_ns(1),(unsigned long long)a03_gpu_blit_phase_ns(2),(unsigned long long)a03_gpu_blit_phase_ns(3),(unsigned long long)a03_gpu_blit_phase_ns(4),(unsigned long long)a03_gpu_blit_phase_ns(5),(unsigned long long)a03_gpu_blit_phase_ns(6));
+     __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
+ }
+ /* Return1 copied and readback verified,0 safe CPU fallback,-1 possible DMA.
+@@ -691,9 +707,12 @@
+     a03_gpu_blit_source_stride=source_stride;a03_gpu_blit_destination_stride=destination_stride;
+     a03_gpu_blit_width=width;a03_gpu_blit_height=height;
+     uint64_t begin=mach_absolute_time();
++    for(unsigned i=0;i<8;i++)a03_gpu_blit_phase[i]=0;
++    a03_gpu_blit_phase[0]=begin;
+     void *saved=a03_gpu_scratch;uint64_t saved_pa=a03_gpu_scratch_pa;
+     a03_gpu_job_requested=3;a03_gpu_last_pass=0;
+     a03_gpu_cores_owned();
++    a03_gpu_blit_mark(7);
+     uint64_t ns=0;absolutetime_to_nanoseconds(mach_absolute_time()-begin,&ns);
+     a03_gpu_blit_last_ns=ns;a03_gpu_blit_ns+=ns;
+     a03_gpu_job_requested=0;a03_gpu_scratch=saved;a03_gpu_scratch_pa=saved_pa;

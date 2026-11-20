@@ -174,7 +174,8 @@ def main():
                      '0169-a03-2d-blit-verification-timing.patch',
                      '0170-a03-bounded-compositor-frame-replay.patch',
                      '0171-a03-retained-rtc-boot-time.patch',
-                     '0172-a03-tiled-g57-framebuffer-dispatch.patch'):
+                     '0172-a03-tiled-g57-framebuffer-dispatch.patch',
+                     '0173-a03-gpu-copy-phase-timings.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

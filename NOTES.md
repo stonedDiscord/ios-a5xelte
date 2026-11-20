@@ -1,4 +1,11 @@
-ACTIVE BOOT0105tiled flashedBOOT-onlySUCCESS after44784844777/3c22c82
+ACTIVE BOOT0105tiled HARDWAREPASS full1152000pixels/noerrors; BUTfast
+138.577/139.407ms vsCPU1.410/1.401ms=>NOspeedup. GPUONverify1/frames33/
+verified17/completed33/fallback0/quarantine0;touchON661slices/events0/iohealthy.
+RTCautonomous1795197038. NoHome. Solecapture49304/session69950.
+0173 lastattemptphase timings prepared/ASanUBSan+ARM64/profile119PASS;
+needfullCI->0106->measurebottleneckbeforechangingcache/powerpolicy.
+
+PREVIOUS BOOT0105tiled flashedBOOT-onlySUCCESS after44784844777/3c22c82
 fullCI/source/reversepatch/checksum/SMP/ASanUBSanPASS. Kernel8f294f4d...e20e0d,
 BOOT40d087fa...954eff. Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
 Capture49304/session69950boot0105-tiled-live.log waitsCDC; no otherreader.
