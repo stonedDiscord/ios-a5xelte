@@ -2,6 +2,12 @@
 
 ## 2026-11-20: BOOT0105 tiled hardware PASS, no speedup; phase candidate0173
 
+PhaseCI44788043452 exacta59bd6a49500d42472d3a62ade7bedb5b68cd7f0 nowactive;
+watchsession54706. Privategpu-phase-work/artifacts.py+pack0106.py pinexact
+run/SHA and expectedtestedGPU/replay/RTC sources. Waitsamejob, do not
+duplicate. Current0105remainsGPUONverify1/touchON; capture49304/session69950
+expiresapproximately18:20UTC. No0173hardwareclaimuntilsuccessfulCIand0106.
+
 CDC enumerated after normalstartupdelay. RTC1795197038 beforeUSB and
 firstreadonlystatus1795197061; nohostsync. ExplicitclocksID90910010 and
 blitON/verify1. PrivateFW79104staged/load0/A55A/config720x1600; initial

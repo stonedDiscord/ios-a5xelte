@@ -1,4 +1,10 @@
 ACTIVE BOOT0105tiled HARDWAREPASS full1152000pixels/noerrors; BUTfast
+NEWphaseCI44788043452 exacta59bd6a49500d42472d3a62ade7bedb5b68cd7f0
+active/watch54706. Privategpu-phase-work/artifacts.py+pack0106.py pinsource/
+run/SHA. Waitsamejob->verify->BOOT-only0106->phasebreakdown. Capture49304/
+69950expires~18:20UTC;revalidateowner. Goalactive, noaccelerationclaim.
+
+PREVIOUS BOOT0105tiled HARDWAREPASS full1152000pixels/noerrors; BUTfast
 138.577/139.407ms vsCPU1.410/1.401ms=>NOspeedup. GPUONverify1/frames33/
 verified17/completed33/fallback0/quarantine0;touchON661slices/events0/iohealthy.
 RTCautonomous1795197038. NoHome. Solecapture49304/session69950.
