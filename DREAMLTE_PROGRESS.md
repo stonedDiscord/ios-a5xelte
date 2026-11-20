@@ -1,5 +1,14 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0244 exact CI in progress — 2026-11-20
+
+CI44728041768 is in_progress at14f999c5ef0caf676c7a9634560b2862fc15578d.
+Private prepare-0244.py(session94017) waits exact successful run,downloads,
+verifies source/profile/linked diagnostics and packages BOOT;never flashes.
+0243/device084 remains installed/live after replug. Next: verify0244 then
+BOOT-only trial,cable left attached,and recover timed attachment evidence.
+Both goal requirements remain unresolved.
+
 ## 0244 USB attachment trace prepared — 2026-11-20
 
 New0244 overlay enables Samsung DEVTEN link-state/wakeup bits3/4 and
