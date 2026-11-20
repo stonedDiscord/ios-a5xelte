@@ -2,6 +2,22 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0240 cable replug restores verified USB — 2026-11-20
+
+After reporting the USB poller on restarted0240,user confirms cable replug
+without another restart. Host enumerates1209:0001 device078 on port3 at
+09:32:08 local; existing host profile automatically supplies192.168.7.1/24.
+Exact EP0 descriptors/status/configuration PASS,3/3ping PASS,and198bytes
+recognized XNU UDP console PASS. USB reboot capability query returns exact
+protocol1 normal/download response. No actual reboot command issued on0240
+in this check. Private logs:ci-44695365296/restart-replug-check.log and
+restart-replug-console.log. Console contains requested setup transfers and
+ue0 rx47 tx88 frames. This isolates cable replug as attachment recovery on
+this already-running boot; it does not fix automatic initialization.
+Preserve live0240/device078 for further investigation. No new partition
+write. Download transition was physically verified on0239;0240 capability
+alone does not retest that transition. First0240 VM stall remains separate.
+
 ## 0240 restart reaches USB poller without host attachment — 2026-11-20
 
 User confirms restarting installed0240,then reports
