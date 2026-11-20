@@ -2,6 +2,21 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0240 physical stop in later page-array pmap calls — 2026-11-20
+
+User reports last visible line verbatim:
+`DREAMLTE VM: pmap enter count=1280 va=0xffffffff034fee000 pa=0x882bec000`.
+This supersedes the missing-screen blocker. The marker is printed on entry
+to pmap_enter_options_internal every64 calls during freeable page-array
+mapping; detailed first-entry markers therefore did not catch this later
+stop. It narrows the unreported interval to entry counts1280..1343 or work
+between entries,before USB initialization. It does not identify the failing
+instruction or prove1280 mapped pages: the outer pmap wrapper retries
+KERN_RESOURCE_SHORTAGE/KERN_ABORTED and increments this counter per attempt.
+Host still has no XNU/Samsung USB. Requested one restart of installed0240,
+keeping cable connected,to compare startup without a new flash. Await
+screen/USB evidence. No mapping/USB fix inferred; no new partition write.
+
 ## 0240 blocked on physical screen evidence — 2026-11-20
 
 Third consecutive post-flash check confirms the same blocker: no XNU or
