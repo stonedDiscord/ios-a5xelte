@@ -23,6 +23,17 @@ with tempfile.TemporaryFile() as log:assert m.command(Probe(log),log,'display').
 values=iter(['enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 original_command=m.command;m.command=lambda *args:next(values)
 assert m.snapshot(None,None)['gpu_ns']==123
+values=iter(['','','enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
+assert m.snapshot(None,None)['gpu_ns']==123
+busy_calls=[]
+def busy_command(*args):
+ busy_calls.append(args[-1]);return ''
+m.command=busy_command
+try:m.snapshot(None,None);assert False
+except RuntimeError:pass
+assert busy_calls==['gpu blit']*10+['display']
+m.command=lambda *args:next(values)
+
 values=iter(['enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12 phases-ns: power=1 prepare=2 cache=3 execute=4 retire=5 verify=6 shutdown=7','copy timing cpu=28/280ns gpu=4/123ns'])
 phases=m.snapshot(None,None)['last_attempt_phases_ns']
 values=iter(['A03 GPU blit: cached=1; four readbacks after policy change enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
