@@ -1,0 +1,39 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -346,17 +346,31 @@
+         q[0x3000/8]=(a03_gpu_blit_physical+0x4000)|(1ULL<<54)|0x443ULL;
+         q[0x3000/8+1]=(a03_gpu_blit_physical+0x5000)|0x4c3ULL;
+     }
++    /* CPU mappings use native16KiB pages. Validate each native page once,
++     * including its end translation, then expand into four4KiB GPU entries.
++     * Surfaces remain retained and mappings are rebuilt for every frame. */
+     uintptr_t va=a03_gpu_blit_source&~(uintptr_t)4095;
+     uint64_t bytes=(a03_gpu_blit_source&4095)+a03_gpu_blit_source_length;
++    uintptr_t native_va=0;uint64_t native_pa=0;
+     for(unsigned i=0;(uint64_t)i*4096<bytes;i++) {
+-        uint64_t pa=kvtophys(va+(uintptr_t)i*4096);
+-        if((pa&4095)||pa<0x102000000ULL||pa>0x17e000000ULL-4096 ||
+-            kvtophys(va+(uintptr_t)i*4096+4095)!=pa+4095)return 0;
++        uintptr_t page=va+(uintptr_t)i*4096,base=page&~(uintptr_t)16383;
++        if(!native_pa || base!=native_va) {
++            uint64_t pa=kvtophys(base);
++            if((pa&16383)||pa<0x102000000ULL||pa>0x17e000000ULL-16384 ||
++               kvtophys(base+16383)!=pa+16383)return 0;
++            native_va=base;native_pa=pa;
++        }
++        uint64_t pa=native_pa+(page-native_va);
+         q[0x8000/8+i]=pa|(1ULL<<54)|(a03_gpu_blit_cached?(0x4c3ULL|((uint64_t)a03_gpu_blit_memattr<<2)):0x4d7ULL);
+     }
+     if((a03_gpu_blit_destination&4095)!=(a03_gpu_blit_destination_pa&4095))return 0;
+-    for(uint64_t off=0;off<a03_gpu_blit_destination_length;off+=4096)
+-        if(kvtophys(a03_gpu_blit_destination+off)!=a03_gpu_blit_destination_pa+off)return 0;
++    uintptr_t first=a03_gpu_blit_destination&~(uintptr_t)16383;
++    uintptr_t end=a03_gpu_blit_destination+a03_gpu_blit_destination_length-1;
++    uint64_t first_pa=a03_gpu_blit_destination_pa-(a03_gpu_blit_destination-first);
++    for(uintptr_t v=first;v<=end;v+=16384) {
++        uint64_t expected=first_pa+(v-first);
++        if(kvtophys(v)!=expected || kvtophys(v+16383)!=expected+16383)return 0;
++    }
+     uint64_t pa=a03_gpu_blit_destination_pa&~4095ULL;
+     bytes=(a03_gpu_blit_destination_pa&4095)+a03_gpu_blit_destination_length;
+     for(unsigned i=0;(uint64_t)i*4096<bytes;i++)q[0xc000/8+i]=(pa+(uint64_t)i*4096)|(1ULL<<54)|(a03_gpu_blit_cached?(0x443ULL|((uint64_t)a03_gpu_blit_memattr<<2)):0x457ULL);

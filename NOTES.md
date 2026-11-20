@@ -1,3 +1,12 @@
+ACTIVE0117cleanHWreadbacks+pairedPASS0fault;GPU384/512medians2.202/2.126ms vs
+CPU1.728/1.796ms. No sourcecleangain. Left384APB11/11/31/GPUOFFpowered0verify1/
+impldef0tile4cachedwarm1/60completedverified0(reset),touchON/storagehealthy.
+Sole125084/session54578boot0117-clean-live.loguntil~23:49UTC.
+0186native16Kpagevalidationcandidateperframe(no persistentmappingcache), expands
+4KiBGPUPTEs; sourcebase+end/range/destinationpageend/faulttestsPASS, fullframe
+source translations600vs2400. ActualDMAASan/ARM64/ratehelper/profile132PASS.
+Needcommit/fullCI->BOOT-only0118->readback+pairedrates/mappingphase. Goalactive.
+
 ACTIVE0117cleanBOOT-onlyflashSUCCESS23:18UTCNov20 CI44834205541/0aeb872 success/
 sixsources/RTC/reverse0185/checksum/SMP/actualDMA+rate+replayASanPASS.
 Kernel3262a1d4...0b3e2c/BOOTba7c925d...89231e; same8cores1984MiB/ADT0094/cmd599.

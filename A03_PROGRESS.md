@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 local /23:26UTC Nov20: clean source HW PASS; native16K validation0186
+
+BOOT0117 sourceCleanPoC fullframepasses;384/512eachfourreadbacks+paired3rounds
+8copiesPASS0fallback/quarantine. GPUmedians2.201601/2.125841ms vsCPU1.728360/
+1.795865ms; no clearcopygainfromCleanPoC and GPUstillnotfasterthanCPU.
+Restored384APB11/11/31/GPUOFFpowered0verify1impldef0tile4cachedwarm1,
+60completed/verified0(resetrestore),touchON632events0/storageready1poison0.
+Sole125084/session54578boot0117-clean-live.loguntil~23:49UTC.
+
+0186 validates CPU-native16KiB pagebase+end once, expandsfour4KiBGPUentries,
+and rebuildsallmappings eachframe. No crossframe translationcache/lifetime
+change. Sourcevalidrange/alignment/pageend and destinationphysicalextent
+checksremain. SurfaceCPU mappings are native16K; noncontiguous nativepages
+remain supported. ActualASanDMA tests reflect16K backing, endfault rejection,
+noncontiguouspages/fullpagewalk/tails/cachefailure; fullframe source translation
+count600 vs prior2400. ARM64GPUAMFI/ratehelperASan/profile132PASS. NeedfullCI/
+hardwarecorrectnessandmappingphase+pairedtiming. No performanceclaimyet.
+
 ## 2026-11-21 local /23:18UTC Nov20: source clean CI success; BOOT0117 trial
 
 CI44834205541 SUCCESS exact0aeb87285006e112783b5e47bd01e81ef2344591.

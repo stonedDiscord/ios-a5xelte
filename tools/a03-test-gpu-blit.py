@@ -44,8 +44,8 @@ int a03_gpu_supply_status(uint32_t*p,uint32_t*v){*p=0;*v=320;return 1;}
 static uint8_t source_mem[0x800000] __attribute__((aligned(16384)));
 static uint8_t dest_mem[0x468000] __attribute__((aligned(16384)));
 static uint8_t gpu_dirty[0x468000]; /* cached writes invisible until clean */
-static unsigned bad_source,bad_dest,corrupt,noncontiguous;
-static uint64_t source_physical(uintptr_t offset){return 0x140000000ULL+(noncontiguous?((offset&~4095ULL)*2+(offset&4095)):offset);}
+static unsigned bad_source,bad_dest,corrupt,noncontiguous,source_translations;
+static uint64_t source_physical(uintptr_t offset){return 0x140000000ULL+(noncontiguous?((offset&~16383ULL)*2+(offset&16383)):offset);}
 vm_offset_t ml_io_map(vm_offset_t p,vm_size_t n){(void)p;(void)n;return 0;}
 static void *IOMallocContiguous(vm_size_t n,vm_size_t align,void*p){
  assert(n==0x10000&&align==0x4000&&!p);if(mode==1)return 0;
@@ -53,8 +53,8 @@ static void *IOMallocContiguous(vm_size_t n,vm_size_t align,void*p){
 }
 static void IOFreeContiguous(void*p,vm_size_t n){assert(!starts&&p==allocation&&n==0x10000);frees++;free(p);allocation=0;}
 uint64_t kvtophys(vm_offset_t p){
- if(p>=(uintptr_t)source_mem&&p<(uintptr_t)source_mem+sizeof(source_mem)){uintptr_t off=p-(uintptr_t)source_mem;if(bad_source==1)return 0x80000000;if(bad_source==2&&off==4095)return 0x140004000ULL;return source_physical(off);}
- if(p>=(uintptr_t)dest_mem&&p<(uintptr_t)dest_mem+sizeof(dest_mem))return bad_dest?0:0x9e000000ULL+p-(uintptr_t)dest_mem;
+ if(p>=(uintptr_t)source_mem&&p<(uintptr_t)source_mem+sizeof(source_mem)){uintptr_t off=p-(uintptr_t)source_mem;source_translations++;if(bad_source==1)return 0x80000000;if(bad_source==2&&off==16383)return 0x140004000ULL;return source_physical(off);}
+ if(p>=(uintptr_t)dest_mem&&p<(uintptr_t)dest_mem+sizeof(dest_mem))return (bad_dest==1 || (bad_dest==2 && p==(uintptr_t)dest_mem+16383))?0:0x9e000000ULL+p-(uintptr_t)dest_mem;
  assert(allocation&&p>=(uintptr_t)allocation&&p<(uintptr_t)allocation+0x10000);
  return 0x120000000ULL+p-(uintptr_t)allocation+((mode==2&&p>(uintptr_t)allocation+0x2000)?0x4000:0);
 }
@@ -157,7 +157,7 @@ static void reset(unsigned m){
  memset(bank,0,sizeof(bank));memset(dest_mem,0x5a,sizeof(dest_mem));
  memset(gpu_dirty,0x5a,sizeof(gpu_dirty));
  for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
- mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=0;
+ mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=source_translations=0;
  cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;a03_gpu_blit_memattr=0;a03_gpu_clock_selector=1;a03_gpu_fullscreen_rows=4;
  a03_gpu_blit_warm=a03_gpu_warm_ready=0;a03_gpu_warm_override=0;
  a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
@@ -171,6 +171,7 @@ static void reset(unsigned m){
 static int blit(unsigned w,unsigned h){return a03_gpu_framebuffer_blit((uintptr_t)source_mem,(uintptr_t)dest_mem,0x9e000000,3072,2880,w,h);}
 int main(void){
  reset(0);assert(blit(720,1600)==1&&starts==1&&offs==1&&flushes==3&&!a03_gpu_job_poisoned);
+ assert(source_translations==600);
  assert(a03_gpu_scratch==0&&a03_gpu_scratch_pa==0&&a03_gpu_blit_frames==1);
  assert(bank[3][0x2400/4]==0&&bank[3][0x2404/4]==0&&bank[3][0x2430/4]==1&&bank[3][0x2408/4]==0x13579bdf);
  us=flushes=starts=offs=0;assert(blit(37,19)==1&&starts==1&&offs==1);
@@ -198,6 +199,7 @@ int main(void){
  reset(0);bad_source=2;assert(blit(37,19)==0&&!starts);
  reset(0);noncontiguous=1;assert(blit(720,1600)==1);
  reset(0);bad_dest=1;assert(blit(37,19)==0&&!starts);
+ reset(0);bad_dest=2;assert(blit(37,19)==0&&!starts);
  reset(0);a03_gpu_owner=1;unsigned n=writes;assert(blit(37,19)==-2&&writes==n);a03_gpu_job();assert(writes==n);
  reset(0);a03_gpu_blit_enabled=0;assert(blit(37,19)==0&&!writes);
  for(unsigned w=0;w<=721;w+=721){reset(0);assert(blit(w,19)==0&&!starts);}
