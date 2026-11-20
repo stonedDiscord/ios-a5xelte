@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: sixteen-pixel CI success; BOOT0110 trial
+
+CI44804438707 SUCCESS exact01e7de1474faf02b8e3c9ee6f9b02c9069929752.
+AllsixGPU/replay sourcesexacttestedmatch;RTCunchanged.0177reversecheck/
+checksum/SMP/actualsourceASanUBSan(tails1..270)PASS.
+KernelSHA256ec18bec3e54e936fa1929003ab200dca63ebe214c571775e83b160b5b4d73eff.
+BOOT0110SHA256e16aec53e420384ea58d7d0be9b049aade40f918f1fe7253cefdbd8b723bb793.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload then
+Heimdalllowercaseboot uploadsuccess/reboot. Nootherpartitionflashed.
+SolecapturePID95247/session20771boot0110-wide-live.log waitsCDC. Need
+clocks/cachedwarm/GPUONverify1/FWload/touchON->4fullreadbacks->paired
+CPUfast3rounds. No sixteenpixelhardwareclaimyet.
+
 ## 2026-11-20: paired replay baseline; wider CI still active
 
 New tools/a03-gpu-paired-benchmark.py alternatesCPU/fast acrossrounds,

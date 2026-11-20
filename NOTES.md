@@ -1,4 +1,11 @@
-ACTIVE20:04UTCwideCI44804438707/01e7de1stillBuild(job136524622008);
+ACTIVE0110wide flashedBOOT-onlySUCCESS after44804438707/01e7de1 fullCI/
+source/checksum/reversepatch/SMP/ASanUBSanPASS. Kernelec18bec3...d73eff/
+BOOTe16aec53...bb793; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
+Solecapture95247/session20771boot0110-wide-live.log waitsCDC. Needclocks/
+cachedwarm/GPUONverify1/FWload/touchON->4fullreadbacks->pairedCPUfast3rounds.
+No sixteenpixelhardwareclaimyet. Preserve0109restore.
+
+PREVIOUS20:04UTCwideCI44804438707/01e7de1stillBuild(job136524622008);
 UPDATE20:13sameCIstillBuild/watch43210/logsBlobNotFound. Newpairedhelper
 26a89f1hosttestsPASS;actual0109CPUmedian1.612682ms/GPU2.327408msacross
 three8-copyrounds. GPU39/verified7/fallback0/quarantine0;GPUOFFpowered0/
