@@ -55,6 +55,12 @@ static void ud_start(unsigned e,unsigned b,unsigned n,unsigned c) {(void)e;(void
 '''
 code += 'static int dreamlte_usb_console_read(uint8_t r,uint16_t v,uint16_t i,uint16_t l,uint8_t*d) {(void)r;(void)v;(void)i;(void)l;(void)d;return -1;}\n'
 code += 'static int dreamlte_usb_dp_pullup(bool enable) {(void)enable;return 0;}\n'
+if 'dreamlte_usb_attach_snapshot' in s:
+    # ud_event now observes device events through the real read-only helper.
+    # Supply its model clock/PHY dependencies instead of dropping the call.
+    code += '#define DCTL 4\nstatic uintptr_t dreamlte_phy=(uintptr_t)pmu;\n'
+    code += 'static uint64_t mach_absolute_time(void) {return 1;}\n'
+    code += 'static void\n'+function('dreamlte_usb_attach_snapshot')+'\n'
 code+='static void\n'+function('ud_setup')+'\nstatic void\n'+function('dreamlte_usb_reboot')+'\nstatic void\n'+function('ud_event')+r'''
 int main(void) {
  ud.dma=(uintptr_t)dma;

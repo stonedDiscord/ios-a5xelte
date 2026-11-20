@@ -1,5 +1,17 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0244 kernel compiled; CI model dependency corrected — 2026-11-20
+
+CI44728041768 at14f999c compiled the kernel but FAILED profile verification:
+the reboot host model extracts ud_event and omitted its new attachment
+snapshot dependency. Preparation session94017 exited1 before downloads or
+packaging; no0244 flash occurred. Updated the model to compile the actual
+snapshot helper with modeled PHY and clock dependencies. All five required
+USB host checks now pass locally(wrapper,endpoint commands,resources,reboot,
+DP helper). Kernel patch/manifest/source inputs are unchanged. A new exact
+CI run is required before BOOT trial.0243/device084 remains live; both goal
+requirements remain unresolved.
+
 ## 0244 exact CI in progress — 2026-11-20
 
 CI44728041768 is in_progress at14f999c5ef0caf676c7a9634560b2862fc15578d.
