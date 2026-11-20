@@ -23,6 +23,12 @@ Replay CI44632519909 succeeded exact7e4ea5b; no0103 deployed here. Current
 boot has reset since prior notes; do not assume old capture/touch/GPUstate.
 Clock capture started with host access session8921 for600seconds.
 
+0171 implementation commit44d482d49f951cd782f1c4f454ebeb645b0030a8 pushed;
+fullCI44765816216 macos26intel active. Superseded44765753773 used oldHEAD
+7eaa974 and was cancelled by workflow concurrency; never use its artifacts.
+Actual extracted platform hook also passes standalone C/C++ linkage and
+success/failure tests. Private0104packer pins44765816216/fullSHA.
+
 ## 2026-11-19: ten actual2D GPUframes; replayCI44632519909 active
 
 BOOT0102frames10/pixels11520000/verified10/completed10/fallback0/quarantine0.

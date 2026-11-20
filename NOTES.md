@@ -1,3 +1,7 @@
+ACTIVECI44765816216 exact44d482d retainedRTC0171 compiling/fullXcodegate.
+Private0104packerready; neveruseoldHEAD44765753773. HookC/C++linkagePASS.
+Needexactartifact/checksum/source->0104BOOT-only->readRTCbeforehostsync.
+
 ACTIVE2026-11-20 clock task: user requires boot-time UTC WITHOUT USB.
 Measured UTC553/January1970 at tx1; volatile tx2 host correction1795188867
 only a temporary repair.0171 retainedSC2730 RTC ->PEGetUTCTimeOfDay prepared,
