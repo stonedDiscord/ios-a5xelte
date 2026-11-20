@@ -1,3 +1,11 @@
+ACTIVE0116rateBOOT-onlyflashSUCCESS22:59UTC CI44831543349/ce9bc57 success/sixsources/
+RTC/reverse0184/checksum/SMP/actualDMA+ratehelperASanPASS. Kernel1a1ca22b...afe5dc/
+BOOT80632772...a618c2; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.
+NEWsolecapture/session86364boot0116-rate-live.logwaitsCDC. Needclocks/cachedwarm/
+FWload/touchON/acceptedframe->GPUOFF->ratebenchmark384/512->384restore.
+Privatenextgpu-clean-work sourceCleanPoCvsFlushPoC actualASan/ARM64PASSbut
+notstaged/CI; trackedDMA test optionalcleanstubuncommitted. Goalactive.
+
 ACTIVE22:45UTC CI44831543349/exactce9bc57ce4f8e159a743183a2122181d8e20b2da
 in_progress0184stock512MHzidlepolicy. No duplicate. Privategpu-rate-work/
 artifacts.py+pack0116.py pinexactrun/sixsources/RTC/reverse0184/checksum/SMP.

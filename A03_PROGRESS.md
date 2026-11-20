@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: stock512MHz CI success; BOOT0116 trial
+
+CI44831543349 SUCCESS exactce9bc57ce4f8e159a743183a2122181d8e20b2da.
+Sixsourcesexactmatch/RTCunchanged/reverse0184/checksum/SMP/actualsourceDMA+
+ratehelper+replayASanUBSanPASS.
+KernelSHA2561a1ca22bae00d4079f42bcc7a1bc306b3701184176d5ef75adfa30f260afe5dc.
+BOOT0116SHA256806327729f3910d482cfb2f9d04d12d8876261e38c58e6bd6ca3025c31a618c2.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload thenBOOT-only
+Heimdalluploadsuccess/reboot22:59UTC. Sole session86364captureboot0116-rate-live.log
+waitsCDC. Needclocks/cachedwarm/FWload/touchON/acceptedframe->GPUOFF->ratebenchmark
+384/512(eachfourfreshreadbacks+paired3rounds8copies)->restore384/physicalUI.
+
+Private nextcandidate gpu-clean-work replaces ONLY sourceCPU FlushPoC with
+CleanPoC (sourceRO GPUmapping), retainingGPUclean/retirement/readback. Actual
+sourceDMA+ratehelperASan andARM64crosscompilePASS, not staged/profiled/CIyet.
+TrackedtesthasoptionalCleanPoCstub uncommitted; keep until cleanfollowup.
+
 ## 2026-11-20: stock512MHz full CI active
 
 22:45UTC CI44831543349 in_progress exactce9bc57ce4f8e159a743183a2122181d8e20b2da.
