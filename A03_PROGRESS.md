@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: BOOT0107 physical UI resumes after one Home
+
+User reports frozen/blank duringcachedlivewindow. At18:53UTCGPUwasalready
+OFF(afterbenchmarkrestoration), frames18/quarantine0; display61swaps/
+56copiesunchanged, touch4034slices1658events, iohealthyandcorrectUTC.
+ONEexplicitinputhome then display585swaps/580copies, CPU562/GPUstill18.
+Userconfirms"ok now it works". No reboot/flash/timeset. This proves
+HomewakeinCPUmode;doesnotproveGPUcausedfreezeorfixedidlewake. Preserve
+GPUOFFverify1/touchON. VectorCI44794488664 stillBuild18:54UTC;waitsamejob.
+
 ## 2026-11-20: cached hardware PASS and22x gain; vector candidate0175
 
 VectorCI44794488664 exact734646c9f2f438ccf0417b747600060288829c7f active;

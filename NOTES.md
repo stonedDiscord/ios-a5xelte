@@ -1,4 +1,11 @@
-ACTIVE0107cachedHARDWAREPASS!6fullframeszeroerrors;fast6.170ms vsuncached
+ACTIVE0107userconfirmsUIworksafterONEHome18:53UTC. GPUalreadyOFF;stale
+swaps61/copies56->585/580, CPU562/GPU18/quarantine0. TouchON4092slices/
+1670events. Homewakeproven,notGPUfreezeetiology/permanentidlefix. Leave
+GPUOFFverify1. VectorCI44794488664/734646c stillBuild18:54;watch40061.
+Capture57854/session79767until~19:02UTC. NeedvectorCI->0108->cached4
+fullreadbacks->fastCPUcomparison->GPUphysicalUIacceptance.
+
+PREVIOUS0107cachedHARDWAREPASS!6fullframeszeroerrors;fast6.170ms vsuncached
 NEWvectorCI44794488664 exact734646c9f2f438ccf0417b747600060288829c7f
 active/watch40061. Privategpu-vector-work/artifacts.py+pack0108.py pinsource/
 RTC/fullSHA/run. NeedfullCI->0108BOOT-only->cached4fullreadbacks->fastCPU.
