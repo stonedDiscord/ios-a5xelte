@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: dispatch tile CI success; BOOT0114 trial
+
+CI44824395202 SUCCESS exact2dc47e3ed8171a73e85c91ba42b5eb6dfbe41771.
+Sixsources exacttestedmatch/RTCunchanged/reverse0182/checksum/SMP/actualsource
+ASanUBSan lifecycle+replay PASS.
+KernelSHA25652f73c0c5fdc087e00e86672d3836b844e6287c514b86ccf9baac4d8f59c3475.
+BOOT0114SHA2568e63704cb8c54e4f5e7367ab7d45aed3233abc4b896f5d272762b089b6e690f7.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload thenBOOT-only
+Heimdall uploadsuccess/reboot22:10UTC. Sole session7470capture
+boot0114-tiles-live.log waitsCDC. Needclocks/cachedwarm/GPUONverify1/FWload/
+touchON->acceptedframe->tools/a03-gpu-tile-benchmark.py--tiles4 8 16 32,
+fourreadbackspertile+paired3rounds/8copies+restoration. Hosthelper20072c8
+qualification/policyisolation/resultparsing/failurerestorationPASS.
+
 ## 2026-11-20: dispatch tile full CI active
 
 21:54UTC CI44824395202 in_progress exact2dc47e3ed8171a73e85c91ba42b5eb6dfbe41771.
