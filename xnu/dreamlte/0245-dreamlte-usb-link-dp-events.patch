@@ -1,0 +1,27 @@
+--- a/bsd/dev/sweet_usb.c
++++ b/bsd/dev/sweet_usb.c
+@@ -1333,6 +1333,24 @@
+ 			}
+ #endif
+ 			printf("SWEET USB: connected, speed %u\n", speed);
++#if defined(DREAMLTE)
++		} else if (type == 3) {
++			/* Samsung 3cfb914 gadget link-state handler on is_not_vbus_pad:
++			 * U0, RX_DET (USB2 early suspend), and RESUME enable VBUSVLDEXT.
++			 * U3/suspend and all other states leave it unchanged. */
++			uint32_t link = (ev >> 16) & 0xf;
++			if ((link == 0 || link == 5 || link == 15) &&
++			    dreamlte_usb_dp_pullup(true)) {
++				printf("DREAMLTE USB: link DP pullup readback failed\n");
++				return;
++			}
++		} else if (type == 4) {
++			/* Samsung wakeup handler releases the forced valid signal. */
++			if (dreamlte_usb_dp_pullup(false)) {
++				printf("DREAMLTE USB: wakeup DP pullup readback failed\n");
++				return;
++			}
++#endif
+ 		} else if (type == 0) {
+ 			printf("SWEET USB: disconnect\n");
+ #if defined(DREAMLTE)

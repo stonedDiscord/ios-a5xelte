@@ -1073,3 +1073,21 @@ physical last line before any replug. If the USB poller runs without host
 enumeration,controlled replug can recover this same boot's retained log.
 Only its timed events can distinguish link-state progression from idle;
 a missing event does not independently prove a MUIC routing failure.
+
+### 0244 timed evidence and0245 event handling
+
+0244's retained trace starts with U0 while PHYUTMI is0x460 (bit9 clear),
+then reset/full-speed connect, RX_DET5 and U3/suspend3. Five periodic
+snapshots stay suspended without frames. Replug restores high-speed USB,
+EP0, three pings and323bytes identifiable XNU UDP. All post-start snapshots
+show DCTL80000000; the copied screen value lacking its leading8 was not
+a controller-stop measurement. No wakeup event was captured.
+
+0245 follows pinned Samsung3cfb914 gadget.c is_not_vbus_pad handling:
+U0(0), RX_DET(5,early suspend for USB2), RESUME(15) enable DP via existing
+PHYUTMI bit9 helper; wakeup(type4) disables it. U3 and other states leave
+it alone. Existing reset/connect actions and trace remain. This closes a
+source-backed omission observed at initialU0, but is not proven to fix
+automatic attachment. No blind retries, MUIC transactions or VM changes.
+Host dispatcher replay covers all16link states with other event-info bits
+set and both initial signal values,plus wakeup. Full CI/hardware pending.

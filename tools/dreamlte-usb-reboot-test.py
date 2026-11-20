@@ -54,7 +54,8 @@ static void ud_stall(void) {stalled++;}
 static void ud_start(unsigned e,unsigned b,unsigned n,unsigned c) {(void)e;(void)b;(void)n;(void)c;starts++;}
 '''
 code += 'static int dreamlte_usb_console_read(uint8_t r,uint16_t v,uint16_t i,uint16_t l,uint8_t*d) {(void)r;(void)v;(void)i;(void)l;(void)d;return -1;}\n'
-code += 'static int dreamlte_usb_dp_pullup(bool enable) {(void)enable;return 0;}\n'
+code += 'static unsigned dp_calls; static bool dp_enabled;\n'
+code += 'static int dreamlte_usb_dp_pullup(bool enable) {dp_calls++;dp_enabled=enable;return 0;}\n'
 if 'dreamlte_usb_attach_snapshot' in s:
     # ud_event now observes device events through the real read-only helper.
     # Supply its model clock/PHY dependencies instead of dropping the call.
@@ -75,6 +76,19 @@ int main(void) {
   ud_event(1u|(type<<8));
   assert(!dreamlte_reboot_pending&&!dreamlte_reboot_mode&&!dreamlte_reboot_delay);
  }
+
+ /* Replay every link state with independent event-info bits set. The actual
+  * dispatcher must apply Samsung's DP action only to U0/RX_DET/RESUME. */
+ for(unsigned link=0;link<16;link++) for(unsigned initial=0;initial<2;initial++) {
+  dp_calls=0;dp_enabled=initial;
+  ud_event(1u|(3u<<8)|((0xa500u|link)<<16));
+  bool enable=link==0||link==5||link==15;
+  assert(dp_calls==(unsigned)enable);
+  assert(dp_enabled==(enable?true:(bool)initial));
+ }
+ dp_calls=0;dp_enabled=true;
+ ud_event(1u|(4u<<8));
+ assert(dp_calls==1&&!dp_enabled);
 
  for(unsigned type=0;type<256;type++) for(unsigned req=0x50;req<=0x51;req++)
  for(unsigned value=0;value<3;value++) for(unsigned idx=0;idx<2;idx++) for(unsigned len=0;len<2;len++) {
@@ -105,4 +119,4 @@ with tempfile.TemporaryDirectory() as d:
 event=function('ud_event');assert 'dreamlte_reboot_pending && !(status & 3u)' in event
 assert event.index('case EP0_STATUS:') < event.index('dreamlte_reboot_delay = 100;')
 assert event.count('dreamlte_reboot_pending = dreamlte_reboot_mode = dreamlte_reboot_delay = 0;')==2
-print('PASS: actual request validation/PMU helpers; all16 completion flag combinations and both modes; reset/disconnect cancellation')
+print('PASS: actual request validation/PMU helpers; all16 completion flag combinations and both modes; reset/disconnect cancellation; all16 Samsung link states and wakeup DP dispatch')

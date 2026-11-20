@@ -1,5 +1,30 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0244 timed trace recovered;0245 event handling prepared — 2026-11-20
+
+Controlled replug enumerates high-speed device086 at13:15:22local. Retained
+console424,677bytes saved privately in ci-44730637160/replug-retained-console.log.
+Exact EP0,3/3ping and323bytes identifiable XNU UDP PASS. No restart after
+0244 flash. Original pre-replug poll at t1761804261 actually records
+DCTL80000000; the user's copied DCTL00000000 omitted the leading8. Retained
+trace supersedes that register transcription,not the user's no-replug report.
+RUN_STOP stays set in all post-start snapshots; no controller-stop cause.
+
+Before replug: link eventU0(UTMI460),reset,full-speed connect(UTMI660),
+RX_DET5,then U3/suspend3; five periodic snapshots remain suspended with
+zero frames. After replug reset/high-speed connect and setup traffic recover.
+No wakeup event captured. VM succeeded on this boot; no sporadic-stall fix.
+
+0245 adds the pinned Samsung3cfb914 is_not_vbus_pad event actions missing
+from current XNU: U0/RX_DET/RESUME set PHYUTMI bit9 through existing guarded
+DP helper; wakeup clears it; U3/other states unchanged. Captured initialU0
+arrives with bit9 clear,so the missing action is observable; causality and
+successful automatic attachment still require a trial. No MUIC or VM change.
+Five required USB host suites PASS; actual dispatcher replays all16states
+and wakeup with modeled DP calls. ARM64 syntax and actual object compile
+PASS; plain git apply on exact0244 source matches compile input; all12source
+hashes match.166patch profile. Preserve live0244/device086 pending full CI.
+
 ## 0244 pre-replug poll snapshot — 2026-11-20
 
 User explicitly confirms no replug yet and reports:
