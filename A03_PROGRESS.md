@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 local /23:47UTC Nov20: mapping CI still live; capture renewed
+
+CI44836868623/e8e3dee remainsBuild; live23:46:13compileroutput confirmsprogress.
+No duplicate/restart. Oldreader125084 intentionallystoppedbeforeexpiry. New
+sole129094/session93167boot0117-mapwait-live.loguntil~00:17UTCNov21. Current
+0117GPUOFFpowered0/384verify1impldef0tile4cachedwarm1. Needexactfullsuccess/
+artifacts.py+pack0118.py->actualASan->BOOT-only->fullreadbacks+pairedrates.
+Privategpu-linear-work linearshadercompilesbutexpensiveintegerdivision; not
+staged, notCI, nohardwareclaim. Goalactive; noGPUoverCPUspeedupyet.
+
 ## 2026-11-21 local /23:27UTC Nov20: native16K validation CI active
 
 CI44836868623 in_progress exacte8e3dee4d9ffa018199d2f6e975516606fbf9ce5.

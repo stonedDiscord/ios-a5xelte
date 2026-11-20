@@ -1,3 +1,10 @@
+ACTIVE23:47UTCNov20 CI44836868623/e8e3dee stillBuild;live23:46compilerprogress.
+No duplicate. NEWsole129094/session93167boot0117-mapwait-live.loguntil~00:17UTCNov21,
+old125084stoppedbeforeexpiry. Current0117GPUOFFpowered0/384verify1impldef0tile4/
+cachedwarm1touchON. NeedexactCI->gpu-map16-work/artifacts.py+pack0118.py/
+actualASan->BOOT-only0118->fullreadbacks+pairedrates. PrivatelinarshaderNOTstaged.
+Goalactive/nospeedupyet.
+
 ACTIVE23:27UTCNov20 CI44836868623/exacte8e3dee4d9ffa018199d2f6e975516606fbf9ce5
 in_progress0186native16Kvalidation. No duplicate. Privategpu-map16-work/artifacts.py+
 pack0118.py pinexactrun/sixsources/RTC/reverse0186/checksum/SMP. Needfullsuccess
