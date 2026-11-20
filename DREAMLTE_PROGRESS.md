@@ -1,5 +1,16 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0245 hardware diagnosis blocked on screen evidence — 2026-11-20
+
+Three consecutive goal turns confirm the same checkpoint blocker: no host
+USB device since087 disconnected; observer has terminated; exact0245 screen
+report is pending. Latest lsusb/kernel journal and process inspection confirm
+no new enumeration or live preparation/flash/observer process. No further
+flash, restart or replug requested. Need current last screen line and whether
+the cable was reconnected before selecting VM restart comparison versus
+same-boot USB trace recovery. Both fixes remain unverified; goal blocked on
+physical evidence, not complete. Handoff commit before this audit: d5f14af.
+
 ## 0245 host observation completed; physical checkpoint pending — 2026-11-20
 
 Read-only observer8565 completed (exit0); its final private log records no
