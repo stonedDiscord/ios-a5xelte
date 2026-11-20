@@ -2,6 +2,13 @@
 
 ## 2026-11-20: cached hardware PASS and22x gain; vector candidate0175
 
+VectorCI44794488664 exact734646c9f2f438ccf0417b747600060288829c7f active;
+watch40061. Privategpu-vector-work/artifacts.py+pack0108.py pinfullSHA/run/
+sixsources/RTC/reversepatch/checksum. 30secondcachedfastlivewindowproduced
+zeroactualcopies/noevents=>INCONCLUSIVE, restoredGPUOFFverify1. Current
+0107frames18/verified10/fallback0/quarantine0, touchON1099slices/events0.
+NeedfullCI->0108->cached4fullreadbacks->fastCPUreplaycomparison.
+
 BOOT0107 retainedRTC1795199519/status1795199529, clocksID90910010.
 Explicitcached1+GPUONverify1. FW79104/load0/A55A andtouchrestartON.
 Actualswaps1/2+replay4 eachfull1152000pixels/mismatches0/done1/retired1/

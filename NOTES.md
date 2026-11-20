@@ -1,4 +1,11 @@
 ACTIVE0107cachedHARDWAREPASS!6fullframeszeroerrors;fast6.170ms vsuncached
+NEWvectorCI44794488664 exact734646c9f2f438ccf0417b747600060288829c7f
+active/watch40061. Privategpu-vector-work/artifacts.py+pack0108.py pinsource/
+RTC/fullSHA/run. NeedfullCI->0108BOOT-only->cached4fullreadbacks->fastCPU.
+30sfastlivewindow0copies=>inconclusive;GPUOFFverify1restored. TouchON1099/0
+events;capture57854/session79767until~19:02UTC. PhysicalUIstillpending.
+
+PREVIOUS0107cachedHARDWAREPASS!6fullframeszeroerrors;fast6.170ms vsuncached
 142.160ms(22x), BUTCPU1.673msstillfaster. GPU18frames/verified10/fallback0/
 quarantine0. LeftGPUOFFverify1/cached1/touchON713slices; capture57854/79767.
 0175fourpixels/thread128bitvector+scalartails640bytes/32regs prepared;
