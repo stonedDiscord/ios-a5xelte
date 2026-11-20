@@ -1007,6 +1007,16 @@ the host still sees no USB device; preserve that boot for the user's exact
 last screen line before restarting or replugging. Do not infer CONTROL1's
 current value or program it from this source review alone.
 
+Saved Android evidence strengthens the routing lead: the private diagnostic
+dmesg at70.885244s records CONTROL1 reads of0x80, a write of0x89 and
+subsequent reads of0x89; the70.913107s dump reports CT1:89. These are
+historical Android observations, not measurements of the current XNU boot.
+The saved live DT places MAX77865 on enabled HSI2C0x10970000 (size0x1000),
+with parent address0x66 and SDA/SCL pins6/7 of phandle0x52. The MUIC0x25
+client is created by the pinned Samsung driver. Measuring its current route
+requires a bounded, source-backed I2C implementation and clock/pin checks;
+no XNU I2C access or switch write has been attempted.
+
 ### Retained console EP0 (0241 diagnostic)
 
 `sudo python3 tools/dreamlte-usb-console.py research/dreamlte/PRIVATE.log`

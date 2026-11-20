@@ -3,6 +3,19 @@
 ## Active S8 handoff — 2026-11-19
 
 
+## 0241 pending; 0240 USB remains verified — 2026-11-20
+
+Repeated live0240 check after replug: exact EP0 PASS,3/3ping PASS,
+163bytes identifiable XNU UDP PASS. Device078 remains attached; no reset
+or flash issued. Exact0241 CI44707721507 still building at7cb2d67.
+Historical Android dmesg records MUIC CONTROL1 open0x80 followed by write
+and reads0x89; live DT places MAX77865 on HSI2C0x10970000. This supports
+investigating external data routing but does not measure the XNU switch
+state. Pinned Samsung I2C source saved privately for reference; no I2C
+transaction or switch write attempted. docs/dreamlte-usb.md records the
+limits. Wait for exact0241 verification/package,then BOOT trial and retained
+startup capture. Sporadic VM stops and automatic USB attachment unresolved.
+
 ## 0241 retained startup console diagnostic prepared — 2026-11-20
 
 CI44707721507 dispatched at7cb2d6780f59bdfe59648f67df1728fbdfd8b797.
