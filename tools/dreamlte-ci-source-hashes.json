@@ -1,5 +1,5 @@
 {
-  "description": "DREAMLTE0242 scopes detailed pmap stages to attempts1216..1407 around repeated1280 stalls; diagnostic only.0241 retained EP0 console preserved.",
+  "description": "DREAMLTE0243 reads raw PVH entry before the observed lock-acquisition stall; diagnostic only; lock semantics unchanged.",
   "sources": {
     "osfmk/arm64/arm_vm_init.c": "dde131f6800f9f316fb866e5ea9b1c85bb8d565465aaad9ca95d65362de12de3",
     "osfmk/arm64/sweet_early.c": "5a3ac225e765c532d1fa749c4c268ab8e04e1922842cea9d32b39f6f18bc9554",
@@ -12,7 +12,7 @@
     "osfmk/kern/startup.c": "5bc0412005db2e01573baf5e094d6cfc72508cb5f9552eab39a688334c2c5469",
     "osfmk/vm/vm_resident.c": "7e21de2b99db24fb73e8cef9d290066704397cae66310e32422b19890e9a2f11",
     "osfmk/vm/vm_init.c": "c3b729b905ac311814707a8ce3fdfa26edee831ad2ef414de18d59e77c730c12",
-    "osfmk/arm/pmap/pmap.c": "654f2ef8a3069dc7ac8bded64e9f221ff3c69dfab0aa251aa5b4216f0a4fd18a"
+    "osfmk/arm/pmap/pmap.c": "dfd0da65a2043e6fdaae71491136a06808dac148060d2ea7aaf2c0052e916d09"
   },
   "strings": [
     "DREAMLTE IOKIT: zalloc lockdown enter",
@@ -89,7 +89,6 @@
     "DREAMLTE VM: pmap pte missing; expand begin",
     "DREAMLTE VM: pmap expand returned kr=%d",
     "DREAMLTE VM: pte lookup complete ptep=%p",
-    "DREAMLTE VM: pvh lock begin pai=%x",
     "DREAMLTE VM: pvh lock acquired",
     "DREAMLTE VM: pv allocation begin free=%u",
     "DREAMLTE VM: pv allocation returned status=%u",
@@ -103,7 +102,9 @@
     "DREAMLTE VM: pvh unlock begin",
     "DREAMLTE VM: pvh unlock complete attr=%x",
     "DREAMLTE VM: pmap unlock begin kr=%d",
-    "DREAMLTE VM: pmap detail returned kr=%d"
+    "DREAMLTE VM: pmap detail returned kr=%d",
+    "DREAMLTE VM: pvh snapshot begin pai=%x slot=%p pa=%p",
+    "DREAMLTE VM: pvh lock begin pai=%x raw=%llx locked=%u"
   ],
   "symbols": [
     "_dreamlte_log_cursor",

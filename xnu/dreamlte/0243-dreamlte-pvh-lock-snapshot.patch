@@ -1,0 +1,18 @@
+--- a/osfmk/arm/pmap/pmap.c
++++ b/osfmk/arm/pmap/pmap.c
+@@ -6082,7 +6082,14 @@
+ 			pai = pa_index(pa);
+ 
+ 			if (dreamlte_diag_detail) {
+-				kprintf("DREAMLTE VM: pvh lock begin pai=%x\n", pai);
++				pv_entry_t **dreamlte_pvh = pai_to_pvh(pai);
++				kprintf("DREAMLTE VM: pvh snapshot begin pai=%x slot=%p pa=%p\n",
++				    pai, dreamlte_pvh, (void *)pa);
++				/* Read only: do not clear or bypass a possibly held lock. */
++				vm_offset_t dreamlte_pvh_raw = os_atomic_load((vm_offset_t *)dreamlte_pvh, relaxed);
++				kprintf("DREAMLTE VM: pvh lock begin pai=%x raw=%llx locked=%u\n",
++				    pai, (unsigned long long)dreamlte_pvh_raw,
++				    (unsigned int)((dreamlte_pvh_raw & PVH_FLAG_LOCK) != 0));
+ 			}
+ 			pvh_lock(pai);
+ 			if (dreamlte_diag_detail) {

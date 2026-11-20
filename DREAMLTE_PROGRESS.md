@@ -1,5 +1,27 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0242 physical stop at PVH lock acquisition;0243 snapshot prepared — 2026-11-20
+
+User's exact last screen line: `DREAMLTE VM: pvh lock begin paj=2bfd`.
+0242 source spells the field `pai`; preserve the reported spelling above.
+This marker is immediately before pvh_lock(pai),with no acquired marker
+reported. It narrows the stop to acquisition or its immediate surrounding
+execution; it does not prove lock ownership,corruption or a WFE cause.
+PVH bit61 is in each page's mapping-head entry; pmap data bootstrap zeros
+that table. hw_lock_trylock_bit uses LL/SC and may WFE on a set bit. No raw
+entry value was included in0242. The earlier1280 interval remains consistent
+with this evidence,not an established exact call count for this boot.
+
+Prepared0243 adds read-only slot/PA then raw-entry/lock-bit snapshots before
+this call. It neither clears a held bit nor bypasses locking. Syntax and
+actual ARM64 object compile PASS; patch zero-fuzz round trip PASS;164patch
+profile generated. First object attempt lacked its output directory; after
+creating it,the actual compile passes. No VM fix claimed.
+Requested one restart of installed0242 with cable attached; if USB poller,
+replug once and retrieve retained trace. No new flash yet. USB attachment
+remains a separate unresolved failure; do not infer a USB cause from this
+pre-USB stop. Screen report resolves the previous missing-evidence blocker.
+
 ## 0242 blocked pending screen checkpoint — 2026-11-20
 
 Third consecutive post-flash observation confirms no XNU/Samsung USB;
