@@ -2,6 +2,24 @@
 
 ## Active S8 handoff — 2026-11-19
 
+## 0246 verified and BOOT flashed; screen checkpoint pending — 2026-11-20
+
+CI44741740589 SUCCESS at fd94fa0be41ec570c243d03a6055cc3b25807007.
+Preparation93473 exit0:12source files,11symbols,122diagnostics/profile PASS;
+original BOOT header/components,payload and partition fit PASS.
+Kernel SHA256:db7bb021e3d417cce7909719145a2ad9f1b58dd78fdda0a4957a9217b7eb9db5.
+BOOT shim/out/dreamlte-xnu-0246.img,18,466,832bytes,SHA256:
+addf825f83631309ab3eaafd8803300b5e50da8e88c0cc589b051ce9e9a218c6.
+Live0245 USB Download transition PASS without buttons to device089.
+Heimdall BOOT-only upload100%,exit0,rebooted;089disconnect14:28:03local.
+Initial host observation sees no XNU USB; requested exact last screen line
+with cable left attached before restart/replug. Preserve this boot pending
+physical evidence; bounded read-only120second observer logging privately.
+Logs/preparation manifest under ci-44741740589. No VM or automatic USB fix
+claimed. Next: new VM marker if stopped,or same-boot timed MUIC preflight
+trace after controlled replug if USB loop reached without enumeration.
+Correction of earlier BUSC clock lead is documented below; use PERIC1/USI13.
+
 ## 0246 exact CI and preparation active — 2026-11-20
 
 CI44741740589 in_progress at fd94fa0be41ec570c243d03a6055cc3b25807007.
