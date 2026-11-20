@@ -39,7 +39,7 @@ def qualified(before,after,tile):
         raise RuntimeError('Fault or fallback during tile qualification')
     if after['verified']-before['verified']<4 or after['completed']-before['completed']<4:
         raise RuntimeError('Tile did not earn four fresh readbacks')
-    for key in ['cached','warm']:
+    for key in ['cached','warm','memattr']:
         if before.get(key)!=after.get(key):raise RuntimeError('Policy changed during qualification')
 
 
@@ -62,6 +62,11 @@ def main():
                 before=blit.snapshot(probe,log)
                 blit.replay(probe,log,4)
                 after=blit.snapshot(probe,log);qualified(before,after,tile)
+                # Pair children restore OFF, avoiding expensive background
+                # readbacks racing the next status/control transaction.
+                blit.command(probe,log,'gpu blit off')
+                if blit.snapshot(probe,log)['enabled']:
+                    raise RuntimeError('GPU OFF did not take effect before paired trial')
                 run=subprocess.run([sys.executable,str(ROOT/'a03-gpu-paired-benchmark.py'),
                     '--log',str(a.log),'--rounds',str(a.rounds),'--replay','8'],capture_output=True,text=True)
                 print(run.stdout,end='',flush=True)
@@ -77,7 +82,7 @@ def main():
             blit.command(probe,log,'gpu blit '+('verify' if original['verify'] else 'fast'))
             blit.command(probe,log,'gpu blit '+('on' if original['enabled'] else 'off'))
             restored=blit.snapshot(probe,log)
-            if any(restored.get(k)!=original.get(k) for k in ['enabled','verify','tile_rows','cached','warm']):
+            if any(restored.get(k)!=original.get(k) for k in ['enabled','verify','tile_rows','cached','warm','memattr']):
                 raise RuntimeError('Original tile/mode restoration not confirmed; inspect live status')
             print('Original dispatch tile and GPU mode restored.',flush=True)
     print(json.dumps(dict(note='Accepted-frame synchronous copy latency, not physical FPS',tiles=results),indent=2))

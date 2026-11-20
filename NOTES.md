@@ -1,3 +1,12 @@
+ACTIVE0114alltilesHWreadback+pairedPASS0fallbackquarantine;GPUmedians4/8/16/32
+rows=2.186/2.205/2.208/2.255ms, CPU~1.4-1.7ms. tile4best/default. LeftGPUOFF
+powered0verify1tile4cachedwarm1/120completed/verified0(resetrestore),touchON.
+Sole114370/session7470boot0114-tiles-live.loguntil~22:41UTC.
+0183pixelmemattrimpldef/cacheall/writealloccandidate(index0/1/2 vendorvalues)
+prepareddefault0; keepsallflush/cacheclean/retirement/sourceownershipguards.
+ActualASanallpolicies+failure/ARM64/profile129/benchtestsPASS. NeedcommitCI
+->artifactgates/pack0115->BOOT-only->fourreadbacks+pairedperattr. Goalactive.
+
 ACTIVE0114tilesBOOT-onlyflashSUCCESS22:10UTC CI44824395202/2dc47e3 fullsuccess/
 sixsources/RTC/reverse0182/checksum/SMP/actualASanPASS. Kernel52f73c0c...9c3475/
 BOOT8e63704c...e690f7; same8cores1984MiB/ADT0094/cmd599/stockramdiskDT.

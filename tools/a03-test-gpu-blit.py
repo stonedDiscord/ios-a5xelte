@@ -29,6 +29,7 @@ static unsigned mode,us,writes,starts,offs,flushes,frees,updates,passed,cache_co
 static unsigned expect_cached,cache_failure;
 static void check_shader(unsigned specialized);
 static unsigned a03_gpu_fullscreen_rows;
+static unsigned a03_gpu_blit_memattr;
 static uint64_t fake_time;
 static uint64_t mach_absolute_time(void){return ++fake_time;}
 static void absolutetime_to_nanoseconds(uint64_t t,uint64_t *ns){*ns=t*10;}
@@ -72,7 +73,7 @@ static uint64_t walk(uint32_t va,int writable){
   if(level<3){uint64_t next=d&0x000000fffffff000ULL;assert(next>=pa&&next<pa+0x10000);root=(uint64_t *)((uint8_t *)allocation+next-pa);}
  }
  assert(d&(1ULL<<54));assert((d&0xc0)==(writable?0x40:0xc0));
- assert(((d>>2)&7)==(expect_cached?0:5));
+ assert(((d>>2)&7)==(expect_cached?a03_gpu_blit_memattr:5));
  return (d&0x000000fffffff000ULL)+(va&4095);
 }
 static void fake_write(unsigned o,uint32_t v){
@@ -153,7 +154,7 @@ static void reset(unsigned m){
  memset(gpu_dirty,0x5a,sizeof(gpu_dirty));
  for(unsigned i=0;i<sizeof(source_mem)/4;i++)((uint32_t *)source_mem)[i]=i^0x77ccff00;
  mode=m;us=writes=starts=offs=flushes=frees=updates=passed=bad_source=bad_dest=corrupt=noncontiguous=0;
- cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;a03_gpu_fullscreen_rows=4;
+ cache_commands=expect_cached=cache_failure=0;a03_gpu_blit_cached=0;a03_gpu_blit_memattr=0;a03_gpu_fullscreen_rows=4;
  a03_gpu_blit_warm=a03_gpu_warm_ready=0;a03_gpu_warm_override=0;
  a03_gpu_pmu=(uintptr_t)bank[0];a03_gpu_aon=(uintptr_t)bank[1];a03_gpu_apb=(uintptr_t)bank[2];a03_gpu_regs=(uintptr_t)bank[3];
  a03_gpu_scratch=0;a03_gpu_scratch_pa=0;a03_gpu_job_poisoned=a03_gpu_job_requested=a03_gpu_owner=0;
@@ -247,6 +248,14 @@ int main(void){
   assert(a03_gpu_blit_verified==(policy==9?8:0));
   assert(blit(720,1600)==1&&!a03_gpu_job_poisoned);
   us=flushes=starts=offs=0;assert(blit(53,17)==1);
+ }
+ for(unsigned policy=13;policy<=15;policy++){
+  reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_verified=8;a03_gpu_blit_control(policy);
+  assert(a03_gpu_blit_memattr==policy-13&&a03_gpu_blit_verified==(policy==13?8:0));
+  assert(blit(720,1600)==1&&!a03_gpu_job_poisoned&&cache_commands==1);
+  us=flushes=starts=offs=0;assert(blit(53,17)==1);
+  us=flushes=starts=0;cache_failure=1;assert(blit(53,17)==-1&&a03_gpu_job_poisoned);
+  unsigned prior=a03_gpu_blit_memattr;a03_gpu_blit_control(policy==13?14:13);assert(a03_gpu_blit_memattr==prior);
  }
  reset(0);if(allocation)free(allocation);return 0;
 }

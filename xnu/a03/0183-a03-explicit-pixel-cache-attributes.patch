@@ -1,0 +1,57 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -310,6 +310,7 @@
+ static unsigned a03_gpu_blit_verify=1,a03_gpu_blit_verified,a03_gpu_blit_completed;
+ static uint64_t a03_gpu_blit_ns,a03_gpu_blit_last_ns;
+ static unsigned a03_gpu_blit_cached;
++static unsigned a03_gpu_blit_memattr; /* vendor index0 impldef,1 forcecacheall,2 writealloc */
+ static unsigned a03_gpu_blit_warm,a03_gpu_warm_ready;
+ static uint32_t a03_gpu_warm_override;
+ static uint64_t a03_gpu_blit_phase[8];
+@@ -349,14 +350,14 @@
+         uint64_t pa=kvtophys(va+(uintptr_t)i*4096);
+         if((pa&4095)||pa<0x102000000ULL||pa>0x17e000000ULL-4096 ||
+             kvtophys(va+(uintptr_t)i*4096+4095)!=pa+4095)return 0;
+-        q[0x8000/8+i]=pa|(1ULL<<54)|(a03_gpu_blit_cached?0x4c3ULL:0x4d7ULL);
++        q[0x8000/8+i]=pa|(1ULL<<54)|(a03_gpu_blit_cached?(0x4c3ULL|((uint64_t)a03_gpu_blit_memattr<<2)):0x4d7ULL);
+     }
+     if((a03_gpu_blit_destination&4095)!=(a03_gpu_blit_destination_pa&4095))return 0;
+     for(uint64_t off=0;off<a03_gpu_blit_destination_length;off+=4096)
+         if(kvtophys(a03_gpu_blit_destination+off)!=a03_gpu_blit_destination_pa+off)return 0;
+     uint64_t pa=a03_gpu_blit_destination_pa&~4095ULL;
+     bytes=(a03_gpu_blit_destination_pa&4095)+a03_gpu_blit_destination_length;
+-    for(unsigned i=0;(uint64_t)i*4096<bytes;i++)q[0xc000/8+i]=(pa+(uint64_t)i*4096)|(1ULL<<54)|(a03_gpu_blit_cached?0x443ULL:0x457ULL);
++    for(unsigned i=0;(uint64_t)i*4096<bytes;i++)q[0xc000/8+i]=(pa+(uint64_t)i*4096)|(1ULL<<54)|(a03_gpu_blit_cached?(0x443ULL|((uint64_t)a03_gpu_blit_memattr<<2)):0x457ULL);
+     return 1;
+ }
+ static int
+@@ -733,6 +734,9 @@
+ void a03_gpu_blit_control(unsigned enable);
+ void a03_gpu_blit_control(unsigned enable) {
+     if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
++    if(enable>=13 && enable<=15 && !a03_gpu_job_poisoned && a03_gpu_blit_memattr!=enable-13) {
++        a03_gpu_blit_memattr=enable-13;a03_gpu_blit_verified=0;
++    }
+     if(enable>=9 && enable<=12 && !a03_gpu_job_poisoned) {
+         unsigned rows=4U<<(enable-9);
+         if(a03_gpu_fullscreen_rows!=rows){a03_gpu_fullscreen_rows=rows;a03_gpu_blit_verified=0;}
+@@ -746,6 +750,7 @@
+         a03_gpu_blit_cached=enable==5;
+         a03_gpu_blit_verified=0; /* Each policy must earn four readbacks. */
+     }
++    printf("A03 GPU blit: memattr=%u; pixel mappings only, cached mode required\n",a03_gpu_blit_memattr);
+     printf("A03 GPU blit: tile-rows=%u; fullscreen-only, four readbacks after change\n",a03_gpu_fullscreen_rows);
+     printf("A03 GPU blit: cached=%u; four readbacks after policy change\n",a03_gpu_blit_cached);
+     printf("A03 GPU blit: warm=%u powered=%u; explicit cold/off releases power\n",a03_gpu_blit_warm,a03_gpu_warm_ready);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -668,6 +668,9 @@
+  else if(!strcmp(command,"gpu blit tile8"))a03_gpu_blit_control(10);
+  else if(!strcmp(command,"gpu blit tile16"))a03_gpu_blit_control(11);
+  else if(!strcmp(command,"gpu blit tile32"))a03_gpu_blit_control(12);
++ else if(!strcmp(command,"gpu blit impldef"))a03_gpu_blit_control(13);
++ else if(!strcmp(command,"gpu blit cacheall"))a03_gpu_blit_control(14);
++ else if(!strcmp(command,"gpu blit writealloc"))a03_gpu_blit_control(15);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

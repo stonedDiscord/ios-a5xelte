@@ -47,7 +47,7 @@ def main():
             if run.returncode:raise RuntimeError(run.stderr or 'Benchmark failed')
             if 'Original GPU mode restored.' not in run.stdout:raise RuntimeError('Mode restoration absent')
             result=parse_result(run.stdout);validate(result,mode,a.replay)
-            current=(result.get('cached'),result.get('warm'),result.get('tile_rows'))
+            current=(result.get('cached'),result.get('warm'),result.get('tile_rows'),result.get('memattr'))
             if policy is not None and current!=policy:raise RuntimeError('Policy changed across paired rounds')
             policy=current;result['round']=index+1;results.append(result)
     cpu=[r['mean_copy_ms'] for r in results if r['mode']=='cpu']

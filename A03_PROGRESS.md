@@ -1,5 +1,27 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-20: tile hardware comparison PASS, no speed gain; cache attribute0183
+
+BOOT0114 alltiles4/8/16/32 eachpassedfourfreshfullreadbacks+threepaired8copy
+rounds. GPUmedians2.186067/2.204730/2.208019/2.254706ms; CPUmedians1.419230/
+1.412235/1.422302/1.686197ms. No fallback/quarantine. Larger groups do not
+improve thiscopy; tile4 default retained. Afterall restoredtile4/GPUOFF/
+powered0/verify1/cachedwarm1,120frames/completed120/verified0(resetontilerestore),
+touchON986events0. Sole114370/session7470boot0114-tiles-live.loguntil~22:41UTC.
+Firsttrialdiscardedbusy-statusrace; correctedhelper retries onlyEMPTY read-only
+status, neverreplay. QualificationthenOFFbeforepaired prevents expensive
+backgroundreadbacks racing policyrestore. Hostregression/failurerestorePASS.
+
+0183 explicitgpu blit impldef/cacheall/writealloc selects vendor pixelAttrIndex
+0/1/2 onlyincachedmode; default0 unchanged. Vendor79c7c8b regmapUAPI defines
+0x88impldef/0x8fforcecacheall/0x8dwritealloc; existingASMEMATTR table already
+contains these. SourceRO/NX,destinationRW/NX,boundedpages, sourceflush/freshGPU
+CLEAN_INV/retirement/quarantine remain. Policychange resetsfourreadbacks;
+quarantinerejectspolicychange. Descriptor/code attributes remainindex0.
+ActualsourceASanUBSan allthreepolicies/fullframe+partial/cleanfailure,
+ARM64GPUAMFI/profile129/benchmarkisolationtestsPASS. NeedfullCI/hardware;
+no newcacheperformancesafetyclaim. Goalactive, noGPUoverCPUspeedupyet.
+
 ## 2026-11-20: dispatch tile CI success; BOOT0114 trial
 
 CI44824395202 SUCCESS exact2dc47e3ed8171a73e85c91ba42b5eb6dfbe41771.

@@ -31,6 +31,12 @@ values=iter(['A03 GPU blit: cached=1; A03 GPU blit: warm=1 powered=1; enabled=1 
 assert m.snapshot(None,None)['powered']==1
 values=iter(['A03 GPU blit: tile-rows=16; enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 assert m.snapshot(None,None)['tile_rows']==16
+values=iter(['A03 GPU blit: memattr=2; enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
+assert m.snapshot(None,None)['memattr']==2
+assert m.report(dict(b,memattr=2),dict(b,memattr=2,gpu_copies=1,gpu_ns=100),'fast')['memattr']==2
+try:m.report(dict(b,memattr=0),dict(b,memattr=1),'fast');assert False
+except RuntimeError as error:assert 'Pixel cache attribute changed' in str(error)
+
 assert m.report(dict(b,tile_rows=16),dict(b,tile_rows=16,gpu_copies=1,gpu_ns=100),'fast')['tile_rows']==16
 try:m.report(dict(b,tile_rows=4),dict(b,tile_rows=16),'fast');assert False
 except RuntimeError as error:assert 'Dispatch tile changed' in str(error)

@@ -23,7 +23,13 @@ def command(probe,log,cmd,timeout=25):
 
 
 def snapshot(probe,log):
-    gpu=command(probe,log,'gpu blit');display=command(probe,log,'display')
+    # The shared hardware owner may transiently decline this read-only status.
+    # Retry only an empty completed status transaction, never replay commands.
+    for attempt in range(10):
+        gpu=command(probe,log,'gpu blit')
+        if gpu.strip():break
+        if attempt<9:time.sleep(.02)
+    display=command(probe,log,'display')
     fields=re.search(r'enabled=([0-9]+) frames=([0-9]+) pixels=([0-9]+) fallbacks=([0-9]+) quarantined=([0-9]+)',gpu)
     policy=re.search(r'verify=([0-9]+) verified=([0-9]+) completed=([0-9]+) total-ns=([0-9]+) last-ns=([0-9]+)',gpu)
     timing=re.search(r'copy timing cpu=([0-9]+)/([0-9]+)ns gpu=([0-9]+)/([0-9]+)ns',display)
@@ -32,6 +38,8 @@ def snapshot(probe,log):
     result=dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
     cached=re.search(r'A03 GPU blit: cached=(\d+);',gpu)
     if cached:result['cached']=int(cached[1])
+    attr=re.search(r'A03 GPU blit: memattr=(\d+);',gpu)
+    if attr:result['memattr']=int(attr[1])
     tile=re.search(r'A03 GPU blit: tile-rows=(\d+);',gpu)
     if tile:result['tile_rows']=int(tile[1])
     warm=re.search(r'A03 GPU blit: warm=(\d+) powered=(\d+);',gpu)
@@ -43,6 +51,8 @@ def snapshot(probe,log):
 
 
 def report(before,after,mode):
+    if before.get('memattr')!=after.get('memattr'):
+        raise RuntimeError('Pixel cache attribute changed during interval; discard measurement')
     if before.get('tile_rows')!=after.get('tile_rows'):
         raise RuntimeError('Dispatch tile changed during interval; discard measurement')
     if before.get('cached')!=after.get('cached'):
@@ -56,6 +66,7 @@ def report(before,after,mode):
     elapsed=delta['cpu_ns'] if mode=='cpu' else delta['gpu_ns']
     delta.update(mode=mode,mean_copy_ms=elapsed/n/1000000 if n else None,quarantined=after['quarantined'])
     if 'cached' in after:delta['cached']=after['cached']
+    if 'memattr' in after:delta['memattr']=after['memattr']
     if 'tile_rows' in after:delta['tile_rows']=after['tile_rows']
     if 'warm' in after:delta.update(warm=after['warm'],powered=after['powered'])
     if mode!='cpu' and delta['frames'] and 'last_attempt_phases_ns' in after:
