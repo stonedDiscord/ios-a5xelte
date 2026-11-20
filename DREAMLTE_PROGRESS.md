@@ -1,5 +1,16 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0244 pre-replug poll snapshot — 2026-11-20
+
+User explicitly confirms no replug yet and reports:
+`DREAMLTE USB ATTACH: poll t=1761804261 event=00000000 DSTS=008e0001 DCTL=00000000 DCFG=00080800 UTMI=00000660 LINK=08000180`
+followed by `SWEET USB: ue0 rx 0 tx 0 frames`.
+DSTS decodes link3/suspend,speed1/full-speed,halt bit22 clear; UTMI bit9 set.
+DCTL unexpectedly reads0 despite source setting RUN_STOP bit31 before poller;
+this needs comparison with retained startup snapshots,not a causal conclusion.
+Still no host enumeration. Controlled replug request remains pending; preserve
+this running0244 boot and retrieve timed trace after attachment.
+
 ## 0244 physical link-state suspend before replug — 2026-11-20
 
 User reports exact screen line:
