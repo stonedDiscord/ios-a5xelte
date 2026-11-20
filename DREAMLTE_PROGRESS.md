@@ -1,5 +1,14 @@
 # DREAMLTE / Galaxy S8 SM-G950F — active handoff
 
+## 0242 blocked pending screen checkpoint — 2026-11-20
+
+Third consecutive post-flash observation confirms no XNU/Samsung USB;
+port3 journal still ends at081 disconnect. No live build/preparation/flash
+remains. Cannot retrieve retained console before enumeration or distinguish
+VM stop from USB failure without the requested physical screen checkpoint.
+Goal blocked pending that observation or restored USB,not complete. Preserve
+installed0242/current boot; no further reset,replug or write issued.
+
 ## 0242 host follow-up; preserve current screen evidence — 2026-11-20
 
 Host recheck still finds no XNU1209:0001 or Samsung04e8:685d. Port3
