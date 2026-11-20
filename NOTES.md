@@ -1,4 +1,10 @@
 ACTIVE0106screenfreeze18:20UTC: host/kerneltimeagree1795198810, stale
+FOLLOWUP18:26CPUcopies7544,total7564; physicalinputresumesnewframesafter
+idlewithoutanotherHome, touchON2585slices277events. GPUstaysOFFframes20.
+Notificationsattempt0whileframesadvance=>notsoleprovenfreeze cause.
+CachedCI44791438428 stillBuild18:27;watch32994. Bencha708396policylabelsPASS.
+
+PREVIOUS0106screenfreeze18:20UTC: host/kerneltimeagree1795198810, stale
 clock/swaps24/copies20. GPUOFF+ONEHome=>687newCPUcopies; userconfirmsclock
 updated. LeaveGPUOFF/verify1/touchON. CombinedwakeisnotcausalGPUfixproof.
 CachedCI44791438428 exact7e56be7 stillBuild;watch32994. Needexactsuccess

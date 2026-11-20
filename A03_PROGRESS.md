@@ -2,6 +2,15 @@
 
 ## 2026-11-20: frozen clock confirmed; CPU-copy wake restores screen
 
+CPU-onlyfollowup18:26UTC: copies707->3096->6016->7141, thenidleandnew
+physicalcontactactivityresumescopies7564 withoutanotherHome. CPUcopies7544,
+GPUframesstill20; touchON2585slices277events. Vsyncandkerneltimecontinue,
+notificationsattemptsremain0 evenwhileframesadvance. Thusmissingvsync
+notificationisnotaloneprovenfreeze cause. Userclockupdateconfirmed;
+sustainedGPUUIacceptanceremainsunproven. CachedCI44791438428 stillBuild
+at18:27UTC; do notduplicate. Benchmarka708396 nowlabelscachepolicyand
+rejectspolicychangeswithinameasurementinterval;hosttestPASS.
+
 User reports frozen/blank/corrupt UI, clock about3minutesbehind. At18:20:10UTC
 kernelreadonlytime1795198810 matcheshost exactly; displayedclockisstale.
 Vsync28277done, swaps24/copies20 unchanged, GPUframes20/verified12/
