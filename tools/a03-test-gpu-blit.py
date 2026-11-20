@@ -174,7 +174,7 @@ int main(void){
  assert(dest_mem[2883]==0x5a&&dest_mem[2884+53*4]==0x5a);
  assert(!memcmp(source_mem+124,dest_mem+2884,53*4));
  /* Exercise all vector tail lengths on both sides of a 64-pixel group. */
- for(unsigned width=1;width<=70;width++){
+ for(unsigned width=1;width<=270;width++){
   reset(0);expect_cached=1;a03_gpu_blit_control(5);
   assert(a03_gpu_framebuffer_blit((uintptr_t)source_mem+124,(uintptr_t)dest_mem+2884,0x9e000b44,3072,2880,width,5)==1);
   for(unsigned y=0;y<5;y++){
