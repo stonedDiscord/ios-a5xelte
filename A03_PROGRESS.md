@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — Physical button candidate
+
+The live SM-A035G DT and matching stock overlay agree on power (SC2730 EIC1
+active low), volume down (EIC4 active high), and volume up (AP GPIO125 active
+low). Patch 0195 forwards debounced edges to the existing consumer HID service
+from a separate kernel thread with `a03keys=1 a03_hid=1`. Polling runs without a
+USB connection. Setup uses the stock data mask and input enable registers.
+PMIC access uses the existing ADI lock. The worker requires a stable release
+before accepting a press and releases/rearms a held key after repeated read
+failures. Host sanitizer tests cover those cases and PMIC mask readback.
+Both changed C files cross-compile for ARM64 using the previous CI flags.
+The host compiler lacks Apple's allocation builtins for the full HID C++
+unit. Full kernel CI and an unplugged physical screen wake remain pending.
+
 ## 2026-11-21: reported SpringBoard freeze, respawn and recovery
 
 User reported a SpringBoard crash/frozen image, then confirmed the image

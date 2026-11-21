@@ -1,4 +1,20 @@
-# A03 USB input trial
+# A03 input
+
+Patch 0195 adds an opt-in physical button driver for the Galaxy A03 SM-A035G.
+Enable it with `a03keys=1` alongside `a03_hid=1`. It polls the PMIC for the
+power and volume down keys and AP GPIO125 for volume up. Each key requires
+two matching samples for a transition. The worker uses a 10 ms poll delay
+and runs independently of the USB probe worker. This targets iOS screen
+sleep with XNU still running. Full SoC suspend would require IRQ wake support.
+
+For hardware validation, capture one press and release per physical key and
+match each to its HID usage (power 0x30, volume up 0xe9, volume down 0xea).
+Observe display request 0, then press physical power and require request 1,
+advancing compositor copies, and a visibly refreshed screen. Repeat with
+USB unplugged and verify the visible response. The framebuffer currently
+reports display power requests while leaving the last image visible.
+
+## USB input trial
 
 BOOT0079 runtime2026-11-17: both services registered/opened; input status3.
 A USB swipe on visible SpringBoard dispatched with result0 but had no user-

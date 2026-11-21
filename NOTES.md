@@ -1,3 +1,10 @@
+ACTIVE physical button candidate 0195. Live SM-A035G DT and matching stock
+source identify EIC1 power, EIC4 volume down, and AP GPIO125 volume up.
+Independent worker uses a03keys=1 with existing a03_hid=1 and forwards to HID.
+Debounce/fault/PMIC fixtures and ARM64 C compile pass. Full CI then BOOT-only
+test. Verify paired physical power and volume edges and screen wake with USB
+unplugged. BOOT0126 and CPU0124 restore images remain available.
+
 ACTIVE 2026-11-21 SpringBoard froze then user confirmed recovery. Replacement
 PID98999 vs original26; fresh capture has spawn but no termination reason.
 GPU354041->355975copies/4verified/0fallbackquarantine; storage ready1poison0.

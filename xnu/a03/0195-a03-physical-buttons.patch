@@ -1,0 +1,193 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -657,4 +657,139 @@
+ static void a03_touch_stream_tick(void) {
+  if(a03_touch_streaming)a03_touch_probe("streamtick");
+ }
++/* SM-A035G live gpio-keys: SC2730 EIC1 active low, AP GPIO125 active
++ * low, and SC2730 EIC4 active high. Use the stock driver's input setup. */
++#define A03_KEY_EIC_DATA 0x280
++#define A03_KEY_EIC_DMSK 0x284
++#define A03_KEY_EIC_MASK ((1u << 1) | (1u << 4))
++#define A03_KEY_GPIO_BANK (7 * 0x80)
++#define A03_KEY_GPIO_BIT (1u << 13)
++
++extern void sweet_hid_key(int, int);
++extern int a03_hid_action(unsigned);
++
++struct a03_key_state {
++ unsigned armed, down, stable, failures;
++};
++
++static void
++a03_key_sample(struct a03_key_state *key, int id, int down)
++{
++ if (down < 0) {
++  key->stable = 0;
++  if (key->failures < 8 && ++key->failures == 8) {
++   if (key->down) sweet_hid_key(id, 0);
++   key->armed = key->down = 0;
++   printf("A03 KEY: id=%d input unavailable\n", id);
++  }
++  return;
++ }
++ key->failures = 0;
++ if ((!key->armed && down) || (key->armed && (unsigned)down == key->down)) {
++  key->stable = 0;
++  return;
++ }
++ if (++key->stable < 2) return;
++ key->stable = 0;
++ if (!key->armed) {
++  key->armed = 1; /* Require a stable release before the first press. */
++  return;
++ }
++ key->down = (unsigned)down;
++ printf("A03 KEY: physical id=%d down=%d\n", id, down);
++ sweet_hid_key(id, down);
++}
++
++static int
++a03_key_pmic_init(void)
++{
++ uint32_t mask, check;
++ if (!adi_read(A03_KEY_EIC_DMSK, &mask)) return 0;
++ if ((mask & A03_KEY_EIC_MASK) == A03_KEY_EIC_MASK) return 1;
++ return adi_write_raw(A03_KEY_EIC_DMSK, mask | A03_KEY_EIC_MASK) &&
++        adi_read(A03_KEY_EIC_DMSK, &check) && check == (mask | A03_KEY_EIC_MASK);
++}
++
++static vm_offset_t
++a03_key_gpio_init(vm_offset_t aon)
++{
++ /* GPIO_EB has a set alias. Preserve other clocks and pinmux. */
++ *(volatile uint32_t *)(aon + 0x1004) = 1u << 1;
++ __asm__ volatile("dsb sy" ::: "memory");
++ if (!(*(volatile uint32_t *)(aon + 4) & (1u << 1))) return 0;
++ vm_offset_t gpio = ml_io_map(0x641b0000, 0x1000);
++ if (!gpio) return 0;
++ vm_offset_t bank = gpio + A03_KEY_GPIO_BANK;
++ update(bank, 8, A03_KEY_GPIO_BIT, 0);    /* DIR: input */
++ update(bank, 0x28, 0, A03_KEY_GPIO_BIT); /* INEN */
++ update(bank, 4, 0, A03_KEY_GPIO_BIT);    /* DMSK */
++ if ((*(volatile uint32_t *)(bank + 8) & A03_KEY_GPIO_BIT) ||
++     !(*(volatile uint32_t *)(bank + 0x28) & A03_KEY_GPIO_BIT) ||
++     !(*(volatile uint32_t *)(bank + 4) & A03_KEY_GPIO_BIT)) return 0;
++ return bank;
++}
++
++static void
++a03_keys_worker(__unused void *arg, __unused wait_result_t result)
++{
++ struct a03_key_state keys[3] = {{0}};
++ vm_offset_t aon = ml_io_map(0x64000000, 0x2000);
++ vm_offset_t gpio = 0;
++ int pmic = 0;
++
++ if (aon) {
++  gpio = a03_key_gpio_init(aon);
++  for (unsigned attempt = 0; attempt < 20; attempt++) {
++   if (__sync_bool_compare_and_swap(&adi_runtime_busy, 0, 1)) {
++    if (!adi) {
++     update(aon, 8, 0, 1u << 9); /* ADI_EB */
++     adi = ml_io_map(0x64200000, 0x40000);
++    }
++    if (adi) pmic = a03_key_pmic_init();
++    __sync_lock_release(&adi_runtime_busy);
++    break;
++   }
++   IOSleep(10);
++  }
++ }
++ printf("A03 KEY: inputs pmic=%d gpio=%u\n", pmic, gpio != 0);
++ if (!pmic && !gpio) {
++  thread_terminate(current_thread());
++  return;
++ }
++ /* The HID service starts asynchronously. Discard keys held before it starts. */
++ while (!(a03_hid_action(0) & 1)) IOSleep(100);
++ for (;;) {
++  if (pmic) {
++   uint32_t data;
++   int valid = 0;
++   if (__sync_bool_compare_and_swap(&adi_runtime_busy, 0, 1)) {
++    valid = adi_read(A03_KEY_EIC_DATA, &data);
++    __sync_lock_release(&adi_runtime_busy);
++   }
++   a03_key_sample(&keys[0], 0, valid ? !(data & (1u << 1)) : -1);
++   a03_key_sample(&keys[2], 2, valid ? !!(data & (1u << 4)) : -1);
++  }
++  if (gpio) {
++   uint32_t data = *(volatile uint32_t *)gpio;
++   a03_key_sample(&keys[1], 1, !(data & A03_KEY_GPIO_BIT));
++  }
++  IOSleep(10);
++ }
++}
++
++void a03_keys_start(void);
++void
++a03_keys_start(void)
++{
++ uint32_t enable = 0, hid = 0;
++ PE_parse_boot_argn("a03keys", &enable, sizeof(enable));
++ PE_parse_boot_argn("a03_hid", &hid, sizeof(hid));
++ if (enable != 1 || hid != 1) return;
++
++ thread_t thread = THREAD_NULL;
++ kern_return_t kr = kernel_thread_start(a03_keys_worker, NULL, &thread);
++ if (kr == KERN_SUCCESS) thread_deallocate(thread);
++ printf("A03 KEY: worker start=%d\n", kr);
++}
+ #endif
+--- a/bsd/dev/a03_usb.c
++++ b/bsd/dev/a03_usb.c
+@@ -47,7 +47,9 @@
+ a03_usb_probe(void)
+ {
+     extern void a03_usb_console_start(void);
++    extern void a03_keys_start(void);
+     a03_usb_console_start();
++    a03_keys_start();
+ 	uint32_t enable = 0;
+ 	PE_parse_boot_argn("a03usb_probe", &enable, sizeof(enable));
+ 	if (enable != 1) {
+--- a/iokit/Kernel/arm/hid/SweetHID.cpp
++++ b/iokit/Kernel/arm/hid/SweetHID.cpp
+@@ -370,9 +370,9 @@
+ 	if (!IOHIDEventService::start(provider)) {
+ 		return false;
+ 	}
+-	gSweetButtons = this;
+ 	registerService();
+-	IOLog("A03 HID: buttons registered (explicit USB input only)\n");
++	__atomic_store_n(&gSweetButtons, this, __ATOMIC_RELEASE);
++	IOLog("A03 HID: buttons registered\n");
+ 	return true;
+ }
+ 
+@@ -499,8 +499,9 @@
+ 		kHIDUsage_Csmr_VolumeDecrement, kHIDUsage_Csmr_Menu,
+ 	};
+ 
+-	if (gSweetButtons && key >= 0 && key < (int)(sizeof(usages) / sizeof(usages[0]))) {
+-		gSweetButtons->key(usages[key], down != 0);
++	SweetHIDButtons *buttons = __atomic_load_n(&gSweetButtons, __ATOMIC_ACQUIRE);
++	if (buttons && key >= 0 && key < (int)(sizeof(usages) / sizeof(usages[0]))) {
++		buttons->key(usages[key], down != 0);
+ 	}
+ }
+ 
+@@ -516,9 +517,10 @@
+  * Each action includes release; no persistent held keys/fingers. */
+ extern "C" int a03_hid_action(unsigned action);
+ extern "C" int a03_hid_action(unsigned action) {
+- if (action == 0) return (gSweetButtons ? 1 : 0) | (gSweetTouch ? 2 : 0);
++ SweetHIDButtons *buttons = __atomic_load_n(&gSweetButtons, __ATOMIC_ACQUIRE);
++ if (action == 0) return (buttons ? 1 : 0) | (gSweetTouch ? 2 : 0);
+  if (action == 1) {
+-  if (!gSweetButtons) return -1;
++  if (!buttons) return -1;
+   sweet_hid_key(3, 1); IOSleep(80); sweet_hid_key(3, 0);
+   return 0;
+  }
