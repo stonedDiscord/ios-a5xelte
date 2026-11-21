@@ -1,3 +1,10 @@
+The stock IOSurface client reads plane width, height, offset, row bytes
+and element size at different offsets from the existing XNU result.
+0213 corrects the layout at the kernel serialization boundary. Patch
+application and profile staging passed. CI44950176996 builds 220d75a.
+Private prepare-posterboard-0144.py uses the original BOOT0142 arguments
+so the existing LaunchServices database stays in place during the test.
+
 BOOT0143 reseeding allowed CollectionsPoster to launch and PosterBoard to
 create snapshot surfaces. PID861 then trapped in CFRetain from
 PBUIImageEncoder saveUIImage:error:. The preceding buildCGImage call
