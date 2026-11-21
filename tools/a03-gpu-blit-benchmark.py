@@ -48,6 +48,8 @@ def snapshot(probe,log):
     if attr:result['memattr']=int(attr[1])
     tile=re.search(r'A03 GPU blit: tile-rows=(\d+);',gpu)
     if tile:result['tile_rows']=int(tile[1])
+    idle=re.search(r'A03 GPU blit: idle-releases=([0-9]+) timeout-ms=([0-9]+)',gpu)
+    if idle:result.update(idle_releases=int(idle[1]),idle_timeout_ms=int(idle[2]))
     warm=re.search(r'A03 GPU blit: warm=(\d+) powered=(\d+);',gpu)
     if warm:result.update(warm=int(warm[1]),powered=int(warm[2]))
     phases=re.search(r'phases-ns: power=(\d+) prepare=(\d+) cache=(\d+) execute=(\d+) retire=(\d+) verify=(\d+) shutdown=(\d+)',gpu)

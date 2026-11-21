@@ -58,6 +58,8 @@ values=iter(['A03 GPU blit: clock-mhz=512; enabled=1 frames=4 pixels=4608000 fal
 assert m.snapshot(None,None)['clock_mhz']==512
 values=iter(['A03 GPU blit: poll-spin=1 gaps=10 gap-ns=100000 enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 assert m.snapshot(None,None)['poll_spin']==1
+values=iter(['A03 GPU blit: idle-releases=7 timeout-ms=100 enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
+idle=m.snapshot(None,None);assert idle['idle_releases']==7 and idle['idle_timeout_ms']==100
 pb=dict(b,poll_spin=1,poll_gaps=10,poll_gap_ns=100000)
 pa=dict(pb,poll_gaps=14,poll_gap_ns=140000,gpu_copies=1,gpu_ns=100)
 assert m.report(pb,pa,'fast')['poll_gaps']==4
