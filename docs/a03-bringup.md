@@ -1,15 +1,13 @@
 # Galaxy A03 SM-A035G bring-up
 
-Current GPU checkpoint (November21,2026): BOOT0123 automatically enables
-cached GPU copying with a03gpu=1, verifies four full frames, then uses fast
-copies. Hardware evidence confirms startup without host GPU controls, twelve
-automatic idle-power-off/cold-resume cycles, and512 stress copies plus four
-final readbacks, with zero fallback/quarantine. GPU copying remains enabled;
-retired owned GPU power releases after100ms idle. Measured submitter CPU cost
-is~0.84ms per copy; prior paired trials show39.7-42.1% less submitting-thread
-CPU than CPU copying. Elapsed GPU copies remain~2ms versusCPU~1.4ms; source
-rendering is CPU-only. Physical UI acceptance and unplugged boot are pending.
-No active CI. See A03_PROGRESS.md/NOTES.md/docs/a03-gpu.md for exact evidence.
+Current GPU checkpoint (November21,2026): sustained compositor activity on
+BOOT0123 exposed a retirement failure after2041GPUcopies. The driver retained
+DMA mappings/source and suppressed panel writes; earlier static stress and idle
+cycle passes did not establish sustained UI reliability. CPU-control BOOT0124
+is now flashed using the exact same kernel with automatic GPU opt-in removed.
+Candidate0192 adds a failure-only stage/register snapshot; CI44856061555 is
+active. Prior paired tests measured real submitting-thread CPU offload, but the
+basic GPU goal remains incomplete. See newest A03_PROGRESS.md and NOTES.md.
 
 2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host
 sync repairs only the running calendar. User requires autonomous time on

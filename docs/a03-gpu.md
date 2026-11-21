@@ -2,16 +2,20 @@
 
 ## Active checkpoint — November 21, 2026
 
-BOOT0123 / CI44853265071 /bc4137c is the current hardware-validated
-framebuffer-copy checkpoint. It boots with a03gpu=1, qualifies four full
-readbacks before fast copies, releases retired GPU power after100ms idle,
-and resumes on the next frame. The first512-copy stress and twelve cold
-resumes pass with zero fallback/quarantine. Source rendering remains CPU-only;
-full Metal/EAGL support is deferred under the requested basic milestone.
+BOOT0123 failed sustained compositor activity after2041completedGPUcopies.
+One Home wake generated1388newGPUframes after diagnostic copies, then the
+retirement guard quarantined scratch/source mappings and suppressed panel
+writes. This supersedes earlier static-stress/idle-cycle passes as evidence of
+sustained UI reliability. The failure is GPU quarantine, distinct from earlier
+idle display-sleep episodes. Exact failing stage was not yet logged.
 
-Paired BOOT0121 measurements establish39.7-42.1% less submitting-thread CPU
-time, while GPU wall latency remains higher than CPU copying. Physical image
-and swipe acceptance and unplugged boot remain unverified. The goal is active.
+CPU-control BOOT0124 uses the same validated kernel with a03gpu=1 removed.
+Candidate0192 adds read-only failure-stage/register diagnostics without changing
+retirement/cache timeouts, quarantine or reset behavior. CI44856061555 is active.
+The goal remains incomplete. Source rendering remains CPU-only; full Metal/EAGL
+is deferred under the requested basic milestone. Earlier paired tests prove CPU
+offload, not sustained physical acceptance or faster animation.
+
 The following optimization table and dated checkpoints are historical evidence;
 use the latest A03_PROGRESS.md and NOTES.md for running-device state.
 
@@ -91,7 +95,8 @@ full readbacks passes, zero fallback/quarantine, meanwall2.055ms and submitting
 threadCPU0.844ms. Read-only final status is enabled1/powered0,82idle releases,
 561completed/8verified, default384MHz/pollwait/impldef0/tile4/cachedwarm1.
 
-The normal opt-in deployment is a03gpu=1 in the BOOT payload. Without it,
+The experimental opt-in is a03gpu=1 in the BOOT payload. Sustained0123 failure
+means it is not a validated normal deployment. Without it,
 GPU copy defaults OFF; an explicit control overrides boot initialization.
 An existing vsync timer releases only retired owned power after100ms idle;
 quarantined DMA is never powered down. The next frame uses the checked cold
