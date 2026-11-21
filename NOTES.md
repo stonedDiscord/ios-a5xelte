@@ -1,3 +1,11 @@
+ACTIVE BOOT0131 focused evidence: catalog opens succeed, but requested
+DefaultWallpapers~ipod.plist is ENOENT. Stock ~iphone file has default7400.
+fd06be0 adds no-overwrite alias in root staging and a03wallpaper migration;
+actual ARM64 C and host tests pass. CI44924752182/job136908295678 queued.
+Private prepare-posterboard-0132.py pins it. BOOT0131 still installed,
+reader ended;58crashes. Need exactCI->BOOT-only0132->default lookup success,
+selected wallpaper and sustained PosterBoard service without restart.
+
 ACTIVE focused trace CI44922279998 failed: unavailable strstr declaration.
 Corrected d77a047 uses bounded XNU strnstr; host tests and actual ARM64 C
 compile pass. Replacement44923242765/job136903620345 is live; private

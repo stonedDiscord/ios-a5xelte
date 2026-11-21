@@ -1,5 +1,28 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: focused BOOT0131 identifies missing default lookup filename
+
+Replacement CI44923242765 succeeded and exact-source/checksum/SMP validation
+passed. BOOT-only upload of image SHA256
+4029ffdc21f1d42cbfbda26d4789462644d6b85511cceaf1d8b529177c30dd09
+succeeded. Private boot0131-posterboard-live.log shows PIDs 228 and 368
+still trap at nil selectedLockPath. Catalog opens succeed. Crucially,
+WallpaperKit requests /Library/Wallpaper/DefaultWallpapers~ipod.plist and
+gets ENOENT, while the root contains DefaultWallpapers~iphone.plist with
+default identifier 7400. The nonexistent PRBPosterExtensionDataStore/59/
+SwitcherConfigurationOrdering.plist is also recorded. One monitor Home was
+dispatched; no physical input or screen acceptance claim.
+
+Commit fd06be0 adds an alias for the observed default filename to the stock
+iPhone file, both in new root staging and the existing a03wallpaper migration.
+Same validated USERDATA/mount/no-overwrite checks remain. Actual stock
+plist staging, repeated staging, startup sanitizer and actual ARM64
+vfs_syscalls.c compile passed. CI44924752182/job136908295678 is queued at
+fd06be0f4b5d23b27036b0dff5255c0b5a7747ae. Private prepare-posterboard-0132.py
+pins the run/source and unchanged arguments. BOOT0131 remains installed;
+reader ended with 58 PosterBoard corpse-limit records. Default selection and
+service survival remain unverified; the crash goal is not complete.
+
 ## 2026-11-21: focused trace compile corrected before deployment
 
 CI44922279998 failed in systemcalls.c because XNU declares strnstr, not
