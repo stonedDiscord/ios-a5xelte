@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:37UTC: exact boot-policy rerun compiling; console renewed
+
+44849933946 attempt2/job136680652501 in_progressBuild exacte8306f9. No duplicate.
+Autonomousboot verifierf752930 andnegativefixtures PASS; actualDMA/runtime/
+pollbenchmarkregressionsrerunPASS. Oldsole144533 intentionallystopped before
+expiry; newsole148860/session82510 boot0121-bootwait-live.loguntil~02:07UTC.
+Lastlive0121GPUOFFpowered0/384pollwaitverify1/698completed16verified0fault,
+touchON4003events0/storageready1poison0. NeedfullCI/artifactverify+actualASan/
+pack0122->BOOT-only->NOhostGPUcommands/replayuntil4readbacks+fastproof.
+Thenpixelstress/physicalUI. Goalactive; noautonomousstartupclaimyet.
+
 ## 2026-11-21 01:30UTC: boot-policy CI network failure; exact failed-job rerun
 
 44849933946 attempt1 terminalFAILURE beforekernelcompilation: git clone of

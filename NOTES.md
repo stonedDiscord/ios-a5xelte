@@ -1,3 +1,10 @@
+ACTIVE01:37UTC44849933946attempt2job136680652501stillBuild/exacte8306f9; noduplicate.
+NEWsole148860/session82510boot0121-bootwait-live.loguntil~02:07UTC(old144533stopped).
+Last0121OFFpowered0/384pollwaitverify1/698completed16verified0fault/touchON/
+storagehealthy. NeedfullCI->privateartifacts.py/pack0122.py->actualASan->BOOT-only
+thenNOhostGPUcontrols/replaybeforeautonomous4readback+fastlogverifierproof.
+PhysicalUIpending, goalactive.
+
 ACTIVE01:30UTC0190CI44849933946attempt1FAILEDnetworkclone libpthread github443,
 BEFOREkernelcompile. Explicitfailed-jobrerunsame44849933946requested/exacte8306f9.
 Noartifactaccepted/nophonechange. Donotdispatchduplicate. Autonomousstartup
