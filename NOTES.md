@@ -1,3 +1,9 @@
+BOOT0140 follow-up: CoreServices has separate extension-point and plug-in
+registration paths. The stock installd job and executable are present in
+the staged root. Live ps showed lsd and pkd with no installd at that sample.
+Inspect MobileInstallation framework metadata and plug-in seeding. The
+missing process sample does not establish a launch failure.
+
 BOOT0140 passed CI44939996930 and the BOOT-only upload. Image SHA-256
 2cf3c36113835d43536a4ecc889740666c764559402321cebd3b6fb5c9b982a0.
 The migration returned 0 and lsd PID97 opened the fallback definition.
