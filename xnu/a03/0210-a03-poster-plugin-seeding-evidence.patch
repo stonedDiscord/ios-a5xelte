@@ -1,0 +1,37 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -5751,3 +5751,4 @@
+ 	    !strcmp(executable, "/usr/libexec/lsd") ||
+-	    !strcmp(executable, "/usr/libexec/pkd")) &&
++	    !strcmp(executable, "/usr/libexec/pkd") ||
++	    !strcmp(executable, "/usr/libexec/installd")) &&
+ 	    PE_parse_boot_argn("a03_userlogs", &userlogs, sizeof(userlogs)) && userlogs == 1 &&
+--- a/bsd/dev/mem.c
++++ b/bsd/dev/mem.c
+@@ -137,4 +137,5 @@
+     else if (!strcmp(name, "pkd")) slot = 4;
++    else if (!strcmp(name, "installd")) slot = 5;
+     else return;
+-    static unsigned reports[5];
++    static unsigned reports[6];
+     unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -91,3 +91,3 @@
+     unsigned slot;
+-    static unsigned reports[11];
++    static unsigned reports[12];
+     if (!strcmp(p->p_comm, "backboardd")) slot = 0;
+@@ -103,2 +103,3 @@
+     else if (!strcmp(p->p_comm, "lsd") || !strcmp(p->p_comm, "pkd")) slot = 10;
++    else if (!strcmp(p->p_comm, "installd")) slot = 11;
+     else return;
+@@ -133,4 +134,6 @@
+             strnstr(text, "CollectionsPoster.appex", copied) ||
+-            strnstr(text, "LegacyPoster.appex", copied);
+-        if (slot == 10 && !registration) return;
++            strnstr(text, "LegacyPoster.appex", copied) ||
++            strnstr(text, "/WallpaperKit.framework/PlugIns", copied) ||
++            strnstr(text, "/PaperBoard.app/PlugIns", copied);
++        if (slot >= 10 && !registration) return;
+         if (!registration && strncmp(text, lookup, sizeof(lookup) - 1) &&
