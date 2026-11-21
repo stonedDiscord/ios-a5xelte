@@ -17,6 +17,7 @@ with tempfile.TemporaryDirectory() as d:
  q.write_text(source)
  subprocess.run(['git','apply','--include=bsd/dev/arm/systemcalls.c',str(root/'xnu/a03/0138-a03-screentime-analytics-evidence.patch')],cwd=d,check=True)
  subprocess.run(['git','apply','--include=bsd/dev/arm/systemcalls.c',str(root/'xnu/a03/0139-a03-filesystem-startup-evidence.patch')],cwd=d,check=True)
+ subprocess.run(['git','apply',str(root/'xnu/a03/0198-a03-posterboard-startup-evidence.patch')],cwd=d,check=True)
  source=q.read_text()
 names=['open','open_nocancel','access','mkdir','mkdir_extended','stat64','lstat64','getattrlist','getxattr','__mac_syscall','openat','openat_nocancel','openat_dprotected_np','faccessat','mkdirat','getattrlistat','csops','csops_audittoken','setattrlist','fsetattrlist','setattrlistat','setxattr','fsetxattr']
 header=r'''
@@ -76,8 +77,8 @@ int main(void){
  a[0]=0;a[1]=0;a[2]=0;a[3]=0;logs=0;
  for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);
  assert(logs==185);
- const char *extra[]={"ScreenTimeAgent","dmd"};
- for(unsigned k=0;k<2;k++){strcpy(p.p_comm,extra[k]);logs=0;
+ const char *extra[]={"ScreenTimeAgent","dmd","PosterBoard"};
+ for(unsigned k=0;k<sizeof(extra)/sizeof(extra[0]);k++){strcpy(p.p_comm,extra[k]);logs=0;
  for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);assert(logs==192);}
  puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/xattr/attrlist/datavault/independent 192-report caps PASS");
 }

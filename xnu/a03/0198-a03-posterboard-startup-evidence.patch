@@ -1,0 +1,19 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -88,7 +88,7 @@
+     const uint64_t *args, int result, uint64_t pc)
+ {
+     unsigned slot;
+-    static unsigned reports[9];
++    static unsigned reports[10];
+     if (!strcmp(p->p_comm, "backboardd")) slot = 0;
+     else if (!strncmp(p->p_comm, "containermanager", 15)) slot = 1;
+     else if (!strcmp(p->p_comm, "mediaserverd")) slot = 2;
+@@ -98,6 +98,7 @@
+     else if (!strcmp(p->p_comm, "mobileactivation")) slot = 6;
+     else if (!strcmp(p->p_comm, "ScreenTimeAgent")) slot = 7;
+     else if (!strcmp(p->p_comm, "dmd")) slot = 8;
++    else if (!strcmp(p->p_comm, "PosterBoard")) slot = 9;
+     else return;
+     if (!error && code != SYS_csops && code != SYS_csops_audittoken &&
+         code != SYS___mac_syscall) return;
