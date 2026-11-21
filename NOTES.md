@@ -1,3 +1,14 @@
+ACTIVE 2026-11-21 SpringBoard froze then user confirmed recovery. Replacement
+PID98999 vs original26; fresh capture has spawn but no termination reason.
+GPU354041->355975copies/4verified/0fallbackquarantine; storage ready1poison0.
+Displayrequest0->1, swaps resume. ONE USB Home preceded recovery report;
+spontaneous versus Home-assisted recovery unknown. PosterBoard crash loop
+persists. Private springboard-20261121-live.log + followup.log; bounded captures
+end automatically. Prior0126capture/soak stopped hours ago, no terminal soakPASS.
+No flash/reboot/GPU controls. Goal now physical buttons to wake iOS from sleep;
+USB Home does not meet this. Live DT gpio-keys/PMIC EIC and existing HID button
+provider are first investigation paths. Preserve current0126 and CPU0124restore.
+
 ACTIVE03:50UTCBOOT0126actualcompositor2095GPUcopies/4verified0fallbackquarantine,
 idle11; no replay/GPUcontrols. Sole168765/session9363 boot0126-boundary-live.log
 until~04:12UTC. Firstsoak67126boot0126-compositor-soak.log600sfrom03:45requires

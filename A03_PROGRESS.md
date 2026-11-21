@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: reported SpringBoard freeze, respawn and recovery
+
+User reported a SpringBoard crash/frozen image, then confirmed the image
+recovered. Fresh private capture springboard-20261121-live.log contains a
+SpringBoard spawn and replacement PID98999 (original boot PID26); no captured
+termination signal/reason, so do not assign a cause. PosterBoard repeatedly
+crashes with the corpse-limit warning. Read-only GPU status:354041completed,
+4verified,0fallback/quarantine,1806idle-releases,powered0; display request0,
+all swaps completed. Storage ready1/poisoned0. Replacement SpringBoard sampled.
+One explicit USB Home was sent before the user's recovery report: spontaneous
+recovery versus Home response cannot be distinguished. Follow-up capture
+springboard-20261121-followup.log confirms request1 and copies354521->355975,
+GPU0fallback/quarantine. Physical recovery confirmed; no fix or crash-cause
+claim. No flash/reboot/GPU controls/replay. Prior capture ended hours earlier;
+prior600s soak has samples but no terminal PASS, and is not a completed gate.
+Private logs remain ignored. Active goal: physical A03 buttons for sleep wake;
+USB Home response is not physical-button support.
+
 ## 2026-11-21 03:50UTC: candidate passes first sustained failure point
 
 BOOT0126actualcompositor2095completed/2413440000pixels/4verified,
