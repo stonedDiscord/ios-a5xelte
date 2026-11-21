@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:48UTC: actual candidate copies advance; duration gate corrected
+
+BOOT0126actualHome/swipe-triggeredcompositor now870GPUcopies/4verified,
+0fallbackquarantine/idle9, no replay/GPUmodecontrols. Earlieridle request0
+resumed viaexplicitHome; laterHome+swipeup generates sustained~10copies/s.
+Thisisnotphysicalinputacceptance. Physicalimage/swipequestionpending.
+The600s/12000copy planned gate is too short at observed~10Hz; host observer
+nowdefaults1800s, retaining12000additionalcopyrequirement ratherthanlowering
+it. Existing600strial continues as an intermediate observation, not expected
+tofulfillcountgate. Needlongeractualtrialandfreshreadbacks/idle/paired/physical.
+Nohardwarefixclaim. Sole168765/session9363captureuntil~04:12UTC;renewbeforeexpiry.
+
 ## 2026-11-21 03:45UTC: BOOT0126 automatic GPU proof passes; actual soak started
 
 Autoboot verifierPASS activation->4full720x1600readbacks->fastcopy, no priorhost

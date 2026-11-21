@@ -24,7 +24,7 @@ def validate_observed_commands(text):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--log',required=True,type=Path)
-    p.add_argument('--seconds',type=int,default=600)
+    p.add_argument('--seconds',type=int,default=1800)
     p.add_argument('--interval',type=int,default=20)
     p.add_argument('--minimum-copies',type=int,default=12000)
     a=p.parse_args()
