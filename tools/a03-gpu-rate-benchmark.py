@@ -79,7 +79,7 @@ def main():
                 print('Qualified '+name+' paired comparison complete.',flush=True)
         finally:
             blit.command(probe,log,'gpu blit off')
-            blit.command(probe,log,'gpu blit rate'+str(original['clock_mhz','poll_spin']))
+            blit.command(probe,log,'gpu blit rate'+str(original['clock_mhz']))
             blit.command(probe,log,'gpu blit '+('verify' if original['verify'] else 'fast'))
             blit.command(probe,log,'gpu blit '+('on' if original['enabled'] else 'off'))
             restored=blit.snapshot(probe,log)
