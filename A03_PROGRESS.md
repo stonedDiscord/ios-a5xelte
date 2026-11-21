@@ -8,8 +8,8 @@ New sole capturePID163479/session31133 boot0124-stage5-recovery-live.log.
 All8cores SGI1PASS; retainedRTC1795230903 read without host calendar sync.
 PrivatevolatileFW79104 staged/load0/A55A; first invalid startup slice required
 one explicit restart, then streamingON. GPU remainsOFF/cached0/powered0/
-quarantine0/0copies. Storage ready1poison0. Compositor startup stillpending at
-lastcheck; do not claim visibleUI recovery until actualframes/physicalcheck.
+quarantine0/0copies. Storage ready1poison0. Compositor recovered at03:17UTC: backboardd submitted two actual720x1600
+BGRA frames using CPU copies. Physical visibleUI acceptance remains pending.
 NoCIrunning. Rootcauseoffreshcleanackfailure remainsunfixed; goalactive.
 
 ## 2026-11-21: second BOOT0125 sustained trial reproduces cache-clean failure

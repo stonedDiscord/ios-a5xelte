@@ -1,7 +1,7 @@
 ACTIVE CPU0124BOOT-onlyrestoreSUCCESS aftercapturing0125stage5evidence.
 Exactimage869f9c90...90e0190 verified;8SGI/RTC1795230903PASS,FWRAMload0/A55A,
 touchONafteronestartretry,GPUOFFpowered0quarantine0/storagehealthy.
-Sole163479/session31133 boot0124-stage5-recovery-live.log; compositorpending.
+Sole163479/session31133 boot0124-stage5-recovery-live.log;2actualCPUframesrecovered03:17UTC.
 NoCI. MissingGPUcleanfreshackrootcauseunfixed;quarantined0125clearedbyreboot.
 Console255charlimitexplainsincompletesnapshot;shortenrecordsbeforenextbuild.
 Goalactive;physicalUItemporarysuccessreportedbut sustainedreliabilityfailed.
