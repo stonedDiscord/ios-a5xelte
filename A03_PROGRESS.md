@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: BOOT0130 traces the wallpaper migration lookups
+
+CI44920479585 succeeded; exact-source and SMP checks passed. BOOT-only
+upload of 428302505bffe412ecee6df164714821504eadccbb9a7ae0b9a4544528caaecc
+succeeded. The existing catalog alias resolves (result=0). PIDs 230 and 439
+reproduced the nil selectedLockPath trap at unslid 0x1be3babac. PID230
+tried both legacy LockBackground.jpg and HomeBackground.jpg and received
+ENOENT. The diagnostic budget of 192 records was exhausted by startup and
+filename variants before the later lookups were visible. Missing legacy
+files alone do not prove why WallpaperKit did not choose a default poster.
+
+Matching WallpaperKit code builds DefaultWallpapers~%@.plist. The offline
+root contains DefaultWallpapers~iphone.plist with a default entry. Patch
+0199 (564d2b5) records successful and failed operations on the default
+lookup, catalog, and persistent wallpaper paths, with the same output cap.
+Local sanitizer test confirms unrelated operations leave the budget intact.
+CI44922279998/job136900706788 is building. Root CI44918953514 succeeded for
+the catalog staging alias. BOOT0130 remains installed, reader ended. Next
+use the focused trace to verify which defaults/store paths actually resolve.
+
 ## 2026-11-21: BOOT0129 clears catalog error; wallpaper publisher still traps
 
 CI44918953970 succeeded and the exact patch, linked kernel and SMP checks

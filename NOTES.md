@@ -1,3 +1,9 @@
+ACTIVE PosterBoard: BOOT0130 reproduced the selectedLockPath trap with
+catalog alias result=0. Broad trace showed absent legacy lock/home JPEGs
+and hit its 192-record limit. 0199 records focused success/error wallpaper
+paths; CI44922279998/job136900706788 active at 564d2b5. Staged root CI
+44918953514 succeeded. BOOT0130 reader ended; crash goal remains open.
+
 ACTIVE PosterBoard still crashes after successful BOOT0129 catalog alias.
 Old invalid-order SIGABRT absent; two live crashes now SIGTRAP BRK #0 in
 PBFWallpaperPublisher activation, nil selectedLockPath, unslid 0x1be3babac.
