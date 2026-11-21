@@ -1,3 +1,8 @@
+BOOT0138 reproduced the provider query failure, -2219 setup errors and
+the publisher trap. lsd opened the definition and signature. Staged
+plist page hashes match. Trace the runtime query authorization and
+registration results to identify where the provider is dropped.
+
 ACTIVE BOOT0138 installed from CI44936228950. Touch firmware ready A55A
 and streaming. Sole reader PID138503/session66689. Live lsd opens the stock
 extension definition plist and signature. Follow its registration and

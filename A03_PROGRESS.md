@@ -11,6 +11,12 @@ boot0138-posterboard-live.log. Live lsd PID107 opened extensions.plist, its
 signature, and the ExtensionPoints directory and definitions successfully.
 PosterBoard startup was still pending at the first checkpoint.
 
+Follow-up reproduced the provider query failure and both -2219 setup errors.
+PIDs 233 and 322 trapped at unslid 0x1be3babac. The trace showed no path
+access to either provider bundle. Offline, all 26 SHA-1 and SHA-256 page
+hashes in the staged extensions.plist signature match the plist. This
+checks file integrity and leaves runtime acceptance unverified.
+
 ## 2026-11-21 — PosterBoard provider coordinator lookup
 
 Matching 20A362 cache disassembly identifies the -2219 return at
