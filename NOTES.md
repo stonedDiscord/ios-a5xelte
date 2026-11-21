@@ -3,7 +3,10 @@ source identify EIC1 power, EIC4 volume down, and AP GPIO125 volume up.
 Independent worker uses a03keys=1 with existing a03_hid=1 and forwards to HID.
 Debounce/fault/PMIC fixtures and ARM64 C compile pass. CI44910781005 job
 136865936423 builds exact a17e9d8. Session44638 waits and verifies/pack0127 in
-private physical-buttons0195-work. Inspect that run before BOOT-only test. Verify paired physical power and volume edges and screen wake with USB
+private physical-buttons0195-work. Intel compile passed but the verification
+step stalled with no artifacts. Alternate ARM run 44912955041/job136872452726
+builds the same SHA and session96022 waits for it. Packaging is serialized
+between the two. Inspect authoritative run state before BOOT-only test. Verify paired physical power and volume edges and screen wake with USB
 unplugged. BOOT0126 and CPU0124 restore images remain available.
 
 ACTIVE 2026-11-21 SpringBoard froze then user confirmed recovery. Replacement

@@ -14,8 +14,12 @@ Both changed C files cross-compile for ARM64 using the previous CI flags.
 The host compiler lacks Apple's allocation builtins for the full HID C++
 unit. Full XNU CI run 44910781005 (job 136865936423) builds exact
 a17e9d8ec339f166273bc6f489021d4e6e1e230a. A private pipeline waits for the
-same run, verifies sources and packs BOOT0127. Physical screen wake remains
-pending.
+run, verifies sources and packs BOOT0127. Intel job finished Build at
+14:03:47 UTC and remained in the linked-kernel verification step for over
+eleven minutes. Two complete log downloads matched byte for byte, ending at
+the build. No artifacts were published. The alternate macOS ARM run
+44912955041, job 136872452726, builds the same commit. Both pipelines remain
+live and serialize packaging. Physical screen wake remains pending.
 
 ## 2026-11-21: reported SpringBoard freeze, respawn and recovery
 
