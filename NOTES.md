@@ -1,3 +1,10 @@
+ACTIVE 14:35 UTC BOOT0127 display resumed after request 0 without a recorded
+key or synthetic input. At follow-up, 34 swaps completed, 30 copies sampled,
+and GPU status advanced to 35 completed with four verified and zero faults.
+Do not count this transition as button wake. Sole reader PID30533/session68042
+still captures boot0127-buttons-live.log. Await a physical Power press while
+display request is 0 and verify visible wake, including with USB unplugged.
+
 ACTIVE BOOT0127 buttons running. ARM CI44912955041 exact a17e9d8 success,
 source and hashes verified, BOOT-only Heimdall upload succeeded. Sole console
 PID30533/session68042 boot0127-buttons-live.log until about 14:58 UTC.

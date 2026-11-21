@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 14:35 UTC — Display resumed without a recorded key
+
+The existing BOOT0127 CDC reader is still active. After display request 0
+and five copies at 14:32 UTC, XNU logged request 1 and fresh compositor
+swaps. At 14:34 UTC the live probe sampled 30 copies and 34 completed
+swaps. GPU status shortly afterward showed 35 completed copies, four
+verified readbacks, and zero fallback or quarantine. There are no physical
+key edges, HID key dispatches or synthetic input actions in the capture.
+The reason for this display transition is unknown. A controlled physical
+Power press during display sleep is still needed.
+
 ## 2026-11-21 14:31 UTC — Physical button BOOT0127 running
 
 ARM CI44912955041 succeeded at exact a17e9d8. Verified CI source and kernel
