@@ -188,7 +188,8 @@ def main():
                      '0183-a03-explicit-pixel-cache-attributes.patch',
                      '0184-a03-explicit-512mhz-idle-clock-policy.patch',
                      '0185-a03-clean-readonly-gpu-source-cache.patch',
-                     '0186-a03-native16k-source-page-validation.patch'):
+                     '0186-a03-native16k-source-page-validation.patch',
+                     '0187-a03-single-verified-gpu-end-cache-clean.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 local /23:59UTC Nov20: native16K HW PASS; verified endclean0187
+
+BOOT0118 fullframe mappings/readbacksPASS.384pairedGPUmedian2.055985ms.
+First512comparison rejected because backgroundCPUcopies36vsrequested8;
+original384/OFF restored. Fresh512-only threepairedrounds PASS, GPUmedian
+1.982543ms. Mappingprepare~0.062-0.135ms vsprior~0.23ms, so actualgain,
+but CPUstillfaster. Allacceptedreplays0fallback/quarantine. Finalrestoration
+mustbecheckedagainbeforeidle. Sole129991/session2940boot0118-map16-live.log
+until~00:22UTCNov21. No speedupoverCPUorphysicalUIcompletionclaim.
+
+0187 cachedframebufferONLY omitsautomaticJS_CONFIG endflush since existing
+explicitfreshGPUCLEAN_INV_CACHES alwayscompletesafterslotretirementbefore
+CPUreads/ASdisable/fallback/shutdown. Startclean/invalidate preserved; uncached
+andprivatediagnosticskeepautomaticendflush. Vendor79c7c8b jm_hw.c supports
+SKIP_CACHE_END andregmap definesend0/noaction. This isNOTomittingfinalcache
+ownershiptransfer. Hostmodelwritesstayhiddenuntilfreshcommand8/IRQ17; all
+failurequarantinetestsPASS. ActualDMA/ratehelperASan/ARM64GPUAMFI/profile133
+PASS. NeedfullCI/hardwarecorrectness/pairedexecutionphase; noHWclaimyet.
+
 ## 2026-11-21 local /23:51UTC Nov20: native16K validation CI success; BOOT0118 trial
 
 CI44836868623 SUCCESS exacte8e3dee4d9ffa018199d2f6e975516606fbf9ce5.

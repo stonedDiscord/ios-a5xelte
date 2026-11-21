@@ -1,0 +1,16 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -482,7 +482,12 @@
+         a03_gpu_write(0x18c4, 0);
+         a03_gpu_write(0x18d0, 1);
+         a03_gpu_write(0x18d4, 0);
+-        a03_gpu_write(0x18d8, (8U << 16) | (3U << 8) | (3U << 12));
++        /* Cached framebuffer jobs always perform a fresh, independently
++         * acknowledged GPU CLEAN_INV after slot retirement below. Avoid
++         * a duplicate automatic end flush; preserve start clean/invalidate.
++         * Uncached and private diagnostics keep both automatic flushes. */
++        uint32_t end_flush=(a03_gpu_job_requested==3 && a03_gpu_blit_cached)?0U:(3U<<12);
++        a03_gpu_write(0x18d8, (8U << 16) | (3U << 8) | end_flush);
+         a03_gpu_write(0x18dc, 0);
+         a03_gpu_write(0x18e0, 1);
+         submitted = 1;

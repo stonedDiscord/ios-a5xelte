@@ -1,3 +1,12 @@
+ACTIVE0118native16KHWreadbackPASSmappingphase~0.06-0.13ms(vs0.23),GPU384median
+2.055985ms;512retrymedian1.982543ms. First512runrejectedbackgroundCPU36vs8;
+retryvalid/restorationmustcheck. Sole129991/session2940until~00:22UTCNov21.
+0187cachedframebufferremovesduplicateautomaticendflushONLY; keepsstartflush+
+explicitfreshGPUCLEAN_INVackbeforeCPUread/ASretire/fallback/poweroff. Uncached/
+privatediagnosticendflushunchanged. ActualASanDMA/cachefail/ratehelper/ARM64/
+profile133PASS. Needcommit/fullCI->BOOT-only0119->readbacks+pairedrates.
+Goalactive; stillnoCPUoverGPUspeedup/physicalacceptance.
+
 ACTIVE0118map16BOOT-onlyflashSUCCESS23:51UTCNov20 CI44836868623/e8e3dee success/
 sixsources/RTC/reverse0186/checksum/SMP/actualDMA+rate+replayASanPASS.
 Kernel8e5a69be...eeec11/BOOTbbb51c88...1e70da; same8cores1984MiB/ADT0094/cmd599.
