@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: focused trace compile corrected before deployment
+
+CI44922279998 failed in systemcalls.c because XNU declares strnstr, not
+strstr. No image from that run was flashed. Commit d77a047 uses bounded
+strnstr with the copied string length. Host sanitizer tests pass, and the
+actual changed systemcalls.c now passes local ARM64 compilation using the
+failed CI command and BOOT0130 headers. The local xnu-cc wrapper normalized
+the repository CI path and selected /usr/bin/clang. Replacement CI44923242765,
+job136903620345, builds exact d77a047f2a15e9c13673a52aa1bd79935ee080f2.
+Private prepare-posterboard-0131.py pins that run and source. Phone remains
+BOOT0130. Full CI and focused runtime capture remain required.
+
 ## 2026-11-21: BOOT0130 traces the wallpaper migration lookups
 
 CI44920479585 succeeded; exact-source and SMP checks passed. BOOT-only

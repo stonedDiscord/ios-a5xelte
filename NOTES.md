@@ -1,3 +1,8 @@
+ACTIVE focused trace CI44922279998 failed: unavailable strstr declaration.
+Corrected d77a047 uses bounded XNU strnstr; host tests and actual ARM64 C
+compile pass. Replacement44923242765/job136903620345 is live; private
+prepare-posterboard-0131.py pins it. No failed image flashed. BOOT0130 remains.
+
 ACTIVE PosterBoard: BOOT0130 reproduced the selectedLockPath trap with
 catalog alias result=0. Broad trace showed absent legacy lock/home JPEGs
 and hit its 192-record limit. 0199 records focused success/error wallpaper
