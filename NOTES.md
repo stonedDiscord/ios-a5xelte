@@ -1,3 +1,11 @@
+ACTIVE 2026-11-21 user reports excessive iOS lag. No A03 CDC tty visible in
+this session; live reproduction pending. Exact BOOT0127 framebuffer requests
+16667us timer and has no donor 10Hz throttle. Saved0127 log has125PosterBoard
+crashes; no current crash rate/causality claim. GPU copies finished frames;
+source rendering remains CPU based. No device changes or performance fix.
+Next capture physical lag with frame/input/CPU/crash deltas after USB reconnect.
+Physical button acceptance below remains outstanding.
+
 ACTIVE BOOT0127 physical test awaits a person at the phone. The console
 reader PID30533 was live at 14:37 UTC. Display request 0, 43 swaps complete,
 37 copies, HID provider status 3. No captured physical key transitions.

@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — User reports excessive iOS lag
+
+Offline inspection only: the A03 CDC tty is absent from this session, so no
+current frame-rate, input-latency, CPU-pressure or freeze measurement was made.
+Exact BOOT0127 CI44912955041 framebuffer source requests a 16667 us timer;
+it contains neither donor fFlushTicks nor sweetfb_hz throttling. This is a
+requested timer period, not evidence of delivered 60 fps. Prior ~10 copies/s
+observations therefore do not prove an explicit 10 Hz cap.
+
+Saved private boot0127-buttons-live.log contains 125 PosterBoard crash records,
+46 dmd, 45 ScreenTimeAgent, 33 locationd and 27 duetexpertd records. Counts are
+for that saved capture, not a current crash rate or proven cause of lag.
+GPU acceleration remains framebuffer-copy offload; source rendering is still
+CPU based. Prior BOOT0123 paired copy medians were CPU 1.533 ms versus GPU
+2.066 ms wall time, with lower submitting-thread CPU for GPU. Those figures
+are not a BOOT0127 frame-time measurement. No performance fix, device change,
+flash or reboot was performed. Next: reconnect CDC, correlate a physical lag
+reproduction with frame/copy, touch, per-core/process CPU and crash deltas;
+distinguish choppy animation, delayed input and stopped frames.
+
 ## 2026-11-21 14:37 UTC — Physical button test awaiting a press
 
 The BOOT0127 console reader is live. A read-only query confirms input
