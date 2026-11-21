@@ -1,0 +1,40 @@
+--- a/bsd/vfs/vfs_syscalls.c
++++ b/bsd/vfs/vfs_syscalls.c
+@@ -5956,13 +5956,10 @@
+ void a03_install_wallpaper_catalog(vnode_t root);
+ 
+ /* Repair the existing A03 HFS root before launchd starts. */
+-void
+-a03_install_wallpaper_catalog(vnode_t root)
+-{
+-	static const char directory[] = "/Library/Wallpaper/Collections";
+-	static const char source[] = "/Library/Wallpaper/Collections/Collections~iphone.plist";
+-	static const char alias[] = "/Library/Wallpaper/Collections/Collections.plist";
+-	static const char target[] = "Collections~iphone.plist";
++static void
++a03_install_wallpaper_alias(vnode_t root, const char *directory,
++    const char *source, const char *alias, const char *target)
++{
+ 	vfs_context_t ctx = vfs_context_kernel();
+ 	mount_t mp = vnode_mount(root);
+ 	vnode_t dir = NULLVP, stock = NULLVP, resolved = NULLVP;
+@@ -6000,7 +5997,18 @@
+ 	if (dir != NULLVP) {
+ 		vnode_put(dir);
+ 	}
+-	printf("A03 wallpaper catalog: alias result=%d\n", error);
++	printf("A03 wallpaper alias: %s result=%d\n", target, error);
++}
++
++void
++a03_install_wallpaper_catalog(vnode_t root)
++{
++	a03_install_wallpaper_alias(root, "/Library/Wallpaper/Collections",
++	    "/Library/Wallpaper/Collections/Collections~iphone.plist",
++	    "/Library/Wallpaper/Collections/Collections.plist", "Collections~iphone.plist");
++	a03_install_wallpaper_alias(root, "/Library/Wallpaper",
++	    "/Library/Wallpaper/DefaultWallpapers~iphone.plist",
++	    "/Library/Wallpaper/DefaultWallpapers~ipod.plist", "DefaultWallpapers~iphone.plist");
+ }
+ #endif
+ 
