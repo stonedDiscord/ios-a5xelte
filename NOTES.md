@@ -1,3 +1,12 @@
+ACTIVE latest0125 reproduced retirement failure at10935actualGPUcopies.
+0192stage5=missingfreshCLEAN_INVcompletion; jobdone1/JSidle/MMU0/ASfault0,
+rawGPU600(no bit17), translationretained. Longprintftruncatedafterclock38;
+strictparserrejects(no fabricatedfields). Separate10935/391verified/67idle/
+quarantine1/powered1/0fallback. Vsyncadvances/displayrequest1/swapinflight,
+so currentfreezeNOTnormalsleep. NOreset/reclaim/ASteardown/poweroff/CPUoverwrite.
+Privateboot0125-retire-soak-live.log+secondtrial.log. CPU0124restoreavailable.
+Nextshorterdiagnosticrecords+cleancompletionrootcause;goalactive/notfixed.
+
 ACTIVE03:08UTC0125diagnosticactualcompositor10025copies(no replay)no fault,then
 4requestedreadbacksPASS+backgroundverifyframes->10412completed391verified,
 0fallbackquarantine/idle63. OFFbusydeclinesexplicitlyhandled; confirmedOFFpowered0

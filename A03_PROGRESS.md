@@ -1,5 +1,30 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: second BOOT0125 sustained trial reproduces cache-clean failure
+
+Supersedes the preceding no-recurrence checkpoint. After re-enabling the same
+cached/warm384MHz fast policy, actual compositor copies advanced10412->10935,
+then0192 recorded stage5: fresh GPU CLEAN_INV completion missing. Job completion
+was observed (submitted1/done1/irq00000002), JS/state/NEXT/ASstatus were zero,
+MMU/ASfault zero, GPU RAW00000600 (clean-completion bit17 absent), AS translation
+retained (lo049e4000/hi00000001/cfg62000006). The console truncated the long
+snapshot after clock=38; idle-releases is missing, so the strict report parser
+correctly rejected it. Do not infer the missing fields from this line. Separate
+status confirms10935completed/391verified/67idle-releases/quarantine1/powered1,
+0fallback, lastattempt54.064269ms/execute2.374230ms/retire0.
+
+Read-only follow-up confirms vsync callbacks still advance (99779), display
+request last-value1, swap entered12391/done12390 and copies12386 stopped; touch
+stream remainsON. This failure is not explained by normal display sleep. It
+identifies a missing cache-clean acknowledgement, not yet its root cause.
+No reset, scratch reclaim, AS teardown, power-down or CPU overwrite was tried
+under quarantine. Reboot is required before more GPU trials. Private evidence:
+boot0125-retire-soak-live.log and boot0125-retire-secondtrial.log. CPU-control
+BOOT0124 remains available. Next: shorten diagnostic records below console
+format limits, investigate clean-command completion and retain strict guards.
+Basic GPU goal remains active; physical reports of temporary working UI do not
+establish sustained reliability.
+
 ## 2026-11-21 03:08UTC: sustained diagnostic trial10412copies, no recurrence; leftOFF
 
 BOOT0125actualcompositortrial(no replaysbefore10025completed) passesprevious

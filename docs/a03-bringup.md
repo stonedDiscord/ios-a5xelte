@@ -1,14 +1,14 @@
 # Galaxy A03 SM-A035G bring-up
 
-Current GPU checkpoint (November21,2026): sustained compositor activity on
-BOOT0123 exposed a retirement failure after2041GPUcopies. The driver retained
-DMA mappings/source and suppressed panel writes; earlier static stress and idle
-cycle passes did not establish sustained UI reliability. CPU-control BOOT0124
-is now flashed using the exact same kernel with automatic GPU opt-in removed.
-BOOT0125/CI44856061555 adds a failure-only stage/register snapshot. Its
-subsequent sustained trial reached10025actualcompositorcopies without recurrence,
-but does not fix the earlier intermittent failure. GPU is explicitly OFF. Prior paired tests measured real submitting-thread CPU offload, but the
-basic GPU goal remains incomplete. See newest A03_PROGRESS.md and NOTES.md.
+Current GPU checkpoint (November21,2026): BOOT0125 reproduced the sustained
+compositor failure at10935 completed GPU copies. Diagnostic stage5 identifies
+missing fresh GPU cache-clean completion after job completion and slot retirement.
+DMA/source mappings remain quarantined and panel writes stop. Vsync continues
+and the last display request is ON, so this occurrence is not normal sleep.
+The long diagnostic record was truncated; missing fields remain unknown. The
+strict parser rejects it. CPU-control BOOT0124 is available for reboot recovery.
+Earlier passes and submitting-thread CPU savings do not establish sustained
+reliability; basic GPU goal remains incomplete. See A03_PROGRESS.md and NOTES.md.
 
 2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host
 sync repairs only the running calendar. User requires autonomous time on
