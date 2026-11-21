@@ -1,3 +1,9 @@
+ACTIVE02:50UTCBOOT0125diagnosticGPUONauto4readbacks+fastPASS. ActualHomewake+
+USBswipeupactivity292completed0fault(4verified),idle11/384waitcachedwarm1.
+FWtouchON1017events0/storagehealthy. Needlongeractualactivityuntilstagecapture;
+shortpassdoesnotfix0123failure. NoCI,0124CPUrestoreavailable. Sole159238/
+session38202boot0125-retire-live.loguntil~03:12UTC.Goalactive/physicalpending.
+
 ACTIVE02:42UTCBOOT0125snapshotBOOT-onlyflashSUCCESS CI44856061555/exact2d4bf90,
 sixsources/RTC/reverse0192/checksum/SMP/actualASanPASS. Kernelafa07d30...caccd38/
 BOOT7a0dbc94...3e12fa3;same8cores1984MiB/cmd593a03gpu=1. Newsole/session38202

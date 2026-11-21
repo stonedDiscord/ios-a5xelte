@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:50UTC: diagnostic boot active; actual compositor reproduction ongoing
+
+BOOT0125all8SGI/RTChealthy; volatileFWload0/A55A/touchON1017events0/storage
+ready1poison0. Automatic4fullreadbacks->fast/nohostGPUcontrolsverifierPASS.
+FirstHomeprecedesrawpower0/noframes; secondHomeafteridleproducesrequest1/
+36newframes. OneexplicitUSBswipeup then~249newactualcompositorframes; atlast
+snapshot292completed/4verified/0fallbackquarantine, idle-releases11/384wait/
+cachedwarm1. This isnewcompositorinput-triggeredactivity, notphysicaltouch
+acceptance. Sustainedfailurehasnotyetrecurred; nofixclaim. Needlongeractual
+activityand0192failurestage ifitrecurs. NoactiveCI. CPUcontrol0124restoreavailable.
+Sole159238/session38202boot0125-retire-live.loguntil~03:12UTC. Goalactive.
+
 ## 2026-11-21 02:42UTC: diagnostic0192 CI success; BOOT0125 flashed
 
 CI44856061555 SUCCESS exact2d4bf9085c197989dc30c05491268fad01debeb4.
