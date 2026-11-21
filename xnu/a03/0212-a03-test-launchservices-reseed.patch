@@ -1,0 +1,45 @@
+--- a/bsd/vfs/vfs_syscalls.c
++++ b/bsd/vfs/vfs_syscalls.c
+@@ -6121,2 +6121,38 @@
+ 
++/* Move one observed LaunchServices cache aside so lsd can seed it again. */
++static void
++a03_archive_launchservices_cache(vnode_t root)
++{
++	char uuid[38] = { 0 };
++	char path[192], archived[200];
++	if (!PE_parse_boot_argn("a03lscache", uuid, sizeof(uuid)) ||
++	    strlen(uuid) != 36 || vfs_isrdonly(vnode_mount(root))) {
++		return;
++	}
++	for (unsigned i = 0; i < 36; i++) {
++		const char c = uuid[i];
++		if (i == 8 || i == 13 || i == 18 || i == 23) {
++			if (c != '-') {
++				return;
++			}
++		} else if (!((c >= '0' && c <= '9') || (c >= 'A' && c <= 'F'))) {
++			return;
++		}
++	}
++	snprintf(path, sizeof(path), "/private/var/mobile/Containers/Data/InternalDaemon/%s"
++	    "/Library/Caches/com.apple.LaunchServices-4029-v2.csstore", uuid);
++	snprintf(archived, sizeof(archived), "%s.a03-old", path);
++	vfs_context_t ctx = vfs_context_kernel();
++	vnode_t vp;
++	int error = vnode_lookup(path, VNODE_LOOKUP_NOFOLLOW, &vp, ctx);
++	if (error == 0) {
++		bool valid = vnode_vtype(vp) == VREG && vnode_mount(vp) == vnode_mount(root);
++		vnode_put(vp);
++		error = valid ? renameat_internal(ctx, AT_FDCWD, CAST_USER_ADDR_T(path),
++		    AT_FDCWD, CAST_USER_ADDR_T(archived), UIO_SYSSPACE,
++		    RENAME_EXCL | RENAME_NOFOLLOW_ANY) : EINVAL;
++	}
++	printf("A03 LaunchServices cache archive: result=%d\n", error);
++}
++
+ void
+@@ -6132,2 +6168,3 @@
+ 	a03_install_poster_extension_point(root);
++	a03_archive_launchservices_cache(root);
+ }

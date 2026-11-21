@@ -213,7 +213,8 @@ def main():
                      '0208-a03-provider-registration-logs.patch',
                      '0209-a03-install-poster-extension-point.patch',
                      '0210-a03-poster-plugin-seeding-evidence.patch',
-                     '0211-a03-poster-scanner-evidence.patch'):
+                     '0211-a03-poster-scanner-evidence.patch',
+                     '0212-a03-test-launchservices-reseed.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
