@@ -1,3 +1,14 @@
+ACTIVE03:49UTCBOOT0126actualcompositor1482GPUcopies/4verified0fallbackquarantine,
+idle10; no replay/GPUcontrols. Sole168765/session9363 boot0126-boundary-live.log
+until~04:12UTC. Firstsoak67126boot0126-compositor-soak.log600sfrom03:45requires
+12000copiesbut~10Hzcannotreach;intermediateonly. Chainedobserver88566waits
+ONLYinsufficientcountterminalthen1800s/12000unchangedgate ->
+boot0126-compositor-longsoak.log; noinput/replay/GPUcontrols. Checkhandlesfirst.
+Renewsolecapturebeforerunninglongsoakpast04:12(and observerlogpathmustmatch).
+Physicalimage/swipequestionpending. NoCI.0193jobendcleanNOTyetfixclaim.
+Onquarantineparse0194fourrecordsandretainDMA/noreset/reclaim/poweroff/overwrite.
+CPU0124restoreavailable;goalactive/readbacks+idle+paired+physicalstillneeded.
+
 ACTIVE03:45UTCBOOT0126autobootPASS4full+fast/nopriorGPUcontrolsorreplays.
 ONcachedwarm384/defaultwait/tile4/idle100;5completed4verified0fault/idle3.
 OneHomeafterrequest0+USBswipeupdispatch;actualsoak67126logboot0126-compositor-soak.log
