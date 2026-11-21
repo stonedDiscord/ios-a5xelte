@@ -1,0 +1,12 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -122,7 +122,8 @@
+         if (copyinstr(path, text, sizeof(text), &copied) != 0 || copied <= 1) return;
+         static const char lookup[] = "/Library/Wallpaper/DefaultWallpapers";
+         if (strncmp(text, lookup, sizeof(lookup) - 1) &&
+-            strncmp(text, "/Library/Wallpaper/", 19) &&
++            strcmp(text, "/Library/Wallpaper/Collections/Collections.plist") &&
++            (!strnstr(text, "/7400.", copied) || code != SYS_open) &&
+             strcmp(text, "/var/mobile/Library/SpringBoard/LockBackground.jpg") &&
+             strcmp(text, "/var/mobile/Library/SpringBoard/HomeBackground.jpg") &&
+             ((!strnstr(text, "PosterBoard", copied) && !strnstr(text, "PosterKit", copied) &&
