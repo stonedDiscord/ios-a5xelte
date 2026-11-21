@@ -30,7 +30,31 @@ def alias(directory, name, target, defaults=False):
     check(catalog, defaults)
 
 
+def stage_poster_extension_point(root):
+    identifier = 'com.apple.posterkit.provider'
+    framework = '/System/Library/PrivateFrameworks/PosterKit.framework'
+    cache = root / 'System/Library/xpc/extensions.plist'
+    definition = plistlib.loads(cache.read_bytes())[identifier][framework]
+    configuration = definition['EXExtensionPointConfiguration']
+    if (definition['NSExtension']['NSExtensionPointIdentifier'] != identifier
+            or configuration['EXExtensionPointIsPublic'] is not False
+            or configuration['EXRequiredEntitlements'].get(
+                'com.apple.runningboard.posterkit.host') is not True):
+        raise ValueError('unexpected PosterKit extension point policy')
+
+    directory = root / 'System/Library/ExtensionKit/ExtensionPoints'
+    path = directory / f'{identifier}.appexpt'
+    record = {identifier: dict(definition['NSExtension'], **configuration)}
+    try:
+        with path.open('xb') as stream:
+            plistlib.dump(record, stream)
+    except FileExistsError:
+        if plistlib.loads(path.read_bytes()) != record:
+            raise ValueError(f'{path} differs from the stock definition')
+
+
 def stage(root):
+    stage_poster_extension_point(root)
     directory = root / 'Library/Wallpaper'
     alias(directory / 'Collections', 'Collections.plist', 'Collections~iphone.plist')
     alias(directory, 'DefaultWallpapers~ipod.plist', 'DefaultWallpapers~iphone.plist', True)
