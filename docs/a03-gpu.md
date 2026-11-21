@@ -2,11 +2,18 @@
 
 ## Active checkpoint — November 21, 2026
 
-BOOT0119 / CI44840823838 /7607421 is hardware validated for full-frame
-GPU copies with one independently acknowledged end clean. CPU rendering still
-produces the source surfaces; Metal/EAGL rendering support is not implemented.
-The acceleration goal is unfinished: GPU copy latency remains above CPU
-latency, and sustained physical UI acceptance has not been established.
+BOOT0123 / CI44853265071 /bc4137c is the current hardware-validated
+framebuffer-copy checkpoint. It boots with a03gpu=1, qualifies four full
+readbacks before fast copies, releases retired GPU power after100ms idle,
+and resumes on the next frame. The first512-copy stress and twelve cold
+resumes pass with zero fallback/quarantine. Source rendering remains CPU-only;
+full Metal/EAGL support is deferred under the requested basic milestone.
+
+Paired BOOT0121 measurements establish39.7-42.1% less submitting-thread CPU
+time, while GPU wall latency remains higher than CPU copying. Physical image
+and swipe acceptance and unplugged boot remain unverified. The goal is active.
+The following optimization table and dated checkpoints are historical evidence;
+use the latest A03_PROGRESS.md and NOTES.md for running-device state.
 
 | Controlled test | GPU median | Result |
 | --- | --- | --- |
@@ -20,9 +27,9 @@ latency, and sustained physical UI acceptance has not been established.
 Each accepted comparison uses four fresh full-frame readbacks and three
 alternating eight-copy CPU/GPU rounds. The first BOOT0118 512MHz run was
 rejected for extra background CPU copies;1.983ms is the uncontaminated retry.
-These are synchronous copy timings, not animation FPS. All accepted trials
-have zero fallbacks/quarantine. Defaults remain GPUOFF,384MHz,impldef0,tile4;
-cached/warm operation is explicit and full verification is the bring-up default.
+These are historical synchronous copy timings, not animation FPS. All accepted
+trials have zero fallbacks/quarantine. Before0190 they used explicit cached/warm
+operation with GPUOFF between trials; BOOT0123 uses the opt-in policy above.
 
 0187 passes hardware full readback and paired timings in BOOT0119. Cached
 framebuffer jobs omit the duplicate automatic end flush while preserving start
@@ -30,8 +37,8 @@ invalidation and the independently acknowledged GPU CLEAN_INV after slot
 retirement. CPU readback, AS disable, fallback and shutdown remain after that
 completion. The source read-only mapping is cleaned to PoC; descriptor/job
 flushes remain. The last512MHz attempt measured1.309ms execution,0.392ms
-source/descriptor cache preparation and0.094ms mapping setup. GPU512MHz is
-still18.3% slower than its pairedCPU median, so normal GPU copying stays OFF.
+source/descriptor cache preparation and0.094ms mapping setup. GPU512MHz
+was18.3% slower than its pairedCPU median, so BOOT0119 was left OFF.
 See A03_PROGRESS.md and NOTES.md for the current reader, image hashes and
 unfinished physical UI/performance gates.
 
@@ -41,12 +48,11 @@ Fresh full-frame readbacks pass for both polling policies at both rates. At
 These differences do not establish a useful gain. The first attempt at each rate
 was rejected for background copies; accepted retries retain exact counts.
 Keep default pollwait: existing XNU already initializes a periodic WFE event
-stream, and these results do not establish a WFE bug. GPU remains OFF.
+stream, and these results do not establish a WFE bug. BOOT0120 was left OFF.
 
-Candidate0189 adds submitting-thread CPU-runtime counters alongside wall time,
-so blocked waiting can be distinguished from CPU work. It does not measure
-all system CPU or source rendering. Full CI and hardware validation remain
-pending; see active progress/handoff for the exact run. No offload benefit claim.
+0189 added submitting-thread CPU-runtime counters alongside wall time. Its
+subsequent BOOT0121 validation follows; these counters do not measure total
+system CPU or source rendering.
 
 BOOT0121 / CI44846854268 /3d14c72 now measures submitting-thread CPU
 runtime as well as elapsed copy time. In the repeated full comparison:
@@ -62,7 +68,8 @@ or GPU source rendering. Both policies passed fresh full pixel readbacks and
 three paired eight-copy rounds, with zero fallback/quarantine. An earlier valid
 trial had a final host-report serialization error after restoration;3df1c3a fixes
 that key and adds a full-success regression. The complete retry emits valid JSON.
-Physical and sustained UI acceptance plus deployment policy remain outstanding.
+At that checkpoint physical acceptance and deployment policy remained pending;
+BOOT0122/0123 validate deployment below. Physical acceptance is still pending.
 
 BOOT0122 / CI44849933946 attempt2 /e8306f9 validates automatic startup via
 a03gpu=1: the first compositor frames activate cached/warm384MHz/defaultwait,
@@ -72,8 +79,8 @@ power-down request. This is host-command independence with USB connected;
 physically unplugged boot and visible UI correctness remain unverified.
 Its512-copy stress passes with four final readbacks, wall1.989ms and submitting
 thread0.832ms per copy, zero fallback/quarantine. Warm power remains on during
-idle, so the running trial is explicitly OFF pending0191 idle-release hardware
-validation. Candidate0191 uses the existing serialized vsync timer to release
+idle, so BOOT0122 was left OFF pending0191 hardware validation. BOOT0123
+uses the existing serialized vsync timer to release
 retired owned GPU power after100ms; it never powers down quarantined DMA.
 
 BOOT0123 / CI44853265071 /bc4137c validates0191 automatic idle release.

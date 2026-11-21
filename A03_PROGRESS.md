@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:24UTC:64more cold cycles and current-image CPU offload PASS
+
+BOOT0123enabledidlepolicy unchanged.64additional observedpoweroff/coldresumes
+PASS(completed562..625,releases82..145), mediancold2.650231ms,min2.417576,
+max2.954807. FourfreshfullreadbacksaftersoakPASS; restoredfastON/powered0,
+629completed/12verified/147releases/0fallbackquarantine,touchON1817events0,
+storageready1poison0. Current0123paired3roundsx8PASS: CPUwallmedian1.532567/
+GPU2.065918ms; submitterCPU1.533552/GPU0.821230ms(46.45%less). Thisisactual
+copyCPUoffload, notfasteranimation/system/renderingCPUclaim. NoactiveCI.
+
+OneexplicitHome+swipeup diagnosticsequence started02:24UTC aftermeasurements
+tocollectnewcompositorframes; distinctfromphysicaltouch. Physicalanswerstill
+pending. Noextrashader/kernelchangejusttopassreplays. Docsactivecheckpoint
+correctedfromstale0119/OFF to0123automaticidlepolicy. Goalactive.
+Sole154528/session47211boot0123-idle-live.loguntil~02:42UTC.
+
 ## 2026-11-21 02:20UTC: BOOT0123 idle/cold/stress hardware validation complete
 
 512stresscopiesPASS+4freshfullreadbacks,0fallbackquarantine. Meanwall2.055193ms,
