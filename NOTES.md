@@ -1,3 +1,11 @@
+ACTIVE00:30UTC CI44844162892/exactcc4576ae04936dc1621b7621cc07ba698df31d7f
+in_progress0188counterpoll. No duplicate. Hostratehelperrestorekeytestfailed,
+fixeda5f75eb/allbenchmarktestsrerunPASS; kernelcandidateunchanged.
+Privategpu-poll-work/artifacts.py+pack0120.py pinexactrun/sixsources/RTC/
+reverse0188/checksum/SMP. Needfullsuccess->actualASan->BOOT-only0120->four
+readbacks/pairedpollwait-pollspin/rates->restore. Current0119GPUOFFpowered0/
+384verify1touchON;sole133832/session39451until~00:48UTC.Goalactive.
+
 ACTIVEcandidate0188explicitpollspin(counterbounded10usgap) vsdefaultpollwait
 (delayusesWFEcanovershootuntilunrelatedIRQ). Framebufferonly; iterationtimeouts/
 faults/cacheclean/retirementunchanged. ActualDMAASan+modes0..7/ratehelper/ARM64/

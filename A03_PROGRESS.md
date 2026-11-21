@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:30UTC: polling CI active; host restore regression fixed
+
+CI44844162892 in_progress exactcc4576ae04936dc1621b7621cc07ba698df31d7f.
+No duplicate/restart. Kernelcandidate unchanged; hostclockhelper mistakenly
+editedtuplekey wascaughtbyfailure-restorationtest and fixedcommit a5f75eb;
+allhostbenchmarktests rerunPASS. Privategpu-poll-work/artifacts.py+pack0120.py
+pinexactrun/sixsources/RTC/reverse0188/checksum/SMP. Needfullsuccess->actualASan/
+BOOT-only0120->readbacks+pairedpollwait/pollspin at384and512->restoredefault.
+Current0119GPUOFFpowered0/384verify1touchON,sole133832/session39451until~00:48UTC.
+
 ## 2026-11-21 00:29UTC: counter-bounded polling candidate0188
 
 Previous goal turn progressed through0182..0187 hardware comparisons and
