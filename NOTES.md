@@ -1,3 +1,10 @@
+ACTIVE01:10UTCBOOT0121runtime BOOT-onlyflashSUCCESS correctCI44846854268/
+3d14c72/fullsource22.6.0/sixsources/RTC/reverse0189/checksum/SMP/actualASanPASS.
+Kernel320e5407...d99f0ae/BOOTa4f3c20b...6a8346;same8cores1984MiB/ADT0094/cmd599.
+Solecapture/session9510boot0121-runtime-live.logwaitingCDC. Needclocks/cachedwarm/
+FWload/touchON/acceptedframe->GPUOFF->pairedwall/submitterCPU384/512/readbacks.
+Wrongsource44846779804cancelled; replacementSUCCESS. Goalactive,nobenefitclaim.
+
 ACTIVE00:57UTC runtimeCI44846854268 exact3d14c72 stillPENDING behind44846779804
 wrongsource run. Normalcancel andforce-cancel202accepted but wrongrunstill
 in_progressDeps; authoritativeAPI notterminal, donotrestartreplacement. Sole

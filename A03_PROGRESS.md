@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:10UTC: runtime observer CI success; BOOT0121 flashed
+
+Correctsource CI44846854268 SUCCESS exact3d14c720278607e27fe4142b167a8fc9380e7759.
+Wrongsource44846779804 terminalCANCELLED; noacceptedartifact. Sixsourcesmatch/
+RTCunchanged/XNU22.6.0/reverse0189/checksum/SMP/actualruntime+DMA+rate+replay
+ASanUBSanPASS. KernelSHA256
+320e5407e65c1dc826917d27d9a84510aa595563e8e0fc13a12af09dbd99f0ae.
+BOOTSHA256a4f3c20b8646e40483344a426f00565aa10cf00d3b2dd6578e8bad15b46a8346.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncDownload->BOOT-only
+HeimdalluploadSUCCESS/reboot. Solecapture session9510 boot0121-runtime-live.log
+waitsCDC. Needclocks/cachedwarm/touchFW/acceptedframe->GPUOFF->fourreadbacks+
+pairedsubmitterCPU/walltime384/512(defaultwait,optionalspin)->restore. Goalactive;
+no0189hardwaremeasurement/physicalUI claimyet. Prior0120allreadbacksPASS but
+GPU~1.96ms remains aboveCPU~1.67ms. TimerauditfoundcorrectMesa v9dispatch;
+noGPUQoS/PLL/PMIC/IRQ changesmade.
+
 ## 2026-11-21 00:57UTC: runtime CI queued; BOOT0120 restoration rechecked
 
 Replacement44846854268 exact3d14c72 pending behindwrongsource44846779804.
