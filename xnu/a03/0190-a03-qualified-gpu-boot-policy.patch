@@ -1,0 +1,70 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -4,6 +4,7 @@
+ #include <sys/param.h>
+ #include <sys/systm.h>
+ #include <kern/clock.h>
++#include <pexpert/pexpert.h>
+ #include <machine/machine_routines.h>
+ extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
+ extern void CleanPoC_DcacheRegion(vm_offset_t, size_t);
+@@ -317,10 +318,11 @@
+ static uint32_t a03_gpu_warm_override;
+ static uint64_t a03_gpu_blit_phase[8];
+ static unsigned a03_gpu_poll_spin;
++static unsigned a03_gpu_boot_checked;
+ static uint64_t a03_gpu_poll_count,a03_gpu_poll_wait_ticks;
+-/* ARM delay() uses WFE and has no deadline wake event in this port. For an
+- * explicitly selected framebuffer policy, bound the short inter-poll gap by
+- * the architectural counter instead. No interrupt masks or global timer changes. */
++/* Explicit comparison against delay(), which can block/reschedule or use
++ * WFE with the initialized periodic timer event stream. Counter polling has
++ * no measured latency benefit and remains opt-in; default wait saves CPU. */
+ static void a03_gpu_poll_gap(void) {
+     if(a03_gpu_job_requested!=3 || !a03_gpu_poll_spin){delay(10);return;}
+     uint64_t ticks=0;nanoseconds_to_absolutetime(10000,&ticks);
+@@ -808,6 +810,7 @@
+ void a03_gpu_blit_control(unsigned enable);
+ void a03_gpu_blit_control(unsigned enable) {
+     if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
++    if(enable!=2)a03_gpu_boot_checked=1; /* explicit policy always overrides boot opt-in */
+     if(enable==18 || enable==19)a03_gpu_poll_spin=enable==19;
+     if(enable==16 || enable==17)a03_gpu_clock_rate(enable==16?1:2);
+     if(enable>=13 && enable<=15 && !a03_gpu_job_poisoned && a03_gpu_blit_memattr!=enable-13) {
+@@ -841,6 +844,28 @@
+ /* Return1 copied and readback verified,0 safe CPU fallback,-1 possible DMA.
+  * Caller retains source+panel mappings until return; on-1 retain indefinitely
+  * and suppress all further panel writes until reboot. No userspace GPU ABI. */
++/* Opt-in deployment path: initialize once under the shared GPU owner when
++ * the first compositor frame arrives. No host command or unsafe early MMIO.
++ * The normal four-full-readback gate still precedes all unverified copies. */
++static void a03_gpu_boot_policy(void) {
++    if(a03_gpu_boot_checked)return;
++    a03_gpu_boot_checked=1;
++    unsigned requested=0;
++    if(!PE_parse_boot_argn("a03gpu",&requested,sizeof(requested)) || requested!=1)return;
++    if(a03_gpu_job_poisoned || a03_gpu_blit_enabled || a03_gpu_blit_cached || a03_gpu_blit_warm) {
++        printf("A03 GPU boot: policy already changed; leave explicit policy in control\n");return;
++    }
++    a03_gpu_clocks_owned();
++    if(!a03_gpu_regs || !a03_gpu_apb || a03_gpu_read(a03_gpu_regs,0)!=0x90910010U ||
++       (a03_gpu_read(a03_gpu_apb,4)&0x771U)!=0x11U ||
++       (a03_gpu_read(a03_gpu_apb,8)&0x771U)!=0x11U ||
++       (a03_gpu_read(a03_gpu_apb,12)&0x71U)!=0x31U) {
++        printf("A03 GPU boot: clock preflight failed; keep CPU copies\n");return;
++    }
++    a03_gpu_blit_cached=1;a03_gpu_blit_warm=1;a03_gpu_blit_verify=0;
++    a03_gpu_blit_verified=0;a03_gpu_blit_enabled=1;
++    printf("A03 GPU boot: cached warm384 defaultwait; four full readbacks before fast copies\n");
++}
+ int a03_gpu_framebuffer_blit(uintptr_t source,uintptr_t destination,uint64_t physical,
+     unsigned source_stride,unsigned destination_stride,unsigned width,unsigned height);
+ int a03_gpu_framebuffer_blit(uintptr_t source,uintptr_t destination,uint64_t physical,
+@@ -848,6 +873,7 @@
+ {
+     if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return -2;
+     int result=0;
++    a03_gpu_boot_policy();
+     if(a03_gpu_job_poisoned){result=-1;goto out;}
+     if(!a03_gpu_blit_enabled)goto out;
+     if(!a03_gpu_blit_geometry(source,destination,physical,source_stride,destination_stride,width,height,

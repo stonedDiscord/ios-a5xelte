@@ -42,6 +42,8 @@ static int capture(const char*fmt,...){
 #define printf capture
 static void delay(unsigned n){us+=n;assert(us<2000000);}
 int a03_gpu_supply_status(uint32_t*p,uint32_t*v){*p=0;*v=320;return 1;}
+static unsigned boot_requested;
+static int PE_parse_boot_argn(const char *name,void *value,int size){assert(!strcmp(name,"a03gpu")&&size==sizeof(unsigned));*(unsigned *)value=boot_requested;return boot_requested!=0;}
 static uint8_t source_mem[0x800000] __attribute__((aligned(16384)));
 static uint8_t dest_mem[0x468000] __attribute__((aligned(16384)));
 static uint8_t gpu_dirty[0x468000]; /* cached writes invisible until clean */
@@ -280,6 +282,27 @@ int main(void){
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''
+if 'static void a03_gpu_boot_policy(void)' in src:
+ tests=tests.replace('static void reset(unsigned m){','static void reset(unsigned m){'+chr(10)+' boot_requested=0;a03_gpu_boot_checked=0;')
+ extra=r"""
+ reset(0);a03_gpu_blit_enabled=0;assert(blit(53,17)==0&&a03_gpu_boot_checked);
+ boot_requested=1;assert(blit(53,17)==0&&!a03_gpu_blit_enabled); /* check once, no late surprise */
+ reset(0);a03_gpu_blit_enabled=0;boot_requested=2;assert(blit(53,17)==0&&!a03_gpu_blit_enabled);
+ reset(0);a03_gpu_blit_enabled=0;boot_requested=1;a03_gpu_blit_control(0);assert(blit(53,17)==0&&!a03_gpu_blit_enabled);
+ reset(0);a03_gpu_blit_enabled=0;boot_requested=1;a03_gpu_blit_control(2);assert(!a03_gpu_boot_checked);
+ reset(0);a03_gpu_blit_enabled=0;boot_requested=1;expect_cached=1;
+ assert(blit(53,17)==1&&a03_gpu_blit_enabled&&a03_gpu_blit_cached&&a03_gpu_blit_warm&&!a03_gpu_blit_verify&&a03_gpu_blit_verified==1);
+ for(unsigned i=0;i<3;i++){us=starts=flushes=0;assert(blit(53,17)==1);}
+ assert(a03_gpu_blit_verified==4);
+ a03_gpu_blit_control(0);assert(blit(53,17)==0&&!a03_gpu_blit_enabled); /* OFF remains respected */
+ reset(0);a03_gpu_blit_enabled=0;boot_requested=1;a03_gpu_blit_cached=1;
+ assert(blit(53,17)==0&&!a03_gpu_blit_enabled); /* explicit policy wins */
+ reset(0);a03_gpu_blit_enabled=0;boot_requested=1;bank[2][1]=0;
+ assert(blit(53,17)==0&&!a03_gpu_blit_enabled&&!starts); /* failed preflight */
+ """
+ tests=tests.replace('int main(void){','int main(void){'+extra)
+else:
+ header=header.replace('static unsigned boot_requested;','static unsigned boot_requested __attribute__((unused));').replace('static int PE_parse_boot_argn','static int __attribute__((unused)) PE_parse_boot_argn')
 with tempfile.TemporaryDirectory(prefix='a03-blit-') as temp:
  check=r'''
 static void check_shader(unsigned specialized){

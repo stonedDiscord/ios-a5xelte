@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:23UTC: wait preserves CPU offload; stress PASS; boot policy0190
+
+Actualpoll384comparison: wait CPUwall1.674567/GPU2.078538ms, submitterCPU
+1.674889/GPU0.870961ms. Counterspin CPUwall1.722745/GPU2.022442ms, submitter
+CPU1.723072/GPU1.934687ms. Thus busyspin removesCPUoffload for littlewallgain;
+defaultwait retained. New boundedstress helper runs64x8 acceptedframecopies
+thenfourfreshfullreadbacks; actual512fastcopies PASS0fallback/quarantine,
+meanwall2.014929ms/submitter0.869928ms, final4readbacksPASS. RestoreOFF/verify
+confirmed384APB11/11/31pollwaitcachedwarm1;698completed/804096000pixels/
+16verified0fault,touchON1680events0/storageready1poison0. Physicaltrial previously
+added10actualGPUframes126vs116 thenrawpower0sleep; noactualtouchevents or
+physicalanswer. Goalstillactive, sourceCPUrenderingunchanged.
+
+0190 opt-in a03gpu=1 initializes validated clocks once under sharedowner at
+firstcompositorframe; cached/warm384/defaultwait and fastAFTERexistingfourfull
+readbacks. Missing/invalidarg preservesdefaultOFF; explicitcontrols override
+bootinitialization includingOFFbeforefirstframe; read-onlystatusdoesnotdisable
+optin. AnyfailedpreflightkeepsCPU, uncertainDMAstillquarantines. NoUSBneeded
+forGPUstart, touchFWstillvolatilehostrestore. CorrectedobsoleteWFEcomment.
+ActualDMAASan bootarg/missing/invalid/once/OFF/explicitpolicy/preflightcases,
+rateASan/ARM64GPUAMFI/profile136PASS. NeedfullCI/BOOT0122witha03gpu=1and
+NOhostGPUcommandsbeforefirstframe to prove deployment. Physicalacceptance
+remainspending; nofullscreenGPUsource-rendering/MetalEAGLclaim.
+
 ## 2026-11-21 01:18UTC: BOOT0121 measures genuine submitting-thread CPU offload
 
 Fullframe readbacks and two complete384/512 pairedthree8copytrials pass with

@@ -1,3 +1,11 @@
+ACTIVE01:23UTC0121stress512fast+4fullreadbacksPASS,meanwall2.014929/submitter
+0.869928ms,0fault. Pollwaitsubmitter0.871vspollspin1.935ms:keepwait. Restored
+384pollwaitGPUOFFpowered0verify1cachedwarm1/698completed16verified0fault,
+touchON1680events0/storagehealthy. Sole144533/session9510until~01:41UTC.
+0190a03gpu=1firstframequalifiedcachedwarm384bootpolicy prepared/actualASan/
+ARM64/profile136PASS; needfullCI->BOOT0122+a03gpu=1(nohostGPUcommands)proof.
+Physicaltrial10GPUframesthenpower0sleep/noevents;useranswerpending.Goalactive.
+
 ACTIVE01:18UTCBOOT0121validpairedruntime:384CPU/GPUsubmitter1.397245/0.842947ms
 (39.7%saved),5121.402822/0.812904(42.1%saved). WallGPU2.028/1.974msremains
 aboveCPU1.396/1.402. This isreal submitterCPUoffload,notFPS/system/renderinggain.
