@@ -1,3 +1,12 @@
+BOOT0141 passed CI44942293405 and BOOT-only installation. SHA-256
+9f499bef61da34cc3e066bf967b545187fdc5d206b8f577034c28350c58316ba.
+Fallback persisted across reboot (EEXIST). The capture showed no installd
+startup or accesses to either provider bundle before PIDs 233 and 332
+returned -2219 and trapped at unslid 0x1be3babac. The stock root lacks
+mobile_install, lsregister and launchctl at the inspected paths. Touch
+returned to A55A with streaming observed at 774 slices. The live reader
+is PID168525/session55680. Provider seeding remains unresolved.
+
 Patch 0210 traces installd startup and scoped wallpaper plug-in directory
 access. Patch application and A03 profile staging passed. CI44942293405
 job136961940025 builds 6749c00. Private prepare-posterboard-0141.py pins
