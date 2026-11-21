@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:30UTC: boot-policy CI network failure; exact failed-job rerun
+
+44849933946 attempt1 terminalFAILURE beforekernelcompilation: git clone of
+apple-oss-distributions/libpthread couldnotconnectgithub443 after28020ms.
+Subsequentpackagingfailsbecausebuildnotcreated. Not an0190compilerfailure;
+noartifactaccepted/nohardwarechange. Explicitghrunrerun--failed same44849933946
+requested, exactsourcee8306f9 unchanged. Do notdispatchduplicate/restartlivejob.
+Addedautonomousstartup logverifier+negativefixturesf752930: activationonce,
+fourfull720x1600readbacks beforefast, nohostGPUcontrols/replaybeforeproof.
+DoesnotclaimphysicalUI/cableindependence. BOOT0122privatepack593bytea03gpu=1
+ready; needfullCI->artifactASan->BOOT-only->nohostGPUcontrolsuntilproof.
+Current0121lastconfirmedGPUOFFpowered0/384pollwaitverify1/touchON; sole144533/
+session9510until~01:41UTC. Goalactive; physicalanswerstillpending.
+
 ## 2026-11-21 01:24UTC: qualified boot policy CI active
 
 CI44849933946 exacte8306f9e90e412a9153a44caf38ea13ed07b0d8a in_progress,
