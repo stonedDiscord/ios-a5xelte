@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:24UTC: qualified boot policy CI active
+
+CI44849933946 exacte8306f9e90e412a9153a44caf38ea13ed07b0d8a in_progress,
+job136678627018. Correct13.5/DEVELOPMENT/SWEET/A03iOS/macOS26intel/fulltree.
+No duplicate/restart. Privategpu-bootpolicy-work/artifacts.py+pack0122.py pin
+run/sixsources/RTC/reverse0190/checksum/SMP. BOOT0122plannedcmd593bytes:
+removeoptional-show_pointers from599bytebaseline, appenda03gpu=1(8bytes),
+allfunctionalflags retained. Nextfullsuccess->actualASan->BOOT-only0122->
+NOhostGPUcommands untilfirstframe, thenstatus/readbackqualification/stress/
+physicalUI;touchFWhostrestore stillneeded. Current0121confirmed384pollwait/
+GPUOFFpowered0verify1cachedwarm1/698completed16verified0fault,touchON/
+storagehealthy. Sole144533/session9510until~01:41UTC. Goalactive.
+
 ## 2026-11-21 01:23UTC: wait preserves CPU offload; stress PASS; boot policy0190
 
 Actualpoll384comparison: wait CPUwall1.674567/GPU2.078538ms, submitterCPU

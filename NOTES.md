@@ -1,3 +1,11 @@
+ACTIVE01:24UTC0190qualifiedbootCI44849933946/e8306f9e90e412a9153a44caf38ea13ed07b0d8a
+in_progressjob136678627018. No duplicate. Privategpu-bootpolicy-work/artifacts.py+
+pack0122.py exactsources/RTC/0190/SMP; cmd593remove-show_pointers+adda03gpu=1.
+Needfullsuccess->actualASan->BOOT0122->NOhostGPUcommandsuntilfirstframe;
+thenstatus/fourreadbacks/stress+physicalUI. Current0121GPUOFFpowered0/384/
+pollwaitverify1cachedwarm1/698completed16verified0fault,touchON/storagehealthy.
+Sole144533/session9510until~01:41UTC.Goalactive.
+
 ACTIVE01:23UTC0121stress512fast+4fullreadbacksPASS,meanwall2.014929/submitter
 0.869928ms,0fault. Pollwaitsubmitter0.871vspollspin1.935ms:keepwait. Restored
 384pollwaitGPUOFFpowered0verify1cachedwarm1/698completed16verified0fault,
