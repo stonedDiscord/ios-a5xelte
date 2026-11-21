@@ -13,3 +13,9 @@ for field,value in [('quarantined',1),('fallbacks',1),('completed',19),('verifie
 source=Path(m.__file__).read_text()
 assert 'blit.replay(' not in source and 'blit.command(' not in source
 print('PASS compositor soak counter/policy/quarantine guards and read-only operation')
+
+m.validate_observed_commands('A03 PROBE 1 BEGIN gpu blit\nA03 PROBE 2 BEGIN display\nA03 PROBE 3 BEGIN input swipeup\n')
+for command in ['display replay 1','display replay cpu 8','gpu blit on','gpu blit off','gpu clocks']:
+ try:m.validate_observed_commands('A03 PROBE 99 BEGIN '+command+'\r\n');assert False,command
+ except RuntimeError:pass
+print('PASS concurrent replay/GPU mutation detection; actual UI input remains allowed')
