@@ -19,7 +19,7 @@ print('PASS stress policy/complete-copy/fault/fallback/fresh-readback validation
 from contextlib import redirect_stdout
 from io import StringIO
 import tempfile
-original=dict(b,enabled=0,verify=1,cpu_copies=0,cpu_ns=0,gpu_copies=0,gpu_ns=0,frames=0,pixels=0,total_ns=0,last_ns=0,poll_gaps=0,poll_gap_ns=0)
+original=dict(b,enabled=0,verify=1,cpu_copies=0,cpu_ns=0,gpu_copies=0,gpu_ns=0,frames=0,pixels=0,total_ns=0,last_ns=0,poll_gaps=0,poll_gap_ns=0,powered=0)
 before=dict(original,enabled=1,verify=0)
 after=dict(before,frames=8,pixels=9216000,completed=12,gpu_copies=8,gpu_ns=16000000)
 qbefore=dict(after,verify=1);qafter=dict(qbefore,frames=12,pixels=13824000,completed=16,verified=8,gpu_copies=12,gpu_ns=120000000)
