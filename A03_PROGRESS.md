@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:20UTC: BOOT0123 idle/cold/stress hardware validation complete
+
+512stresscopiesPASS+4freshfullreadbacks,0fallbackquarantine. Meanwall2.055193ms,
+submitterCPU0.843793ms. Combinedautoboot/12coldresume/stress final561completed/
+646272000pixels/8verified; idle-releases82/powered0 whileenabled1fast. Default
+384APB11/11/31,pollwait,impldef0,tile4,cachedwarm1. TouchON1037slices/events0;
+storageready1poison0. LeftGPUenabled (unlike priortrials) becauseautomatic
+retiredidlepowerrelease now hardwarevalidated. NoactiveCI, worktreecleanbefore
+thisrecord. BOOT0123sourcebc4137c/CI44853265071 andexacthashes recordedabove.
+
+Goalstillactive: thisisusefulframebuffercopyCPUoffload withautoboot/idlepower/
+coldresume andexplicitOFF, notGPUsource-rendering/MetalEAGL orfasterFPS.
+Physicalimage/swipequestionstillunanswered, allrecenttouchtrials0events;
+unpluggedrestartunverified; knownPosterBoardcrashes/sleepdisplayhandlingremain
+separate. Do notinventphysicalacceptance ormarkgoalcompletefromreplaycounts.
+Sole154528/session47211boot0123-idle-live.loguntil~02:42UTC; normalpolicyON,
+idlepowered0. NextphysicalUIacceptanceandlongeractualframeobservations; keep
+anynewworkgroundedinevidence, avoidshaderchurnorCPUlatency-onlyclaims.
+
 ## 2026-11-21 02:19UTC: BOOT0123 autonomous idle release and12cold resumes PASS
 
 NoGPUcontrols/replay beforeactivation->4fullreadbacks->firstfastcopy; autoboot

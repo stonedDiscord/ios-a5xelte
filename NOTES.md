@@ -1,3 +1,12 @@
+ACTIVE02:20UTCBOOT0123normalGPUONfast/idlepowered0 validated:autoboot4fullthenfast,
+12automaticpoweroff/coldresumes,512stress+4finalreadbacksPASS0fault.561completed/
+8verified/82idlereleases; meanstress2.055193wall/0.843793submitterms.384APB11/11/31,
+pollwaitimpldef0tile4cachedwarm1. TouchON1037events0/storageready1poison0.
+Sole154528/session47211boot0123-idle-live.loguntil~02:42UTC.NoactiveCI.
+Sourcebc4137cCI44853265071/kernel985328ce...ff365ac/BOOT9f03fb56...95c9314.
+Goalactive:physicalimage/swipeanswerpending/unpluggedbootunverified;sourceCPU
+renders/MetalEAGLabsent;nofasterFPSclaim. Nextphysicalacceptance+actualframes.
+
 ACTIVE02:19UTCBOOT0123autoboot4readbacks+fastPASS/nohostGPUcontrols. Idlepower0
 observedat2and4verifiedframes.12coldcyclesPASS(releases5..16/completed34..45)
 0fault/qualificationretained,lastcoldcopies2.50-2.69ms.64x8stressnowrunning,
