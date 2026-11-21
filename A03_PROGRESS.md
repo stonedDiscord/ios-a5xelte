@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — BOOT0140 fallback result
+
+BOOT0140 passed CI44939996930 and the BOOT-only upload. Image SHA-256
+2cf3c36113835d43536a4ecc889740666c764559402321cebd3b6fb5c9b982a0.
+The migration returned 0 and lsd PID97 opened the fallback definition.
+LaunchServices then reported “Failed to fetch app bundle unit: 0” for
+com.apple.posterkit.provider. PosterBoard PID238 still returned -2219 for
+both providers and trapped at unslid 0x1be3babac. The fallback alone is
+insufficient. Investigate the definition's association with a registered
+bundle and provider discovery. Touch firmware reported A55A and streaming
+reached 588 slices. Sole reader PID152789/session66754 remains active.
+
 ## 2026-11-21 — Existing root migration
 
 BOOT0140 migration candidate 15ed2cc installs the single PosterKit fallback
