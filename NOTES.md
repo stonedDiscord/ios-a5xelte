@@ -1,3 +1,11 @@
+ACTIVE02:00UTC0191idleCI44853265071 exactbc4137cfc886f86155e08a0d95a41bc620122967
+job136689379518in_progress/noduplicate. Privategpu-idle-work/artifacts.py+
+pack0123.py sixsources/RTC/0191/SMP; same593bytea03gpu=1. Needfullsuccess->
+actualASan->BOOT0123autoboot/idlepower0/coldresume/readbacks/stress/physicalUI.
+Sole150953/session16774boot0122-bootpolicy-live.loguntil~02:19UTC;watch3854.
+Current0122OFFpowered0verify1/384pollwaitcachedwarm1/549completed8verified0fault,
+touchON1225events0/storagehealthy. Autoboot+512stressPASS,physicalpending.Goalactive.
+
 ACTIVE01:58UTC0122autoboot+512stress+4finalreadbacksPASS(mean1.988864wall/0.832096
 submitterms),0fault. RestoredOFFpowered0/384pollwaitverify1/549completed8verified,
 touchON1225events0/storagehealthy. Sole150953/session16774until~02:19UTC.

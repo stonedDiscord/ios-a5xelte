@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:00UTC: idle-release CI active, hardware checkpoint restored
+
+CI44853265071 exactbc4137cfc886f86155e08a0d95a41bc620122967/job136689379518
+in_progress; correct13.5/SWEET/A03iOS/macOS26intel/fulltree. Noduplicate.
+Privategpu-idle-work/artifacts.py+pack0123.py pinsixsources/RTC/reverse0191/
+checksum/SMP; plannedBOOT0123same593bytea03gpu=1. NeedfullCI->actualartifact
+ASan(vsynchook+DMA+rate+runtime+replay)->BOOT-only->autobootproof/idlepowered0/
+coldresumequalification/stress/physicalUI. Sole150953/session16774/log
+boot0122-bootpolicy-live.loguntil~02:19UTC; watchsession3854ci-watch.log.
+Current0122restoredexplicitOFFpowered0verify1/384pollwaitcachedwarm1,
+549completed/8verified/0fallbackquarantine,touchON1225events0/storageready1
+poison0. NoactiveGPUkeepalive. AutonomousstartuphardwarePASS, idle-release
+candidateonly, physicalanswerpending. Goalactive.
+
 ## 2026-11-21 01:58UTC: bootpolicy stress PASS; idle-release candidate0191
 
 BOOT0122autonomousproof remainsPASS (4fullreadbacks thenfast/nohostGPUcontrol).
