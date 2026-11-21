@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:17UTC: verified endclean CI success; BOOT0119 trial
+
+CI44840823838 SUCCESS exact7607421e7dfeed0c335aa22ad1c5297f452ce0ca.
+Sixsourcesexactmatch/RTCunchanged/reverse0187/checksum/SMP/actualDMA+rate+
+replayASanUBSanPASS.
+KernelSHA256a99f3c6a963a840ab2ca398807ec91e2ef4913ca7ca0e9c67d962b7edce897f9.
+BOOT0119SHA2560319667042b42bfd0fff68be935f3f6bfa6e9b02336016c73da02d69e4cbce39.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload thenBOOT-only
+Heimdalluploadsuccess/reboot00:17UTC. Sole session39451captureboot0119-endflush-live.log
+waitsCDC. Needclocks/cachedwarm/FWload/touchON/acceptedframe->GPUOFF->ratebenchmark
+384/512(eachfourreadbacks+paired3rounds8copies)->restore384/physicalUI.
+
 ## 2026-11-21 00:00UTC: single verified endclean CI active
 
 CI44840823838 in_progress exact7607421e7dfeed0c335aa22ad1c5297f452ce0ca.
