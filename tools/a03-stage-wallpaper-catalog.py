@@ -34,6 +34,18 @@ def stage(root):
     directory = root / 'Library/Wallpaper'
     alias(directory / 'Collections', 'Collections.plist', 'Collections~iphone.plist')
     alias(directory, 'DefaultWallpapers~ipod.plist', 'DefaultWallpapers~iphone.plist', True)
+    metadata = directory / 'Collections/iOS_16~iphone.wallpaperCollection/Wallpapers/7400.WWDC_2022-375w-812h@3x~iphone.wallpaper/Wallpaper.plist'
+    data = metadata.read_bytes()
+    plist = plistlib.loads(data)
+    if plist.get('logicalScreenClass') == '375w-812h@3x~iphone':
+        original = b'\x5f\x10\x13375w-812h@3x~iphone'
+        if len(data) != 536 or data[425:447] != original:
+            raise ValueError('unexpected stock wallpaper metadata layout')
+        changed = data[:428] + b'240w-533h@3x~iphone' + data[447:]
+        expected = dict(plist, logicalScreenClass='240w-533h@3x~iphone')
+        if plistlib.loads(changed) != expected:
+            raise ValueError('wallpaper metadata edit changed other values')
+        metadata.write_bytes(changed)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,62 @@
+--- a/bsd/vfs/vfs_syscalls.c
++++ b/bsd/vfs/vfs_syscalls.c
+@@ -6000,6 +6000,51 @@
+ 	printf("A03 wallpaper alias: %s result=%d\n", target, error);
+ }
+ 
++/* Adapt only the screen-class string in the verified stock default metadata.
++ * Its animation filenames have the same text and must remain unchanged. */
++static void
++a03_install_wallpaper_screen_class(vnode_t root)
++{
++	static const char path[] = "/Library/Wallpaper/Collections/iOS_16~iphone.wallpaperCollection/Wallpapers/7400.WWDC_2022-375w-812h@3x~iphone.wallpaper/Wallpaper.plist";
++	static const char original[] = "375w-812h@3x~iphone";
++	static const char adapted[] = "240w-533h@3x~iphone";
++	char data[536];
++	vnode_t vp = NULLVP;
++	vfs_context_t ctx = vfs_context_kernel();
++	struct vnode_attr va;
++	int residual = 0;
++	if (vfs_isrdonly(vnode_mount(root)) ||
++	    strcmp(vfs_statfs(vnode_mount(root))->f_fstypename, "hfs") != 0) return;
++	int error = vnode_open(path, FREAD | FWRITE | O_NOFOLLOW, 0,
++	    VNODE_LOOKUP_NOFOLLOW, &vp, ctx);
++	if (error != 0) {
++		printf("A03 wallpaper screen-class: open=%d\n", error);
++		return;
++	}
++	VATTR_INIT(&va);
++	VATTR_WANTED(&va, va_data_size);
++	error = vnode_getattr(vp, &va, ctx);
++	if (error == 0 && (vnode_vtype(vp) != VREG || vnode_mount(vp) != vnode_mount(root) ||
++	    !VATTR_IS_SUPPORTED(&va, va_data_size) || va.va_data_size != sizeof(data))) {
++		error = EINVAL;
++	}
++	if (error == 0) {
++		error = vn_rdwr(UIO_READ, vp, data, sizeof(data), 0, UIO_SYSSPACE,
++		    0, vfs_context_ucred(ctx), &residual, vfs_context_proc(ctx));
++		if (error == 0 && (residual != 0 || memcmp(data, "bplist00", 8) ||
++		    memcmp(data + 425, "\x5f\x10\x13", 3) ||
++		    (memcmp(data + 428, original, sizeof(original) - 1) &&
++		     memcmp(data + 428, adapted, sizeof(adapted) - 1)))) error = EINVAL;
++	}
++	if (error == 0 && !memcmp(data + 428, original, sizeof(original) - 1)) {
++		error = vn_rdwr(UIO_WRITE, vp, (caddr_t)adapted, sizeof(adapted) - 1,
++		    428, UIO_SYSSPACE, IO_SYNC, vfs_context_ucred(ctx), &residual, vfs_context_proc(ctx));
++		if (error == 0 && residual != 0) error = EIO;
++	}
++	int close_error = vnode_close(vp, FREAD | FWRITE, ctx);
++	printf("A03 wallpaper screen-class: result=%d close=%d\n", error, close_error);
++}
++
+ void
+ a03_install_wallpaper_catalog(vnode_t root)
+ {
+@@ -6009,6 +6054,7 @@
+ 	a03_install_wallpaper_alias(root, "/Library/Wallpaper",
+ 	    "/Library/Wallpaper/DefaultWallpapers~iphone.plist",
+ 	    "/Library/Wallpaper/DefaultWallpapers~ipod.plist", "DefaultWallpapers~iphone.plist");
++	a03_install_wallpaper_screen_class(root);
+ }
+ #endif
+ 
