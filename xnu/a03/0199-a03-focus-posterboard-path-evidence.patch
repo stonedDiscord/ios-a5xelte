@@ -27,8 +27,8 @@
 +            strcmp(text, "/Library/Wallpaper/Collections/Collections.plist") &&
 +            strcmp(text, "/var/mobile/Library/SpringBoard/LockBackground.jpg") &&
 +            strcmp(text, "/var/mobile/Library/SpringBoard/HomeBackground.jpg") &&
-+            ((!strstr(text, "PosterBoard") && !strstr(text, "PosterKit") &&
-+              !strstr(text, "SwitcherConfiguration") && !strstr(text, "Wallpaper")) ||
++            ((!strnstr(text, "PosterBoard", copied) && !strnstr(text, "PosterKit", copied) &&
++              !strnstr(text, "SwitcherConfiguration", copied) && !strnstr(text, "Wallpaper", copied)) ||
 +             (strncmp(text, "/var/", 5) && strncmp(text, "/private/var/", 13)))) return;
 +        unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
 +        do {

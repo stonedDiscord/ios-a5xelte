@@ -36,6 +36,11 @@ typedef uintptr_t user_addr_t;
 struct proc {char p_comm[17];};
 static unsigned enabled,logs,strings,headers;static uintptr_t last;
 static const char *sample_path = "path\nvalue";
+static const char *strnstr(const char *s, const char *needle, size_t limit) {
+ size_t size=strlen(needle);
+ for(;limit>=size&&*s;--limit,++s)if(!strncmp(s,needle,size))return s;
+ return NULL;
+}
 static int proc_pid(struct proc *p){(void)p;return 42;}
 static void PE_parse_boot_argn(const char *a,void *p,size_t n){assert(!strcmp(a,"a03crash_log")&&n==4);memcpy(p,&enabled,n);}
 static int copyinstr(user_addr_t a,char *b,size_t n,size_t *c){assert(c);last=a;strings++;if(a!=0x1000)return 1;assert(n==192);strcpy(b,sample_path);*c=strlen(sample_path)+1;return 0;}
