@@ -1,13 +1,14 @@
 # Galaxy A03 SM-A035G bring-up
 
-Current GPU checkpoint (November21,2026): BOOT0119 single verified end-clean
-passes actual full720x1600 GPU readbacks. Paired GPU medians are2.042ms at
-384MHz and1.969ms at512MHz, versusCPU1.677/1.665ms. GPUcopy remains opt-in
-and OFF; source rendering remains CPU-only. Native16Kpage validation reduced
-mapping setup, but measuredCPU/GPU benefit and physicalUI acceptance remain
-outstanding. BOOT0120 counter-polling comparison passes readbacks but shows
-no meaningful latency gain. Candidate0189 adds submitting-thread CPU timing;
-normal GPU copying stays OFF. See newestA03_PROGRESS.md/NOTES.md/docs/a03-gpu.md.
+Current GPU checkpoint (November21,2026): BOOT0121 measures real copy
+CPU offload: submitting-thread CPU falls from1.397 to0.843ms at384MHz,
+and1.403 to0.813ms at512MHz. GPU elapsed latency remains~2ms versusCPU~1.4ms;
+source surfaces are still CPU-rendered. A512-copy stress run plus four final
+full readbacks passes without fallback/quarantine. Physical UI acceptance is
+pending. Candidate0190 adds opt-in a03gpu=1 qualified boot deployment;
+CI44849933946 is active, with no hardware boot-policy claim yet. Normal
+copying remains OFF on the current trial. See newestA03_PROGRESS.md/NOTES.md/
+docs/a03-gpu.md for exact live state and remaining work.
 
 2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host
 sync repairs only the running calendar. User requires autonomous time on
