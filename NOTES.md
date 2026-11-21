@@ -1,3 +1,11 @@
+ACTIVE00:55UTC0189CIreplacement44846854268 exact3d14c720278607e27fe4142b167a8fc9380e7759,
+correct13.5source/SWEET/A03/macOS26intel/fulltree. Wrong26.0source44846779804
+cancelrequested; donotacceptitsartifacts. Replacementpending; noduplicate.
+Privategpu-runtime-work/artifacts.py+pack0121.py pinsixsources/RTC/0189/SMP.
+Needfullsuccess->actualASan->BOOT0121->readbacks+wall/submitterCPUcomparison.
+Current0120confirmed384pollwaitGPUOFFpowered0verify1touchON/storagehealthy.
+Sole138803/session43018until~01:14UTC.Goalactive.
+
 ACTIVE00:53UTC0120 counterpollHWbothratesPASS,nolatencygain:384GPUwait/spin
 2.035014/2.029918ms,5121.964975/1.962125ms. Firstsamples rejectedextraCPU/GPU
 backgroundcopies; acceptedretryeach4readbacks+3paired8. Restored384pollwait/

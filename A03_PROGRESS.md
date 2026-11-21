@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:55UTC: runtime observer CI dispatched on correct source baseline
+
+Exact0189sourcecommit3d14c720278607e27fe4142b167a8fc9380e7759. Run44846779804
+mistakenly usedmacos_version26.0; cancellation explicitlyrequested BEFORE
+hardware; noartifactaccepted. Replacement44846854268 uses correct13.5source,
+DEVELOPMENT/SWEET/A03/iOSuserspace/macOS26intel/fullbuildtree. Replacement
+pending behindcancelledrun; do notduplicate. Privategpu-runtime-work/artifacts.py
+andpack0121.py pinexactrun/sixsources/RTC/reverse0189/checksum/SMP. Actualruntime
+helper+DMA+replayASan/benchmarkruntime+paired/poll/rate testsPASS; profile135PASS.
+Current0120restored384pollwaitGPUOFFpowered0verify1/touchON/storagehealthy,
+sole138803/session43018until~01:14UTC. Goalactive; physicalUI and usefulGPU
+benefit unproven. NeedfullCI->actualartifacttests->BOOT0121->fourreadbacks+
+pairedwall/submitterCPU/runtime comparison, then sustainedphysicaltrial.
+
 ## 2026-11-21 00:53UTC: counter polling hardware passes; no latency gain
 
 BOOT0120 accepted384 pollwait/pollspin GPUmedians2.035014/2.029918ms,
