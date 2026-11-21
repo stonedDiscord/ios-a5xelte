@@ -1,3 +1,10 @@
+ACTIVE BOOT0137 installed from CI44934190387 at 3613443. Touch firmware
+reloaded to A55A and streaming remained active after one restart. Zero
+contact events at 690 slices. USB Home dispatch succeeded. Await physical
+gesture evidence. Sole console reader PID124506/session43309 writes
+boot0137-posterboard-live.log. Follow PosterBoard startup and the first
+selection attempt through the stderr and persistent store traces.
+
 ACTIVE BOOT0136 touch restored and capture PID116468/session62917 live.
 Temporary wallpaper rename succeeds. Persistent ordering and selected
 identifier files remain absent and PosterBoard traps. 0206 enables

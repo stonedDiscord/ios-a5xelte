@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — BOOT0137 installed and touch stream checked
+
+CI run 44934190387 passed for 3613443. Source, checksum and SMP checks
+passed, and the BOOT-only upload succeeded. Image SHA-256
+7009659b57c55baf7ada07e9f9082f1a3b72dd5cb2e578e9ea7dd61f55c69e73.
+
+The touch controller firmware reload reached ready marker A55A. The first
+stream start stopped after one invalid slice. The retry stayed active and
+reached 690 slices with zero contact events at the sampled status. A USB
+Home command returned successful dispatch. Physical touch and the UI's
+response remain unverified. The sole reader is PID 124506, session 43309.
+The capture was still showing iOS startup with no PosterBoard output at
+the same checkpoint.
+
 ## 2026-11-21: BOOT0136 traces persistent PosterBoard initialization
 
 CI44932481949 passed and BOOT-only upload succeeded. BOOT0136 SHA256
