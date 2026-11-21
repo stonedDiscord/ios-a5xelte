@@ -1,3 +1,14 @@
+BOOT0144 passed CI44950176996 and BOOT-only installation. SHA-256
+a24bde626bf494dcb089ee2fa2b2dc92f39c0da22722cc7209b2bfdd02715a2b.
+LaunchServices reopened its persisted cache and CollectionsPoster launched.
+PosterBoard PID260 created a two-plane b3a8 snapshot surface and stayed
+alive through startup and USB Home wake. Display copies rose from 35 to
+9055. The capture showed one PosterBoard launch and no PosterBoard crash
+through the 21:32 UTC checkpoint, over nine minutes after launch.
+Touch firmware reached A55A and streaming remained active. Physical panel
+content, physical touch on this boot, and persistent wallpaper selection
+were not independently verified. Reader PID203973/session2896.
+
 The stock IOSurface client reads plane width, height, offset, row bytes
 and element size at different offsets from the existing XNU result.
 0213 corrects the layout at the kernel serialization boundary. Patch
