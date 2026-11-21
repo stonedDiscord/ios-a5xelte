@@ -1,3 +1,9 @@
+ACTIVE user reported touch off; live0133 streaming0 confirmed. Restored
+private verified FW/load0/A55A; one start retry ->streaming1/49slices/events0,
+HIDstatus3. Sole100198/session91285 boot0133-touch-recovery-live.log~17:33UTC.
+Restore touch on EVERY following diagnostic boot. AssetCI44929116933success,
+BOOT0134exact-source/hash/SMP ready88193cb6...f98725, NOTflashed; phone0133.
+
 ACTIVE BOOT0133 installed; screen-class migration result0/close0 but PIDs232,
 317 still trap selectedLockPath nil.46corpse records17:16UTC; sole reader
 PID93564/session44663 to~17:21UTC. Asset evidence0203/ae05b15 compiles ARM64;

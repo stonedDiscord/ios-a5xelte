@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: touch restored after user's loss-of-input report
+
+Live BOOT0133 streamstatus confirmed streaming0/slices0/events0: touch had
+not been restored after the diagnostic reboot. Matching private79104-byte
+firmware SHA8ba14e32...a82d staged and validated, explicit controller RAM load
+returned0, readyA55A and720x1600 configuration. Initial start stopped on its
+first invalid slice; one restart succeeded. Follow-up confirms streaming1,
+49slices/events0. HID provider status3. No physical-touch acceptance yet.
+Sole capture PID100198/session91285 boot0133-touch-recovery-live.log runs
+600seconds from about17:23UTC. Restore touch after every subsequent test boot.
+
+Asset-trace CI44929116933 succeeded and exact-source/checksum/SMP packaging
+passed. BOOT0134 image88193cb613db5d23fa91da736a4ed9462e21557e1c9c3a72ade67c1decf98725
+is prepared, not flashed. Current phone remains0133 with touch streaming.
+PosterBoard crash remains unresolved; next0134 capture must include touch restore.
+
 ## 2026-11-21: BOOT0133 screen-class write succeeds but trap persists
 
 CI44927553296 succeeded and exact-source/checksum/SMP gates passed.
