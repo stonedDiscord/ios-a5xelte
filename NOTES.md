@@ -1,3 +1,8 @@
+ACTIVE BOOT0139 installed, touch ready and streaming, reader PID145876.
+LaunchServices cannot read the signed extension-point cache because it
+cannot find AMFI (ExtensionKit code 12). Investigate the signed-cache
+validator interface and verify provider discovery and wallpaper selection.
+
 ACTIVE BOOT0138 still installed. Patch 0208 mirrors lsd and pkd startup
 logs for provider registration. CI44938311489/job136949746962 builds b18d40e.
 Private prepare-posterboard-0139.py pins the build. Restore touch after BOOT test.

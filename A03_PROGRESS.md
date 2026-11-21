@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — BOOT0139 identifies the AMFI dependency
+
+CI44938311489 passed. BOOT-only upload succeeded after source, checksum
+and SMP verification. Image SHA-256
+0ec7e91cd04641227c8aebfa92da295d658f58fa50e3c7e82054d6cc507835b7.
+Touch RAM load succeeded with ready A55A and streaming reached 24 slices.
+Reader PID145876/session80234 captures boot0139-posterboard-live.log.
+LaunchServices PID97 reported extensionKit.errorDomain Code 12, “Unable
+to find AMFI,” while reading the signed extension-point cache. The trace
+then showed fallback enumeration of the ExtensionPoints directory.
+The failure is in the signed-cache validation path. A validator and a
+successful PosterBoard launch remain to be verified.
+
 ## 2026-11-21 — Provider registration daemon logs
 
 BOOT0138 captured 21 registration path records from lsd, including
