@@ -1,3 +1,10 @@
+ACTIVE01:54UTCBOOT0122autonomousGPUproofPASS:activation->4fullreadbacks->fast,
+NOpriorhostGPUcontrols/replay. ONEHomeafterrawpower0causesdelayedrequest1/frames.
+Status33completed4verified0fault/cachedwarm1ONpowered1/384pollwait. Cableconnected;
+unpluggedbootnotproven.64x8stressnowrunningafterproof. Physicalquestionpending.
+Sole150953/session16774boot0122-bootpolicy-live.loguntil~02:19UTC. Needstressfinal
+readbacks/physicalUI/idlepowerpolicy;goalactive,sourceCPUrenders/MetalEAGLabsent.
+
 ACTIVE01:49UTCBOOT0122 BOOT-onlyflashSUCCESS CI44849933946attempt2/e8306f9success,
 sixsources/RTC/reverse0190/source22.6/checksum/SMP/actualASanPASS.
 Kernele8f07f5c...5d1d454/BOOT93524888...ca408bd;cmd593+a03gpu=1,8cores1984MiB.

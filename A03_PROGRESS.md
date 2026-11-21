@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:54UTC: BOOT0122 autonomous qualified GPU startup PASS
+
+No hostGPUcontrols/replays beforeactivation. Firstcompositorframe logs0190
+cachedwarm384/defaultwait activation, then4full720x1600 readbacks each
+mismatches0/done1/retired1/PASS1. iOSrequestsrawpower0sleep after4copies;
+ONEHome dispatched, delayedrawpower1 thenfirstverify0copy. LogverifierPASS
+{full_readbacks:4,fast_copy:true,prior_host_gpu_mutations:0}. No explicit GPU
+initialization/modecommand supplied. This proves host-command-independent
+GPUstart with cableconnected; physically unplugged/coldboot independence
+remainsunverified. SourceCPUrendering/MetalEAGLunchanged.
+
+Read-onlystatusthen33completed/38016000pixels/4verified/0fallbackquarantine,
+enabled1cachedwarm1powered1/384pollwait/impldef0tile4. Storage ready1poison0;
+touchstreamON607events0. Physicalquestionpending. New64x8stressstarted after
+startup proof, final4freshreadbacksrequired. Sole150953/session16774captures
+boot0122-bootpolicy-live.loguntil~02:19UTC. Goalactive; pendingphysicalUI,
+sustainedtests/idlepower policy and usefuldeployablebasicGPUoffload.
+
 ## 2026-11-21 01:49UTC: qualified boot CI success; BOOT0122 flashed
 
 CI44849933946attempt2 SUCCESS exact e8306f9e90e412a9153a44caf38ea13ed07b0d8a.
