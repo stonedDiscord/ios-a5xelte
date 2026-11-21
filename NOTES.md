@@ -1,3 +1,9 @@
+ACTIVE02:19UTCBOOT0123autoboot4readbacks+fastPASS/nohostGPUcontrols. Idlepower0
+observedat2and4verifiedframes.12coldcyclesPASS(releases5..16/completed34..45)
+0fault/qualificationretained,lastcoldcopies2.50-2.69ms.64x8stressnowrunning,
+needfinal4readbacks/idlehealth. Sole154528/session47211until~02:42UTC.
+Physicalquestionpending/noactualtouchyet. Goalactive/sourceCPUrenders.
+
 ACTIVE02:12UTCBOOT0123idleBOOT-onlyflashSUCCESS CI44853265071/bc4137c/sixsources/
 RTC/reverse0191/source22.6/checksum/SMP/actualASanPASS. Kernel985328ce...ff365ac/
 BOOT9f03fb56...95c9314;same8cores1984MiB/ADT0094/cmd593a03gpu=1.

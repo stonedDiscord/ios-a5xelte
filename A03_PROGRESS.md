@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:19UTC: BOOT0123 autonomous idle release and12cold resumes PASS
+
+NoGPUcontrols/replay beforeactivation->4fullreadbacks->firstfastcopy; autoboot
+verifierPASS. At2verifiedframes read-onlystatusshowsidle-releases1/powered0;
+at4verified releases2/powered0. ONEHomeafterrawpower0 hasdelayedrawpower1+
+fastframes, againrawpower0; noperiodicHome. Twelvehostretainedframecycles each
+observeautomaticpowered0 thennewGPUcompletion withunchangedqualification/
+mode/rate/poll. Releases5..16, completed34..45, all0fallbackquarantine.
+Coldlastcopytimes~2.50-2.69ms. ThisisGPUcoldresumption, notphysicalswipe/UIproof.
+64x8stressstartedaftercycles; need4finalfreshreadbacks andidlepowered0health.
+Sole154528/session47211boot0123-idle-live.loguntil~02:42UTC. Physicalquestion
+pending;touchstreamlatest331events0. Goalactive; Metal/EAGLsource renderingabsent.
+
 ## 2026-11-21 02:12UTC: idle-release CI success; BOOT0123 flashed
 
 CI44853265071 SUCCESS exactbc4137cfc886f86155e08a0d95a41bc620122967.
