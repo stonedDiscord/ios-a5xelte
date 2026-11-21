@@ -17,6 +17,12 @@ access to either provider bundle. Offline, all 26 SHA-1 and SHA-256 page
 hashes in the staged extensions.plist signature match the plist. This
 checks file integrity and leaves runtime acceptance unverified.
 
+ExtensionFoundation disassembly identifies an early rejection in
++[_EXDiscoveryController canRunQuery:error:] when extensionPointRecords
+is empty. The per-record host entitlement evaluation follows that check.
+The failed query and missing binding map make record population the next
+place to inspect. The runtime record count remains unmeasured.
+
 ## 2026-11-21 — PosterBoard provider coordinator lookup
 
 Matching 20A362 cache disassembly identifies the -2219 return at
