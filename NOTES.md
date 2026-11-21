@@ -1,3 +1,10 @@
+ACTIVE02:12UTCBOOT0123idleBOOT-onlyflashSUCCESS CI44853265071/bc4137c/sixsources/
+RTC/reverse0191/source22.6/checksum/SMP/actualASanPASS. Kernel985328ce...ff365ac/
+BOOT9f03fb56...95c9314;same8cores1984MiB/ADT0094/cmd593a03gpu=1.
+Newsole/session47211boot0123-idle-live.logwaitsCDC. NOhostGPUcontrols/replayuntil
+4readback+fastautobootproof. RestoretouchFW/load/start->autobootverifier->12idle
+cycles->stress512+4freshreadbacks->physicalUI. Goalactive.
+
 ACTIVE02:00UTC0191idleCI44853265071 exactbc4137cfc886f86155e08a0d95a41bc620122967
 job136689379518in_progress/noduplicate. Privategpu-idle-work/artifacts.py+
 pack0123.py sixsources/RTC/0191/SMP; same593bytea03gpu=1. Needfullsuccess->

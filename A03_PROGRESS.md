@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:12UTC: idle-release CI success; BOOT0123 flashed
+
+CI44853265071 SUCCESS exactbc4137cfc886f86155e08a0d95a41bc620122967.
+Sixsourcesexact/RTCunchanged/reverse0191/source22.6/checksum/SMP/actualDMA+
+vsynchook+rate+runtime+replayASanUBSanPASS. PrivatepackSHAcheckcaught typo
+introducedby0122->0123 textreplacementinsidecommitSHA; corrected BEFOREpack,
+exactfullSHA revalidated. KernelSHA256
+985328ce22bc544bce4528d8adfce7c7d77480d4869c4d93a4c6233aaff365ac.
+BOOTSHA2569f03fb56d25a6f4c63a588c865eff094d47ec4abed621cde7c27bba7795c9314.
+Same8cores1984MiB/ADT0094/cmd593+a03gpu=1/stockramdiskDT. SyncDownload then
+BOOT-onlyHeimdalluploadSUCCESS/reboot. Solecapture/session47211
+boot0123-idle-live.log waitsCDC. NOhostGPUcontrols/replaybeforeautobootproof.
+RestorevolatiletouchFW/load/start; waitfirstframes; tools/a03-verify-gpu-boot.py,
+thenidle-cycle.py12cycles/stress512+freshreadbacks/physicalUI. Hostcyclehelper
+b36d9d0parsesidlecounterandrejectspolicy/fault/qualificationchanges. Goalactive.
+
 ## 2026-11-21 02:00UTC: idle-release CI active, hardware checkpoint restored
 
 CI44853265071 exactbc4137cfc886f86155e08a0d95a41bc620122967/job136689379518
