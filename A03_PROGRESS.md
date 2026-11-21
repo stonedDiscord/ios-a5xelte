@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:00UTC: diagnostic sustained compositor exceeds prior failure point
+
+BOOT0125actualHome+swipeup-triggeredcompositoractivity continues WITHOUT any
+staticreplays; at02:59UTC5776GPUcompleted/6653952000pixels/4verified,
+0fallbackquarantine,41idlereleases/384pollwaitcachedwarm1. Prior0123failed2041;
+thislongerpassdoesNOTestablishfix:0192onlyfailurelogging, rootcauseunknown,
+no retirement snapshot emittedyet. Actualsourceframeskeepadvancing request1;
+noactualphysicaltouchevents. Needcontinuedcaptureorreproduciblefailurestage.
+Sole159238/session38202boot0125-retire-live.loguntil~03:12UTC; renewbeforeexpiry.
+NoCI,0124CPUrestoreavailable. Goalactive/physicalacceptancepending.
+
 ## 2026-11-21 02:50UTC: diagnostic boot active; actual compositor reproduction ongoing
 
 BOOT0125all8SGI/RTChealthy; volatileFWload0/A55A/touchON1017events0/storage

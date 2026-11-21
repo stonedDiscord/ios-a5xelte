@@ -1,3 +1,9 @@
+ACTIVE03:00UTC0125actualcompositor5776GPUframes/4verified0fault/idle41asof02:59UTC,
+NOreplayafterboot. Exceeds0123failure2041but0192loggingonly,NOFIXclaim/rootcause
+unknown. Needlongercaptureorreprostage. Sole159238/session38202
+boot0125-retire-live.loguntil~03:12UTC(renew).NoCI/0124CPUrestoreavailable.
+Goalactive/physicalpending.
+
 ACTIVE02:50UTCBOOT0125diagnosticGPUONauto4readbacks+fastPASS. ActualHomewake+
 USBswipeupactivity292completed0fault(4verified),idle11/384waitcachedwarm1.
 FWtouchON1017events0/storagehealthy. Needlongeractualactivityuntilstagecapture;
