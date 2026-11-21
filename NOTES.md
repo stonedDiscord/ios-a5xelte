@@ -1,3 +1,12 @@
+ACTIVE03:40UTCBOOT0126boundaryflashedBOOT-onlySUCCESS CI44860660965/exactede01ea.
+Sixsources/RTC/reverse0194/checksum/SMP/actualASanPASS. Kernel72b18062...98f754b/
+BOOT9ab6b2d8...801773b;same8cores1984MiB/cmd593a03gpu=1.
+Solecapture/session9363boot0126-boundary-live.logwaitingCDC;resolvePID.
+NeedFWtouchload/start/A55A;NOhostGPUcontrolsorreplaysbeforeautoboot4full+fast
+verifierPASS. Thenactualcompositorsoak12000additional/600s/readbacks/idle/
+paired/physicalgates. Rootcausecandidate0193restoredjobendclean,0194shortlogs;
+NOhardwarefixclaim. CPU0124restoreavailable;goalactive. NoactiveCI.
+
 ACTIVE03:29UTC CI44860660965 exactede01ea/job136713035392 VERIFIEDBuild,
 no duplicate/restart. AutoartifactpipelinePID166002/session34387 waits sameCI,
 then exactartifacts/source/RTC/reverse0194/checksum/SMP+actualASantests+pack0126;

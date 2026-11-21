@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:40UTC: candidate fullCI passes; BOOT0126 flashed
+
+CI44860660965SUCCESS/exactede01ea4ac14ee411c7b5fd49bf4a279030a36c5.
+Sixsourcesexact/XNU22.6/RTCunchanged/reverse0194/checksum/SMP/actualCI-source
+blit+idlehook+rate+runtime+replayASanUBSanPASS. KernelSHA256
+72b1806291eda316a68e07b8ca1cc5cc1e741480ec08228a4d4ce7e5298f754b.
+BOOT0126SHA2569ab6b2d81c2fe76079780e3b87afe5f1c44ec6c71cf78eabaaf681136801773b.
+Same8CPU/1984MiB/ADT0094/cmd593+a03gpu=1/stockramdiskDT. SyncDownload->
+BOOT-onlyHeimdalluploadSUCCESS/reboot. Solecapture/session9363
+boot0126-boundary-live.logwaitingCDC. NeedtouchFW/load/start andautomatic
+4fullreadbacks->fast BEFOREGPUcontrols/replays; thenlongactualcompositor,
+freshreadbacks/idle/pairedCPUoffload/physicalresponse.0193jobendflushcandidate
+NOTyetfixclaim.0194boundedfailureevidence. CPU0124restorepreserved. Goalactive.
+
 ## 2026-11-21 03:29UTC: candidate CI verified live; artifact pipeline waiting
 
 SameCI44860660965/exactede01ea/job136713035392 verifiedin_progressBuild.
