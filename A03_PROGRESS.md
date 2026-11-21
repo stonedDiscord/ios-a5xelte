@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:44UTC: polling CI success; BOOT0120 flashed
+
+CI44844162892 SUCCESS exactcc4576ae04936dc1621b7621cc07ba698df31d7f.
+Sixsources exactmatch/RTCunchanged/reverse0188/checksum/SMP/actualDMA+rate+
+replayASanUBSanPASS. KernelSHA256
+cc4ba8509cb88ed4628c5611415c8e0ab651d9b2891bf8a21de0709e4bef7d6b.
+BOOTSHA2565f2569fce5b97255d24052e7cc38c6b793b8b932589926ae39a5fd4a10acd508.
+Same8cores1984MiB/ADT0094/cmd599/stockramdiskDT. SyncedDownload then BOOT-only
+HeimdalluploadSUCCESS/reboot. New sole reader session43018 captures
+boot0120-poll-live.log waiting CDC. Need clocks/cachedwarm/touchFW/accepted
+frame->GPUOFF->pollwait/pollspin paired384/512 fullreadbacks->restoredefault.
+Private submitting-thread runtime observer prepared, notstaged/CI/hardware;
+C++ localcompile blocked by baseline Apple-specific header compiler errors.
+No hardware0188 performance or physicalUI claim yet. Goal remains active.
+
 ## 2026-11-21 00:36UTC: polling rationale corrected after timer-source audit
 
 0188 remains an explicit comparison experiment, not a diagnosed WFE defect.

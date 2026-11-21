@@ -1,3 +1,10 @@
+ACTIVE00:44UTC BOOT0120 BOOT-onlyflashSUCCESS CI44844162892/cc4576success,
+sixsources/RTC/reverse0188/checksum/SMP/actualDMA+rate+replayASanPASS.
+Kernelcc4ba850...bef7d6b/BOOT5f2569fc...acd508;same8cores1984MiB/ADT0094/cmd599.
+Newsole session43018 boot0120-poll-live.log waitsCDC. Needclocks/cachedwarm/
+FWload/touchON/acceptedframe->GPUOFF->pairedpollwait/pollspin384and512->restore.
+Private runtimeobservernotstaged; C++baselineAppleheadererrors local. Goalactive.
+
 ACTIVE00:36UTC polling rationale correction: exact XNU initializes CNTKCTL
 WFE periodic event stream in arm_init. Prior no-wake-event statement unproven.
 delay10us can instead thread_block when cpu_idle_latency0; counterpoll compares
