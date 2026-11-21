@@ -1,3 +1,13 @@
+ACTIVE00:57UTC runtimeCI44846854268 exact3d14c72 stillPENDING behind44846779804
+wrongsource run. Normalcancel andforce-cancel202accepted but wrongrunstill
+in_progressDeps; authoritativeAPI notterminal, donotrestartreplacement. Sole
+reader138803/session43018until~01:14UTC,liveboot0120-poll-live.log. Current
+384pollwaitGPUOFFpowered0verify1/165completed/0fallbackquarantine/touchON2113
+slices0events/storageready1poison0. Displaylastrequest0idle; noperiodicHome.
+NextpollsameCI->exactartifactvalidation/privatepack0121->BOOT-only->FWtouch/
+acceptedframe->fourreadbacks+pairedCPUwall/runtime at384/512. Helpercancompare
+pollwait/pollspin; no0188speedgain. Goalremainsactive, physicalacceptancepending.
+
 ACTIVE00:55UTC0189CIreplacement44846854268 exact3d14c720278607e27fe4142b167a8fc9380e7759,
 correct13.5source/SWEET/A03/macOS26intel/fulltree. Wrong26.0source44846779804
 cancelrequested; donotacceptitsartifacts. Replacementpending; noduplicate.

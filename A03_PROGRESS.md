@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:57UTC: runtime CI queued; BOOT0120 restoration rechecked
+
+Replacement44846854268 exact3d14c72 pending behindwrongsource44846779804.
+Bothnormalcancel andforcecancel accepted, butAPI stillreports wrongrunDeps
+in_progress; treataslive, no duplicate replacement. Sole138803/session43018
+expires~01:14UTC. Rechecked384APB(default), pollwait0/GPUOFFpowered0verify1,
+165completed/190080000pixels/0fallbackquarantine, touchON2113slices/events0,
+storageready1poison0. Displaylastrequest0 and idle; no periodicHome. Runtime
+observer source/test/profile committed3d14c72, docsupdatede918a71. Needexact
+fullCI validation/BOOT0121/readbacks+pairedruntime and physicalacceptance.
+Goalactive; this turn produces real0188hardwareevidence and nextinstrumentation.
+
 ## 2026-11-21 00:55UTC: runtime observer CI dispatched on correct source baseline
 
 Exact0189sourcecommit3d14c720278607e27fe4142b167a8fc9380e7759. Run44846779804
