@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — PosterBoard provider coordinator lookup
+
+Matching 20A362 cache disassembly identifies the -2219 return at
+0x1be3917dc. Configuration creation takes that branch when
+_stateLock_extensionStoreCoordinatorForExtensionBundleIdentifier: returns
+nil. The staged HFS image contains both CollectionsPoster and LegacyPoster.
+Its stock extensions.plist defines com.apple.posterkit.provider, and its
+launchd.plist AppExtensions dictionary includes the provider bundles.
+This narrows the investigation to discovery or registration at runtime.
+
+Patch 0207 adds bounded, opt-in registration path evidence for PosterBoard,
+lsd and pkd. It applies against the BOOT0137 build tree and the A03 profile
+stages successfully. CI44936228950/job136943326829 is building 54f6f71.
+Private prepare-posterboard-0138.py pins that build. BOOT0137 stays installed
+while CI runs.
+
 ## 2026-11-21 — BOOT0137 installed and touch stream checked
 
 CI run 44934190387 passed for 3613443. Source, checksum and SMP checks

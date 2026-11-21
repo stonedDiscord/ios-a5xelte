@@ -1,3 +1,9 @@
+ACTIVE BOOT0137 confirmed error -2219 is the missing provider coordinator.
+The staged HFS contains provider declarations and bundles. 0207/54f6f71
+traces live registration paths for PosterBoard, lsd and pkd.
+CI44936228950/job136943326829 is building. Private prepare-posterboard-0138.py
+pins the run. Restore touch after the next BOOT test.
+
 ACTIVE BOOT0137 confirmed 13 physical swipe events while user saw Apple logo.
 USB Home later preceded new frame copies. PosterBoard reproduced the publisher
 trap. Stderr captures provider discovery query failures and error -2219 for
