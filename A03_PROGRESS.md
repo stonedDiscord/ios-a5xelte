@@ -1,5 +1,22 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:30UTC: CPU control BOOT0124 restored; failure snapshot CI active
+
+Quarantined0123 notreset/reclaimed/CPUoverwritten whilelive. SyncDownload->
+BOOT-only0124flashSUCCESS/reboot. Sameexact0123kernel985328ce...ff365ac from
+CI44853265071/bc4137c; command584 removesa03gpu=1 soGPUdefaultOFF, other
+functionalflags/8cores1984MiB/ADT0094/stockramdiskDTunchanged. BOOTSHA256
+869f9c901071ba12359a0613e10c63e158e880baa17debc291d8f13ee90e0190.
+Sole157092/session91200 boot0124-cpu-live.logwaitsCDCuntil~03:00UTC; restore
+volatiletouchFW/load/start, confirmCPUframes/time/io. NoGPUenableincontrolboot.
+
+Diagnostic0192CI44856061555 exact2d4bf9085c197989dc30c05491268fad01debeb4,
+job136698449738in_progressBuild. No duplicate. ActualASanstagefixturesPASS
+cachetimeout5/staleack3/cleanfault4/slot1/ASdisable6; allretain/quarantine.
+Privategpu-retire-work/artifacts.py+pack0125.py exactrun/sources/RTC/0192/SMP
+ready. NeedfullCI->actualartifacttests->BOOT0125->sustainedactualHomecompositor
+activityuntilfailure/snapshot. Do nottreatmorestaticreplaysasfix. Goalactive.
+
 ## 2026-11-21 02:27UTC: sustained compositor failure supersedes replay acceptance
 
 After64additionalcoldcycles+freshreadbacks+pairedPASS, ONEHome at02:24UTC

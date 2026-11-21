@@ -1,3 +1,12 @@
+ACTIVE02:30UTCCPUcontrol0124BOOT-onlyrestoreSUCCESS;exact0123kernel/noa03gpu=1,
+cmd584/8cores1984MiB,BOOT869f9c90...90e0190. Sole157092/session91200
+boot0124-cpu-live.logwaitsCDCuntil~03:00UTC. RestoreFWtouch+CPUframeshealth;
+DONOTenableGPUincontrol.0123quarantine1after2041actualcopiesrequiresrootcause.
+0192snapshotCI44856061555 exact2d4bf9085c197989dc30c05491268fad01debeb4
+job136698449738Build/noduplicate. Privategpu-retire-work/artifacts.py+pack0125.py
+ready; needexactfullCI+actualASan->BOOT0125->actualcompositorfailurestage.
+Goalactive,physicalpending;nofixclaim.
+
 ACTIVE02:27UTC0123SUSTAINEDUIFAIL:Homegenerated1388actualGPUframes653->2041then
 retirementunproven/quarantine1; panelwritesstop/source+scratchretained,powered1.
 NOTsleep(request1), USB/time/touch/storagealive. NOreset/reclaim/CPUoverwrite.
