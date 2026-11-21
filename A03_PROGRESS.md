@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:26UTC: regression proves pixels do not bypass retirement
+
+Expanded actual-code fakeDMA fixture models the restored automatic job-end
+writeback independently from explicit CLEAN_INV. It makes panel pixels already
+correct, then suppresses fresh explicit completion: driver still returnsfailure,
+retains translation/source/scratch, quarantines and skips powerdown. ASanUBSan
+PASS. Thus0193 does not accidentally turn correctreadback into retirementproof.
+CI44860660965 exactede01ea/job136713035392 remainsin_progressBuild; no restart.
+
 ## 2026-11-21 03:21UTC: exact0193/0194 CI running; read-only soak prepared
 
 CI44860660965 exactede01ea4ac14ee411c7b5fd49bf4a279030a36c5,

@@ -146,6 +146,9 @@ static void fake_write(unsigned o,uint32_t v){
   assert(copied==count);
   if(corrupt)*(uint32_t *)((expect_cached?gpu_dirty:dest_mem)+doff)^=1;
 
+  /* Model automatic job-end writeback separately from the explicit command.
+   * Even visible pixels cannot substitute for a fresh retirement ack. */
+  if(expect_cached&&(bank[3][0x18d8/4]&(3U<<12))==(3U<<12))memcpy(dest_mem,gpu_dirty,sizeof(dest_mem));
   *(uint32_t *)((uint8_t*)allocation+0x4000)=1;
   if(mode==8)*(uint64_t *)((uint8_t*)allocation+0x5000)=0xa5a55a5adeadbeefULL;
   if(mode==9)*(uint32_t *)((uint8_t*)allocation+0x4000)=0;
@@ -228,6 +231,7 @@ int main(void){
   if(failure==2)bank[3][0x20/4]=1U<<17;
   assert(blit(53,17)==-1&&a03_gpu_job_poisoned&&!offs);
   assert(bank[3][0x2400/4]); /* mapping retained until cache ownership proven */
+  if(failure==1)assert(!memcmp(source_mem,dest_mem,53*4)); /* job-end writeback is insufficient */
   unsigned before=writes;assert(blit(53,17)==-1&&writes==before);
  }
  reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_verify=0;
