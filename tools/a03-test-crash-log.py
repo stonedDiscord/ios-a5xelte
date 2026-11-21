@@ -16,6 +16,7 @@ with tempfile.TemporaryDirectory() as d:
  subprocess.run(['git','apply',str(root/'xnu/a03/0128-a03-analytics-crash-evidence.patch')],cwd=d,check=True)
  subprocess.run(['git','apply',str(root/'xnu/a03/0137-a03-mobileactivation-crash-evidence.patch')],cwd=d,check=True)
  subprocess.run(['git','apply','--include=bsd/kern/kern_exit.c',str(root/'xnu/a03/0138-a03-screentime-analytics-evidence.patch')],cwd=d,check=True)
+ subprocess.run(['git','apply',str(root/'xnu/a03/0196-a03-posterboard-crash-evidence.patch')],cwd=d,check=True)
  source=q.read_text()
 header=r'''
 #include <assert.h>
@@ -34,7 +35,7 @@ static void PE_parse_boot_argn(const char *arg,void *value,unsigned size) {
 tests=r'''
 int main(void) {
  const char *names[]={"watchdogd","backboardd","SpringBoard","launchd","xpcproxy",
- "bluetoothd","identityservices","fairplayd.H2","mediaserverd","configd","lockdownd","analyticsd","dmd","tccd","mobileactivation","ScreenTimeAgent"};
+ "bluetoothd","identityservices","fairplayd.H2","mediaserverd","configd","lockdownd","analyticsd","dmd","tccd","mobileactivation","ScreenTimeAgent","PosterBoard"};
  assert(!a03_should_log_daemon_crash("mediaserverd",SIGABRT));
  enabled=2;assert(!a03_should_log_daemon_crash("mediaserverd",SIGABRT));enabled=1;
  assert(!a03_should_log_daemon_crash("unknown",SIGABRT));

@@ -1,0 +1,19 @@
+--- a/bsd/kern/kern_exit.c
++++ b/bsd/kern/kern_exit.c
+@@ -1852,7 +1852,7 @@
+         sig != SIGBUS && sig != SIGILL && sig != SIGKILL)) {
+         return false;
+     }
+-    static _Atomic uint32_t counts[16];
++    static _Atomic uint32_t counts[17];
+     unsigned slot;
+     if (!strcmp(name, "watchdogd")) slot = 0;
+     else if (!strcmp(name, "backboardd")) slot = 1;
+@@ -1870,6 +1870,7 @@
+     else if (!strcmp(name, "tccd")) slot = 13;
+     else if (!strcmp(name, "mobileactivation")) slot = 14;
+     else if (!strcmp(name, "ScreenTimeAgent")) slot = 15;
++    else if (!strcmp(name, "PosterBoard")) slot = 16;
+     else return false;
+     /* Saturate: never wrap and resume flooding after a long crash loop. */
+     uint32_t count = atomic_load_explicit(&counts[slot], memory_order_relaxed);
