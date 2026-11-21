@@ -567,3 +567,14 @@ as an explanation for the stale clock in that episode. It does not establish
 the enum definitions or a completed panel power transition, and PosterBoard
 crashloops remain a separate issue. The driver still does not blank the panel
 or change the existing selector12 return status. No periodic wake is installed.
+
+
+BOOT0125 sustained-compositor follow-up distinguishes a second stale-image
+cause from the earlier sleep episode: at10935 completed GPU copies, stage5
+reports missing fresh CLEAN_INV completion. The last display request remains1,
+vsync callbacks advance, and one swap is incomplete. The driver quarantines
+DMA and suppresses panel writes. Normal sleep does not explain this occurrence.
+The failure snapshot was truncated at255 characters (after clock=38), matching
+the XNU console print-buffer limit; missing fields are not reconstructed.
+Strict report rejection is correct. Shorter diagnostic lines are needed before
+another diagnostic build; no timeout/retirement guard has been weakened.

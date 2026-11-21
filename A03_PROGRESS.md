@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: CPU0124 restored after preserving stage5 evidence
+
+Matching CPU0124 image SHA256869f9c901071ba12359a0613e10c63e158e880baa17debc291d8f13ee90e0190
+verified before syncDownload and BOOT-only Heimdall restore; uploadSUCCESS/reboot.
+New sole capturePID163479/session31133 boot0124-stage5-recovery-live.log.
+All8cores SGI1PASS; retainedRTC1795230903 read without host calendar sync.
+PrivatevolatileFW79104 staged/load0/A55A; first invalid startup slice required
+one explicit restart, then streamingON. GPU remainsOFF/cached0/powered0/
+quarantine0/0copies. Storage ready1poison0. Compositor startup stillpending at
+lastcheck; do not claim visibleUI recovery until actualframes/physicalcheck.
+NoCIrunning. Rootcauseoffreshcleanackfailure remainsunfixed; goalactive.
+
 ## 2026-11-21: second BOOT0125 sustained trial reproduces cache-clean failure
 
 Supersedes the preceding no-recurrence checkpoint. After re-enabling the same
