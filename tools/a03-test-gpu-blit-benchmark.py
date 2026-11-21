@@ -23,6 +23,16 @@ with tempfile.TemporaryFile() as log:assert m.command(Probe(log),log,'display').
 values=iter(['enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 original_command=m.command;m.command=lambda *args:next(values)
 assert m.snapshot(None,None)['gpu_ns']==123
+values=iter(['enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns copy thread-runtime cpu=250ns gpu=90ns'])
+assert m.snapshot(None,None)['gpu_runtime_ns']==90
+rb=dict(b,cpu_runtime_ns=100,gpu_runtime_ns=200)
+ra=dict(rb,cpu_copies=2,cpu_ns=2000,cpu_runtime_ns=700)
+assert m.report(rb,ra,'cpu')['mean_submitter_cpu_ms']==0.0003
+try:m.report(ra,dict(ra,cpu_runtime_ns=699),'cpu');assert False
+except RuntimeError:pass
+try:m.report(rb,b,'cpu');assert False
+except RuntimeError:pass
+
 values=iter(['','','enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 assert m.snapshot(None,None)['gpu_ns']==123
 busy_calls=[]

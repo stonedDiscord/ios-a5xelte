@@ -36,6 +36,8 @@ def snapshot(probe,log):
     if not(fields and policy and timing):raise RuntimeError('Missing0169 counters or GPU busy; no measurement')
     keys=['enabled','frames','pixels','fallbacks','quarantined','verify','verified','completed','total_ns','last_ns','cpu_copies','cpu_ns','gpu_copies','gpu_ns']
     result=dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
+    runtime=re.search(r'copy thread-runtime cpu=(\d+)ns gpu=(\d+)ns',display)
+    if runtime:result.update(cpu_runtime_ns=int(runtime[1]),gpu_runtime_ns=int(runtime[2]))
     cached=re.search(r'A03 GPU blit: cached=(\d+);',gpu)
     if cached:result['cached']=int(cached[1])
     polling=re.search(r'A03 GPU blit: poll-spin=(\d+) gaps=(\d+) gap-ns=(\d+)',gpu)
@@ -70,9 +72,16 @@ def report(before,after,mode):
     delta={k:after[k]-before[k] for k in ['frames','pixels','fallbacks','verified','completed','cpu_copies','cpu_ns','gpu_copies','gpu_ns']}
     for k,v in delta.items():
         if v<0:raise RuntimeError('Counter reset/wrap in '+k+'; discard interval')
+    for key in ['cpu_runtime_ns','gpu_runtime_ns']:
+        if (key in before)!=(key in after):raise RuntimeError('Copy runtime observer changed during interval')
+        if key in after:
+            delta[key]=after[key]-before[key]
+            if delta[key]<0:raise RuntimeError('Copy runtime counter reset; discard interval')
     n=delta['cpu_copies'] if mode=='cpu' else delta['gpu_copies']
     elapsed=delta['cpu_ns'] if mode=='cpu' else delta['gpu_ns']
     delta.update(mode=mode,mean_copy_ms=elapsed/n/1000000 if n else None,quarantined=after['quarantined'])
+    runtime_key='cpu_runtime_ns' if mode=='cpu' else 'gpu_runtime_ns'
+    if runtime_key in delta and n:delta['mean_submitter_cpu_ms']=delta[runtime_key]/n/1000000
     if 'cached' in after:delta['cached']=after['cached']
     if 'poll_spin' in after:
         delta.update(poll_spin=after['poll_spin'],poll_gaps=after['poll_gaps']-before['poll_gaps'],poll_gap_ns=after['poll_gap_ns']-before['poll_gap_ns'])

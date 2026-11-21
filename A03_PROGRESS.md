@@ -1,5 +1,29 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:53UTC: counter polling hardware passes; no latency gain
+
+BOOT0120 accepted384 pollwait/pollspin GPUmedians2.035014/2.029918ms,
+pairedCPU1.487668/1.664534ms. At512 GPU1.964975/1.962125ms, pairedCPU
+1.667826/1.672461ms. Eachpolicy earnedfourfresh fullreadbacks and three
+paired8copyrounds. First384 and first512 trial discarded for extra background
+compositor copies; retry logs alone supply accepted numbers. No polling
+speedup established; execution remains~1.3ms. Counter gap time measured~10us.
+Allacceptedreadbacks done1/retired1/mismatch0, fallback0/quarantine0.
+Restored384APB11/11/31/pollwait/GPUOFFpowered0verify1/impldef0/tile4/cachedwarm1;
+165completed/190080000pixels/verified0(resetrate). TouchON1086slices/events0;
+storageready1poison0. Sole138803/session43018until~01:14UTC. NoactiveCI.
+Private384/512-retry logs retain full exactcounter evidence.
+
+0189 adds submitting-thread CPU-runtime counters beside copy wall time,
+allowing GPUoffload to be distinguished from synchronouswait overhead. Uses
+thread_get_runtime_self absolute ticks, includes sourceclean/setup/poll/readback,
+excludes blocked/preempted time, failed/skippedframes excluded likeexisting
+copycounters. Not total-system CPU or rendering-cost measurement. Actualhelper/
+replay/DMAASan and benchmark parsing/reset testsPASS, profile135PASS. ARM64
+C++syntaxcompilePASS with host-only substitutes for three unavailable Apple
+XNU typebuiltins; fullCI mandatory, no deployablelocalC++object claim.
+Needcommit/fullCI->BOOT0121/readbacks+pairedruntime+walltime->physicalUI.
+
 ## 2026-11-21 00:44UTC: polling CI success; BOOT0120 flashed
 
 CI44844162892 SUCCESS exactcc4576ae04936dc1621b7621cc07ba698df31d7f.

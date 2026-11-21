@@ -1,3 +1,12 @@
+ACTIVE00:53UTC0120 counterpollHWbothratesPASS,nolatencygain:384GPUwait/spin
+2.035014/2.029918ms,5121.964975/1.962125ms. Firstsamples rejectedextraCPU/GPU
+backgroundcopies; acceptedretryeach4readbacks+3paired8. Restored384pollwait/
+GPUOFFpowered0verify1impldef0tile4cachedwarm1/165completed0fallbackquarantine;
+touchON1086events0/storagehealthy. Sole138803/session43018until~01:14UTC.
+0189submitterCPU-runtimeobserver+parsingtests/profile135/actualASanPASS;
+C++syntaxPASShostApplebuiltin substitutionsonly. NeedfullCI/hardware; noCPU
+benefit/physicalcompletionclaim. Goalactive.
+
 ACTIVE00:44UTC BOOT0120 BOOT-onlyflashSUCCESS CI44844162892/cc4576success,
 sixsources/RTC/reverse0188/checksum/SMP/actualDMA+rate+replayASanPASS.
 Kernelcc4ba850...bef7d6b/BOOT5f2569fc...acd508;same8cores1984MiB/ADT0094/cmd599.

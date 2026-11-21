@@ -33,6 +33,20 @@ def validate(result,mode,count):
         raise RuntimeError('Fast replay included verification or incomplete jobs')
 
 
+
+def runtime_summary(samples):
+    present=['mean_submitter_cpu_ms' in sample for sample in samples]
+    if not any(present):return {}
+    if not all(present):raise RuntimeError('Mixed runtime observer across paired samples')
+    cpu=[r['mean_submitter_cpu_ms'] for r in samples if r['mode']=='cpu']
+    gpu=[r['mean_submitter_cpu_ms'] for r in samples if r['mode']=='fast']
+    if not cpu or not gpu or any(value<=0 for value in cpu+gpu):
+        raise RuntimeError('Missing positive submitting-thread runtime')
+    return dict(cpu_submitter_ms=cpu,gpu_submitter_ms=gpu,
+        cpu_submitter_median_ms=statistics.median(cpu),gpu_submitter_median_ms=statistics.median(gpu),
+        note_runtime='Submitting-thread CPU only; excludes blocked/preempted time, not total system or rendering CPU')
+
+
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--log',type=Path,required=True)
@@ -54,7 +68,7 @@ def main():
     gpu=[r['mean_copy_ms'] for r in results if r['mode']=='fast']
     print(json.dumps(dict(cpu_ms=cpu,gpu_ms=gpu,cpu_median_ms=statistics.median(cpu),
         gpu_median_ms=statistics.median(gpu),cpu_over_gpu=statistics.median(cpu)/statistics.median(gpu),
-        note='Accepted-frame synchronous copy timing, not physical animation FPS',samples=results),indent=2))
+        note='Accepted-frame synchronous copy timing, not physical animation FPS',samples=results,**runtime_summary(results)),indent=2))
 
 
 if __name__=='__main__':main()

@@ -1,0 +1,54 @@
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -42,6 +42,7 @@
+ #include <IOKit/system.h>
+ #include <pexpert/pexpert.h>
+ #include <kern/clock.h>
++#include <kern/thread.h>
+ #include <sys/proc.h>
+ 
+ enum {
+@@ -69,6 +70,7 @@
+     uint64_t vsyncEntered, vsyncDone, vsyncAt;
+     uint64_t swapEntered, swapDone, swapAt, copies, copyAt;
+     uint64_t cpuCopies,cpuNs,gpuCopies,gpuNs;
++    uint64_t cpuRuntimeNs,gpuRuntimeNs;
+     uint64_t powerRequests,powerAt,lastPowerRequest;
+     uint64_t notifyAttempt, notifyOK, notifyError, notifySkipped, notifyAt, lastError;
+ };
+@@ -86,11 +88,19 @@
+         a03_fb_read(&s->swapEntered), a03_fb_read(&s->swapDone), a03_fb_read(&s->swapAt),
+         a03_fb_read(&s->copies), a03_fb_read(&s->copyAt));
+     IOLog("A03 DISPLAY copy timing cpu=%llu/%lluns gpu=%llu/%lluns\n",a03_fb_read(&s->cpuCopies),a03_fb_read(&s->cpuNs),a03_fb_read(&s->gpuCopies),a03_fb_read(&s->gpuNs));
++    IOLog("A03 DISPLAY copy thread-runtime cpu=%lluns gpu=%lluns; submitting thread only\n",a03_fb_read(&s->cpuRuntimeNs),a03_fb_read(&s->gpuRuntimeNs));
+     IOLog("A03 DISPLAY power requests=%llu last-value=%llu last=%llu; observed requests only\n",
+         a03_fb_read(&s->powerRequests),a03_fb_read(&s->lastPowerRequest),a03_fb_read(&s->powerAt));
+     IOLog("A03 DISPLAY notify attempts=%llu ok=%llu errors=%llu skipped=%llu last=%llu error=0x%llx\n",
+         a03_fb_read(&s->notifyAttempt), a03_fb_read(&s->notifyOK), a03_fb_read(&s->notifyError),
+         a03_fb_read(&s->notifySkipped), a03_fb_read(&s->notifyAt), a03_fb_read(&s->lastError));
++}
++/* Runtime counts only the submitting thread, excluding blocked/preempted time.
++ * It does not measure total system CPU use or asynchronous rendering work. */
++static void a03_fb_record_runtime(bool gpu,uint64_t begin) {
++    uint64_t ns=0;absolutetime_to_nanoseconds(thread_get_runtime_self()-begin,&ns);
++    if(gpu)__atomic_add_fetch(&a03_display_stats.gpuRuntimeNs,ns,__ATOMIC_RELAXED);
++    else __atomic_add_fetch(&a03_display_stats.cpuRuntimeNs,ns,__ATOMIC_RELAXED);
+ }
+ /* End A03 display probe helpers. */
+ 
+@@ -340,6 +350,7 @@
+ 		if (src != 0 && bpe == 4 && s->pixelFormat == SWEET_FB_FORMAT_BGRA) {
+ 			/* A03: validated GUI pixels take ownership; logs remain on USB. */
+ 			a03_console_panel_quiet();
++            uint64_t runtimeBegin=thread_get_runtime_self();
+             uint64_t copyBegin=mach_absolute_time();
+             int copied=a03_gpu_framebuffer_blit(src+s->offset+(uint64_t)sy*s->bytesPerRow+(uint64_t)sx*4,
+                 fPixels+(uint64_t)dy*fRowBytes+(uint64_t)dx*4,
+@@ -354,6 +365,7 @@
+ 				    (size_t)w * 4);
+ 			}
+             uint64_t ns=0;absolutetime_to_nanoseconds(mach_absolute_time()-copyBegin,&ns);
++            a03_fb_record_runtime(copied!=0,runtimeBegin);
+             if(copied){a03_fb_inc(&a03_display_stats.gpuCopies);__atomic_add_fetch(&a03_display_stats.gpuNs,ns,__ATOMIC_RELAXED);}
+             else{a03_fb_inc(&a03_display_stats.cpuCopies);__atomic_add_fetch(&a03_display_stats.cpuNs,ns,__ATOMIC_RELAXED);}
+             memcpy(fReplayRecord,rec,sizeof(fReplayRecord));fReplayValid=true;

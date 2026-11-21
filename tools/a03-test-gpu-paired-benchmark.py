@@ -14,3 +14,11 @@ for change in [dict(gpu_copies=7),dict(cpu_copies=1),dict(fallbacks=1),dict(quar
     except RuntimeError:pass
 assert m.parse_result('unrelated {invalid} text '+json.dumps(dict(mean_copy_ms=1.5))+' trailing')['mean_copy_ms']==1.5
 print('PASS paired benchmark exact counts, mixed modes, faults, warmup and JSON isolation')
+
+assert m.runtime_summary([cpu,gpu])=={}
+summary=m.runtime_summary([dict(cpu,mean_submitter_cpu_ms=1.4),dict(gpu,mean_submitter_cpu_ms=0.6)])
+assert summary['cpu_submitter_median_ms']==1.4 and summary['gpu_submitter_median_ms']==0.6
+for samples in [[cpu,dict(gpu,mean_submitter_cpu_ms=0.6)],[dict(cpu,mean_submitter_cpu_ms=1.4),dict(gpu,mean_submitter_cpu_ms=0)]]:
+ try:m.runtime_summary(samples);assert False
+ except RuntimeError:pass
+print('PASS paired submitter runtime summary, legacy support and mixed/missing/zero runtime rejection')
