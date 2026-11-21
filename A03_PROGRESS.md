@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:42UTC: diagnostic0192 CI success; BOOT0125 flashed
+
+CI44856061555 SUCCESS exact2d4bf9085c197989dc30c05491268fad01debeb4.
+Sixsourcesexact/RTCunchanged/reverse0192/source22.6/checksum/SMP/actualDMAstage+
+vsynchook+rate+runtime+replayASanUBSanPASS. Privateverifierpatchpath corrected
+beforevalidation; sourcefullSHA unchanged. KernelSHA256
+ afa07d303c865948dc68ac461e5cd0fdb206cc48dfafe2ec64fd85a10caccd38.
+BOOTSHA2567a0dbc94cd53ebfcc157381f8524371c0b1c53b968002c2abb62949193e12fa3.
+Same8cores1984MiB/ADT0094/cmd593+a03gpu=1/stockramdiskDT. SyncDownload->BOOT-only
+HeimdalluploadSUCCESS/reboot. Solecapture/session38202 boot0125-retire-live.log
+waitsCDC. NeedtouchFW/load/start/autoboot4readbacks+fast then sustainedactual
+Homewakecompositoractivity, notstaticreplayacceptance. Parser555ea32 mapsstage/
+registersnapshotandrejectsmissingevidence.0124CPUrestorepreserved. Goalactive.
+
 ## 2026-11-21 02:33UTC: CPU-control runtime recovered; exact diagnostic build live
 
 BOOT0124read-onlyGPUstatusOFF/cached0/warm0/powered0/frames0/quarantine0;
