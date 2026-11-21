@@ -1,0 +1,67 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -316,6 +316,7 @@
+ static unsigned a03_gpu_blit_memattr; /* vendor index0 impldef,1 forcecacheall,2 writealloc */
+ static unsigned a03_gpu_blit_warm,a03_gpu_warm_ready;
+ static uint32_t a03_gpu_warm_override;
++static uint64_t a03_gpu_last_completed_at,a03_gpu_idle_releases;
+ static uint64_t a03_gpu_blit_phase[8];
+ static unsigned a03_gpu_poll_spin;
+ static unsigned a03_gpu_boot_checked;
+@@ -632,6 +633,21 @@
+     }
+     (void)a03_gpu_power_off_owned(a03_gpu_warm_override);
+ }
++/* Called under framebuffer serialization by the existing vsync timer.
++ * Never wait for the shared hardware owner; never power down uncertain DMA.
++ * A successful frame can reacquire cold ownership through the existing path. */
++void a03_gpu_idle_tick(void);
++void a03_gpu_idle_tick(void) {
++    if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
++    if(a03_gpu_warm_ready && !a03_gpu_job_poisoned && a03_gpu_last_completed_at) {
++        uint64_t idle=0,now=mach_absolute_time();nanoseconds_to_absolutetime(100000000ULL,&idle);
++        if(now>=a03_gpu_last_completed_at && now-a03_gpu_last_completed_at>=idle) {
++            a03_gpu_warm_stop();
++            if(!a03_gpu_warm_ready && !a03_gpu_job_poisoned)a03_gpu_idle_releases++;
++        }
++    }
++    __atomic_store_n(&a03_gpu_owner,0,__ATOMIC_RELEASE);
++}
+ void a03_gpu_cores_owned(void);
+ void
+ a03_gpu_cores_owned(void)
+@@ -835,6 +851,7 @@
+     printf("A03 GPU blit: memattr=%u; pixel mappings only, cached mode required\n",a03_gpu_blit_memattr);
+     printf("A03 GPU blit: tile-rows=%u; fullscreen-only, four readbacks after change\n",a03_gpu_fullscreen_rows);
+     printf("A03 GPU blit: cached=%u; four readbacks after policy change\n",a03_gpu_blit_cached);
++    printf("A03 GPU blit: idle-releases=%llu timeout-ms=100\n",(unsigned long long)a03_gpu_idle_releases);
+     printf("A03 GPU blit: warm=%u powered=%u; explicit cold/off releases power\n",a03_gpu_blit_warm,a03_gpu_warm_ready);
+     printf("A03 GPU blit: enabled=%u frames=%u pixels=%llu fallbacks=%u quarantined=%u\n",a03_gpu_blit_enabled,a03_gpu_blit_frames,(unsigned long long)a03_gpu_blit_pixels,a03_gpu_blit_fallbacks,a03_gpu_job_poisoned);
+     printf("A03 GPU blit: verify=%u verified=%u completed=%u total-ns=%llu last-ns=%llu\n",a03_gpu_blit_verify,a03_gpu_blit_verified,a03_gpu_blit_completed,(unsigned long long)a03_gpu_blit_ns,(unsigned long long)a03_gpu_blit_last_ns);
+@@ -892,7 +909,7 @@
+     a03_gpu_blit_last_ns=ns;a03_gpu_blit_ns+=ns;
+     a03_gpu_job_requested=0;a03_gpu_scratch=saved;a03_gpu_scratch_pa=saved_pa;
+     if(a03_gpu_job_poisoned){result=-1;goto out;}
+-    if(a03_gpu_last_pass){a03_gpu_blit_frames++;a03_gpu_blit_pixels+=(uint64_t)width*height;result=1;goto out;}
++    if(a03_gpu_last_pass){a03_gpu_last_completed_at=a03_gpu_blit_phase[7];a03_gpu_blit_frames++;a03_gpu_blit_pixels+=(uint64_t)width*height;result=1;goto out;}
+ fallback:
+     a03_gpu_blit_fallbacks++;
+ out:
+--- a/iokit/Kernel/arm/SweetFramebuffer.cpp
++++ b/iokit/Kernel/arm/SweetFramebuffer.cpp
+@@ -217,6 +217,7 @@
+ 	return true;
+ }
+ 
++extern "C" void a03_gpu_idle_tick(void);
+ void
+ AppleCLCD::vsyncFired(OSObject *owner, IOTimerEventSource *sender)
+ {
+@@ -232,6 +233,7 @@
+ 	};
+ 
+ 	IOLockLock(fb->fLock);
++    a03_gpu_idle_tick();
+ 	for (unsigned int i = 0; i < fb->fClients->getCount(); i++) {
+ 		IOMobileFramebufferUserClient *client =
+ 		    (IOMobileFramebufferUserClient *)fb->fClients->getObject(i);

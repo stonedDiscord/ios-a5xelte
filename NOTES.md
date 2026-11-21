@@ -1,3 +1,11 @@
+ACTIVE01:58UTC0122autoboot+512stress+4finalreadbacksPASS(mean1.988864wall/0.832096
+submitterms),0fault. RestoredOFFpowered0/384pollwaitverify1/549completed8verified,
+touchON1225events0/storagehealthy. Sole150953/session16774until~02:19UTC.
+0191idle100msreleaseviaexistingvsyncunderfblock/nonwaitingGPUowner/warm_stop;
+actualASan deadline/busy/coldresume/ASquarantine/vsynchookPASS,ARM64/profile137.
+NeedfullCI->BOOT0123autoboot/idleoff/coldresume/readbacks/stress/physicalUI.
+Goalactive/sourceCPUrenders/physicalanswerpending.
+
 ACTIVE01:54UTCBOOT0122autonomousGPUproofPASS:activation->4fullreadbacks->fast,
 NOpriorhostGPUcontrols/replay. ONEHomeafterrawpower0causesdelayedrequest1/frames.
 Status33completed4verified0fault/cachedwarm1ONpowered1/384pollwait. Cableconnected;

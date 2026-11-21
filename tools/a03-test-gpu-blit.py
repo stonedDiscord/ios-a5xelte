@@ -282,6 +282,22 @@ int main(void){
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''
+if 'void a03_gpu_idle_tick(void)' in src:
+ tests=tests.replace('static void reset(unsigned m){','static void reset(unsigned m){'+chr(10)+' a03_gpu_last_completed_at=a03_gpu_idle_releases=0;')
+ extra=r"""
+ reset(0);expect_cached=1;a03_gpu_blit_control(5);a03_gpu_blit_control(7);assert(blit(53,17)==1);
+ assert(a03_gpu_last_completed_at&&a03_gpu_warm_ready);
+ uint64_t last=a03_gpu_last_completed_at;unsigned oldwrites=writes;
+ fake_time=last+9999998;a03_gpu_idle_tick();assert(a03_gpu_warm_ready&&writes==oldwrites&&!a03_gpu_idle_releases);
+ fake_time=last+10000000;a03_gpu_owner=1;a03_gpu_idle_tick();assert(a03_gpu_warm_ready&&writes==oldwrites&&a03_gpu_owner);a03_gpu_owner=0;
+ a03_gpu_idle_tick();assert(!a03_gpu_warm_ready&&a03_gpu_idle_releases==1&&!a03_gpu_job_poisoned&&a03_gpu_blit_enabled);
+ unsigned savedverified=a03_gpu_blit_verified;us=flushes=starts=offs=0;assert(blit(53,17)==1&&a03_gpu_warm_ready&&a03_gpu_blit_verified==savedverified+1);
+ fake_time=a03_gpu_last_completed_at+10000000;bank[3][0x2400/4]=0x1234;oldwrites=writes;
+ unsigned oldoffs=offs;a03_gpu_idle_tick();assert(a03_gpu_job_poisoned&&a03_gpu_warm_ready&&writes==oldwrites+1&&offs==oldoffs); /* only owned IRQ ack to refresh slot snapshot */
+ oldwrites=writes;a03_gpu_idle_tick();assert(writes==oldwrites); /* quarantine never powers down */
+ reset(0);oldwrites=writes;a03_gpu_idle_tick();assert(!a03_gpu_idle_releases&&writes==oldwrites&&!a03_gpu_owner);
+ """
+ tests=tests.replace('int main(void){','int main(void){'+extra)
 if 'static void a03_gpu_boot_policy(void)' in src:
  tests=tests.replace('static void reset(unsigned m){','static void reset(unsigned m){'+chr(10)+' boot_requested=0;a03_gpu_boot_checked=0;')
  extra=r"""

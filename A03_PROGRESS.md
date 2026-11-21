@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:58UTC: bootpolicy stress PASS; idle-release candidate0191
+
+BOOT0122autonomousproof remainsPASS (4fullreadbacks thenfast/nohostGPUcontrol).
+64x8stressPASS512copies+4finalfullreadbacks/0fallbackquarantine, meanwall
+1.988864ms/submitter0.832096ms. RestoredexplicitOFFpowered0verify1/384pollwait/
+cachedwarm1,549completed/632448000pixels/8verified0fault. TouchON1225events0;
+storageready1poison0. Physicalanswerpending. WarmGPUstayedpoweredafterraw
+power0sleep, so normaldeploymentneedsidlepowerrelease. No source-renderinggain.
+
+0191existingvsynctimer calls nonwaiting sharedowneridlehook UNDERframebufferlock.
+After100mswithoutsuccessfulGPUframe, reuseexistingwarm_stop(slot/ASownership
+checks) andpoweroffowned sequence. Busyownerskip; poisonedDMAneverpoweredoff;
+uncertainASquarantine; nextframeusesexistingcoldstart andretainsqualification.
+No newtimer/interrupt/PMIC/PLL orpanelpowersettings. ActualDMAASan deadline/
+busy/reacquire/ASquarantine/nooptestsPASS; actualvsynchooklockorder/notify/rearm
+ASanPASS; rate/runtime/replaytestsPASS; ARM64GPUAMFIPASS; framebuffer syntaxPASS
+withhost-onlyApplebuiltin stubs; profile137PASS. NeedfullCI/BOOT0123autostart+
+idlepowered0+newframecoldresume/readbacks/stress/physicalUI. Goalactive.
+Sole150953/session16774boot0122-bootpolicy-live.loguntil~02:19UTC.
+
 ## 2026-11-21 01:54UTC: BOOT0122 autonomous qualified GPU startup PASS
 
 No hostGPUcontrols/replays beforeactivation. Firstcompositorframe logs0190
