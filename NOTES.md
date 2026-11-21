@@ -1,3 +1,10 @@
+ACTIVEcandidate0188explicitpollspin(counterbounded10usgap) vsdefaultpollwait
+(delayusesWFEcanovershootuntilunrelatedIRQ). Framebufferonly; iterationtimeouts/
+faults/cacheclean/retirementunchanged. ActualDMAASan+modes0..7/ratehelper/ARM64/
+profile134/benchtestsPASS. NeedcommitCI->BOOT-only0120->readbacks/pairedpolicies.
+Current0119GPUOFFpowered0/384verify1/touchON,sole133832/session39451until~00:48UTC.
+Goalactive; hypothesiscouldexplain1.3msexecutephase,notprovenyet.
+
 ACTIVE00:23UTCNov21 BOOT0119HWbothratesreadbacks+pairedPASS, GPU512median1.969163ms
 vsCPU1.664846ms(18.3%slower).384GPU2.041745vsCPU1.677052. Singleexplicitendclean
 functionalbutnogreatgain;fallback0quarantine0. Last512execute1.309ms/sourceclean

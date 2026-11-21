@@ -1,0 +1,77 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -316,6 +316,19 @@
+ static unsigned a03_gpu_blit_warm,a03_gpu_warm_ready;
+ static uint32_t a03_gpu_warm_override;
+ static uint64_t a03_gpu_blit_phase[8];
++static unsigned a03_gpu_poll_spin;
++static uint64_t a03_gpu_poll_count,a03_gpu_poll_wait_ticks;
++/* ARM delay() uses WFE and has no deadline wake event in this port. For an
++ * explicitly selected framebuffer policy, bound the short inter-poll gap by
++ * the architectural counter instead. No interrupt masks or global timer changes. */
++static void a03_gpu_poll_gap(void) {
++    if(a03_gpu_job_requested!=3 || !a03_gpu_poll_spin){delay(10);return;}
++    uint64_t ticks=0;nanoseconds_to_absolutetime(10000,&ticks);
++    uint64_t begin=mach_absolute_time();
++    while(mach_absolute_time()-begin<ticks){__asm__ volatile("yield" ::: "memory");}
++    a03_gpu_poll_count++;a03_gpu_poll_wait_ticks+=mach_absolute_time()-begin;
++}
++
+ static void a03_gpu_blit_mark(unsigned phase) {
+     if(a03_gpu_job_requested==3)a03_gpu_blit_phase[phase]=mach_absolute_time();
+ }
+@@ -496,7 +509,7 @@
+             mmu = a03_gpu_read(a03_gpu_regs, 0x2000);
+             gpu = a03_gpu_read(a03_gpu_regs, 0x20);
+             if ((irq & 0x00020002U) || mmu || (gpu & 0x81U)) break;
+-            delay(10);
++            a03_gpu_poll_gap();
+         }
+     }
+     a03_gpu_blit_mark(4);
+@@ -511,7 +524,7 @@
+     int idle = !submitted;
+     for (unsigned i = 0; submitted && i < 2000; i++) {
+         if (a03_gpu_slot_idle()) { idle = 1; break; }
+-        delay(10);
++        a03_gpu_poll_gap();
+     }
+     if (!idle || !a03_gpu_as_wait()) goto poison;
+     /* AttrIndex0 is the pinned vendor implementation-defined cache policy.
+@@ -528,7 +541,7 @@
+             uint32_t raw=a03_gpu_read(a03_gpu_regs,0x20);
+             if(raw&0x181U)goto poison;
+             if(raw&(1U<<17)){clean=1;break;}
+-            delay(10);
++            a03_gpu_poll_gap();
+         }
+         if(!clean)goto poison;
+         a03_gpu_write(0x24,1U<<17);
+@@ -795,6 +808,7 @@
+ void a03_gpu_blit_control(unsigned enable);
+ void a03_gpu_blit_control(unsigned enable) {
+     if(__atomic_exchange_n(&a03_gpu_owner,1,__ATOMIC_ACQUIRE))return;
++    if(enable==18 || enable==19)a03_gpu_poll_spin=enable==19;
+     if(enable==16 || enable==17)a03_gpu_clock_rate(enable==16?1:2);
+     if(enable>=13 && enable<=15 && !a03_gpu_job_poisoned && a03_gpu_blit_memattr!=enable-13) {
+         a03_gpu_blit_memattr=enable-13;a03_gpu_blit_verified=0;
+@@ -812,6 +826,8 @@
+         a03_gpu_blit_cached=enable==5;
+         a03_gpu_blit_verified=0; /* Each policy must earn four readbacks. */
+     }
++    uint64_t poll_ns=0;absolutetime_to_nanoseconds(a03_gpu_poll_wait_ticks,&poll_ns);
++    printf("A03 GPU blit: poll-spin=%u gaps=%llu gap-ns=%llu\n",a03_gpu_poll_spin,(unsigned long long)a03_gpu_poll_count,(unsigned long long)poll_ns);
+     printf("A03 GPU blit: clock-mhz=%u; explicit384/512MHz, sys divide4\n",a03_gpu_clock_selector==2?512:384);
+     printf("A03 GPU blit: memattr=%u; pixel mappings only, cached mode required\n",a03_gpu_blit_memattr);
+     printf("A03 GPU blit: tile-rows=%u; fullscreen-only, four readbacks after change\n",a03_gpu_fullscreen_rows);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -673,6 +673,8 @@
+  else if(!strcmp(command,"gpu blit writealloc"))a03_gpu_blit_control(15);
+  else if(!strcmp(command,"gpu blit rate384"))a03_gpu_blit_control(16);
+  else if(!strcmp(command,"gpu blit rate512"))a03_gpu_blit_control(17);
++ else if(!strcmp(command,"gpu blit pollwait"))a03_gpu_blit_control(18);
++ else if(!strcmp(command,"gpu blit pollspin"))a03_gpu_blit_control(19);
+  else if(!strncmp(command,"threads ",8)||!strncmp(command,"sample ",7)||!strncmp(command,"mem ",4)||!strncmp(command,"creds ",6)) {
+   bool threads=!strncmp(command,"threads ",8);
+   bool creds=!strncmp(command,"creds ",6);

@@ -39,7 +39,7 @@ def qualified(before,after,rate):
         raise RuntimeError('Fault or fallback during clock qualification')
     if after['verified']-before['verified']<4 or after['completed']-before['completed']<4:
         raise RuntimeError('Clock policy did not earn four fresh readbacks')
-    for key in ['cached','warm','tile_rows','memattr']:
+    for key in ['cached','warm','tile_rows','memattr','poll_spin']:
         if before.get(key)!=after.get(key):raise RuntimeError('Policy changed during qualification')
 
 
@@ -75,15 +75,15 @@ def main():
                 result=paired_result(run.stdout)
                 if len(result['samples'])!=a.rounds*2 or any(s.get('clock_mhz')!=rate for s in result['samples']):
                     raise RuntimeError('Incomplete or mixed clock policy comparison')
-                result['clock_mhz']=rate;result['policy']=name;results.append(result)
+                result['clock_mhz','poll_spin']=rate;result['policy']=name;results.append(result)
                 print('Qualified '+name+' paired comparison complete.',flush=True)
         finally:
             blit.command(probe,log,'gpu blit off')
-            blit.command(probe,log,'gpu blit rate'+str(original['clock_mhz']))
+            blit.command(probe,log,'gpu blit rate'+str(original['clock_mhz','poll_spin']))
             blit.command(probe,log,'gpu blit '+('verify' if original['verify'] else 'fast'))
             blit.command(probe,log,'gpu blit '+('on' if original['enabled'] else 'off'))
             restored=blit.snapshot(probe,log)
-            if any(restored.get(k)!=original.get(k) for k in ['enabled','verify','tile_rows','cached','warm','memattr','clock_mhz']):
+            if any(restored.get(k)!=original.get(k) for k in ['enabled','verify','tile_rows','cached','warm','memattr','clock_mhz','poll_spin']):
                 raise RuntimeError('Original clock policy/mode restoration not confirmed; inspect live status')
             print('Original clock policy and GPU mode restored.',flush=True)
     print(json.dumps(dict(note='Accepted-frame synchronous copy latency, not physical FPS',rates=results),indent=2))

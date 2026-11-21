@@ -38,6 +38,8 @@ def snapshot(probe,log):
     result=dict(zip(keys,map(int,fields.groups()+policy.groups()+timing.groups())))
     cached=re.search(r'A03 GPU blit: cached=(\d+);',gpu)
     if cached:result['cached']=int(cached[1])
+    polling=re.search(r'A03 GPU blit: poll-spin=(\d+) gaps=(\d+) gap-ns=(\d+)',gpu)
+    if polling:result.update(poll_spin=int(polling[1]),poll_gaps=int(polling[2]),poll_gap_ns=int(polling[3]))
     clock=re.search(r'A03 GPU blit: clock-mhz=(\d+);',gpu)
     if clock:result['clock_mhz']=int(clock[1])
     attr=re.search(r'A03 GPU blit: memattr=(\d+);',gpu)
@@ -53,6 +55,8 @@ def snapshot(probe,log):
 
 
 def report(before,after,mode):
+    if before.get('poll_spin')!=after.get('poll_spin'):
+        raise RuntimeError('GPU poll policy changed during interval; discard measurement')
     if before.get('clock_mhz')!=after.get('clock_mhz'):
         raise RuntimeError('GPU clock policy changed during interval; discard measurement')
     if before.get('memattr')!=after.get('memattr'):
@@ -70,6 +74,8 @@ def report(before,after,mode):
     elapsed=delta['cpu_ns'] if mode=='cpu' else delta['gpu_ns']
     delta.update(mode=mode,mean_copy_ms=elapsed/n/1000000 if n else None,quarantined=after['quarantined'])
     if 'cached' in after:delta['cached']=after['cached']
+    if 'poll_spin' in after:
+        delta.update(poll_spin=after['poll_spin'],poll_gaps=after['poll_gaps']-before['poll_gaps'],poll_gap_ns=after['poll_gap_ns']-before['poll_gap_ns'])
     if 'clock_mhz' in after:delta['clock_mhz']=after['clock_mhz']
     if 'memattr' in after:delta['memattr']=after['memattr']
     if 'tile_rows' in after:delta['tile_rows']=after['tile_rows']

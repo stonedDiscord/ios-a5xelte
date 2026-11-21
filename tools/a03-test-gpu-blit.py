@@ -9,7 +9,7 @@ assert 'a03_fb_gpu_quarantined_surface=s;' in fb
 assert fb.index('if(a03_fb_gpu_quarantined)return;')<fb.index('uint32_t mask = get32(rec, 0x104);')
 assert fb.index('int copied=a03_gpu_framebuffer_blit')<fb.index('if(!copied)for (int32_t y = 0; y < h; y++)')
 src=(args.source/'bsd/dev/a03_gpu.c').read_text()
-src=chr(10).join(l for l in src.splitlines() if not l.startswith('#include')).replace('__asm__ volatile("dsb sy" ::: "memory");','')
+src=chr(10).join(l for l in src.splitlines() if not l.startswith('#include')).replace('__asm__ volatile("dsb sy" ::: "memory");','').replace('__asm__ volatile("yield" ::: "memory");','')
 src=src.replace('uint32_t value = *(volatile uint32_t *)(base + offset);','uint32_t value = fake_read(base, offset);').replace('*(volatile uint32_t *)(a03_gpu_regs + offset) = value;','fake_write(offset, value);')
 layout=''
 for name in ['a03_gpu_job_layout.h','a03_gpu_copy_layout.h','a03_gpu_blit_layout.h']:
@@ -32,6 +32,7 @@ static unsigned a03_gpu_fullscreen_rows;
 static unsigned a03_gpu_blit_memattr;
 static uint64_t fake_time;
 static uint64_t mach_absolute_time(void){return ++fake_time;}
+static void nanoseconds_to_absolutetime(uint64_t n,uint64_t *t){*t=n/10;}
 static void absolutetime_to_nanoseconds(uint64_t t,uint64_t *ns){*ns=t*10;}
 static void *allocation;
 static int capture(const char*fmt,...){
@@ -266,6 +267,16 @@ int main(void){
  reset(0);a03_gpu_clock_selector=2;bank[2][1]=bank[2][2]=0x21;
  assert(blit(720,1600)==1&&!a03_gpu_job_poisoned);
  reset(0);a03_gpu_clock_selector=2;assert(blit(720,1600)==0&&!starts);
+ reset(0);a03_gpu_job_requested=3;a03_gpu_blit_control(19);
+ unsigned prior_us=us;uint64_t gaps=a03_gpu_poll_count;
+ a03_gpu_poll_gap();assert(a03_gpu_poll_count==gaps+1&&a03_gpu_poll_wait_ticks>=1000&&us==prior_us);
+ a03_gpu_blit_control(18);a03_gpu_poll_gap();assert(us==prior_us+10&&a03_gpu_poll_count==gaps+1);
+ a03_gpu_job_requested=0;a03_gpu_blit_control(19);a03_gpu_poll_gap();assert(us==prior_us+20);
+ for(unsigned m=0;m<=7;m++){
+  reset(m);a03_gpu_blit_control(19);int r=blit(53,17);
+  if(m==0)assert(r==1);
+  else assert(r!=1);
+ }
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''

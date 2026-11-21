@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:29UTC: counter-bounded polling candidate0188
+
+Previous goal turn progressed through0182..0187 hardware comparisons and
+native16K mapping improvement. Goal remains active. New source audit identifies
+machine_delay_until uses WFE with no local deadline event; delay10us may wait
+for unrelated interrupts. This can inflate measured GPU execution latency.
+0188 explicitpollspin uses architectural-counter bounded10us yield loop ONLY
+for framebuffer completion/retirement/cacheclean polling. Defaultpollwait keeps
+existingdelay; nointerruptmask/globaltimerchange. Iterationtimeouts, faults,
+sourceownership/freshcleancompletion/retirement/quarantine unchanged. Reports
+pollgapcount/time; benchmarks rejectmixedpollpolicy. HostactualDMA modes0..7,
+helper boundedgap/default/nonframe path, ASanUBSan/ratehelper/ARM64/profile134/
+benchmarkregressionsPASS. NeedfullCI/BOOT0120/readbacks+pairedpollwait/pollspin;
+hypothesis nothardwareproof. Current0119GPUOFFpowered0/384verify1/touchON.
+
 ## 2026-11-21 00:23UTC: BOOT0119 hardware PASS1.969ms; CPU remains faster
 
 Both384/512MHz fourfreshfullreadbacks+threepaired8copyrounds PASS. CPU384

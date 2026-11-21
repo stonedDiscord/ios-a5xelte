@@ -46,6 +46,14 @@ values=iter(['A03 GPU blit: memattr=2; enabled=1 frames=4 pixels=4608000 fallbac
 assert m.snapshot(None,None)['memattr']==2
 values=iter(['A03 GPU blit: clock-mhz=512; enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
 assert m.snapshot(None,None)['clock_mhz']==512
+values=iter(['A03 GPU blit: poll-spin=1 gaps=10 gap-ns=100000 enabled=1 frames=4 pixels=4608000 fallbacks=0 quarantined=0 verify=1 verified=4 completed=4 total-ns=123 last-ns=12','copy timing cpu=28/280ns gpu=4/123ns'])
+assert m.snapshot(None,None)['poll_spin']==1
+pb=dict(b,poll_spin=1,poll_gaps=10,poll_gap_ns=100000)
+pa=dict(pb,poll_gaps=14,poll_gap_ns=140000,gpu_copies=1,gpu_ns=100)
+assert m.report(pb,pa,'fast')['poll_gaps']==4
+try:m.report(dict(pb,poll_spin=0),pa,'fast');assert False
+except RuntimeError as error:assert 'GPU poll policy changed' in str(error)
+
 assert m.report(dict(b,clock_mhz=512),dict(b,clock_mhz=512,gpu_copies=1,gpu_ns=100),'fast')['clock_mhz']==512
 try:m.report(dict(b,clock_mhz=384),dict(b,clock_mhz=512),'fast');assert False
 except RuntimeError as error:assert 'GPU clock policy changed' in str(error)
