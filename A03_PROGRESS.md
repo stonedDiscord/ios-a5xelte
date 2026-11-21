@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: BOOT0129 clears catalog error; wallpaper publisher still traps
+
+CI44918953970 succeeded and the exact patch, linked kernel and SMP checks
+passed. BOOT-only upload of 584e6fda7689ed4b281ccd705e290dd1ebcced5c37a870ab93c7f5965befb1df
+succeeded. BOOT0129 logged validated USERDATA root and catalog alias result=0.
+One monitor Home dispatch preceded display wake. PosterBoard PID240 advanced
+into wallpaper bundle loading; the previous invalid-order SIGABRT did not
+recur in this capture. It then trapped and respawned; recorded PIDs 240 and
+353 both show SIGTRAP at unslid 0x1be3babac. Matching cache disassembly shows
+BRK #0 on the nil selectedLockPath branch of PBFWallpaperPublisher activation.
+Caller obtains selectedConfiguration and asks it for _path. Which upstream
+condition leaves the path nil is still unproven. Private
+boot0129-wallpaper-live.log captured 49 corpse-limit PosterBoard records.
+
+Patch 0198 (ba9000c) adds PosterBoard to the bounded startup syscall trace;
+exact BOOT0129 source application and sanitizer tests pass. CI44920479585,
+job136895209891 builds exact ba9000cfec4b07e0e440fa7c53e8d35aac65d930.
+Next verify BOOT0130 with the same arguments and alias, then correlate errors
+from the first traced PID with its trap. BOOT0129 still installed, reader
+ended. Staged-root CI44918953514 was still running on last check.
+
 ## 2026-11-21: PosterBoard crash isolated; repair building
 
 Diagnostic CI44916896554 succeeded, source and kernel checksum checked, and

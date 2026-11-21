@@ -1,3 +1,11 @@
+ACTIVE PosterBoard still crashes after successful BOOT0129 catalog alias.
+Old invalid-order SIGABRT absent; two live crashes now SIGTRAP BRK #0 in
+PBFWallpaperPublisher activation, nil selectedLockPath, unslid 0x1be3babac.
+49 corpse-limit records in private boot0129-wallpaper-live.log; reader ended.
+Patch 0198 ba9000c adds bounded startup syscall evidence. CI44920479585
+job136895209891 active. Package next BOOT with the same arguments and alias,
+capture first traced PID and correlate failures. No full fix yet.
+
 ACTIVE PosterBoard cause confirmed on BOOT0128: PIDs 248 and 353 SIGABRT
 for missing valid order in /Library/Wallpaper/Collections/Collections.plist.
 Stock Collections~iphone.plist in the installed-root source has six entries.
