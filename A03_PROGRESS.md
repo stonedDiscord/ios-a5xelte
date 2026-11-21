@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: BOOT0135 confirms default wallpaper metadata opens
+
+CI44930944890 passed for d81db2b. BOOT0135 checksum
+c213041b3ee5c11df5c5dc69e11f4ea9f0d982d5e27b8fe7f2c6c57e6b44da08
+verified and BOOT-only upload succeeded. Touch firmware reloaded with
+ready A55A, and streaming reached 1102 slices after one start retry.
+Private boot0135-posterboard-live.log shows PID231 opening all three
+7400 metadata variants and the iPhone defaults, then successfully opening
+a temporary Wallpaper.plist. The persistent store and version directory
+exist and belong to mobile, yet its ordering plist returns ENOENT.
+PIDs231 and318 still trap at unslid 0x1be3babac. Patch 0205 captures paths
+under PRBPosterExtensionDataStore including rename destinations, which
+0204 missed. CI44932481949/job136931918601 is building exact
+2ed4ef0f02144b81969d1958d5c1ed05d8680d75. Private
+prepare-posterboard-0136.py pins the run and source. BOOT0135 is installed
+with reader PID110201/session80995. Capture store initialization on 0136
+and restore volatile touch after reboot.
+
 ## 2026-11-21: BOOT0134 keeps touch active; asset trace budget refined
 
 CI44929116933 verified and BOOT-only0134 upload succeeded. Touch immediately

@@ -1,3 +1,10 @@
+ACTIVE BOOT0135 opens all default 7400 metadata and the iPhone defaults.
+Temporary wallpaper metadata also opens. Store directories exist, ordering
+plist returns ENOENT, and the nil selectedLockPath trap persists. Patch 0205
+traces persistent store operations and rename destinations. CI44932481949
+job136931918601 active at 2ed4ef0. Private prepare-posterboard-0136.py pins it.
+BOOT0135 touch restored. Reader PID110201/session80995. Restore touch on 0136.
+
 ACTIVE0134 running, touch restored/load0/A55A/stream1 after one retry.
 SolePID102004/session5401 to~17:42UTC;41PosterBoardcrashes17:37. Stock asset
 reads succeed but trace192cap exhausted;0204/d81db2b focuses7400 opens.
