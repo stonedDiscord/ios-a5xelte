@@ -1,3 +1,8 @@
+ACTIVE BOOT0138 installed from CI44936228950. Touch firmware ready A55A
+and streaming. Sole reader PID138503/session66689. Live lsd opens the stock
+extension definition plist and signature. Follow its registration and
+PosterBoard's query on this boot.
+
 ACTIVE BOOT0137 confirmed error -2219 is the missing provider coordinator.
 The staged HFS contains provider declarations and bundles. 0207/54f6f71
 traces live registration paths for PosterBoard, lsd and pkd.

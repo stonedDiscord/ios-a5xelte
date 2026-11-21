@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — BOOT0138 registration trace installed
+
+CI44936228950 passed, and the source, checksum and SMP checks passed.
+The BOOT-only upload succeeded. Image SHA-256
+b4d156cb820e4ccfb3f354e4e560694ee665390ce33b81186e5e87f07841a09a.
+Touch staging succeeded after a retry and the controller reported ready A55A.
+Streaming reached 175 slices. The sole reader PID138503/session66689 writes
+boot0138-posterboard-live.log. Live lsd PID107 opened extensions.plist, its
+signature, and the ExtensionPoints directory and definitions successfully.
+PosterBoard startup was still pending at the first checkpoint.
+
 ## 2026-11-21 — PosterBoard provider coordinator lookup
 
 Matching 20A362 cache disassembly identifies the -2219 return at
