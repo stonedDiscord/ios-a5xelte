@@ -1,3 +1,12 @@
+ACTIVE03:45UTCBOOT0126autobootPASS4full+fast/nopriorGPUcontrolsorreplays.
+ONcachedwarm384/defaultwait/tile4/idle100;5completed4verified0fault/idle3.
+OneHomeafterrequest0+USBswipeupdispatch;actualsoak67126logboot0126-compositor-soak.log
+600s/12000additionalrequired nowrunning. NoGPUcontrolsorreplaysduringsoak.
+Sole168765/session9363boot0126-boundary-live.loguntil~04:12UTC.
+Checksoak+failurelines;onquarantinereadcomplete0194snapshot,NORESET/reclaim/
+ASteardown/powerdown/CPUoverwrite. Otherwisefreshreadbacks/idle/paired/physical.
+CPU0124restoreavailable. Goalactive/nofixclaim/physicalpending.
+
 ACTIVE03:43UTCBOOT0126runtime:8SGIPASS/RTC1795232498retained,nohostsync.
 FWRAM79104load0/A55A;firststartupinvalidslice,onestartretry->touchON.
 Storagehealthyready1poison0. GPUstilldefaultOFFbeforefirstcompositorframe;

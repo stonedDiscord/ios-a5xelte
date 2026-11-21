@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:45UTC: BOOT0126 automatic GPU proof passes; actual soak started
+
+Autoboot verifierPASS activation->4full720x1600readbacks->fastcopy, no priorhost
+GPUcontrolsorreplays. GPUON/cachedwarm384/defaultwait/tile4/idle100ms; first5
+copies/4verified/0fallbackquarantine, idle3/powered0 observed afterretirement.
+OneHome beforeproof and secondafterrequest0, thenoneUSBswipeup dispatch to
+triggeractualcompositoractivity; nophysicalUIackclaim. Read-onlysoak67126
+boot0126-compositor-soak.log started03:45UTC,600s/12000additionalcopiesrequired.
+No replay/GPUmodecontrols duringinterval. Needactualprogressandnofailure,
+thenfreshreadbacks/idle/paired/physicalgates. Sole168765/session9363loguntil
+~04:12UTC. Goalactive;restoredjobendclean remainscandidate/notfixyet.
+
 ## 2026-11-21 03:43UTC: BOOT0126 kernel/touch/storage healthy; waiting compositor
 
 All8SGI1PASS/retainedRTC1795232498 read without host sync. Volatile79104byte
