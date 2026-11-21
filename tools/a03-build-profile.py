@@ -198,7 +198,8 @@ def main():
                      '0193-a03-preserve-job-boundary-cache-clean.patch',
                      '0194-a03-bounded-retirement-snapshot-records.patch',
                      '0195-a03-physical-buttons.patch',
-                     '0196-a03-posterboard-crash-evidence.patch'):
+                     '0196-a03-posterboard-crash-evidence.patch',
+                     '0197-a03-install-wallpaper-catalog-alias.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

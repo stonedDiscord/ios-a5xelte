@@ -1,0 +1,80 @@
+--- a/bsd/kern/bsd_init.c
++++ b/bsd/kern/bsd_init.c
+@@ -1051,5 +1051,15 @@
+ #endif /* CONFIG_IMAGEBOOT */
+ #endif /* CONFIG_BASESYSTEMROOT */
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++	uint32_t wallpaper = 0;
++	extern int a03_emmc_writable_root(dev_t);
++	extern void a03_install_wallpaper_catalog(vnode_t);
++	if (PE_parse_boot_argn("a03wallpaper", &wallpaper, sizeof(wallpaper)) &&
++	    wallpaper == 1 && !bsd_rooted_ramdisk() && a03_emmc_writable_root(rootdev)) {
++		a03_install_wallpaper_catalog(rootvnode);
++	}
++#endif
++
+ 	/* Initialize signal state for process 0. */
+ 	bsd_init_kprintf("calling siginit\n");
+--- a/bsd/vfs/vfs_syscalls.c
++++ b/bsd/vfs/vfs_syscalls.c
+@@ -5950,7 +5950,59 @@
+ 
+ 	return error;
+ }
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++void a03_install_wallpaper_catalog(vnode_t root);
++
++/* Repair the existing A03 HFS root before launchd starts. */
++void
++a03_install_wallpaper_catalog(vnode_t root)
++{
++	static const char directory[] = "/Library/Wallpaper/Collections";
++	static const char source[] = "/Library/Wallpaper/Collections/Collections~iphone.plist";
++	static const char alias[] = "/Library/Wallpaper/Collections/Collections.plist";
++	static const char target[] = "Collections~iphone.plist";
++	vfs_context_t ctx = vfs_context_kernel();
++	mount_t mp = vnode_mount(root);
++	vnode_t dir = NULLVP, stock = NULLVP, resolved = NULLVP;
++	int error;
++
++	if (vfs_isrdonly(mp) || strcmp(vfs_statfs(mp)->f_fstypename, "hfs") != 0) {
++		return;
++	}
++	error = vnode_lookup(directory, VNODE_LOOKUP_NOFOLLOW, &dir, ctx);
++	if (error == 0 && (vnode_vtype(dir) != VDIR || vnode_mount(dir) != mp)) {
++		error = EINVAL;
++	}
++	if (error == 0) {
++		error = vnode_lookup(source, VNODE_LOOKUP_NOFOLLOW, &stock, ctx);
++	}
++	if (error == 0 && (vnode_vtype(stock) != VREG || vnode_mount(stock) != mp)) {
++		error = EINVAL;
++	}
++	if (error == 0) {
++		error = symlinkat_internal(ctx, CAST_USER_ADDR_T(target), AT_FDCWD,
++		    CAST_USER_ADDR_T(alias), UIO_SYSSPACE);
++		if (error == 0 || error == EEXIST) {
++			error = vnode_lookup(alias, 0, &resolved, ctx);
++			if (error == 0 && resolved != stock) {
++				error = EEXIST;
++			}
++		}
++	}
++	if (resolved != NULLVP) {
++		vnode_put(resolved);
++	}
++	if (stock != NULLVP) {
++		vnode_put(stock);
++	}
++	if (dir != NULLVP) {
++		vnode_put(dir);
++	}
++	printf("A03 wallpaper catalog: alias result=%d\n", error);
++}
++#endif
++
+ int
+ symlink(__unused proc_t p, struct symlink_args *uap, __unused int32_t *retval)
+ {

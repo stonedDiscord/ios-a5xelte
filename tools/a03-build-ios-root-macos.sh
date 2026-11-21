@@ -56,6 +56,7 @@ hdiutil attach -nobrowse -owners on -mountpoint "$work/root" "$work/root.dmg"
 # Reuse portable file staging only; no donor hardware or partition tool.
 sudo env STAGE_FULL=1 STAGE_ALL_APPS=1 bash "$repo/tools/a5xelte-stage-ios-root.sh" "$work/os" "$work/sysos" "$work/appos" "$work/root"
 sudo python3 "$repo/tools/sweet-root-tweaks.py" "$work/root"
+sudo python3 "$repo/tools/a03-stage-wallpaper-catalog.py" "$work/root"
 python3 "$repo/tools/a03-inspect-ios-root.py" "$work/root" | tee "$output.inventory.json"
 sync
 hdiutil detach "$work/root"
