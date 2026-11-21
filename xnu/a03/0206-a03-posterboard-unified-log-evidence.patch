@@ -1,0 +1,34 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -5741,6 +5741,31 @@
+ 		imgp->ip_envc++;
+ 	}
+ 
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++	/* Route PosterBoard's unified log through its existing stderr capture. */
++	static const char activity_env[] = "OS_ACTIVITY_DT_MODE=YES";
++	static const char activity_key[] = "OS_ACTIVITY_DT_MODE=";
++	uint32_t userlogs = 0;
++	if (!strcmp(imgp->ip_strings + strlen(EXECUTABLE_KEY),
++	    "/Applications/PosterBoard.app/PosterBoard") &&
++	    PE_parse_boot_argn("a03_userlogs", &userlogs, sizeof(userlogs)) && userlogs == 1 &&
++	    imgp->ip_argspace >= sizeof(activity_env) + 2 * new_ptr_size &&
++	    imgp->ip_strspace >= sizeof(activity_env)) {
++		const char *env = imgp->ip_endargv;
++		while (env < imgp->ip_strendp && strncmp(env, activity_key, sizeof(activity_key) - 1)) {
++			env += strlen(env) + 1;
++		}
++		if (env == imgp->ip_strendp) {
++			error = exec_add_user_string(imgp, CAST_USER_ADDR_T(activity_env), UIO_SYSSPACE, TRUE);
++			if (error) {
++				goto bad;
++			}
++			imgp->ip_argspace -= new_ptr_size;
++			imgp->ip_envc++;
++		}
++	}
++#endif
++
+ 	/* Save space for envv[] NULL terminator */
+ 	if (imgp->ip_argspace < new_ptr_size) {
+ 		error = E2BIG;
