@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — PosterKit fallback extension-point definition
+
+BOOT0139 reproduced both -2219 errors and the publisher trap in PID246.
+Commit 0f4dc39 stages the PosterKit definition in the directory that
+LaunchServices enumerates after the signed cache fails. The staging
+check used the matching stock plist and verified repeat staging and
+preservation of the private host entitlement and scene-hosting policy.
+Root CI44939625136 is building. The device still runs BOOT0139 and the
+fallback has not been exercised on hardware.
+
 ## 2026-11-21 — BOOT0139 identifies the AMFI dependency
 
 CI44938311489 passed. BOOT-only upload succeeded after source, checksum

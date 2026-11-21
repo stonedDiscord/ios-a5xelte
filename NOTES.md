@@ -1,3 +1,8 @@
+ACTIVE root CI44939625136 builds 0f4dc39, which stages the stock PosterKit
+extension point for fallback enumeration. BOOT0139 still reproduces the
+crash. Validate the fallback on USERDATA p55 and check provider discovery,
+wallpaper selection, and PosterBoard survival through startup and wake.
+
 ACTIVE BOOT0139 installed, touch ready and streaming, reader PID145876.
 LaunchServices cannot read the signed extension-point cache because it
 cannot find AMFI (ExtensionKit code 12). Investigate the signed-cache
