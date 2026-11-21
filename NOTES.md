@@ -1,3 +1,11 @@
+ACTIVE00:00UTCNov21 CI44840823838/exact7607421e7dfeed0c335aa22ad1c5297f452ce0ca
+in_progress0187singleverifiedendclean. No duplicate. Privategpu-endflush-work/
+artifacts.py+pack0119.py pinexactrun/sixsources/RTC/reverse0187/checksum/SMP.
+Needfullsuccess->actualASan->BOOT-only0119->readbacks+pairedrates->384restore.
+Current0118confirmed384APB11/11/31/GPUOFFpowered0verify1impldef0tile4cachedwarm1,
+80completedverified0(reset)/0quarantine. Sole129991/session2940until~00:22UTC.
+Goalactive; native16Koptimizationimproved512GPUmedian1.983msbutCPUstillfaster.
+
 ACTIVE0118native16KHWreadbackPASSmappingphase~0.06-0.13ms(vs0.23),GPU384median
 2.055985ms;512retrymedian1.982543ms. First512runrejectedbackgroundCPU36vs8;
 retryvalid/restorationmustcheck. Sole129991/session2940until~00:22UTCNov21.
