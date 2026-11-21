@@ -1,3 +1,11 @@
+ACTIVE BOOT0127 buttons running. ARM CI44912955041 exact a17e9d8 success,
+source and hashes verified, BOOT-only Heimdall upload succeeded. Sole console
+PID30533/session68042 boot0127-buttons-live.log until about 14:58 UTC.
+8/8 SGI, RTC and storage healthy, touch RAM restored and stream ON. Both
+button controllers initialized and HID client open. Await physical button
+edges and power request/copy transitions, then unplugged wake. No synthetic
+input on BOOT0127 as of 14:31 UTC. Restore BOOT0126 is available.
+
 ACTIVE physical button candidate 0195. Live SM-A035G DT and matching stock
 source identify EIC1 power, EIC4 volume down, and AP GPIO125 volume up.
 Independent worker uses a03keys=1 with existing a03_hid=1 and forwards to HID.

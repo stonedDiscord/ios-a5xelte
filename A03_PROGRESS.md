@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 14:31 UTC — Physical button BOOT0127 running
+
+ARM CI44912955041 succeeded at exact a17e9d8. Verified CI source and kernel
+SHA256 76e2ab4b5a17b01dcd99c83683004fd5c035507460e1629315dd32bbb8852c1f.
+BOOT0127 SHA256
+33adcbc910bfcc1cd7ae0ba097bfb9c0401c47196d626689dffde27184dc5b98.
+Same eight CPUs, 1984 MiB, ADT and root parameters with a03keys=1 added.
+Explicit CDC Download reboot reached Heimdall and BOOT-only upload succeeded.
+Sole reader PID30533/session68042, private boot0127-buttons-live.log.
+All eight SGI checks pass, retained RTC works, storage ready/unpoisoned.
+Button worker start=0, PMIC and GPIO init both 1, and backboardd opened
+the HID service. Touch RAM load succeeded with ready A55A and streaming
+resumed after one invalid startup slice. No physical key edges yet.
+Physical test requested over USB first so key, HID, and panels logs can be
+matched. Then verify sleep/wake physically without USB. Goal still active.
+
 ## 2026-11-21 — Physical button candidate
 
 The live SM-A035G DT and matching stock overlay agree on power (SC2730 EIC1
