@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Qualify and compare explicit explicit stock GPU clock policies on one live boot.
+"""Qualify and compare explicit stock GPU clock policies on one live boot.
 
 Uses an existing sole console reader. Does not flash, reset, change cache or
 power policy, or inject input. Each policy earns four full readbacks before the

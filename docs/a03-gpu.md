@@ -1,5 +1,54 @@
 # A03 GPU acceleration bring-up
 
+## Active checkpoint — November 21, 2026
+
+BOOT0118 / CI44836868623 / e8e3dee is hardware validated for full-frame
+GPU copies. CPU rendering still produces the source surfaces; Metal/EAGL
+rendering support is not implemented. The acceleration goal is unfinished:
+GPU copy latency remains above CPU latency, and sustained physical UI
+acceptance has not been established.
+
+| Controlled test | GPU median | Result |
+| --- | --- | --- |
+| BOOT0114 tile rows4/8/16/32 | 2.186 /2.205 /2.208 /2.255ms | Larger tiles do not help |
+| BOOT0115 impldef/cacheall/writealloc | 2.214 /2.191 /2.325ms | Retain default impldef |
+| BOOT0116 clock384/512MHz | 2.193 /2.128ms | Small clock effect |
+| BOOT0117 clean-only CPU source,384/512MHz | 2.202 /2.126ms | No measured latency gain |
+| BOOT0118 native16K mapping validation,384/512MHz | 2.056 /1.983ms | Setup reduced; still above CPU |
+
+Each accepted comparison uses four fresh full-frame readbacks and three
+alternating eight-copy CPU/GPU rounds. The first BOOT0118 512MHz run was
+rejected for extra background CPU copies;1.983ms is the uncontaminated retry.
+These are synchronous copy timings, not animation FPS. All accepted trials
+have zero fallbacks/quarantine. Defaults remain GPUOFF,384MHz,impldef0,tile4;
+cached/warm operation is explicit and full verification is the bring-up default.
+
+0187 is building in CI44840823838 (exact7607421). Cached framebuffer jobs
+omit the duplicate automatic end flush while preserving start invalidation
+and the independently acknowledged GPU CLEAN_INV after slot retirement.
+CPU readback, AS disable, fallback and shutdown remain after that completion.
+The source read-only mapping is cleaned to PoC; descriptor/job flushes remain.
+No0187 hardware/performance claim yet. See A03_PROGRESS.md and NOTES.md for
+current reader, image hashes, deployment and unfinished gates.
+
+Use the existing single-reader log with these bounded comparison tools:
+
+    python3 tools/a03-gpu-tile-benchmark.py --log LOG
+    python3 tools/a03-gpu-memattr-benchmark.py --log LOG
+    python3 tools/a03-gpu-rate-benchmark.py --log LOG
+
+They qualify policies and restore the original mode, refusing faults, incomplete
+replays, changed policies, mixed CPU/GPU intervals or background copies.
+The kernel's read-only status may be retried on a completed empty busy reply;
+a replay is never resent automatically.
+
+0181 observes raw display-power requests:1 ->0 around idle cessation, then
+Home ->1 followed by CPU frames. Sleep is a likely explanation for that stale
+clock episode. Panel blanking and completed power transitions remain
+unimplemented/unproven; PosterBoard crashes are a separate known issue.
+
+The following dated checkpoints are retained as bring-up history.
+
 ## Cached hardware checkpoint and remaining work
 
 BOOT0107 from CI44791438428 (7e56be7) passes repeated full-frame pixel
