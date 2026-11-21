@@ -1,3 +1,11 @@
+BOOT0143 reseeding allowed CollectionsPoster to launch and PosterBoard to
+create snapshot surfaces. PID861 then trapped in CFRetain from
+PBUIImageEncoder saveUIImage:error:. The preceding buildCGImage call
+can return NULL. The same capture shows unsupported IOSurface selector 1
+and a two-plane b3a8 surface. These are leads for the snapshot failure.
+The earlier -2219 error did not appear in this launch. Selection and
+survival through startup and wake remain unverified.
+
 BOOT0143 passed CI44945143677 and the BOOT-only upload. SHA-256
 aed4f81d51b4ed79fe19bd445a1f62ca047de70405658fb860c5748071c76546.
 Cache archive returned 0 and lsd confirmed ENOENT at the original path.
