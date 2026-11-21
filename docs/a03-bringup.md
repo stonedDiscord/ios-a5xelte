@@ -5,8 +5,9 @@ BOOT0123 exposed a retirement failure after2041GPUcopies. The driver retained
 DMA mappings/source and suppressed panel writes; earlier static stress and idle
 cycle passes did not establish sustained UI reliability. CPU-control BOOT0124
 is now flashed using the exact same kernel with automatic GPU opt-in removed.
-Candidate0192 adds a failure-only stage/register snapshot; CI44856061555 is
-active. Prior paired tests measured real submitting-thread CPU offload, but the
+BOOT0125/CI44856061555 adds a failure-only stage/register snapshot. Its
+subsequent sustained trial reached10025actualcompositorcopies without recurrence,
+but does not fix the earlier intermittent failure. GPU is explicitly OFF. Prior paired tests measured real submitting-thread CPU offload, but the
 basic GPU goal remains incomplete. See newest A03_PROGRESS.md and NOTES.md.
 
 2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host

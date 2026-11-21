@@ -1,3 +1,12 @@
+ACTIVE03:08UTC0125diagnosticactualcompositor10025copies(no replay)no fault,then
+4requestedreadbacksPASS+backgroundverifyframes->10412completed391verified,
+0fallbackquarantine/idle63. OFFbusydeclinesexplicitlyhandled; confirmedOFFpowered0
+verify1,CPUcopiesresume. NOTFIX:0192loggingonly/original0123intermittentfailure
+unreproduced/physicalpending. NoCI;0124CPUrestoreavailable. NEWsole/session97940
+boot0125-retire-soak-live.loguntil~03:38UTC(old159238stopped);resolvePIDnext.
+Originalbootprooflogboot0125-retire-live.logretained. Goalactive;nextfailurestage
+captureandrootcausecomparison,notmorestaticreplaycompletionclaims.
+
 ACTIVE03:00UTC0125actualcompositor5776GPUframes/4verified0fault/idle41asof02:59UTC,
 NOreplayafterboot. Exceeds0123failure2041but0192loggingonly,NOFIXclaim/rootcause
 unknown. Needlongercaptureorreprostage. Sole159238/session38202

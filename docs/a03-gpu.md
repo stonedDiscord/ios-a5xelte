@@ -10,8 +10,11 @@ sustained UI reliability. The failure is GPU quarantine, distinct from earlier
 idle display-sleep episodes. Exact failing stage was not yet logged.
 
 CPU-control BOOT0124 uses the same validated kernel with a03gpu=1 removed.
-Candidate0192 adds read-only failure-stage/register diagnostics without changing
-retirement/cache timeouts, quarantine or reset behavior. CI44856061555 is active.
+BOOT0125/CI44856061555 adds read-only failure-stage/register diagnostics without
+changing retirement/cache timeouts, quarantine or reset behavior. Its sustained
+trial reached10025actualcompositorcopies without recurrence; subsequent requested
+and background full readbacks also passed. It is left GPUOFF pending root cause.
+No failure snapshot appeared, so the earlier intermittent failure remains unresolved.
 The goal remains incomplete. Source rendering remains CPU-only; full Metal/EAGL
 is deferred under the requested basic milestone. Earlier paired tests prove CPU
 offload, not sustained physical acceptance or faster animation.
