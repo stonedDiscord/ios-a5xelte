@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: BOOT0133 screen-class write succeeds but trap persists
+
+CI44927553296 succeeded and exact-source/checksum/SMP gates passed.
+BOOT-only upload of 3bf8b08b8239d75a306e933281ae6c1cea3443b636dd133cf9e1096a698985e1
+succeeded. Migration logs result=0 close=0; both catalog aliases also0.
+PIDs232 and317 still trap at unslid0x1be3babac, so adapting the default7400
+metadata did not fix PosterBoard. One USB Home was dispatched after sleep;
+no physical touch/display acceptance claim. Sole reader PID93564/session44663
+captures boot0133-posterboard-live.log until about17:21UTC;46corpse records
+at17:16UTC. Do not infer survival from the earlier quiet startup interval.
+
+0203/ae05b15 expands focused tracing to /Library/Wallpaper assets and
+adds PosterBoard to the bounded userspace /dev/null log tap. Both changed
+C files compile ARM64 using prior CI flags. CI44929116933/job136921631147
+builds exact ae05b15b4389f1dc3abd9682249549dcb08d7bee. Private
+prepare-posterboard-0134.py pins it. Next verify fullCI, BOOT-only0134 and
+inspect actual asset reads plus available app error logs. Goal stays active.
+
 ## 2026-11-21: BOOT0132 uses iPhone defaults; screen-class candidate building
 
 Combined CI44925526385 succeeded at c30a775. Exact 0200+0201 sources,
