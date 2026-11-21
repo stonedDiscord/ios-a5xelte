@@ -64,6 +64,18 @@ trial had a final host-report serialization error after restoration;3df1c3a fixe
 that key and adds a full-success regression. The complete retry emits valid JSON.
 Physical and sustained UI acceptance plus deployment policy remain outstanding.
 
+BOOT0122 / CI44849933946 attempt2 /e8306f9 validates automatic startup via
+a03gpu=1: the first compositor frames activate cached/warm384MHz/defaultwait,
+four full readbacks pass before a fast frame, and the log verifier confirms no
+prior host GPU controls or replays. One Home press followed the observed idle
+power-down request. This is host-command independence with USB connected;
+physically unplugged boot and visible UI correctness remain unverified.
+Its512-copy stress passes with four final readbacks, wall1.989ms and submitting
+thread0.832ms per copy, zero fallback/quarantine. Warm power remains on during
+idle, so the running trial is explicitly OFF pending0191 idle-release hardware
+validation. Candidate0191 uses the existing serialized vsync timer to release
+retired owned GPU power after100ms; it never powers down quarantined DMA.
+
 Use the existing single-reader log with these bounded comparison tools:
 
     python3 tools/a03-gpu-tile-benchmark.py --log LOG
