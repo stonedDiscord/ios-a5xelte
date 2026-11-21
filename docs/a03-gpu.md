@@ -35,6 +35,19 @@ still18.3% slower than its pairedCPU median, so normal GPU copying stays OFF.
 See A03_PROGRESS.md and NOTES.md for the current reader, image hashes and
 unfinished physical UI/performance gates.
 
+BOOT0120 / CI44844162892 / cc4576ae adds explicit counter-bounded polling.
+Fresh full-frame readbacks pass for both polling policies at both rates. At
+384MHz, wait/spin GPU medians are 2.035/2.030ms; at512MHz they are1.965/1.962ms.
+These differences do not establish a useful gain. The first attempt at each rate
+was rejected for background copies; accepted retries retain exact counts.
+Keep default pollwait: existing XNU already initializes a periodic WFE event
+stream, and these results do not establish a WFE bug. GPU remains OFF.
+
+Candidate0189 adds submitting-thread CPU-runtime counters alongside wall time,
+so blocked waiting can be distinguished from CPU work. It does not measure
+all system CPU or source rendering. Full CI and hardware validation remain
+pending; see active progress/handoff for the exact run. No offload benefit claim.
+
 Use the existing single-reader log with these bounded comparison tools:
 
     python3 tools/a03-gpu-tile-benchmark.py --log LOG
