@@ -1,3 +1,10 @@
+ACTIVE00:36UTC polling rationale correction: exact XNU initializes CNTKCTL
+WFE periodic event stream in arm_init. Prior no-wake-event statement unproven.
+delay10us can instead thread_block when cpu_idle_latency0; counterpoll compares
+combined wait/scheduler overhead, not proof of brokenWFE. 0188/defaultwait
+unchanged; actualDMAASan rerunPASS. CI44844162892 stillBuild. Sleep evidence
+and Home wake recordedddd8a61; physicalconfirmationpending.
+
 ACTIVE00:33UTC BOOT0119 idle-sleep evidence: rawpower0/swaps143/copies137
 stop whilevsync/timealive; GPUalreadyOFFpowered0/fallback0quarantine0. ONE
 inputhome->rawpower1->swaps439/copies433about10slater. Supports sleep/wake

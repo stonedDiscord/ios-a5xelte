@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:36UTC: polling rationale corrected after timer-source audit
+
+0188 remains an explicit comparison experiment, not a diagnosed WFE defect.
+Read of exact BOOT0119 XNU reveals wfe_timeout_configure/init are invoked in
+arm_init and enable CNTKCTL periodic events (nominal1us). Previous claim that
+this port has no deadline wake event was too strong. Also ml_delay_should_spin
+returns false with default cpu_idle_latency0, allowing delay10us to block and
+reschedule in normal thread context. Counter polling can test combined wait/
+scheduling overhead but cannot by itself establish broken WFE. No global timer
+change is justified. Actual candidate DMA ASan/UBSan rerun PASS00:34UTC. CI
+44844162892 still building exactcc4576; kernel candidate unchanged/defaultoff.
+
 ## 2026-11-21 00:33UTC: live idle episode supports display sleep
 
 User asks whether stale clock is iOS sleep. BOOT0119 passive display status
