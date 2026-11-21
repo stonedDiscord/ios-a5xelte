@@ -1,0 +1,53 @@
+--- a/bsd/kern/kern_mib.c
++++ b/bsd/kern/kern_mib.c
+@@ -525,6 +525,12 @@
+ 
+ 	case HW_MACHINE:
+ 		bzero(dummy, sizeof(dummy));
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++		/* A03 runs iOS on the device-tree identity, not iOS-on-Mac. */
++		if (!PEGetProductName(dummy, 64)) {
++			return EINVAL;
++		}
++#else
+ 		if (proc_platform(req->p) == PLATFORM_IOS) {
+ 			/* iOS-on-Mac processes don't expect the macOS kind of
+ 			 * hw.machine, e.g. "arm64", but are used to seeing
+@@ -541,11 +547,16 @@
+ 		else {
+ 			strlcpy(dummy, "arm64", sizeof(dummy));
+ 		}
++#endif
+ 		dummy[64] = 0;
+ 		return SYSCTL_OUT(req, dummy, strlen(dummy) + 1);
+ 	case HW_MODEL:
+ 		bzero(dummy, sizeof(dummy));
++#if defined(ARM64_BOARD_CONFIG_SWEET)
++		if (!PEGetTargetName(dummy, 64)) {
++#else
+ 		if (!PEGetProductName(dummy, 64)) {
++#endif
+ 			return EINVAL;
+ 		}
+ 		dummy[64] = 0;
+--- a/iokit/Kernel/arm/SweetPlatformExpert.cpp
++++ b/iokit/Kernel/arm/SweetPlatformExpert.cpp
+@@ -85,8 +85,7 @@
+ 	if (name == NULL || maxLength <= 0) {
+ 		return false;
+ 	}
+-	strlcpy(name, "a03", (size_t)maxLength);
+-	return true;
++	return IODTPlatformExpert::getTargetName(name, maxLength);
+ }
+ 
+ bool
+@@ -95,7 +94,6 @@
+ 	if (name == NULL || maxLength <= 0) {
+ 		return false;
+ 	}
+-	strlcpy(name, "Samsung Galaxy A03", (size_t)maxLength);
+-	return true;
++	return IODTPlatformExpert::getProductName(name, maxLength);
+ }
+ #endif /* SWEET */
