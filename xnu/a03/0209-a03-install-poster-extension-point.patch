@@ -1,0 +1,83 @@
+--- a/bsd/vfs/vfs_syscalls.c
++++ b/bsd/vfs/vfs_syscalls.c
+@@ -6047,2 +6047,76 @@
+ 
++static int renameat_internal(vfs_context_t, int, user_addr_t, int,
++    user_addr_t, int, u_int);
++
++static void
++a03_install_poster_extension_point(vnode_t root)
++{
++	static const char directory[] = "/System/Library/ExtensionKit/ExtensionPoints";
++	static const char path[] =
++	    "/System/Library/ExtensionKit/ExtensionPoints/com.apple.posterkit.provider.appexpt";
++	static const char temporary[] =
++	    "/System/Library/ExtensionKit/ExtensionPoints/.a03-poster-provider.tmp";
++	static char definition[] =
++	    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
++	    "<plist version=\"1.0\"><dict><key>com.apple.posterkit.provider</key><dict>"
++	    "<key>NSExtensionPointIdentifier</key><string>com.apple.posterkit.provider</string>"
++	    "<key>NSExtensionPrincipalClassProhibited</key><true/>"
++	    "<key>EXExtensionPointIsPublic</key><false/>"
++	    "<key>EXPresentsUserInterface</key><true/>"
++	    "<key>EXRequiredEntitlements</key><dict>"
++	    "<key>com.apple.runningboard.posterkit.host</key><true/></dict>"
++	    "<key>EXRequiresSceneHosting</key><true/></dict></dict></plist>";
++	vfs_context_t ctx = vfs_context_kernel();
++	mount_t mp = vnode_mount(root);
++	vnode_t dir = NULLVP, file = NULLVP;
++	if (vfs_isrdonly(mp) || strcmp(vfs_statfs(mp)->f_fstypename, "hfs")) {
++		return;
++	}
++	int error = vnode_lookup(directory, VNODE_LOOKUP_NOFOLLOW, &dir, ctx);
++	if (error != 0) {
++		goto out;
++	}
++	if (vnode_mount(dir) != mp || vnode_vtype(dir) != VDIR) {
++		error = EINVAL;
++		goto out;
++	}
++	error = vnode_lookup(path, VNODE_LOOKUP_NOFOLLOW, &file, ctx);
++	if (error == 0) {
++		vnode_put(file);
++		error = EEXIST;
++		goto out;
++	}
++	if (error != ENOENT) {
++		goto out;
++	}
++	error = unlink1(ctx, NULLVP, CAST_USER_ADDR_T(temporary), UIO_SYSSPACE, 0);
++	if (error != 0 && error != ENOENT) {
++		goto out;
++	}
++	error = vnode_open(temporary, FWRITE | O_CREAT | O_EXCL | O_NOFOLLOW,
++	    0644, VNODE_LOOKUP_NOFOLLOW, &file, ctx);
++	if (error != 0) {
++		goto out;
++	}
++	int residual = 0;
++	error = vn_rdwr(UIO_WRITE, file, definition, sizeof(definition) - 1,
++	    0, UIO_SYSSPACE, IO_SYNC, vfs_context_ucred(ctx), &residual, vfs_context_proc(ctx));
++	int close_error = vnode_close(file, FWRITE, ctx);
++	if (error == 0) {
++		error = residual != 0 ? EIO : close_error;
++	}
++	if (error == 0) {
++		error = renameat_internal(ctx, AT_FDCWD, CAST_USER_ADDR_T(temporary),
++		    AT_FDCWD, CAST_USER_ADDR_T(path), UIO_SYSSPACE, RENAME_EXCL);
++	}
++	if (error != 0) {
++		unlink1(ctx, NULLVP, CAST_USER_ADDR_T(temporary), UIO_SYSSPACE, 0);
++	}
++out:
++	if (dir != NULLVP) {
++		vnode_put(dir);
++	}
++	printf("A03 PosterKit extension point: result=%d\n", error);
++}
++
+ void
+@@ -6057,2 +6131,3 @@
+ 	a03_install_wallpaper_screen_class(root);
++	a03_install_poster_extension_point(root);
+ }
