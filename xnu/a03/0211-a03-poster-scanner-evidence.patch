@@ -1,0 +1,16 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -137,4 +137,11 @@
+             strnstr(text, "/PaperBoard.app/PlugIns", copied);
+-        if (slot >= 10 && !registration) return;
+-        if (!registration && strncmp(text, lookup, sizeof(lookup) - 1) &&
++        const bool scanner = slot >= 10 &&
++            (!strcmp(text, "/System/Library") ||
++             !strcmp(text, "/System/Library/Frameworks") ||
++             !strcmp(text, "/System/Library/PrivateFrameworks") ||
++             !strcmp(text, "/Applications") ||
++             !strcmp(text, "/System/Library/CoreServices") ||
++             strnstr(text, ".csstore", copied));
++        if (slot >= 10 && !registration && !scanner) return;
++        if (!registration && !scanner && strncmp(text, lookup, sizeof(lookup) - 1) &&
+             strcmp(text, "/Library/Wallpaper/Collections/Collections.plist") &&
