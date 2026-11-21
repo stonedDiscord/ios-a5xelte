@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 14:37 UTC — Physical button test awaiting a press
+
+The BOOT0127 console reader is live. A read-only query confirms input
+providers 3 and display request 0 after 43 completed swaps and 37 copies.
+The capture still contains no physical button transitions or HID key
+dispatches. The next test requires a person at the phone to press the
+buttons and observe the screen. The earlier unexplained transition to
+request 1 does not establish physical wake.
+
 ## 2026-11-21 14:35 UTC — Display resumed without a recorded key
 
 The existing BOOT0127 CDC reader is still active. After display request 0

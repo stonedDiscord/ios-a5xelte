@@ -1,3 +1,9 @@
+ACTIVE BOOT0127 physical test awaits a person at the phone. The console
+reader PID30533 was live at 14:37 UTC. Display request 0, 43 swaps complete,
+37 copies, HID provider status 3. No captured physical key transitions.
+On resumption verify the current reader, capture physical Power down/up
+during display sleep and observe visible wake, then repeat with USB unplugged.
+
 ACTIVE 14:35 UTC BOOT0127 display resumed after request 0 without a recorded
 key or synthetic input. At follow-up, 34 swaps completed, 30 copies sampled,
 and GPU status advanced to 35 completed with four verified and zero faults.
