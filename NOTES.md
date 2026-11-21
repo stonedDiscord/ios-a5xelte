@@ -1,3 +1,10 @@
+ACTIVE0134 running, touch restored/load0/A55A/stream1 after one retry.
+SolePID102004/session5401 to~17:42UTC;41PosterBoardcrashes17:37. Stock asset
+reads succeed but trace192cap exhausted;0204/d81db2b focuses7400 opens.
+CI44930944890/job136927206594 live;prepare-posterboard-0135.py pinned.
+CollectionsPoster.appex exists but no launch captured. Need default/provider
+selection evidence; preserve touch on every reboot.
+
 ACTIVE user reported touch off; live0133 streaming0 confirmed. Restored
 private verified FW/load0/A55A; one start retry ->streaming1/49slices/events0,
 HIDstatus3. Sole100198/session91285 boot0133-touch-recovery-live.log~17:33UTC.

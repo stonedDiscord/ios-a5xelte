@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: BOOT0134 keeps touch active; asset trace budget refined
+
+CI44929116933 verified and BOOT-only0134 upload succeeded. Touch immediately
+restored: private FW staging/load0/A55A/config720x1600, initial invalid slice
+required one start retry, streaming1 confirmed. Current sole readerPID102004/
+session5401 boot0134-posterboard-live.log until~17:42UTC. One USB Home after
+sleep; no physical acceptance claim. PIDs254 and451 reproduce the same
+nil selectedLockPath trap;41corpse records at17:37UTC.
+
+Successful reads of Bokeh wallpaper metadata show stock assets accessible,
+but broad /Library/Wallpaper tracing consumed192 records before default7400.
+No PosterBoard user-log messages captured.0204/d81db2b reserves asset output
+for actual open calls below7400 plus defaults/catalog/persistent poster
+paths. Actual ARM64 systemcalls.c compile passes. CI44930944890/job136927206594
+is building exact d81db2b37c6a1981041770f6ca8d7c7199644928. Private
+prepare-posterboard-0135.py pins it. CollectionsPoster.appex exists at
+WallpaperKit.framework/PlugIns with the expected provider identifier; no
+launch seen yet. Provider discovery is a lead, not an established cause.
+
 ## 2026-11-21: touch restored after user's loss-of-input report
 
 Live BOOT0133 streamstatus confirmed streaming0/slices0/events0: touch had
