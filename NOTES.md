@@ -1,3 +1,11 @@
+ACTIVE01:18UTCBOOT0121validpairedruntime:384CPU/GPUsubmitter1.397245/0.842947ms
+(39.7%saved),5121.402822/0.812904(42.1%saved). WallGPU2.028/1.974msremains
+aboveCPU1.396/1.402. This isreal submitterCPUoffload,notFPS/system/renderinggain.
+Firstreportserializationtuplekeyfixed3df1c3a/testsuccessfullmain; retryfullJSONvalid.
+Livephysicaltrial384pollwaitfastONwarm1powered1/116completed4verified0fault,
+ONEHome/touchON964events0; physicalquestionpending. Sole144533/session9510
+until~01:41UTC. Needphysical+sustainedactualframes+deploymentpolicy;goalactive.
+
 ACTIVE01:10UTCBOOT0121runtime BOOT-onlyflashSUCCESS correctCI44846854268/
 3d14c72/fullsource22.6.0/sixsources/RTC/reverse0189/checksum/SMP/actualASanPASS.
 Kernel320e5407...d99f0ae/BOOTa4f3c20b...6a8346;same8cores1984MiB/ADT0094/cmd599.

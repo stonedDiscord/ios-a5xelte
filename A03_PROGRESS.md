@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:18UTC: BOOT0121 measures genuine submitting-thread CPU offload
+
+Fullframe readbacks and two complete384/512 pairedthree8copytrials pass with
+0fallback/quarantine. Firsttrial child results valid but top-levelJSON serialization
+failed (tuplekey leftover from0188hostedit); originalmode/rate restored before
+error. Fixedhostkey+successfulfullmain regression test in3df1c3a; repeatedwhole
+hardwaretrial producesvalid finalJSON (boot0121-runtime-rate-retry.log).
+Acceptedrepeat384: CPUwall1.396274/GPUwall2.027908ms, submitterCPU1.397245/
+GPU0.842947ms(39.7%less).512: CPUwall1.401990/GPUwall1.974293ms, submitterCPU
+1.402822/GPU0.812904ms(42.1%less). Priortrial384 submitter1.678303/0.836711,
+5121.423759/0.810351. GPU walllatencyremainslonger; this demonstrates CPU
+offload for the submitting thread, notFPSgain,total-systemCPU,or source-rendering
+acceleration. Clean/setup/poll/readback costs included, blockedtime excluded.
+
+Forphysicaltrial restored384/defaultwait; fourfreshfullreadbacks thenfastON,
+116completed/4verified0fallbackquarantine,warm1powered1. ONEHome dispatched,
+powerlast1. TouchON964slices/events0; physicalquestionpending. Sole144533/
+session9510boot0121-runtime-live.loguntil~01:41UTC. NeedboundedphysicalUI/
+sustainedactualframeevidence anddeploymentpolicy. No Metal/EAGL rendering added.
+
 ## 2026-11-21 01:10UTC: runtime observer CI success; BOOT0121 flashed
 
 Correctsource CI44846854268 SUCCESS exact3d14c720278607e27fe4142b167a8fc9380e7759.
