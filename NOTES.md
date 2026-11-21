@@ -3,8 +3,8 @@ BOOT0140 passed CI44939996930 and the BOOT-only upload. Image SHA-256
 The migration returned 0 and lsd PID97 opened the fallback definition.
 LaunchServices then reported “Failed to fetch app bundle unit: 0” for
 com.apple.posterkit.provider. PosterBoard PID238 still returned -2219 for
-both providers and trapped at unslid 0x1be3babac. The fallback alone is
-insufficient. Investigate the definition's association with a registered
+both providers and trapped at unslid 0x1be3babac. The prior “Cannot run query” message disappeared in the captured startup,
+but both provider coordinators remain unavailable. Investigate the definition's association with a registered
 bundle and provider discovery. Touch firmware reported A55A and streaming
 reached 588 slices. Sole reader PID152789/session66754 remains active.
 
