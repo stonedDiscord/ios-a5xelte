@@ -1,5 +1,13 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — Existing root migration
+
+BOOT0140 migration candidate 15ed2cc installs the single PosterKit fallback
+on the existing writable HFS root through the validated USERDATA p55 gate.
+It publishes the complete file with an exclusive rename. Its definition
+matches the stock plist. CI44939996930/job136954881102 is building.
+Private prepare-posterboard-0140.py pins the build. BOOT0139 is installed.
+
 ## 2026-11-21 — PosterKit fallback extension-point definition
 
 BOOT0139 reproduced both -2219 errors and the publisher trap in PID246.

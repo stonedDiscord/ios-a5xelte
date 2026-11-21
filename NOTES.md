@@ -1,3 +1,9 @@
+BOOT0140 migration candidate 15ed2cc installs the single PosterKit fallback
+on the existing writable HFS root through the validated USERDATA p55 gate.
+It publishes the complete file with an exclusive rename. Its definition
+matches the stock plist. CI44939996930/job136954881102 is building.
+Private prepare-posterboard-0140.py pins the build. BOOT0139 is installed.
+
 ACTIVE root CI44939625136 builds 0f4dc39, which stages the stock PosterKit
 extension point for fallback enumeration. BOOT0139 still reproduces the
 crash. Validate the fallback on USERDATA p55 and check provider discovery,
