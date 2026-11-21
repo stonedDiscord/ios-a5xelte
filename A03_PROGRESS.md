@@ -12,6 +12,13 @@ but both provider coordinators remain unavailable. Investigate the definition's 
 bundle and provider discovery. Touch firmware reported A55A and streaming
 reached 588 slices. Sole reader PID152789/session66754 remains active.
 
+The matching CoreServices cache has distinct extension-point registration
+and plug-in registration paths. _registerExtensionPointsFromMIFrameworkDictionary
+calls _LSRegisterExtensionPoint, while provider registration uses
+_LSRegisterPlugins. The successful fallback open and disappearance of the
+query rejection establish a change on the extension-point side. They leave
+plug-in registration and association with the extension point unresolved.
+
 ## 2026-11-21 — Existing root migration
 
 BOOT0140 migration candidate 15ed2cc installs the single PosterKit fallback
