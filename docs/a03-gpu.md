@@ -48,6 +48,22 @@ so blocked waiting can be distinguished from CPU work. It does not measure
 all system CPU or source rendering. Full CI and hardware validation remain
 pending; see active progress/handoff for the exact run. No offload benefit claim.
 
+BOOT0121 / CI44846854268 /3d14c72 now measures submitting-thread CPU
+runtime as well as elapsed copy time. In the repeated full comparison:
+
+| Rate | CPU wall | GPU wall | CPU submitter | GPU submitter |
+| --- | --- | --- | --- | --- |
+|384MHz|1.396ms|2.028ms|1.397ms|0.843ms|
+|512MHz|1.402ms|1.974ms|1.403ms|0.813ms|
+
+That is39.7/42.1% less submitting-thread CPU time, with higher elapsed latency.
+This establishes copy offload, not faster animation, total-system CPU reduction
+or GPU source rendering. Both policies passed fresh full pixel readbacks and
+three paired eight-copy rounds, with zero fallback/quarantine. An earlier valid
+trial had a final host-report serialization error after restoration;3df1c3a fixes
+that key and adds a full-success regression. The complete retry emits valid JSON.
+Physical and sustained UI acceptance plus deployment policy remain outstanding.
+
 Use the existing single-reader log with these bounded comparison tools:
 
     python3 tools/a03-gpu-tile-benchmark.py --log LOG
