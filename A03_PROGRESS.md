@@ -12,9 +12,11 @@ Sole reader PID30533/session68042, private boot0127-buttons-live.log.
 All eight SGI checks pass, retained RTC works, storage ready/unpoisoned.
 Button worker start=0, PMIC and GPIO init both 1, and backboardd opened
 the HID service. Touch RAM load succeeded with ready A55A and streaming
-resumed after one invalid startup slice. No physical key edges yet.
-Physical test requested over USB first so key, HID, and panels logs can be
-matched. Then verify sleep/wake physically without USB. Goal still active.
+resumed after one invalid startup slice. At 14:32 UTC iOS had submitted
+seven swaps, completed five copies, and requested display sleep (value 0).
+No synthetic input was sent. No physical key edges have been captured.
+Physical test requested with USB attached first to match key, HID and
+display records. The visible wake test with USB unplugged remains pending.
 
 ## 2026-11-21 — Physical button candidate
 
