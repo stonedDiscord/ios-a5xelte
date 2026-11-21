@@ -1,5 +1,13 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:50UTC: candidate passes first sustained failure point
+
+BOOT0126actualcompositor2095completed/2413440000pixels/4verified,
+0fallbackquarantine/idle11; no replay/GPUcontrols. Passes0123's2041failurepoint,
+but earlier0125failed10935 so nofixclaim. First600ssoak67126 continues;
+1800s/12000copyfollow-up88566queued onlyifcountinsufficient, notonGPUfault.
+Sole168765/session9363captureuntil~04:12UTC. Physicalreplypending.
+
 ## 2026-11-21 03:48UTC: actual candidate copies advance; duration gate corrected
 
 BOOT0126actualHome/swipe-triggeredcompositor now870GPUcopies/4verified,

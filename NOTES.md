@@ -1,5 +1,5 @@
-ACTIVE03:49UTCBOOT0126actualcompositor1482GPUcopies/4verified0fallbackquarantine,
-idle10; no replay/GPUcontrols. Sole168765/session9363 boot0126-boundary-live.log
+ACTIVE03:50UTCBOOT0126actualcompositor2095GPUcopies/4verified0fallbackquarantine,
+idle11; no replay/GPUcontrols. Sole168765/session9363 boot0126-boundary-live.log
 until~04:12UTC. Firstsoak67126boot0126-compositor-soak.log600sfrom03:45requires
 12000copiesbut~10Hzcannotreach;intermediateonly. Chainedobserver88566waits
 ONLYinsufficientcountterminalthen1800s/12000unchangedgate ->
