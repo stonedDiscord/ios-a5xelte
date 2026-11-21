@@ -1,3 +1,11 @@
+ACTIVE PosterBoard crash fix. BOOT0127 baseline: 255 corpse-limit records in
+eight seconds; deployed detailed logger omitted PosterBoard. Patch 0196 adds
+its own two-report slot; exact source apply and host tests pass. ARM CI
+44916896554/job136884342088 at aed2d33 is building. After successful CI, private
+shim/a03/out/prepare-posterboard-0128.py verifies and packages a BOOT-only
+diagnostic. Capture first two crash records and symbolize; diagnostic is not
+a fix. Phone remains BOOT0127; no active console reader for this investigation.
+
 ACTIVE 2026-11-21 BOOT0127 lag measured after CDC reappeared. Over 9.821s,
 557 vsync callbacks and 98 submitted/completed/copied frames (10/s); display
 request on, GPU copy avg 2.223ms, zero quarantine at mid-interval status.

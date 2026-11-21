@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: PosterBoard crash diagnosis
+
+Read-only BOOT0127 CDC capture logged 255 PosterBoard corpse-limit records in
+eight seconds and sampled a live PosterBoard PID between failures. The crash
+reports directory exists, but the live stat probe does not list or read reports.
+The exact deployed kernel's detailed crash selector omits PosterBoard.
+
+Patch 0196 adds PosterBoard to the existing opt-in crash logger, with its own
+two-report budget before corpse processing. Signal, exit reason if present,
+registers, stack and available annotations remain handled by the existing
+logger. The host saturation and annotation tests pass, and the patch applies
+to the exact BOOT0127 source. This adds evidence, with no change to crash behavior.
+ARM CI 44916896554, job 136884342088, is building exact
+aed2d33fca10d6fc0acad101a02f2e012a822a61. No BOOT0128 flash yet. The private
+prepare-posterboard-0128.py verifies the exact successful build and packages
+the unchanged BOOT0127 command line and ADT with the diagnostic kernel.
+Next capture and resolve the first PosterBoard failure; then repair and verify
+continuing PosterBoard service operation without the observed crash loop.
+
 ## 2026-11-21 — Live lag measurement on BOOT0127
 
 CDC enumerated after the initial offline check; read-only captures are in
