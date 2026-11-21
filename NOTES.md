@@ -1,3 +1,11 @@
+ACTIVE PosterBoard cause confirmed on BOOT0128: PIDs 248 and 353 SIGABRT
+for missing valid order in /Library/Wallpaper/Collections/Collections.plist.
+Stock Collections~iphone.plist in the installed-root source has six entries.
+cf226d2 adds the staged alias and opt-in migration for existing USERDATA HFS.
+Kernel CI44918953970/job136890549051 and root CI44918953514 running.
+BOOT0128 remains installed; verify BOOT0129, then check alias result,
+stable PosterBoard PID across active use, and no recurring crash.
+
 ACTIVE PosterBoard crash fix. BOOT0127 baseline: 255 corpse-limit records in
 eight seconds; deployed detailed logger omitted PosterBoard. Patch 0196 adds
 its own two-report slot; exact source apply and host tests pass. ARM CI

@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: PosterBoard crash isolated; repair building
+
+Diagnostic CI44916896554 succeeded, source and kernel checksum checked, and
+BOOT0128 uploaded to BOOT only. Image SHA256
+3d21885a76f77bbf6f491dce2031b2c3c486083e555fba91986217b1f24c507f.
+Private boot0128-posterboard-sample.log records SIGABRT from PIDs 248 and 353.
+Both throw NSInvalidArgumentException in WallpaperKit:
+/Library/Wallpaper/Collections/Collections.plist has no valid order value.
+The saved installed-root source has no generic file, but the stock
+Collections~iphone.plist parses with six order entries.
+
+Commit cf226d2 stages the relative catalog alias for new A03 filesystems.
+Patch 0197 adds an explicit a03wallpaper=1 migration before launchd: check
+validated writable USERDATA HFS, require the original file on its root mount,
+create the alias without replacing an existing path, and verify resolution.
+Local staging with the actual original plist passed, including repeat runs
+and preservation of an existing file. Exact BOOT0128 patch application and
+builder shell syntax passed. Kernel CI44918953970/job136890549051 and new-root
+CI44918953514 are running. BOOT0128 is still installed with the crash loop.
+Next: verify and package BOOT0129 and check service survival on the phone.
+
 ## 2026-11-21: PosterBoard crash diagnosis
 
 Read-only BOOT0127 CDC capture logged 255 PosterBoard corpse-limit records in
