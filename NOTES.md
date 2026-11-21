@@ -1,3 +1,9 @@
+ACTIVE00:33UTC BOOT0119 idle-sleep evidence: rawpower0/swaps143/copies137
+stop whilevsync/timealive; GPUalreadyOFFpowered0/fallback0quarantine0. ONE
+inputhome->rawpower1->swaps439/copies433about10slater. Supports sleep/wake
+forstaleclock; physicalrecoverypending, panelpowersemanticsnotimplemented.
+No periodicHome/fakeframes. CI44844162892 stillbuilding0188; no duplicate.
+
 ACTIVE00:30UTC CI44844162892/exactcc4576ae04936dc1621b7621cc07ba698df31d7f
 in_progress0188counterpoll. No duplicate. Hostratehelperrestorekeytestfailed,
 fixeda5f75eb/allbenchmarktestsrerunPASS; kernelcandidateunchanged.

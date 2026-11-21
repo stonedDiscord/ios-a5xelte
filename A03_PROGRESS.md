@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:33UTC: live idle episode supports display sleep
+
+User asks whether stale clock is iOS sleep. BOOT0119 passive display status
+shows last raw power request0, swaps143/copies137 stopped at12202384523/
+12048499106 absolute ticks, while vsync50953 and kernel time continue. GPU
+alreadyOFF/powered0, fallback0/quarantine0; touchstream1/slices2373/events0.
+ONE explicit input home dispatch succeeds, records request1 at24473668578.
+After about10s swaps439/copies433 and CPUcopies372 (previous76), vsync52834.
+No reboot, fake clock/frame, periodic Home or GPU policy change. Strong sleep/
+wake correlation for this episode; request enums/panel power transition and
+physical visible recovery are not independently confirmed. Existing panel
+retains the last image and observer does not implement display power changes.
+PosterBoard crashloops remain a separate known problem. CI44844162892 still
+building0188; no duplicate/restart. Current reader133832 remains sole owner.
+
 ## 2026-11-21 00:30UTC: polling CI active; host restore regression fixed
 
 CI44844162892 in_progress exactcc4576ae04936dc1621b7621cc07ba698df31d7f.
