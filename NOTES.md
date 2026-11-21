@@ -1,3 +1,10 @@
+ACTIVE BOOT0136 touch restored and capture PID116468/session62917 live.
+Temporary wallpaper rename succeeds. Persistent ordering and selected
+identifier files remain absent and PosterBoard traps. 0206 enables
+PosterBoard startup log mirroring. CI44934190387/job136937140024 active
+at 3613443. Private prepare-posterboard-0137.py pins the build.
+Restore touch after the next reboot.
+
 ACTIVE BOOT0135 opens all default 7400 metadata and the iPhone defaults.
 Temporary wallpaper metadata also opens. Store directories exist, ordering
 plist returns ENOENT, and the nil selectedLockPath trap persists. Patch 0205

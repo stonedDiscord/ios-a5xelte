@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: BOOT0136 traces persistent PosterBoard initialization
+
+CI44932481949 passed and BOOT-only upload succeeded. BOOT0136 SHA256
+7983589c169b521ba12140bd8ab92c3fb5b029124687d41c87e1fcc155ca35cf.
+Touch RAM load and ready A55A verified, with streaming on after one retry.
+Reader PID116468/session62917 records boot0136-posterboard-live.log.
+
+PIDs 231 and 321 opened the store directories, stock defaults and metadata.
+Both successfully renamed temporary Wallpaper.plist files before the same
+publisher trap. Persistent ordering and selection identifier plists returned
+ENOENT. The trace captured no rename to either persistent plist.
+Offline symbolication locates first-time setup and its CollectionsPoster
+configuration creation call. Patch 0206 enables OS_ACTIVITY_DT_MODE for
+the exact PosterBoard executable when a03_userlogs is enabled to expose
+the framework's startup error through the existing stderr logger.
+CI44934190387/job136937140024 builds 3613443. The private
+prepare-posterboard-0137.py verifies and packages it.
+
 ## 2026-11-21: BOOT0135 confirms default wallpaper metadata opens
 
 CI44930944890 passed for d81db2b. BOOT0135 checksum
