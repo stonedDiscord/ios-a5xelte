@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:29UTC: candidate CI verified live; artifact pipeline waiting
+
+SameCI44860660965/exactede01ea/job136713035392 verifiedin_progressBuild.
+No timeout restart/duplicate. Session34387/PID166002 waits for terminalsuccess,
+then exactsource/RTC/reverse0194/checksum/SMP checks, actualCI-source sanitizer
+fixtures and0126packing; it NEVER flashes. Phone remainsCPU0124 with sole
+capture163479/session31133 until~03:45UTC. Observer now rejects concurrent
+replay/GPUcontrols, preventing retainedframe contamination ofactualcopycount.
+NewguardsPASS/aa8496a pushed; jobendwriteback-vs-freshackfixture bba5b4cPASS.
+Goalactive. Need successfulCI/hardwarevalidation before claimingfix.
+
 ## 2026-11-21 03:26UTC: regression proves pixels do not bypass retirement
 
 Expanded actual-code fakeDMA fixture models the restored automatic job-end

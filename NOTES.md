@@ -1,3 +1,15 @@
+ACTIVE03:29UTC CI44860660965 exactede01ea/job136713035392 VERIFIEDBuild,
+no duplicate/restart. AutoartifactpipelinePID166002/session34387 waits sameCI,
+then exactartifacts/source/RTC/reverse0194/checksum/SMP+actualASantests+pack0126;
+NOautoFLASH. Watchsession12565 alsoalive; redundantread-onlywatchonly.
+CPU0124sole163479/session31133boot0124-stage5-recovery-live.loguntil~03:45UTC.
+Latesthosttests bba5b4c modeljobendwriteback andstillrequirefreshack even
+correctpixels; aa8496a rejectsconcurrentreplay/GPUcontrols inactualsoak.PASS.
+Next inspectsamepipeline/status;onfullsuccessverifylogs/hashthenBOOT-only0126,
+touchload/start/autoboot4readbacks+fast WITHOUTpriorcontrols/replays,actual
+compositorlongsoak12000additional/600s,readbacks/idle/paired/physicalgates.
+Goalactive/nofixclaim. gpu-boundary0193-work only;oldergpu-endflush-workunrelated.
+
 ACTIVE CI44860660965 exactede01ea4ac14ee411c7b5fd49bf4a279030a36c5 /
 job136713035392in_progressBuild03:24UTC;NODUPLICATE.0193restorejobendclean+0194bounded
 snapshot;hostactualASan/ARM64PASS. gpu-boundary0193-work/artifacts.py+pack0126.py
