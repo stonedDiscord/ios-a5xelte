@@ -76,6 +76,24 @@ idle, so the running trial is explicitly OFF pending0191 idle-release hardware
 validation. Candidate0191 uses the existing serialized vsync timer to release
 retired owned GPU power after100ms; it never powers down quarantined DMA.
 
+BOOT0123 / CI44853265071 /bc4137c validates0191 automatic idle release.
+Automatic startup again passes four full readbacks before fast frames, without
+host GPU controls/replay. Twelve cycles observe powered0 before each resumed
+GPU copy; cold copies take about2.50-2.69ms. A512-copy stress plus four final
+full readbacks passes, zero fallback/quarantine, meanwall2.055ms and submitting
+threadCPU0.844ms. Read-only final status is enabled1/powered0,82idle releases,
+561completed/8verified, default384MHz/pollwait/impldef0/tile4/cachedwarm1.
+
+The normal opt-in deployment is a03gpu=1 in the BOOT payload. Without it,
+GPU copy defaults OFF; an explicit control overrides boot initialization.
+An existing vsync timer releases only retired owned power after100ms idle;
+quarantined DMA is never powered down. The next frame uses the checked cold
+start and retains qualification. The kernel source is unchanged by host controls;
+remove a03gpu=1 or issue gpu blit off to select CPU copying. This is framebuffer
+copy offload, not Metal/EAGL rendering or a demonstrated animation-FPS gain.
+Physical swipe/image acceptance and an unplugged reboot remain unverified.
+Touch RAM firmware still requires the existing host restoration after reboot.
+
 Use the existing single-reader log with these bounded comparison tools:
 
     python3 tools/a03-gpu-tile-benchmark.py --log LOG

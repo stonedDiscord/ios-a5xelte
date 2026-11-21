@@ -1,14 +1,15 @@
 # Galaxy A03 SM-A035G bring-up
 
-Current GPU checkpoint (November21,2026): BOOT0122 automatically enables
+Current GPU checkpoint (November21,2026): BOOT0123 automatically enables
 cached GPU copying with a03gpu=1, verifies four full frames, then uses fast
-copies. Hardware log verification confirms no prior host GPU controls/replay.
-A512-copy stress plus four final readbacks passes without faults. BOOT0121
-measured39.7-42.1% less submitting-thread CPU time, though GPU wall latency
-remains~2ms versusCPU~1.4ms; source rendering remains CPU-only. Physical UI
-acceptance is pending. BOOT0122 warm power persists while idle, so the live
-trial is explicitly OFF. Candidate0191 adds retired-GPU100ms idle release;
-CI44853265071 is active. See A03_PROGRESS.md/NOTES.md/docs/a03-gpu.md.
+copies. Hardware evidence confirms startup without host GPU controls, twelve
+automatic idle-power-off/cold-resume cycles, and512 stress copies plus four
+final readbacks, with zero fallback/quarantine. GPU copying remains enabled;
+retired owned GPU power releases after100ms idle. Measured submitter CPU cost
+is~0.84ms per copy; prior paired trials show39.7-42.1% less submitting-thread
+CPU than CPU copying. Elapsed GPU copies remain~2ms versusCPU~1.4ms; source
+rendering is CPU-only. Physical UI acceptance and unplugged boot are pending.
+No active CI. See A03_PROGRESS.md/NOTES.md/docs/a03-gpu.md for exact evidence.
 
 2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host
 sync repairs only the running calendar. User requires autonomous time on
