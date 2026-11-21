@@ -14,6 +14,15 @@ response remain unverified. The sole reader is PID 124506, session 43309.
 The capture was still showing iOS startup with no PosterBoard output at
 the same checkpoint.
 
+Follow-up captured 13 contact events during the user's physical swipes.
+The user still saw the Apple logo. After USB Home, the display power request
+returned to 1 and completed GPU copies rose from 4 to 32. Panel contents
+after those copies remain unverified. PosterBoard stderr mirroring worked.
+PID 274 logged failed com.apple.posterkit.provider queries and error -2219
+creating both the Collections and legacy poster configurations. The selected
+identifier was absent, then PIDs 274 and 416 trapped at unslid 0x1be3babac.
+WallpaperKit separately logged that it found no compatible default 7400.
+
 ## 2026-11-21: BOOT0136 traces persistent PosterBoard initialization
 
 CI44932481949 passed and BOOT-only upload succeeded. BOOT0136 SHA256

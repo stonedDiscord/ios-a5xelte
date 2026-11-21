@@ -1,3 +1,9 @@
+ACTIVE BOOT0137 confirmed 13 physical swipe events while user saw Apple logo.
+USB Home later preceded new frame copies. PosterBoard reproduced the publisher
+trap. Stderr captures provider discovery query failures and error -2219 for
+both Collections and legacy configuration creation. Trace provider registration
+and the -2219 return path. WallpaperKit separately rejects default 7400.
+
 ACTIVE BOOT0137 installed from CI44934190387 at 3613443. Touch firmware
 reloaded to A55A and streaming remained active after one restart. Zero
 contact events at 690 slices. USB Home dispatch succeeded. Await physical
