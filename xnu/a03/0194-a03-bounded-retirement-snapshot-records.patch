@@ -1,0 +1,32 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -614,13 +614,23 @@
+     a03_gpu_job_poisoned = 1;
+     /* Read-only failure snapshot before retaining mappings. No acknowledgements,
+      * retries, reset, address-space teardown or power-down in this path. */
+-    printf("A03 GPU retirement: stage=%u submitted=%u done=%u irq=%08x mmu=%08x gpu=%08x js=%08x asfault=%08x rawgpu=%08x rawjob=%08x state=%08x next=%08x asstatus=%08x aslo=%08x ashi=%08x cfg=%08x frame=%u clock=%u idle-releases=%llu\n",
+-        retire_stage,(unsigned)submitted,(unsigned)done,irq,mmu,gpu,js_status,as_fault,
+-        a03_gpu_read(a03_gpu_regs,0x20),a03_gpu_read(a03_gpu_regs,0x1000),
+-        a03_gpu_read(a03_gpu_regs,0x1010),a03_gpu_read(a03_gpu_regs,0x18e0),
++    /* Each record stays below the console's255-character print buffer.
++     * All reads precede any recovery; quarantine still retains everything. */
++    printf("A03 GPU retirement: stage=%u submitted=%u done=%u frame=%u clock=%u idle-releases=%llu\n",
++        retire_stage,(unsigned)submitted,(unsigned)done,a03_gpu_blit_frames,
++        a03_gpu_clock_selector==2?512U:384U,(unsigned long long)a03_gpu_idle_releases);
++    printf("A03 GPU retirement-regs: irq=%08x mmu=%08x gpu=%08x js=%08x asfault=%08x rawgpu=%08x rawjob=%08x state=%08x next=%08x\n",
++        irq,mmu,gpu,js_status,as_fault,a03_gpu_read(a03_gpu_regs,0x20),
++        a03_gpu_read(a03_gpu_regs,0x1000),a03_gpu_read(a03_gpu_regs,0x1010),
++        a03_gpu_read(a03_gpu_regs,0x18e0));
++    printf("A03 GPU retirement-as: asstatus=%08x aslo=%08x ashi=%08x cfg=%08x\n",
+         a03_gpu_read(a03_gpu_regs,0x2428),a03_gpu_read(a03_gpu_regs,0x2400),
+-        a03_gpu_read(a03_gpu_regs,0x2404),a03_gpu_read(a03_gpu_regs,0x2430),
+-        a03_gpu_blit_frames,a03_gpu_clock_selector==2?512U:384U,(unsigned long long)a03_gpu_idle_releases);
++        a03_gpu_read(a03_gpu_regs,0x2404),a03_gpu_read(a03_gpu_regs,0x2430));
++    printf("A03 GPU retirement-power: status=%08x shader=%08x l2=%08x tiler=%08x shadertrans=%08x l2trans=%08x tilertrans=%08x\n",
++        a03_gpu_read(a03_gpu_regs,0x34),a03_gpu_read(a03_gpu_regs,0x140),
++        a03_gpu_read(a03_gpu_regs,0x160),a03_gpu_read(a03_gpu_regs,0x150),
++        a03_gpu_read(a03_gpu_regs,0x200),a03_gpu_read(a03_gpu_regs,0x220),
++        a03_gpu_read(a03_gpu_regs,0x210));
+     printf("A03 GPU job: retirement unproven; wired scratch quarantined, core shutdown skipped\n");
+     return 0;
+ }

@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: candidate0193 restores job-boundary clean;0194 bounds diagnostics
+
+Evidence-driven candidate, NOT hardware fix:0193 restores JS1 automatic end
+CLEAN_INV (config83300 rather than cached80300), matching pinned vendor default
+job-boundary flush policy. The explicit post-retirement CLEAN_INV and fresh
+completion acknowledgement remain required. No timeout extension/retry/reset,
+AS teardown or quarantine weakening. Restoring a removed optimization tests
+whether job-boundary ordering explains stage5; root cause still unproven.
+0194 splits failure-only read-only snapshots into four records below255bytes,
+including GPU/core-ready/power-transition fields. Parser accepts complete legacy
+or complete multipart evidence and rejects truncated/duplicate/missing fields.
+ActualGPUcode fakeMMIO/DMA ASanUBSan and ARM64 C compilation PASS; profile140
+staged. FullCI and hardware long-compositor/readbacks/idle/physical gates remain.
+Phone staysCPU0124. No claim of faster walltime or GPU source rendering.
+
 ## 2026-11-21: CPU0124 restored after preserving stage5 evidence
 
 Matching CPU0124 image SHA256869f9c901071ba12359a0613e10c63e158e880baa17debc291d8f13ee90e0190

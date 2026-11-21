@@ -38,6 +38,7 @@ static unsigned last_retire_stage;
 static void *allocation;
 static int capture(const char*fmt,...){
  char line[1024];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof(line),fmt,ap);va_end(ap);
+ if(!strncmp(line,"A03 GPU retirement",18))assert(strlen(line)<255);
  if(!strncmp(line,"A03 GPU retirement: stage=",25)){unsigned value=0;assert(sscanf(line,"A03 GPU retirement: stage=%u",&value)==1);last_retire_stage=value;}
  if(strstr(line,"PASS=1"))passed++;return 0;
 }
@@ -117,7 +118,7 @@ static void fake_write(unsigned o,uint32_t v){
   assert(!(scratch[0x3000/8+1]&(1ULL<<54)));
   assert(bank[3][0x2400/4]==0x20000000&&bank[3][0x2404/4]==1);
   assert(bank[3][0x2408/4]==0x888d8f88&&bank[3][0x240c/4]==0x4c8d);
-  assert(bank[3][0x18c0/4]==0x2000000&&bank[3][0x18d8/4]==(expect_cached?0x80300:0x83300));
+  assert(bank[3][0x18c0/4]==0x2000000&&bank[3][0x18d8/4]==0x83300);
 
   if(mode==4||mode==6){bank[3][0x18e0/4]=1;bank[3][0x1010/4]=2;return;}
   if(mode==5){bank[3][0x1000/4]=0x20000;bank[3][0x2000/4]=1;return;}

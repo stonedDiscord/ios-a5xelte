@@ -1,3 +1,10 @@
+ACTIVE candidate0193 restores vendorjobendCLEAN_INV (83300) plus retainedfresh
+explicitcleanack;0194splitsfailure-onlyread-onlyrecords<255+powerstate.
+ActualASan/ARM64/profile140PASS;needfullCI+hardwarelongactualcompositor,
+readbacks/idle/physicalacceptance. NoGPUfixclaim. PhoneCPU0124healthy,
+sole163479/session31133 boot0124-stage5-recovery-live.log. Goalactive.
+Privatecandidate gpu-boundary0193-work (do not reuse older gpu-endflush-work).
+
 ACTIVE CPU0124BOOT-onlyrestoreSUCCESS aftercapturing0125stage5evidence.
 Exactimage869f9c90...90e0190 verified;8SGI/RTC1795230903PASS,FWRAMload0/A55A,
 touchONafteronestartretry,GPUOFFpowered0quarantine0/storagehealthy.
