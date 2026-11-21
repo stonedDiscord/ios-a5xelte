@@ -1,0 +1,25 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -91,3 +91,3 @@
+     unsigned slot;
+-    static unsigned reports[10];
++    static unsigned reports[11];
+     if (!strcmp(p->p_comm, "backboardd")) slot = 0;
+@@ -102,4 +102,5 @@
+     else if (!strcmp(p->p_comm, "PosterBoard")) slot = 9;
++    else if (!strcmp(p->p_comm, "lsd") || !strcmp(p->p_comm, "pkd")) slot = 10;
+     else return;
+-    if (slot == 9) {
++    if (slot >= 9) {
+         user_addr_t path;
+@@ -128,3 +129,9 @@
+         static const char lookup[] = "/Library/Wallpaper/DefaultWallpapers";
+-        if (strncmp(text, lookup, sizeof(lookup) - 1) &&
++        const bool registration = strnstr(text, "/xpc/extensions.plist", copied) ||
++            strnstr(text, "/xpc/launchd.plist", copied) ||
++            strnstr(text, "/ExtensionPoints", copied) ||
++            strnstr(text, "CollectionsPoster.appex", copied) ||
++            strnstr(text, "LegacyPoster.appex", copied);
++        if (slot == 10 && !registration) return;
++        if (!registration && strncmp(text, lookup, sizeof(lookup) - 1) &&
+             strcmp(text, "/Library/Wallpaper/Collections/Collections.plist") &&
