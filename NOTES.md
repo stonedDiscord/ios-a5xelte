@@ -1,3 +1,12 @@
+BOOT0143 passed CI44945143677 and the BOOT-only upload. SHA-256
+aed4f81d51b4ed79fe19bd445a1f62ca047de70405658fb860c5748071c76546.
+Cache archive returned 0 and lsd confirmed ENOENT at the original path.
+Live PID98 entered MIFilesystemScanner and validated built-in bundles.
+At the latest sample the scan had advanced into MobileGestalt call stacks.
+The 192-record lsd path cap was reached during Applications enumeration.
+PosterBoard launch and provider registration remain unverified.
+Touch streaming restored. Sole reader PID186437/session68219.
+
 BOOT0142 passed CI44943875183 and BOOT-only installation. Touch reached
 A55A and streaming was verified. Reader PID177195/session35987 captured
 lsd opening an existing LaunchServices csstore and accessing Frameworks.
