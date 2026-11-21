@@ -18,8 +18,10 @@ with tempfile.TemporaryDirectory() as d:
  subprocess.run(['git','apply','--include=bsd/dev/arm/systemcalls.c',str(root/'xnu/a03/0138-a03-screentime-analytics-evidence.patch')],cwd=d,check=True)
  subprocess.run(['git','apply','--include=bsd/dev/arm/systemcalls.c',str(root/'xnu/a03/0139-a03-filesystem-startup-evidence.patch')],cwd=d,check=True)
  subprocess.run(['git','apply',str(root/'xnu/a03/0198-a03-posterboard-startup-evidence.patch')],cwd=d,check=True)
+ subprocess.run(['git','apply',str(root/'xnu/a03/0199-a03-focus-posterboard-path-evidence.patch')],cwd=d,check=True)
  source=q.read_text()
 names=['open','open_nocancel','access','mkdir','mkdir_extended','stat64','lstat64','getattrlist','getxattr','__mac_syscall','openat','openat_nocancel','openat_dprotected_np','faccessat','mkdirat','getattrlistat','csops','csops_audittoken','setattrlist','fsetattrlist','setattrlistat','setxattr','fsetxattr']
+names += ['unlink', 'fstatat64']
 header=r'''
 #include <assert.h>
 #include <stdint.h>
@@ -33,9 +35,10 @@ header=r'''
 typedef uintptr_t user_addr_t;
 struct proc {char p_comm[17];};
 static unsigned enabled,logs,strings,headers;static uintptr_t last;
+static const char *sample_path = "path\nvalue";
 static int proc_pid(struct proc *p){(void)p;return 42;}
 static void PE_parse_boot_argn(const char *a,void *p,size_t n){assert(!strcmp(a,"a03crash_log")&&n==4);memcpy(p,&enabled,n);}
-static int copyinstr(user_addr_t a,char *b,size_t n,size_t *c){assert(c);last=a;strings++;if(a!=0x1000)return 1;assert(n==192);strcpy(b,"path\nvalue");*c=11;return 0;}
+static int copyinstr(user_addr_t a,char *b,size_t n,size_t *c){assert(c);last=a;strings++;if(a!=0x1000)return 1;assert(n==192);strcpy(b,sample_path);*c=strlen(sample_path)+1;return 0;}
 static int copyin(user_addr_t a,void *p,size_t n){last=a;headers++;assert(n==8||n==16||n==24);if(a==0xdead)return 1;memset(p,0,n);if(n==16)((uint64_t *)p)[1]=0x1000;return 0;}
 static int logline(const char *f,...){(void)f;logs++;return 0;}
 #define printf logline
@@ -77,9 +80,17 @@ int main(void){
  a[0]=0;a[1]=0;a[2]=0;a[3]=0;logs=0;
  for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);
  assert(logs==185);
- const char *extra[]={"ScreenTimeAgent","dmd","PosterBoard"};
+ const char *extra[]={"ScreenTimeAgent","dmd"};
  for(unsigned k=0;k<sizeof(extra)/sizeof(extra[0]);k++){strcpy(p.p_comm,extra[k]);logs=0;
  for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,99,2,a,0,1);assert(logs==192);}
+ strcpy(p.p_comm,"PosterBoard");logs=0;a[0]=0x1000;a[1]=0x1000;
+ for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,SYS_open,2,a,0,1);
+ assert(logs==0);
+ sample_path="/Library/Wallpaper/DefaultWallpapers~iphone.plist";
+ a03_startup_syscall_log(&p,SYS_open,0,a,0,1);assert(logs==1);
+ sample_path="/private/var/mobile/Library/PosterBoard/SwitcherConfiguration";
+ for(unsigned i=0;i<1000;i++)a03_startup_syscall_log(&p,SYS_openat,2,a,0,1);
+ assert(logs==192);
  puts("A03 actual startup diagnostics: opt-in/names/success filter/path argument/headers/xattr/attrlist/datavault/independent 192-report caps PASS");
 }
 '''

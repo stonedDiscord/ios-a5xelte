@@ -200,7 +200,8 @@ def main():
                      '0195-a03-physical-buttons.patch',
                      '0196-a03-posterboard-crash-evidence.patch',
                      '0197-a03-install-wallpaper-catalog-alias.patch',
-                     '0198-a03-posterboard-startup-evidence.patch'):
+                     '0198-a03-posterboard-startup-evidence.patch',
+                     '0199-a03-focus-posterboard-path-evidence.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

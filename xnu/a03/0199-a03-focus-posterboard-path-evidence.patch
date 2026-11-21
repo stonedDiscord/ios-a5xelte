@@ -1,0 +1,44 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -103,4 +103,41 @@
+     else if (!strcmp(p->p_comm, "PosterBoard")) slot = 9;
+     else return;
++    if (slot == 9) {
++        user_addr_t path;
++        switch (code) {
++        case SYS_open: case SYS_open_nocancel: case SYS_access:
++        case SYS_mkdir: case SYS_stat64: case SYS_lstat64:
++        case SYS_getattrlist: case SYS_unlink:
++            path = args[0]; break;
++        case SYS_openat: case SYS_openat_nocancel: case SYS_openat_dprotected_np:
++        case SYS_faccessat: case SYS_mkdirat: case SYS_getattrlistat: case SYS_fstatat64:
++            path = args[1]; break;
++        default: return;
++        }
++        uint32_t enabled = 0;
++        PE_parse_boot_argn("a03crash_log", &enabled, sizeof(enabled));
++        if (enabled != 1 || !path ||
++            __atomic_load_n(&reports[slot], __ATOMIC_RELAXED) >= 192) return;
++        char text[192];
++        size_t copied = 0;
++        if (copyinstr(path, text, sizeof(text), &copied) != 0 || copied <= 1) return;
++        static const char lookup[] = "/Library/Wallpaper/DefaultWallpapers";
++        if (strncmp(text, lookup, sizeof(lookup) - 1) &&
++            strcmp(text, "/Library/Wallpaper/Collections/Collections.plist") &&
++            strcmp(text, "/var/mobile/Library/SpringBoard/LockBackground.jpg") &&
++            strcmp(text, "/var/mobile/Library/SpringBoard/HomeBackground.jpg") &&
++            ((!strstr(text, "PosterBoard") && !strstr(text, "PosterKit") &&
++              !strstr(text, "SwitcherConfiguration") && !strstr(text, "Wallpaper")) ||
++             (strncmp(text, "/var/", 5) && strncmp(text, "/private/var/", 13)))) return;
++        unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
++        do {
++            if (old >= 192) return;
++        } while (!__atomic_compare_exchange_n(&reports[slot], &old, old + 1,
++            false, __ATOMIC_RELAXED, __ATOMIC_RELAXED));
++        for (size_t i = 0; i + 1 < copied; i++)
++            if ((unsigned char)text[i] < 32 || (unsigned char)text[i] > 126) text[i] = ' ';
++        printf("A03 POSTER PATH pid=%d syscall=%u err=%d %s\n", proc_pid(p), code, error, text);
++        return;
++    }
+     if (!error && code != SYS_csops && code != SYS_csops_audittoken &&
+         code != SYS___mac_syscall) return;
