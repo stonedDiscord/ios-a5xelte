@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:49UTC: qualified boot CI success; BOOT0122 flashed
+
+CI44849933946attempt2 SUCCESS exact e8306f9e90e412a9153a44caf38ea13ed07b0d8a.
+Livecompilerlogconfirmedprogress01:44UTC, source22.6.0/sixsourcesexact/RTCunchanged/
+reverse0190/checksum/SMP/actualDMA+rate+runtime+replayASanUBSanPASS.
+KernelSHA256e8f07f5c2f18afb4a594a8e3c1a82b964064abdcf315ba61c69a841865d1d454.
+BOOTSHA2569352488865c3c268234892a5e57e2fde5ccffd80fc84699e2550bfd44ca408bd.
+Same8cores1984MiB/ADT0094/stockramdiskDT. Cmd593 removesonly-show_pointers,
+appendsa03gpu=1. SyncDownload->BOOT-onlyHeimdalluploadSUCCESS/reboot. Newsole
+capture/session16774 boot0122-bootpolicy-live.log waitsCDC. DO NOTsendhostGPU
+controls/replays before autonomous activation+4readbacks+fast proof. TouchFW
+stage/load/startallowed; display/time/statuspassiveallowed. Needlogverifier,
+qualification/stress/physicalUI and normaldeploymentbehavior. Goalactive.
+
 ## 2026-11-21 01:43UTC: boot-policy attempt2 verified live; no new hardware artifact
 
 CI44849933946attempt2 exact e8306f9/job136680652501 remainsin_progressBuild

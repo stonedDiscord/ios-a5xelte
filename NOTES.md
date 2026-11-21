@@ -1,3 +1,10 @@
+ACTIVE01:49UTCBOOT0122 BOOT-onlyflashSUCCESS CI44849933946attempt2/e8306f9success,
+sixsources/RTC/reverse0190/source22.6/checksum/SMP/actualASanPASS.
+Kernele8f07f5c...5d1d454/BOOT93524888...ca408bd;cmd593+a03gpu=1,8cores1984MiB.
+NEWsolecapture/session16774boot0122-bootpolicy-live.logwaitsCDC. NOhostGPUcontrols/
+replaysbeforeautonomous4fullreadback+fastlogproof(tools/a03-verify-gpu-boot.py).
+RestoretouchFW/load/start,read-onlydisplay/time/statusallowed. Goalactive.
+
 ACTIVE01:43UTCbootpolicy44849933946attempt2job136680652501 VERIFIEDin_progressBuild
 exacte8306f9(start01:31:47). No duplicate/restart. Sole148860/session82510
 boot0121-bootwait-live.loguntil~02:07UTC;watch5403ci-watch-attempt2.log.
