@@ -1,3 +1,11 @@
+ACTIVE01:43UTCbootpolicy44849933946attempt2job136680652501 VERIFIEDin_progressBuild
+exacte8306f9(start01:31:47). No duplicate/restart. Sole148860/session82510
+boot0121-bootwait-live.loguntil~02:07UTC;watch5403ci-watch-attempt2.log.
+NextsameCI->privategpu-bootpolicy-work/artifacts.py+actualASan+pack0122.py
+->BOOT-only->NOhostGPUcontrol/replaybeforeautonomous4readback+fastproof.
+0121lastconfirmedOFFpowered0/384pollwaitverify1/698completed16verified0fault,
+touchON4003events0/storagehealthy. Goalactive/physicalanswerpending.
+
 ACTIVE01:37UTC44849933946attempt2job136680652501stillBuild/exacte8306f9; noduplicate.
 NEWsole148860/session82510boot0121-bootwait-live.loguntil~02:07UTC(old144533stopped).
 Last0121OFFpowered0/384pollwaitverify1/698completed16verified0fault/touchON/

@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 01:43UTC: boot-policy attempt2 verified live; no new hardware artifact
+
+CI44849933946attempt2 exact e8306f9/job136680652501 remainsin_progressBuild
+(start01:31:47UTC), verified via jobAPI; no failure/usableartifact yet. Do not
+restart/duplicate. Sole148860/session82510 boot0121-bootwait-live.loguntil~02:07UTC;
+watchsession5403 gpu-bootpolicy-work/ci-watch-attempt2.log. ActualDMA/runtime/
+stresssuccess-restoration/ratefullreport/autonomousproofnegativefixturesPASS.
+Privateartifacts.py+pack0122.py ready; sixsources/RTC/reverse0190/source22.6.0/
+checksums/SMP and actualASan mandatory beforeflash. BOOT0122cmd593 removes
+only-show_pointers and adds a03gpu=1. No hostGPUcommands/replays untilfirst
+fourverified+fastcopyproof usingtools/a03-verify-gpu-boot.py. Lastlive0121
+GPUOFFpowered0/384pollwaitverify1/698completed16verified0fault,touchON4003
+slices0events/storageready1poison0. Physicalresponsepending. Goalactive.
+
 ## 2026-11-21 01:37UTC: exact boot-policy rerun compiling; console renewed
 
 44849933946 attempt2/job136680652501 in_progressBuild exacte8306f9. No duplicate.
