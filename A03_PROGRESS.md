@@ -1,5 +1,24 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — Live lag measurement on BOOT0127
+
+CDC enumerated after the initial offline check; read-only captures are in
+private /tmp/a03-lag-host.log and /tmp/a03-lag-paired.log. Over 9.821 seconds
+(255349362 ticks at 26 MHz), display request stayed on and 98 swaps entered,
+completed and copied (~10/s), while 557 vsync callbacks completed (~56.7/s).
+All 98 copies used the GPU and averaged 2.223 ms wall time. Mid-interval GPU
+status was enabled, 12039 complete, four verified, 30 cumulative fallbacks,
+zero quarantine; the paired display endpoints show no additional CPU copies.
+The lag is visible in submission cadence during this sample; it is not a
+stuck swap or evidence that accelerating the final copy will fix frame rate.
+
+The earlier eight-second live capture logged 263 PosterBoard crash reports;
+the 15-second follow-up logged 46. Neither interval was a controlled touch
+or animation test. Only one CPU snapshot completed; no per-core deltas or
+causal attribution. No input was injected, no settings changed and no flash.
+Next: capture a repeatable physical gesture and paired CPU counters, then
+measure whether removing crash churn improves submission cadence.
+
 ## 2026-11-21 — User reports excessive iOS lag
 
 Offline inspection only: the A03 CDC tty is absent from this session, so no

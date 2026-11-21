@@ -1,10 +1,11 @@
-ACTIVE 2026-11-21 user reports excessive iOS lag. No A03 CDC tty visible in
-this session; live reproduction pending. Exact BOOT0127 framebuffer requests
-16667us timer and has no donor 10Hz throttle. Saved0127 log has125PosterBoard
-crashes; no current crash rate/causality claim. GPU copies finished frames;
-source rendering remains CPU based. No device changes or performance fix.
-Next capture physical lag with frame/input/CPU/crash deltas after USB reconnect.
-Physical button acceptance below remains outstanding.
+ACTIVE 2026-11-21 BOOT0127 lag measured after CDC reappeared. Over 9.821s,
+557 vsync callbacks and 98 submitted/completed/copied frames (10/s); display
+request on, GPU copy avg 2.223ms, zero quarantine at mid-interval status.
+Earlier eight-second live capture logged 263 PosterBoard crashes; follow-up
+46 in 15s. Causality unknown. Logs /tmp/a03-lag-host.log and
+/tmp/a03-lag-paired.log; readers finished. GPU only copies finished frames.
+Next correlate controlled physical input and paired CPU/frame counters, then
+test effect of crash churn. No device changes. Button acceptance still pending.
 
 ACTIVE BOOT0127 physical test awaits a person at the phone. The console
 reader PID30533 was live at 14:37 UTC. Display request 0, 43 swaps complete,
