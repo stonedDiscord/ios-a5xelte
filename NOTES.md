@@ -1,3 +1,10 @@
+ACTIVE02:33UTC0124CPUcontrolruntimePASS2CPUframes0GPU/OFFpowered0quarantine0;
+8coresRTChealthy,FWRAMload0/A55A/touchON,storageready1poison0. Sole157092/
+session91200boot0124-cpu-live.loguntil~03:00UTC.0192CI44856061555 exact2d4bf90/
+job136698449738Build;norestartduplicate. Privategpu-retire-work/artifacts.py+
+pack0125.pyready. NeedfullCI/actualASan->BOOT0125->sustainedactualGPUactivity
+snapshotfailurestage.0123failedafter2041copies,notfixed.Goalactive.
+
 ACTIVE02:30UTCCPUcontrol0124BOOT-onlyrestoreSUCCESS;exact0123kernel/noa03gpu=1,
 cmd584/8cores1984MiB,BOOT869f9c90...90e0190. Sole157092/session91200
 boot0124-cpu-live.logwaitsCDCuntil~03:00UTC. RestoreFWtouch+CPUframeshealth;

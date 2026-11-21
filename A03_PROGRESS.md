@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:33UTC: CPU-control runtime recovered; exact diagnostic build live
+
+BOOT0124read-onlyGPUstatusOFF/cached0/warm0/powered0/frames0/quarantine0;
+nohostGPUsetup. All8SGIverified/retainedRTC initialized. Volatile79104byteFW
+staged+loadedresult0/A55A/config720x1600; touchstreamON4events0. Storageready1
+poison0. Displaynow2actualCPUcopies/3.385msaggregate,0GPU; firstcompositor
+outputrecoveredafterreboot. PhysicalvisibleUIstillunverified. CI44856061555
+exact2d4bf90/job136698449738remainsBuild; do notduplicate. Privategpu-retire-work/
+artifacts.py+pack0125.py pinexactfullSHA(noimage-numberglobalreplace), RTC,
+source/reverse0192/checksum/SMP. NeedfullCI->actualASan->BOOT0125->longactual
+compositortrial tocatchfailedretirementstage; nofixclaim.
+Sole157092/session91200boot0124-cpu-live.loguntil~03:00UTC. Goalactive.
+
 ## 2026-11-21 02:30UTC: CPU control BOOT0124 restored; failure snapshot CI active
 
 Quarantined0123 notreset/reclaimed/CPUoverwritten whilelive. SyncDownload->
