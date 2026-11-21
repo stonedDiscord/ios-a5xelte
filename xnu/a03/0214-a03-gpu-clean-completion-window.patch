@@ -1,0 +1,13 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -539,7 +539,9 @@
+         a03_gpu_write(0x30,8);
+         int clean=0;retire_stage=4;
+-        for(unsigned i=0;i<2000;i++) {
++        /* Keep waiting for this command if its completion is late.
++         * A second command would make the completion ambiguous. */
++        for(unsigned i=0;i<4000;i++) {
+             uint32_t raw=a03_gpu_read(a03_gpu_regs,0x20);
+             if(raw&0x181U)goto poison;
+             if(raw&(1U<<17)){clean=1;break;}
+             a03_gpu_poll_gap();

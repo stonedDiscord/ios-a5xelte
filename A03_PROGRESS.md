@@ -2,8 +2,9 @@
 
 ## 2026-11-21 — bounded GPU clean retry candidate
 
-Patch 0214 adds one retry of the cached GPU CLEAN_INV request when its
-completion bit is absent after the first bounded poll window. It preserves
+Patch 0214 extends the cached GPU CLEAN_INV completion window from 2000 to
+4000 bounded polls, avoiding a second ambiguous request when completion is
+late. It preserves
 the existing fault checks and quarantine behavior, and never tears down
 mappings before completion is acknowledged. Host regression
 tools/a03-test-gpu-clean-retry.py passes. No CI build or hardware result

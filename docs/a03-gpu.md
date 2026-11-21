@@ -2,11 +2,10 @@
 
 ## 2026-11-21 clean-completion retry candidate
 
-Patch 0214 adds one bounded retry for the explicit cached GPU CLEAN_INV
-completion poll. A compositor timeout can consume the first idempotent clean
-request without exposing its completion edge. The retry reissues the same
-request while the job mappings remain owned, then follows the existing
-quarantine path if both 2000-iteration windows fail. This is a source and
+Patch 0214 extends the explicit cached GPU CLEAN_INV completion poll from
+2000 to 4000 bounded iterations. This handles a late completion without
+issuing a second ambiguous request. The existing quarantine path remains in
+place if the single command still fails to complete. This is a source and
 host-regression improvement only until a BOOT trial verifies sustained copies.
 
 ## Active checkpoint — November 21, 2026

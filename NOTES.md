@@ -4411,8 +4411,8 @@ What it took today (in order): 0058 HID services (Apple IOHIDFamily-1915 user cl
 
 GPU acceleration remains disabled by default after BOOT0125 reached a
 stage-5 cached CLEAN_INV timeout during sustained compositor copies. Added
-candidate patch xnu/a03/0214-a03-gpu-clean-retry.patch, which retries that
-idempotent completion request once before quarantining retained mappings.
+candidate patch xnu/a03/0214-a03-gpu-clean-completion-window.patch, which
+extends the completion poll window before quarantining retained mappings.
 Host check tools/a03-test-gpu-clean-retry.py passes. No CI or hardware
 validation has been run for 0214. Next authorized step is a BOOT-only CI
 build and trial, preserving recovery, bootloaders, EFS/NV and USERDATA.
