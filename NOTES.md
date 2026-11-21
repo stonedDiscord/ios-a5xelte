@@ -1,3 +1,8 @@
+BOOT0140: the bundle-unit message occurs after _LSExtensionPointAdd
+succeeds. Both providers match the staged launchd cache. Inspect the
+separate plug-in seeding path instead of treating the unit-0 message as
+proof that extension-point creation failed. Root CI44939625136 passed.
+
 BOOT0140 follow-up: CoreServices has separate extension-point and plug-in
 registration paths. The stock installd job and executable are present in
 the staged root. Live ps showed lsd and pkd with no installd at that sample.

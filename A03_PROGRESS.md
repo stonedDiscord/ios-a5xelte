@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — LaunchServices bundle lookup evidence
+
+The BOOT0140 message “Failed to fetch app bundle unit” resolves to
+_LSRegisterExtensionPoint.cold.1 in the matching CoreServices cache.
+The caller has already returned a nonzero ID from _LSExtensionPointAdd
+when _LSBundleGet returns NULL for parent unit 0. The parent lookup
+message is therefore compatible with creation of the extension-point
+record and does not by itself explain the missing provider plug-ins.
+Both staged HFS images contain the two provider executables and matching
+AppExtensions registration dictionaries. Stock installd dependencies
+resolve in the matching cache. A live lsd PID97 sample found its main
+thread in the server run loop and two pthread workers idle. No active
+seeding wait was observed in that sample. Root CI44939625136 passed.
+
 ## 2026-11-21 — BOOT0140 fallback result
 
 BOOT0140 passed CI44939996930 and the BOOT-only upload. Image SHA-256
