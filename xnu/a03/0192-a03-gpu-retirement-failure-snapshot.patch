@@ -1,0 +1,63 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -493,6 +493,7 @@
+     int configured = a03_gpu_as_wait();
+     uint32_t irq = 0, mmu = 0, gpu = 0;
+     int submitted = 0;
++    unsigned retire_stage=1;
+     if (configured) {
+         a03_gpu_write(0x18c0, (uint32_t)A03_GPU_JOB_VA);
+         a03_gpu_write(0x18c4, 0);
+@@ -535,17 +536,20 @@
+      * core shutdown. A missing fresh completion retains mappings and the
+      * source surface through the existing quarantine path. */
+     if(submitted && a03_gpu_job_requested==3 && a03_gpu_blit_cached) {
++        retire_stage=2;
+         if(a03_gpu_read(a03_gpu_regs,0x20)&0x181U)goto poison;
+         a03_gpu_write(0x24,1U<<17);
++        retire_stage=3;
+         if(a03_gpu_read(a03_gpu_regs,0x20)&(1U<<17))goto poison;
+         a03_gpu_write(0x30,8);
+-        int clean=0;
++        int clean=0;retire_stage=4;
+         for(unsigned i=0;i<2000;i++) {
+             uint32_t raw=a03_gpu_read(a03_gpu_regs,0x20);
+             if(raw&0x181U)goto poison;
+             if(raw&(1U<<17)){clean=1;break;}
+             a03_gpu_poll_gap();
+         }
++        retire_stage=5;
+         if(!clean)goto poison;
+         a03_gpu_write(0x24,1U<<17);
+     }
+@@ -557,12 +561,14 @@
+     a03_gpu_write(0x2400, 0);
+     a03_gpu_write(0x2404, 0);
+     a03_gpu_write(0x2418, 1);
++    retire_stage=6;
+     if (!a03_gpu_as_wait()) goto poison;
+     a03_gpu_write(0x2408, old_attr_lo);
+     a03_gpu_write(0x240c, old_attr_hi);
+     a03_gpu_write(0x2430, old_cfg_lo);
+     a03_gpu_write(0x2434, old_cfg_hi);
+     a03_gpu_write(0x2418, 1);
++    retire_stage=7;
+     if (!a03_gpu_as_wait()) goto poison;
+     FlushPoC_DcacheRegion((vm_offset_t)a03_gpu_scratch, a03_gpu_memory_size());
+     a03_gpu_blit_mark(5);
+@@ -607,6 +613,15 @@
+     return 1;
+ poison:
+     a03_gpu_job_poisoned = 1;
++    /* Read-only failure snapshot before retaining mappings. No acknowledgements,
++     * retries, reset, address-space teardown or power-down in this path. */
++    printf("A03 GPU retirement: stage=%u submitted=%u done=%u irq=%08x mmu=%08x gpu=%08x js=%08x asfault=%08x rawgpu=%08x rawjob=%08x state=%08x next=%08x asstatus=%08x aslo=%08x ashi=%08x cfg=%08x frame=%u clock=%u idle-releases=%llu\n",
++        retire_stage,(unsigned)submitted,(unsigned)done,irq,mmu,gpu,js_status,as_fault,
++        a03_gpu_read(a03_gpu_regs,0x20),a03_gpu_read(a03_gpu_regs,0x1000),
++        a03_gpu_read(a03_gpu_regs,0x1010),a03_gpu_read(a03_gpu_regs,0x18e0),
++        a03_gpu_read(a03_gpu_regs,0x2428),a03_gpu_read(a03_gpu_regs,0x2400),
++        a03_gpu_read(a03_gpu_regs,0x2404),a03_gpu_read(a03_gpu_regs,0x2430),
++        a03_gpu_blit_frames,a03_gpu_clock_selector==2?512U:384U,(unsigned long long)a03_gpu_idle_releases);
+     printf("A03 GPU job: retirement unproven; wired scratch quarantined, core shutdown skipped\n");
+     return 0;
+ }

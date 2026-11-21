@@ -1,3 +1,10 @@
+ACTIVE02:27UTC0123SUSTAINEDUIFAIL:Homegenerated1388actualGPUframes653->2041then
+retirementunproven/quarantine1; panelwritesstop/source+scratchretained,powered1.
+NOTsleep(request1), USB/time/touch/storagealive. NOreset/reclaim/CPUoverwrite.
+Needsreboot.0192read-onlyfailurestage/registersnapshotactualASan/ARM64/profile138
+PASS; fullCIpending. RestoreCPUcontrolBOOT(exact0123kernel,noa03gpu)whilebuildruns.
+Sole154528/session47211until~02:42UTC.Goalactive;physicalquestionpending.
+
 ACTIVE02:24UTC0123additional64coldcycles+4freshreadbacksPASS;medcold2.650231ms.
 CurrentimagepairedCPU/GPUwall1.532567/2.065918ms;submitter1.533552/0.821230ms
 (46.45%saved). All0fallbackquarantine. BeforeHIDtrial653GPU/24CPUcompleted,

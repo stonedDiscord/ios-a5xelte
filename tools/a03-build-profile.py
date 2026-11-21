@@ -193,7 +193,8 @@ def main():
                      '0188-a03-explicit-counter-bounded-gpu-poll.patch',
                      '0189-a03-submitting-thread-copy-runtime.patch',
                      '0190-a03-qualified-gpu-boot-policy.patch',
-                     '0191-a03-retired-gpu-idle-power-release.patch'):
+                     '0191-a03-retired-gpu-idle-power-release.patch',
+                     '0192-a03-gpu-retirement-failure-snapshot.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

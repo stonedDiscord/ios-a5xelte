@@ -34,9 +34,11 @@ static uint64_t fake_time;
 static uint64_t mach_absolute_time(void){return ++fake_time;}
 static void nanoseconds_to_absolutetime(uint64_t n,uint64_t *t){*t=n/10;}
 static void absolutetime_to_nanoseconds(uint64_t t,uint64_t *ns){*ns=t*10;}
+static unsigned last_retire_stage;
 static void *allocation;
 static int capture(const char*fmt,...){
  char line[1024];va_list ap;va_start(ap,fmt);vsnprintf(line,sizeof(line),fmt,ap);va_end(ap);
+ if(!strncmp(line,"A03 GPU retirement: stage=",25)){unsigned value=0;assert(sscanf(line,"A03 GPU retirement: stage=%u",&value)==1);last_retire_stage=value;}
  if(strstr(line,"PASS=1"))passed++;return 0;
 }
 #define printf capture
@@ -282,6 +284,21 @@ int main(void){
  reset(0);if(allocation)free(allocation);return 0;
 }
 '''
+if 'A03 GPU retirement: stage=' in src:
+ tests=tests.replace('static void reset(unsigned m){','static void reset(unsigned m){'+chr(10)+' last_retire_stage=0;')
+ extra=r"""
+ for(unsigned f=1;f<=4;f++){
+  reset(0);expect_cached=1;a03_gpu_blit_control(5);cache_failure=f;
+  if(f==2)bank[3][0x20/4]=1U<<17;
+  assert(blit(53,17)==-1&&a03_gpu_job_poisoned&&!offs);
+  assert(last_retire_stage==(f==1?5:f==2?3:4));
+ }
+ reset(6);assert(blit(53,17)==-1&&last_retire_stage==1&&!offs);
+ reset(7);assert(blit(53,17)==-1&&last_retire_stage==6&&!offs);
+ """
+ tests=tests.replace('int main(void){','int main(void){'+extra)
+else:
+ header=header.replace('static unsigned last_retire_stage;','static unsigned last_retire_stage __attribute__((unused));')
 if 'void a03_gpu_idle_tick(void)' in src:
  tests=tests.replace('static void reset(unsigned m){','static void reset(unsigned m){'+chr(10)+' a03_gpu_last_completed_at=a03_gpu_idle_releases=0;')
  extra=r"""

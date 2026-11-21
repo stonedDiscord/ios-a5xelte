@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 02:27UTC: sustained compositor failure supersedes replay acceptance
+
+After64additionalcoldcycles+freshreadbacks+pairedPASS, ONEHome at02:24UTC
+triggered1388newactualGPUcompositorcopies(653->2041) over~34s. Thenretirement
+unproven logsanddriverquarantinesDMA/preserveswiredscratch+source; panelwrites
+suppressed. Status2041completed/2351232000pixels/quarantined1/fallback0,
+warm1powered1(retainedbyquarantine). Executephase2.083ms, retire/verify0,
+lastattempt56.574ms; exactfailedguard notlogged. USB/time/vsync/touchstream/
+storage remainalive. Subsequent synthetic swipe dispatchedafterfailure, noUI
+ackclaim. This is NOT merelydisplay sleep: requestlast1, in-flight swap never
+finished/copiesstop and GPUquarantineexplicit. ActualsustainedUIacceptanceFAIL.
+Noattempttoreset/reclaimDMAorCPUoverwrite underquarantine. Rebootrequired.
+
+0192 addsfailureonlyread-onlyregister snapshot withstage1slot/ASwait,2priorGPU
+fault,3staleack,4faultduringclean,5missingfreshclean,6ASdisable,7ASrestore.
+No timeout/cache/retirement weakening, reset,retry,powerofforrecovery. Existing
+faultinjectiontests exerciseexactstage andretainmappings/suppressshutdown.
+ActualASan/ARM64/profile138PASS. NeedfullCI->diagnosticBOOT->reproduceactual
+compositorfailure; do notclaimfixedfrommorestaticreplays. PlanCPUcontrolBOOT
+restoreusingexact0123kernelwithouta03gpu whilediagnosticbuildruns. Goalactive.
+
 ## 2026-11-21 02:24UTC:64more cold cycles and current-image CPU offload PASS
 
 BOOT0123enabledidlepolicy unchanged.64additional observedpoweroff/coldresumes
