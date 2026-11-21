@@ -204,7 +204,8 @@ def main():
                      '0199-a03-focus-posterboard-path-evidence.patch',
                      '0200-a03-default-wallpaper-lookup-alias.patch',
                      '0201-a03-ios-device-sysctl-identity.patch',
-                     '0202-a03-default-wallpaper-screen-class.patch'):
+                     '0202-a03-default-wallpaper-screen-class.patch',
+                     '0203-a03-wallpaper-asset-evidence.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
