@@ -1,3 +1,11 @@
+ACTIVE BOOT0132 installed, c30a775/CI44925526385 verified. Identity correction
+changes live WallpaperKit lookup from ~ipod ENOENT to ~iphone successful.
+PosterBoard still traps selectedLockPath nil;131corpse records/reader ended.
+0202/0da7315 adapts stock default7400 metadata screen class to240w-533h@3x~iphone;
+asset filenames preserved. Actual-stock host test and ARM64 compile pass.
+CI44927553296/job136916888173 queued; prepare-posterboard-0133.py pinned.
+Next verify CI, BOOT-only0133, migration result and sustained poster survival.
+
 ACTIVE user reports mixed iPod/iPad identity. Found macOS iOS-on-Mac
 hw.machine=iPad8,6 and A03 platform expert product=Samsung Galaxy A03,
 target=a03, inconsistent with ADT iPhone10,3/D22AP.0201 c30a775 restores

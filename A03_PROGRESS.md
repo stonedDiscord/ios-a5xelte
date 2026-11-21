@@ -1,5 +1,32 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: BOOT0132 uses iPhone defaults; screen-class candidate building
+
+Combined CI44925526385 succeeded at c30a775. Exact 0200+0201 sources,
+kernel checksum and SMP checks passed. BOOT0132 SHA256
+26bd2e65b3787ba924a1f9785bfae8f36c694b6cb952a7e2098ac18c5d3c0deb
+uploaded to BOOT only. First synced Download reset explicitly failed;
+console retained, second attempt reached Download and upload succeeded.
+Both catalog aliases returned0. One monitor Home was dispatched after sleep.
+
+User's mixed identity observation led to a measurable correction: PIDs255
+and354 now open DefaultWallpapers~iphone.plist successfully, replacing the
+prior ipod ENOENT. The selectedLockPath trap still reproduces at unslid
+0x1be3babac, so identity/default lookup repair is not the complete crash fix.
+Private boot0132-posterboard-live.log ended with131PosterBoard corpse records.
+
+Matching WallpaperKit builds logical screen class using mainScreen
+_referenceBounds, scale and format %.0fw-%.0fh@%@x~%@. A03 720x1600/3 implies
+240w-533h@3x~iphone; the stock7400 variant metadata is375w-812h@3x~iphone.
+Candidate0202/0da7315 adapts only that metadata string in the 536-byte stock
+binary plist, preserving animation filenames (which contain the same text).
+Existing-root migration remains behind a03wallpaper, validated USERDATA,
+HFS mount/type/size/magic/string checks and synchronous write; no new file.
+Actual-stock staging decode comparison and repeat run pass; actual
+vfs_syscalls.c ARM64 compile passes. Hardware selection remains unverified.
+CI44927553296/job136916888173 queued at0da7315970c891cb91bb979871c79279315cb85a.
+Private prepare-posterboard-0133.py pins it. Phone stays0132, reader ended.
+
 ## 2026-11-21: inconsistent iPad/iPod identity traced to kernel overrides
 
 User reports iPod touch and iPad labels in different places. Exact deployed
