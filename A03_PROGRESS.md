@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — Provider registration daemon logs
+
+BOOT0138 captured 21 registration path records from lsd, including
+successful opens of the stock definitions and signature. The live
+trace shows no path accesses to CollectionsPoster or LegacyPoster.
+Patch 0208 mirrors lsd and pkd startup logs through the opt-in stderr
+capture already verified with PosterBoard. The exact daemon paths
+were confirmed in the staged launchd jobs. Patch application and
+profile staging passed. CI44938311489/job136949746962 builds b18d40e.
+Private prepare-posterboard-0139.py pins the build.
+
 ## 2026-11-21 — BOOT0138 registration trace installed
 
 CI44936228950 passed, and the source, checksum and SMP checks passed.

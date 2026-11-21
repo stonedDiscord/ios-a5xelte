@@ -1,3 +1,7 @@
+ACTIVE BOOT0138 still installed. Patch 0208 mirrors lsd and pkd startup
+logs for provider registration. CI44938311489/job136949746962 builds b18d40e.
+Private prepare-posterboard-0139.py pins the build. Restore touch after BOOT test.
+
 BOOT0138 reproduced the provider query failure, -2219 setup errors and
 the publisher trap. lsd opened the definition and signature. Staged
 plist page hashes match. Trace the runtime query authorization and
