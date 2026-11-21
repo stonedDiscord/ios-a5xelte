@@ -24,6 +24,7 @@ def find():
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--output',type=Path,default=Path('shim/a03/out/usb-console-'+time.strftime('%Y%m%d-%H%M%S')+'.log'))
+    ap.add_argument('--append',action='store_true',help='resume an existing private capture without truncation; stop the prior reader first')
     ap.add_argument('--wait',type=float,default=120,help='seconds to wait for enumeration')
     ap.add_argument('--duration',type=float,default=300,help='maximum capture seconds')
     ap.add_argument('--command',action='append',default=[],help='monitor command; repeat for multiple commands')
@@ -59,7 +60,8 @@ def main():
     a.output.parent.mkdir(parents=True,exist_ok=True)
     print('Capturing '+dev+' to '+str(a.output),file=sys.stderr)
     try:
-        log=a.output.open('xb')
+        if a.append and not a.output.is_file():raise RuntimeError('Append requires an existing capture file')
+        log=a.output.open('ab' if a.append else 'xb')
     except OSError:
         os.close(fd)
         raise
