@@ -3,7 +3,7 @@
 ## 2026-11-21 03:21UTC: exact0193/0194 CI running; read-only soak prepared
 
 CI44860660965 exactede01ea4ac14ee411c7b5fd49bf4a279030a36c5,
-job136713035392 in_progress (Deps at last authoritative check). No duplicate.
+job136713035392 in_progress Build at03:24UTC. No duplicate.
 Actualblit/idlehook/rate/runtime/replayASanUBSan and ARM64 compilation PASS.
 Private gpu-boundary0193-work/artifacts.py+pack0126.py pin exactCI/source,
 source22.6/RTC/checksum/reverse0194/SMP. Needfullsuccess->artifactactualtests
