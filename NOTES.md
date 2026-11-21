@@ -1,3 +1,8 @@
+BOOT0141 reproduces the crash. Patch 0211 traces LaunchServices database
+paths and the standard built-in scan directories. Patch application and
+profile staging passed. CI44943875183 builds 2314b54. Private
+prepare-posterboard-0142.py pins the build.
+
 BOOT0141 follow-up: the stock cache has an in-process built-in scanner
 in InstalledContentLibrary. Determine whether the live LaunchServices
 database reaches the built-in scan, including framework enumeration,

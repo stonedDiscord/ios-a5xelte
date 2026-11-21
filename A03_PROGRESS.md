@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — LaunchServices scanner trace
+
+BOOT0141 reproduces the crash. Patch 0211 traces LaunchServices database
+paths and the standard built-in scan directories. Patch application and
+profile staging passed. CI44943875183 builds 2314b54. Private
+prepare-posterboard-0142.py pins the build.
+
 ## 2026-11-21 — BOOT0141 seeding trace result
 
 BOOT0141 passed CI44942293405 and BOOT-only installation. SHA-256
