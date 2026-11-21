@@ -209,7 +209,8 @@ def main():
                      '0204-a03-focus-default-wallpaper-asset-evidence.patch',
                      '0205-a03-poster-store-path-evidence.patch',
                      '0206-a03-posterboard-unified-log-evidence.patch',
-                     '0207-a03-poster-provider-registration-evidence.patch'):
+                     '0207-a03-poster-provider-registration-evidence.patch',
+                     '0208-a03-provider-registration-logs.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

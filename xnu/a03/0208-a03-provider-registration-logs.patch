@@ -1,0 +1,37 @@
+--- a/bsd/kern/kern_exec.c
++++ b/bsd/kern/kern_exec.c
+@@ -5743,10 +5743,12 @@
+ 
+ #if defined(ARM64_BOARD_CONFIG_SWEET)
+-	/* Route PosterBoard's unified log through its existing stderr capture. */
++	/* Mirror wallpaper discovery and registration logs through stderr. */
+ 	static const char activity_env[] = "OS_ACTIVITY_DT_MODE=YES";
+ 	static const char activity_key[] = "OS_ACTIVITY_DT_MODE=";
++	const char *executable = imgp->ip_strings + strlen(EXECUTABLE_KEY);
+ 	uint32_t userlogs = 0;
+-	if (!strcmp(imgp->ip_strings + strlen(EXECUTABLE_KEY),
+-	    "/Applications/PosterBoard.app/PosterBoard") &&
++	if ((!strcmp(executable, "/Applications/PosterBoard.app/PosterBoard") ||
++	    !strcmp(executable, "/usr/libexec/lsd") ||
++	    !strcmp(executable, "/usr/libexec/pkd")) &&
+ 	    PE_parse_boot_argn("a03_userlogs", &userlogs, sizeof(userlogs)) && userlogs == 1 &&
+ 	    imgp->ip_argspace >= sizeof(activity_env) + 2 * new_ptr_size &&
+--- a/bsd/dev/mem.c
++++ b/bsd/dev/mem.c
+@@ -134,6 +134,8 @@
+     else if (!strcmp(name, "backboardd")) slot = 1;
+     else if (!strcmp(name, "PosterBoard")) slot = 2;
++    else if (!strcmp(name, "lsd")) slot = 3;
++    else if (!strcmp(name, "pkd")) slot = 4;
+     else return;
+-    static unsigned reports[3];
++    static unsigned reports[5];
+     unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
+     do {
+@@ -143,5 +145,5 @@
+     uio_t copy = uio_duplicate(uio);
+     if (copy == NULL) return;
+-    char text[256];
++    char text[512];
+     int n = (int)MIN(uio_resid(copy), sizeof(text) - 1);
+     int error = uiomove(text, n, copy);
