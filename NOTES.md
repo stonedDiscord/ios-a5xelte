@@ -1,3 +1,14 @@
+ACTIVE00:23UTCNov21 BOOT0119HWbothratesreadbacks+pairedPASS, GPU512median1.969163ms
+vsCPU1.664846ms(18.3%slower).384GPU2.041745vsCPU1.677052. Singleexplicitendclean
+functionalbutnogreatgain;fallback0quarantine0. Last512execute1.309ms/sourceclean
+0.392/setup0.094ms. Currentconfirmed384APB11/11/31/GPUOFFpowered0verify1impldef0
+/tile4cachedwarm1,61completed/verified0(resetrestore),touchON389events0/storagehealthy.
+Sole133832/session39451boot0119-endflush-live.loguntil~00:48UTC.NoactiveCI.
+Validatedcode7607421CI44840823838/kernel a99f3c6a...e897f9/BOOT03196670...cbce39.
+Goalactive:needactualGPUbenefit+physicalUIacceptance;sourceCPUrenders/MetalEAGLabsent.
+Nexttargetmeasuredexecution+sourcecleancost,keepallownership/cachecompletionguards.
+Privatepipeline/linearshaderexperimentsnotstaged.No periodicHome/fakeframes.
+
 ACTIVE0119endflushBOOT-onlyflashSUCCESS00:17UTCNov21 CI44840823838/7607421success/
 sixsources/RTC/reverse0187/checksum/SMP/actualDMA+rate+replayASanPASS.
 Kernela99f3c6a...e897f9/BOOT03196670...cbce39;same8cores1984MiB/ADT0094/cmd599.

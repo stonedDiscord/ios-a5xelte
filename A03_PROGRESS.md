@@ -1,5 +1,30 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 00:23UTC: BOOT0119 hardware PASS1.969ms; CPU remains faster
+
+Both384/512MHz fourfreshfullreadbacks+threepaired8copyrounds PASS. CPU384
+1.672350/1.677052/1.690889ms; GPU3842.064879/2.018956/2.041745ms. CPU512
+1.674447/1.399019/1.664846ms; GPU5121.969163/1.977956/1.962942ms. Median
+GPU5121.969163 vsCPU1.664846ms, still18.3percent slower. Last512phasepower
+0.048769/prepare0.094423/cache0.391807/execute1.309230/retire0.031692ms.
+Singleexplicitendcleanworksbutdoesnotmateriallyimprovelatency. No cached
+DMAvisibility/retirement failures, fallback0/quarantine0. Pixelreadbacks
+compareall1152000pixels; verifiedcounterreset0uponrestoringrate384.
+
+Finalstateconfirmed:384APB11/11/31,GPUOFFpowered0,verify1,impldef0,tile4,
+cachedwarm1,61frames/completed61,70272000pixels. Touchstreaming1/389slices/
+events0;storageready1/poison0. Solecapture133832/session39451,
+boot0119-endflush-live.loguntil~00:48UTC. NoactiveCI, worktreecleanbeforethis
+record. BasicGPUcopy isfunctional but measuredbenefit/physicalacceptance
+remainunmet; goalactive. No Metal/EAGL source rendering added.
+
+Nextinvestigation should target measured1.31ms GPUexecution +0.39ms CPU
+sourceclean without removing ownership/lifetime/cachecompletion guards.
+Native16Kmappingoptimization hasactualgain; tile/memattr/sourceclean/rate/
+duplicateendflush trials alone do not closeCPUgap. Avoidanotherblindshader
+rewrite orclaiming replay FPS/healthyUI. Physicaltouchacceptance pending;
+sleepcorrelation andPosterBoardcrashloops remainseparate.
+
 ## 2026-11-21 00:17UTC: verified endclean CI success; BOOT0119 trial
 
 CI44840823838 SUCCESS exact7607421e7dfeed0c335aa22ad1c5297f452ce0ca.

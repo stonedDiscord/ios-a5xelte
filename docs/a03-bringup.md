@@ -1,12 +1,11 @@
 # Galaxy A03 SM-A035G bring-up
 
-Current GPU checkpoint (November21,2026): BOOT0118 native16K source-page
-validation passes actual full720x1600 GPU readbacks. Paired GPU medians are
-2.056ms at384MHz and1.983ms at512MHz, still slower than CPU copies. GPUcopy
-is opt-in; source rendering remains CPU-only. CI44840823838/7607421 builds
-0187 single independently verified end-clean follow-up. Physical UI acceptance
-and a measured CPU/GPU benefit remain outstanding. See the active entries in
-A03_PROGRESS.md, NOTES.md and docs/a03-gpu.md; dated older entries follow.
+Current GPU checkpoint (November21,2026): BOOT0119 single verified end-clean
+passes actual full720x1600 GPU readbacks. Paired GPU medians are2.042ms at
+384MHz and1.969ms at512MHz, versusCPU1.677/1.665ms. GPUcopy remains opt-in
+and OFF; source rendering remains CPU-only. Native16Kpage validation reduced
+mapping setup, but measuredCPU/GPU benefit and physicalUI acceptance remain
+outstanding. NoactiveCI. See newestA03_PROGRESS.md/NOTES.md/docs/a03-gpu.md.
 
 2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host
 sync repairs only the running calendar. User requires autonomous time on

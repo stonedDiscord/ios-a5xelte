@@ -2,19 +2,20 @@
 
 ## Active checkpoint — November 21, 2026
 
-BOOT0118 / CI44836868623 / e8e3dee is hardware validated for full-frame
-GPU copies. CPU rendering still produces the source surfaces; Metal/EAGL
-rendering support is not implemented. The acceleration goal is unfinished:
-GPU copy latency remains above CPU latency, and sustained physical UI
-acceptance has not been established.
+BOOT0119 / CI44840823838 /7607421 is hardware validated for full-frame
+GPU copies with one independently acknowledged end clean. CPU rendering still
+produces the source surfaces; Metal/EAGL rendering support is not implemented.
+The acceleration goal is unfinished: GPU copy latency remains above CPU
+latency, and sustained physical UI acceptance has not been established.
 
 | Controlled test | GPU median | Result |
 | --- | --- | --- |
-| BOOT0114 tile rows4/8/16/32 | 2.186 /2.205 /2.208 /2.255ms | Larger tiles do not help |
-| BOOT0115 impldef/cacheall/writealloc | 2.214 /2.191 /2.325ms | Retain default impldef |
-| BOOT0116 clock384/512MHz | 2.193 /2.128ms | Small clock effect |
-| BOOT0117 clean-only CPU source,384/512MHz | 2.202 /2.126ms | No measured latency gain |
-| BOOT0118 native16K mapping validation,384/512MHz | 2.056 /1.983ms | Setup reduced; still above CPU |
+| BOOT0114 tile rows4/8/16/32 |2.186 /2.205 /2.208 /2.255ms| Larger tiles do not help |
+| BOOT0115 impldef/cacheall/writealloc |2.214 /2.191 /2.325ms| Retain default impldef |
+| BOOT0116 clock384/512MHz |2.193 /2.128ms| Small clock effect |
+| BOOT0117 clean-only CPU source,384/512MHz |2.202 /2.126ms| No measured latency gain |
+| BOOT0118 native16K mapping validation,384/512MHz |2.056 /1.983ms| Setup reduced; still above CPU |
+| BOOT0119 single verified endclean,384/512MHz |2.042 /1.969ms| CPU medians1.677 /1.665ms |
 
 Each accepted comparison uses four fresh full-frame readbacks and three
 alternating eight-copy CPU/GPU rounds. The first BOOT0118 512MHz run was
@@ -23,13 +24,16 @@ These are synchronous copy timings, not animation FPS. All accepted trials
 have zero fallbacks/quarantine. Defaults remain GPUOFF,384MHz,impldef0,tile4;
 cached/warm operation is explicit and full verification is the bring-up default.
 
-0187 is building in CI44840823838 (exact7607421). Cached framebuffer jobs
-omit the duplicate automatic end flush while preserving start invalidation
-and the independently acknowledged GPU CLEAN_INV after slot retirement.
-CPU readback, AS disable, fallback and shutdown remain after that completion.
-The source read-only mapping is cleaned to PoC; descriptor/job flushes remain.
-No0187 hardware/performance claim yet. See A03_PROGRESS.md and NOTES.md for
-current reader, image hashes, deployment and unfinished gates.
+0187 passes hardware full readback and paired timings in BOOT0119. Cached
+framebuffer jobs omit the duplicate automatic end flush while preserving start
+invalidation and the independently acknowledged GPU CLEAN_INV after slot
+retirement. CPU readback, AS disable, fallback and shutdown remain after that
+completion. The source read-only mapping is cleaned to PoC; descriptor/job
+flushes remain. The last512MHz attempt measured1.309ms execution,0.392ms
+source/descriptor cache preparation and0.094ms mapping setup. GPU512MHz is
+still18.3% slower than its pairedCPU median, so normal GPU copying stays OFF.
+See A03_PROGRESS.md and NOTES.md for the current reader, image hashes and
+unfinished physical UI/performance gates.
 
 Use the existing single-reader log with these bounded comparison tools:
 
