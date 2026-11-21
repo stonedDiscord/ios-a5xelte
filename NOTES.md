@@ -1,3 +1,8 @@
+Patch 0210 traces installd startup and scoped wallpaper plug-in directory
+access. Patch application and A03 profile staging passed. CI44942293405
+job136961940025 builds 6749c00. Private prepare-posterboard-0141.py pins
+the build. BOOT0140 remains installed.
+
 BOOT0140: the bundle-unit message occurs after _LSExtensionPointAdd
 succeeds. Both providers match the staged launchd cache. Inspect the
 separate plug-in seeding path instead of treating the unit-0 message as
