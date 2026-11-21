@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:21UTC: exact0193/0194 CI running; read-only soak prepared
+
+CI44860660965 exactede01ea4ac14ee411c7b5fd49bf4a279030a36c5,
+job136713035392 in_progress (Deps at last authoritative check). No duplicate.
+Actualblit/idlehook/rate/runtime/replayASanUBSan and ARM64 compilation PASS.
+Private gpu-boundary0193-work/artifacts.py+pack0126.py pin exactCI/source,
+source22.6/RTC/checksum/reverse0194/SMP. Needfullsuccess->artifactactualtests
+->BOOT0126. New host compositor-soak observer sends only read-only status,
+requires12000additional actual copies over600s by default, failsquarantine/
+fallback/policychange/counterregression/insufficientcopies; no replay/input.
+GuardfixturesPASS. Realframesarestillrequired; observer alone provesnothing.
+CPU0124 now4CPUcopies,request0 afteridle,touchON1024events0/storagehealthy;
+this sleep episode is distinctfrom0125GPUstage5. Goalactive/physicalpending.
+
 ## 2026-11-21: candidate0193 restores job-boundary clean;0194 bounds diagnostics
 
 Evidence-driven candidate, NOT hardware fix:0193 restores JS1 automatic end
