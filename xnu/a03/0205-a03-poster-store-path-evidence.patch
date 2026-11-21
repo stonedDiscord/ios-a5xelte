@@ -1,0 +1,28 @@
+--- a/bsd/dev/arm/systemcalls.c
++++ b/bsd/dev/arm/systemcalls.c
+@@ -106,11 +106,16 @@
+         switch (code) {
+         case SYS_open: case SYS_open_nocancel: case SYS_access:
+         case SYS_mkdir: case SYS_stat64: case SYS_lstat64:
+-        case SYS_getattrlist: case SYS_unlink:
++        case SYS_getattrlist: case SYS_unlink: case SYS_mkdir_extended:
+             path = args[0]; break;
+         case SYS_openat: case SYS_openat_nocancel: case SYS_openat_dprotected_np:
+         case SYS_faccessat: case SYS_mkdirat: case SYS_getattrlistat: case SYS_fstatat64:
++            case SYS_unlinkat:
+             path = args[1]; break;
++        case SYS_rename:
++            path = args[1]; break; /* destination */
++        case SYS_renameat: case SYS_renameatx_np:
++            path = args[3]; break; /* destination */
+         default: return;
+         }
+         uint32_t enabled = 0;
+@@ -127,6 +132,7 @@
+             strcmp(text, "/var/mobile/Library/SpringBoard/LockBackground.jpg") &&
+             strcmp(text, "/var/mobile/Library/SpringBoard/HomeBackground.jpg") &&
+             ((!strnstr(text, "PosterBoard", copied) && !strnstr(text, "PosterKit", copied) &&
++              !strnstr(text, "PRBPosterExtensionDataStore", copied) &&
+               !strnstr(text, "SwitcherConfiguration", copied) && !strnstr(text, "Wallpaper", copied)) ||
+              (strncmp(text, "/var/", 5) && strncmp(text, "/private/var/", 13)))) return;
+         unsigned old = __atomic_load_n(&reports[slot], __ATOMIC_RELAXED);
