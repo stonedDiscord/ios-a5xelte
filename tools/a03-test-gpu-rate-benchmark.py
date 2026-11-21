@@ -34,3 +34,24 @@ with tempfile.NamedTemporaryFile() as f:
  except RuntimeError as error:assert str(error)=='partial replay'
 assert seq[-4:]==['gpu blit off','gpu blit rate384','gpu blit verify','gpu blit off']
 print('PASS clock qualification, policy isolation, complete result parsing and failure restoration')
+
+# Complete the successful path, including final JSON serialization.
+from contextlib import redirect_stdout
+from io import StringIO
+from types import SimpleNamespace
+original=dict(original,poll_spin=0)
+before=dict(b,poll_spin=0);after=dict(before,verified=4,completed=4)
+snapshots=[original,before,after,dict(before,enabled=0),original]
+seq=[];m.blit.snapshot=lambda *args:snapshots.pop(0)
+m.blit.replay=lambda *args:100
+sample=dict(clock_mhz=512,poll_spin=0)
+paired=dict(cpu_median_ms=1.5,gpu_median_ms=2.1,samples=[sample]*6)
+m.subprocess.run=lambda *args,**kwargs:SimpleNamespace(returncode=0,stdout=json.dumps(paired),stderr='')
+output=StringIO()
+with tempfile.NamedTemporaryFile() as f,redirect_stdout(output):
+ sys.argv=['rate','--log',f.name,'--rates','512'];m.main()
+text=output.getvalue();start=text.rfind('{'+chr(10)+'  "note"')
+report=json.loads(text[start:]);assert report['rates'][0]['clock_mhz']==512
+assert report['rates'][0]['policy']=='rate512'
+assert not snapshots and seq[-4:]==['gpu blit off','gpu blit rate384','gpu blit verify','gpu blit off']
+print('PASS complete successful clock comparison, report serialization and restoration')
