@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 03:43UTC: BOOT0126 kernel/touch/storage healthy; waiting compositor
+
+All8SGI1PASS/retainedRTC1795232498 read without host sync. Volatile79104byte
+FW staged/load0/A55A/config720x1600. Firststartupinvalidslice required one
+explicit touchstart retry; streamingON. Storage ready1poison0. GPUdefaultOFF
+beforefirstcompositorframe; zero submissions so noautobootproofyet. NoGPU
+controls/replayissued. Sole168765/session9363 boot0126-boundary-live.log.
+Verifierwaitsession87644 onlyreadslog, failsifquarantine. Needactivation/
+4fullreadbacks/fastthen sustainedactualframes. Goalactive/nofixclaim.
+
 ## 2026-11-21 03:40UTC: candidate fullCI passes; BOOT0126 flashed
 
 CI44860660965SUCCESS/exactede01ea4ac14ee411c7b5fd49bf4a279030a36c5.

@@ -1,3 +1,11 @@
+ACTIVE03:43UTCBOOT0126runtime:8SGIPASS/RTC1795232498retained,nohostsync.
+FWRAM79104load0/A55A;firststartupinvalidslice,onestartretry->touchON.
+Storagehealthyready1poison0. GPUstilldefaultOFFbeforefirstcompositorframe;
+NOhostGPUcontrols/replays. Sole168765/session9363boot0126-boundary-live.log.
+Autobootverifierwaitsession87644pollslogonly;need4full+fastproof.
+Thenactualcompositorlongsoak/readbacks/idle/paired/physicalgates;goalactive.
+0126CI44860660965/exactede01ea;kernel72b18062...98f754b/BOOT9ab6b2d8...801773b.
+
 ACTIVE03:40UTCBOOT0126boundaryflashedBOOT-onlySUCCESS CI44860660965/exactede01ea.
 Sixsources/RTC/reverse0194/checksum/SMP/actualASanPASS. Kernel72b18062...98f754b/
 BOOT9ab6b2d8...801773b;same8cores1984MiB/cmd593a03gpu=1.
