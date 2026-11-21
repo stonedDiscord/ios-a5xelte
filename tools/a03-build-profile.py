@@ -214,7 +214,8 @@ def main():
                      '0209-a03-install-poster-extension-point.patch',
                      '0210-a03-poster-plugin-seeding-evidence.patch',
                      '0211-a03-poster-scanner-evidence.patch',
-                     '0212-a03-test-launchservices-reseed.patch'):
+                     '0212-a03-test-launchservices-reseed.patch',
+                     '0213-a03-iosurface-plane-result-layout.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

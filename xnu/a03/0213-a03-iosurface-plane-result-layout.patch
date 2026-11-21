@@ -1,0 +1,14 @@
+--- a/iokit/Kernel/arm/SweetSurface.cpp
++++ b/iokit/Kernel/arm/SweetSurface.cpp
+@@ -592,8 +592,9 @@
+ 	for (uint32_t i = 0; i < s->planeCount; i++) {
+-		uint8_t *p = out + 0x68 + i * 0x80;
++		uint8_t *p = out + 0x64 + i * 0x80;
+ 		const struct sweet_surface_plane *pl = &s->planes[i];
++		/* IOSurfaceClient plane fields start at client offset 0xcc. */
+ 		put32(p, 0x00, pl->width);
+ 		put32(p, 0x04, pl->height);
+-		put32(p, 0x08, pl->bytesPerRow);
+ 		put32(p, 0x0c, pl->offset);
++		put32(p, 0x10, pl->bytesPerRow);
+ 		put32(p, 0x14, pl->size);
