@@ -11,6 +11,10 @@ tools/a03-test-gpu-clean-retry.py passes. No CI build or hardware result
 exists yet. BOOT0125's stage-5 timeout remains unresolved pending a BOOT-only
 trial.
 
+CI44957509219 was dispatched from commit 20e267f8 with the A03 SWEET profile
+and patch 0214 included. The build remains in progress. No BOOT artifact or
+hardware result is available yet.
+
 ## 2026-11-21 — BOOT0144 PosterBoard startup and wake verification
 
 BOOT0144 passed CI44950176996 and BOOT-only installation. SHA-256
