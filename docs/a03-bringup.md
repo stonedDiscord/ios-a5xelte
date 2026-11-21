@@ -5,7 +5,8 @@ passes actual full720x1600 GPU readbacks. Paired GPU medians are2.042ms at
 384MHz and1.969ms at512MHz, versusCPU1.677/1.665ms. GPUcopy remains opt-in
 and OFF; source rendering remains CPU-only. Native16Kpage validation reduced
 mapping setup, but measuredCPU/GPU benefit and physicalUI acceptance remain
-outstanding. NoactiveCI. See newestA03_PROGRESS.md/NOTES.md/docs/a03-gpu.md.
+outstanding. CI44844162892 is building the explicit0188 polling comparison;
+normal GPU copying stays OFF. See newestA03_PROGRESS.md/NOTES.md/docs/a03-gpu.md.
 
 2026-11-20 clock: measured fresh-boot UTC553 (January1970). Explicit host
 sync repairs only the running calendar. User requires autonomous time on
