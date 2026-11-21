@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — LaunchServices cache reseed trial
+
+BOOT0142 passed CI44943875183 and BOOT-only installation. Touch reached
+A55A and streaming was verified. Reader PID177195/session35987 captured
+lsd opening an existing LaunchServices csstore and accessing Frameworks.
+Patch 0212 archives that exact cache with an exclusive rename behind a
+private boot argument, so lsd can attempt a fresh seed. CI44945143677
+builds c387071. Private prepare-posterboard-0143.py pins the build and
+derives the container identifier from the device log. Reseed is untested.
+
 ## 2026-11-21 — LaunchServices scanner trace
 
 BOOT0141 reproduces the crash. Patch 0211 traces LaunchServices database

@@ -1,3 +1,11 @@
+BOOT0142 passed CI44943875183 and BOOT-only installation. Touch reached
+A55A and streaming was verified. Reader PID177195/session35987 captured
+lsd opening an existing LaunchServices csstore and accessing Frameworks.
+Patch 0212 archives that exact cache with an exclusive rename behind a
+private boot argument, so lsd can attempt a fresh seed. CI44945143677
+builds c387071. Private prepare-posterboard-0143.py pins the build and
+derives the container identifier from the device log. Reseed is untested.
+
 BOOT0141 reproduces the crash. Patch 0211 traces LaunchServices database
 paths and the standard built-in scan directories. Patch application and
 profile staging passed. CI44943875183 builds 2314b54. Private
