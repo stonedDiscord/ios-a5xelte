@@ -12,8 +12,10 @@ exists yet. BOOT0125's stage-5 timeout remains unresolved pending a BOOT-only
 trial.
 
 CI44957509219 was dispatched from commit 20e267f8 with the A03 SWEET profile
-and patch 0214 included. The build remains in progress. No BOOT artifact or
-hardware result is available yet.
+and completed successfully, but iOS userspace staging was disabled so it did
+not validate the A03 profile path used for BOOT images. CI44958900136 was
+then dispatched with iOS userspace staging and buildtree upload enabled. No
+BOOT artifact or hardware result is available yet.
 
 ## 2026-11-21 — BOOT0144 PosterBoard startup and wake verification
 
