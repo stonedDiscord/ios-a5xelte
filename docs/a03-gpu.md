@@ -1,5 +1,14 @@
 # A03 GPU acceleration bring-up
 
+## 2026-11-21 clean-completion retry candidate
+
+Patch 0214 adds one bounded retry for the explicit cached GPU CLEAN_INV
+completion poll. A compositor timeout can consume the first idempotent clean
+request without exposing its completion edge. The retry reissues the same
+request while the job mappings remain owned, then follows the existing
+quarantine path if both 2000-iteration windows fail. This is a source and
+host-regression improvement only until a BOOT trial verifies sustained copies.
+
 ## Active checkpoint — November 21, 2026
 
 BOOT0123 failed sustained compositor activity after2041completedGPUcopies.

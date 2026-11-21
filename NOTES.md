@@ -4407,3 +4407,12 @@ What it took today (in order): 0058 HID services (Apple IOHIDFamily-1915 user cl
      cpu_init, before arm_vm_init.
   5. panic hook at top of panic_trap_to_debugger: va_copy + _doprnt(fmt, &copy, sweet_early_putc, 16).
   Verify with tools/xnu-cc.py (compile+symbols) and patch-order simulation before the single CI run.
+## Active A03 handoff — 2026-11-21
+
+GPU acceleration remains disabled by default after BOOT0125 reached a
+stage-5 cached CLEAN_INV timeout during sustained compositor copies. Added
+candidate patch xnu/a03/0214-a03-gpu-clean-retry.patch, which retries that
+idempotent completion request once before quarantining retained mappings.
+Host check tools/a03-test-gpu-clean-retry.py passes. No CI or hardware
+validation has been run for 0214. Next authorized step is a BOOT-only CI
+build and trial, preserving recovery, bootloaders, EFS/NV and USERDATA.

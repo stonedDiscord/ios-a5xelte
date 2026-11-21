@@ -1,0 +1,25 @@
+--- a/bsd/dev/a03_gpu.c
++++ b/bsd/dev/a03_gpu.c
+@@ -539,9 +539,17 @@
+         a03_gpu_write(0x30,8);
+         int clean=0;retire_stage=4;
+-        for(unsigned i=0;i<2000;i++) {
+-            uint32_t raw=a03_gpu_read(a03_gpu_regs,0x20);
+-            if(raw&0x181U)goto poison;
+-            if(raw&(1U<<17)){clean=1;break;}
+-            a03_gpu_poll_gap();
++        for(unsigned attempt=0;attempt<2&&!clean;attempt++) {
++            for(unsigned i=0;i<2000;i++) {
++                uint32_t raw=a03_gpu_read(a03_gpu_regs,0x20);
++                if(raw&0x181U)goto poison;
++                if(raw&(1U<<17)){clean=1;break;}
++                a03_gpu_poll_gap();
++            }
++            if(!clean&&attempt==0) {
++                /* A busy compositor can consume the first clean request
++                 * without producing its completion edge. Re-issue the
++                 * idempotent request once while ownership is retained. */
++                a03_gpu_write(0x30,8);
++            }
+         }
+         retire_stage=5;

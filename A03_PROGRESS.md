@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21 — bounded GPU clean retry candidate
+
+Patch 0214 adds one retry of the cached GPU CLEAN_INV request when its
+completion bit is absent after the first bounded poll window. It preserves
+the existing fault checks and quarantine behavior, and never tears down
+mappings before completion is acknowledged. Host regression
+tools/a03-test-gpu-clean-retry.py passes. No CI build or hardware result
+exists yet. BOOT0125's stage-5 timeout remains unresolved pending a BOOT-only
+trial.
+
 ## 2026-11-21 — BOOT0144 PosterBoard startup and wake verification
 
 BOOT0144 passed CI44950176996 and BOOT-only installation. SHA-256
