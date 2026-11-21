@@ -11,6 +11,13 @@ mobile_install, lsregister and launchctl at the inspected paths. Touch
 returned to A55A with streaming observed at 774 slices. The live reader
 is PID168525/session55680. Provider seeding remains unresolved.
 
+The matching cache also exposes a local built-in scan through
+ICLWorkspace enumerateBuiltInSystemContentWithBlock:error:,
+MILaunchServicesDatabaseGatherer and MIFilesystemScanner. The current
+trace covers the two provider directories but omits scanner entry and
+the top-level system framework enumeration. The absence of installd
+does not rule out the local scan path.
+
 ## 2026-11-21 — Plug-in seeding trace
 
 Patch 0210 traces installd startup and scoped wallpaper plug-in directory

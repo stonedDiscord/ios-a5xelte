@@ -1,3 +1,8 @@
+BOOT0141 follow-up: the stock cache has an in-process built-in scanner
+in InstalledContentLibrary. Determine whether the live LaunchServices
+database reaches the built-in scan, including framework enumeration,
+before changing the installd launch policy.
+
 BOOT0141 passed CI44942293405 and BOOT-only installation. SHA-256
 9f499bef61da34cc3e066bf967b545187fdc5d206b8f577034c28350c58316ba.
 Fallback persisted across reboot (EEXIST). The capture showed no installd
