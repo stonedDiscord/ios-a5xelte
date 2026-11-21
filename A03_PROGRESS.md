@@ -1,5 +1,26 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-21: inconsistent iPad/iPod identity traced to kernel overrides
+
+User reports iPod touch and iPad labels in different places. Exact deployed
+source explains two inconsistencies: macOS ARM64 HW_MACHINE returns iPad8,6
+for PLATFORM_IOS, while A03's platform expert returns Samsung Galaxy A03
+and a03 from product/target. The input ADT instead contains iPhone10,3,
+D22AP, iPhone X and artwork-device-idiom=phone. The focused live trace
+independently proves WallpaperKit requested an ipod default lookup. The
+causal chain from these values to GSDeviceName remains to be verified.
+
+0201 (c30a775) uses device-tree product/target for the A03 sysctls and removes
+the custom platform-expert names in favor of IODTPlatformExpert. Actual
+ARM64 syntax compiles of kern_mib.c and SweetPlatformExpert.cpp passed.
+Combined CI44925526385/job136910842997 builds exact
+c30a775e1233daeaeaafd18259ba34b1d98894cd, including 0200's default alias.
+Workflow concurrency canceled earlier alias-only44924752182; no new image
+was deployed. Private prepare-posterboard-0132.py now pins the combined
+run and verifies all three changed sources. BOOT0131 remains installed.
+Next fullCI->BOOT-only0132->default lookup/device-class and PosterBoard
+survival verification. Preserve separate UI labels and crash-fix claims.
+
 ## 2026-11-21: focused BOOT0131 identifies missing default lookup filename
 
 Replacement CI44923242765 succeeded and exact-source/checksum/SMP validation

@@ -1,3 +1,10 @@
+ACTIVE user reports mixed iPod/iPad identity. Found macOS iOS-on-Mac
+hw.machine=iPad8,6 and A03 platform expert product=Samsung Galaxy A03,
+target=a03, inconsistent with ADT iPhone10,3/D22AP.0201 c30a775 restores
+device-tree identity; actual ARM64 C/C++ checks pass. CombinedCI44925526385
+job136910842997 active (earlier44924752182 canceled by workflow concurrency).
+prepare-posterboard-0132.py pins combined0200+0201; no flash yet/phone0131.
+
 ACTIVE BOOT0131 focused evidence: catalog opens succeed, but requested
 DefaultWallpapers~ipod.plist is ENOENT. Stock ~iphone file has default7400.
 fd06be0 adds no-overwrite alias in root staging and a03wallpaper migration;
