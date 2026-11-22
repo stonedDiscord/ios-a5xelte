@@ -1,5 +1,21 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — BOOT0151 panic localized, BOOT0150 restored
+
+The user reported BEGIN audio ap followed by an implementation-specific
+panic on CPU6. This supersedes the earlier inference from the truncated
+host USB log. The exact faulting operation remains unresolved. BOOT-only
+restore to 0150 succeeded and its console answered ping. Bundled touch
+reached A55A and requested streaming.
+
+Commit a73a5c1 removes the direct VBC aperture reads from the wake trial
+and drops the untested FIFO write candidate. The revised command reports
+the access-gate and mailbox steps before reading only the always-on power
+registers. The stock UMS9230 AUDCP AHB clock definitions identify VBCIFD,
+VBC and VBC 24 MHz gates at bits 13, 14 and 21. Their state was not
+captured before the panic. CI 45022182506 and private BOOT0153 packaging
+session 64726 cover the wake-only trial.
+
 ## 2026-11-22 — BOOT0151 recovery and PCM FIFO candidate
 
 CI 45020753150 passed and BOOT-only installation succeeded. Capture stopped
