@@ -1,0 +1,51 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -372,6 +372,24 @@
+ a03_audio_scene_probe(void)
+ {
+  if (!a03_audio_scene_start()) a03_audio_scene_stop();
++}
++
++/*
++ * AP01 uses L16 format. Submit whole stereo frames and stop as soon as
++ * either channel is full so both FIFOs advance by the same amount.
++ */
++static unsigned
++a03_audio_submit_pcm(vm_offset_t vbc, const uint32_t *frames, unsigned count)
++{
++ const uint32_t full = 1U << 19;
++ unsigned submitted = 0;
++ while (submitted < count) {
++  if ((a03_audio_read(vbc, 0x34) | a03_audio_read(vbc, 0x38)) & full) break;
++  uint32_t frame = frames[submitted++];
++  a03_audio_write(vbc, 0, frame & 0xffff);
++  a03_audio_write(vbc, 4, frame >> 16);
++ }
++ return submitted;
+ }
+
+ /* Wake the audio domain the same way as the stock agdsp_access driver.
+@@ -494,13 +512,17 @@
+         /* Stock command 7 carries the trigger directly in parameter2. */
+         int trigger = a03_audio_exchange(7, 0, 0, NULL, 0, 1, NULL);
+         printf("A03 AUDIO FIFO: DSP trigger consumed=%u error=%d\n", !trigger, trigger);
+-        if (!trigger && !((a03_audio_read(vbc, 0x34) |
+-            a03_audio_read(vbc, 0x38)) & (1U << 19))) {
+-         for (unsigned frame = 0; frame < 16; frame++) {
+-          a03_audio_write(vbc, 0, frame + 1);
+-          a03_audio_write(vbc, 4, frame + 1);
+-         }
++        if (!trigger) {
++         static const uint32_t frames[] = {
++          0x00010001, 0x00020002, 0x00030003, 0x00040004,
++          0x00050005, 0x00060006, 0x00070007, 0x00080008,
++          0x00090009, 0x000a000a, 0x000b000b, 0x000c000c,
++          0x000d000d, 0x000e000e, 0x000f000f, 0x00100010
++         };
++         unsigned submitted = a03_audio_submit_pcm(vbc, frames,
++             sizeof(frames) / sizeof(frames[0]));
+          __asm__ volatile("dsb sy" ::: "memory");
++         printf("A03 AUDIO FIFO: submitted=%u\n", submitted);
+         }
+        }
+        printf("A03 AUDIO FIFO: enable=%08x left=%08x->%08x right=%08x->%08x\n",
