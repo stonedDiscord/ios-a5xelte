@@ -1,3 +1,13 @@
+## A03 external speaker amplifier
+
+The direct AP01 probe submitted 4800 tone frames and completed teardown.
+The user heard no sound. The live DT identifies active-high GPIO40 for
+the external speaker amplifier. The stock 4H10 playback hook uses ten
+2 microsecond low/high pulses and a 10 millisecond settling interval.
+Patch 0244 adds this sequence and restores the pin after playback.
+Patch application passed against the verified tree with 0243 applied.
+CI 45065385204 builds bafd519 for the BOOT0174 CPU-rendering trial.
+
 ## Touch restored and ringtone playback still silent
 
 The user confirmed touch responds after the HID polling restart on the
@@ -6,8 +16,7 @@ During a live capture the PCM worker started the DSP and AP01 scene,
 reached speaker depop 019f, and later restored the speaker and shut down
 the scene successfully. The live worker starts only with queued PCM. A separate bounded AP01
 speaker probe submitted 4800 tone frames, restored speaker state and shut
-down the DSP scene successfully. The user has not confirmed whether that
-direct test tone was audible.
+down the DSP scene successfully. The user confirmed the direct test tone was silent.
 
 Patch 0243 reports total and nonzero frames submitted per live playback
 session. It applies to the verified BOOT0172 tree. CI 45063949773 builds
