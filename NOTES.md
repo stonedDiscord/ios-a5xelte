@@ -1,3 +1,9 @@
+BOOT0164 passed CI 45036949973 and BOOT-only upload. DSP boot passed.
+The digital DAC probe configured stereo at 48 kHz and read back
+AUD_TOP_CTL=00000005 and AUD_DAC_CTL=000003f1. It reported configured=1
+and restored=1. BOOT0165 tests the analog power and reset sequence.
+The latest Settings preview was silent and audible playback remains open.
+
 Settings ringtone previews are still silent per the latest physical test.
 BOOT0165 adds SC2730 analog DAC power and reset sequencing in patch 0235.
 Local patch application and iOS profile staging passed. CI 45037358504
