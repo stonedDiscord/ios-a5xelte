@@ -1,3 +1,11 @@
+Offline HFS catalog inspection verified both audio bundles in the
+replacement root image. /Library/Audio/Plug-Ins/HAL contains
+HakiosAudio.driver and VirtualAudio.plugin. HakiosAudio’s Info.plist
+uses an AudioServerPlugIn factory type. This proves image placement and
+metadata, not mediaserverd loading or playback. CI 45049709675 is still
+building. The validated p55 LUN still denies host access; no USERDATA
+write has begun.
+
 Offline catalog inspection of root artifact 45044428311 confirmed
 VirtualAudio.plugin under /Library/Audio/Plug-Ins/HAL and
 HakiosAudio.driver under /System/Library/Audio/Plug-Ins/HAL. This
