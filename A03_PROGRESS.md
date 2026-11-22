@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+BOOT0161 passed CI 45033595131 and BOOT-only upload. The phone answered
+ping, reported A55A and requested HID streaming at startup. DSP boot
+returned ready. The SC2730 probe completed with clock sequence=1,
+restored=1, PMU0=0020, CDC14=0000 and STS11=0000. The enabled clocks
+made PMU0 readable with a nonzero value. Physical cable-free touch and
+iOS speaker playback remain unverified.
+
 The user tested several ringtone previews in iOS Settings and heard no
 audio. The A03 audio plug-in and PCM device are still pending deployment.
 
