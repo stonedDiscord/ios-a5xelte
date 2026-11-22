@@ -1,0 +1,37 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -409,6 +409,7 @@
+  a03_audio_write(mailbox, 12, 1);
+  __asm__ volatile("dsb sy" ::: "memory");
+ 
++ bool started = false;
+  uint32_t deep = 0, sleep = 0, power = 0;
+  for (unsigned poll = 0; poll < 50; poll++) {
+   deep = a03_audio_read(pmu, 0x850) & 8;
+@@ -446,7 +447,7 @@
+           (a03_audio_read(vbc, 0x38) & (1U << 18))) {
+        a03_audio_update(vbc, 0x20, 0x6ff, (3U << 9) | 80);
+        a03_audio_update(vbc, 0x30, 4, 4);
+-       bool started = !a03_audio_scene_start();
++       started = !a03_audio_scene_start();
+        a03_audio_update(vbc, 0x2c, 0x300, 0x300);
+        __asm__ volatile("dsb sy" ::: "memory");
+        uint32_t enabled = a03_audio_read(vbc, 0x2c);
+@@ -475,8 +476,8 @@
+        printf("A03 AUDIO FIFO: enable=%08x left=%08x->%08x right=%08x->%08x\n",
+            enabled, left, a03_audio_read(vbc, 0x34),
+            right, a03_audio_read(vbc, 0x38));
++       printf("A03 AUDIO FIFO: restoring AP01 before DSP shutdown\n");
+        a03_audio_update(vbc, 0x2c, 0x300, 0);
+-       if (started) a03_audio_scene_stop();
+        a03_audio_update(vbc, 0x30, 4, 4);
+        a03_audio_update(vbc, 0x20, 0x6ff, config);
+       } else {
+@@ -493,6 +494,7 @@
+  }
+  printf("A03 AUDIO AP: wake monitor=%x sleep=%x power=%x\n", deep, sleep, power);
+  a03_audio_update(aon, 0x14c, access, old_access);
++ if (started) a03_audio_scene_stop();
+ }
+ 
+ void a03_usb_console_start(void);
