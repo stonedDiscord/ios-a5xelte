@@ -1,0 +1,121 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -199,7 +199,7 @@
+ 
+ static int
+ a03_audio_exchange(uint16_t command, uint32_t id, uint32_t stream,
+-    uint32_t *params, unsigned words, uint32_t *status)
++    uint32_t *params, unsigned words, uint32_t argument, uint32_t *status)
+ {
+  static vm_offset_t aon, mailbox;
+  static bool poisoned;
+@@ -255,7 +255,7 @@
+  a03_audio_write(ipc, slot, command);
+  a03_audio_write(ipc, slot + 4, id);
+  a03_audio_write(ipc, slot + 8, stream);
+- a03_audio_write(ipc, slot + 12, A03_AGDSP_IPC_PA);
++ a03_audio_write(ipc, slot + 12, argument);
+  a03_audio_write(ipc, slot + 16, 0);
+  __asm__ volatile("dmb oshst" ::: "memory");
+  a03_audio_write(ipc, A03_AUDIO_TX_WRITE, tx + 1);
+@@ -265,6 +265,15 @@
+  a03_audio_write(mailbox, 0, A03_AUDIO_DSP_CORE);
+  a03_audio_write(mailbox, 12, 1);
+ 
++
++ if (!status) {
++  for (poll = 0; poll < 100; poll++) {
++   if (a03_audio_read(ipc, A03_AUDIO_TX_READ) == tx + 1) return 0;
++   IOSleep(1);
++  }
++  poisoned = true;
++  return ETIMEDOUT;
++ }
+ 
+  /* Match only fresh channel-zero replies and release each consumed slot. */
+  for (poll = 0; poll < 100; poll++) {
+@@ -301,15 +310,14 @@
+ {
+  uint32_t params[] = { A03_AUDIO_DAC0_FIFO_CFG, UINT32_MAX, 0 };
+  uint32_t status;
+- if (!a03_audio_exchange(A03_AUDIO_VBC_GET, 0, UINT32_MAX, params, 3, &status)) {
++ if (!a03_audio_exchange(A03_AUDIO_VBC_GET, 0, UINT32_MAX, params, 3, A03_AGDSP_IPC_PA, &status)) {
+   printf("A03 AUDIO VBC: GET reply status=%08x fifo=%08x\n", status, params[2]);
+  }
+ }
+ 
+ /* Stock 4H10 VBC scene NORMAL_AP01, playback, DAC0 and ADC0. */
+-void a03_audio_scene_probe(void);
+-void
+-a03_audio_scene_probe(void)
++static int
++a03_audio_scene_start(void)
+ {
+  enum {
+   ADC_SOURCE = 52, DAC_OUT = 84, TX_PORT = 100, RX_PORT = 124,
+@@ -344,14 +352,26 @@
+  payload[IIS_MASTER / 4] = 1;
+  payload[IV_ADC / 4] = 1;
+  payload[VOICE_RECORD / 4] = 1;
+- int error = a03_audio_exchange(4, 0, 0, payload, sizeof(payload) / 4, &status);
++ int error = a03_audio_exchange(4, 0, 0, payload, sizeof(payload) / 4, A03_AGDSP_IPC_PA, &status);
+  printf("A03 AUDIO scene: startup error=%d status=%08x\n", error, status);
+- if (error) return;
+-
+- memset(payload, 0, sizeof(payload));
+- status = 0;
+- error = a03_audio_exchange(5, 0, 0, payload, sizeof(payload) / 4, &status);
++ return error ? error : status ? EIO : 0;
++}
++
++static void
++a03_audio_scene_stop(void)
++{
++ uint32_t payload[620 / sizeof(uint32_t)] = {0};
++ uint32_t status = 0;
++ int error = a03_audio_exchange(5, 0, 0, payload, sizeof(payload) / 4,
++     A03_AGDSP_IPC_PA, &status);
+  printf("A03 AUDIO scene: shutdown error=%d status=%08x\n", error, status);
++}
++
++void a03_audio_scene_probe(void);
++void
++a03_audio_scene_probe(void)
++{
++ if (!a03_audio_scene_start()) a03_audio_scene_stop();
+ }
+ 
+ /* Wake the audio domain the same way as the stock agdsp_access driver.
+@@ -426,6 +446,7 @@
+           (a03_audio_read(vbc, 0x38) & (1U << 18))) {
+        a03_audio_update(vbc, 0x20, 0x6ff, (3U << 9) | 80);
+        a03_audio_update(vbc, 0x30, 4, 4);
++       bool started = !a03_audio_scene_start();
+        a03_audio_update(vbc, 0x2c, 0x300, 0x300);
+        __asm__ volatile("dsb sy" ::: "memory");
+        uint32_t enabled = a03_audio_read(vbc, 0x2c);
+@@ -438,10 +459,24 @@
+         }
+         __asm__ volatile("dsb sy" ::: "memory");
+        }
++       if ((enabled & 0x300) == 0x300 && started) {
++        /* Stock command 7 carries the trigger directly in parameter2. */
++        int trigger = a03_audio_exchange(7, 0, 0, NULL, 0, 1, NULL);
++        printf("A03 AUDIO FIFO: DSP trigger consumed=%u error=%d\n", !trigger, trigger);
++        if (!trigger && !((a03_audio_read(vbc, 0x34) |
++            a03_audio_read(vbc, 0x38)) & (1U << 19))) {
++         for (unsigned frame = 0; frame < 16; frame++) {
++          a03_audio_write(vbc, 0, frame + 1);
++          a03_audio_write(vbc, 4, frame + 1);
++         }
++         __asm__ volatile("dsb sy" ::: "memory");
++        }
++       }
+        printf("A03 AUDIO FIFO: enable=%08x left=%08x->%08x right=%08x->%08x\n",
+            enabled, left, a03_audio_read(vbc, 0x34),
+            right, a03_audio_read(vbc, 0x38));
+        a03_audio_update(vbc, 0x2c, 0x300, 0);
++       if (started) a03_audio_scene_stop();
+        a03_audio_update(vbc, 0x30, 4, 4);
+        a03_audio_update(vbc, 0x20, 0x6ff, config);
+       } else {

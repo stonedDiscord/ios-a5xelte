@@ -228,7 +228,8 @@ def main():
                      '0224-a03-audcp-clock-read.patch',
                      '0225-a03-vbc-clock-acquire.patch',
                      '0226-a03-clocked-pcm-prefill.patch',
-                     '0227-a03-enable-ap01-for-pcm-prefill.patch'):
+                     '0227-a03-enable-ap01-for-pcm-prefill.patch',
+                     '0228-a03-trigger-ap01-playback-scene.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
