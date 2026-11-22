@@ -1,3 +1,10 @@
+A03 audio bring-up starts from live BOOT0145. mediaserverd PID 28 is
+present. Stock evidence identifies VBC v4, SC2730, AP GPIO 40 speaker PA
+and DSP-backed 48 kHz routes. Patch 0216 stages a read-only `audio status`
+live-worker command for PMU/AON state. Next capture the command on the
+first audio diagnostic BOOT and trace DSP firmware loading and IPC before
+trying PCM. Audible iOS playback is pending. See A03_PROGRESS.md.
+
 The bundled touch firmware build is available from CI 44967426084 at
 `1af663a`. The preceding run, 44966189758, failed on two `SecureDTEntry`
 declarations in patch 0215. Both now use XNU's `DTEntry` type. The A03 USB

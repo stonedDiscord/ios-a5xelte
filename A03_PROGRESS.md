@@ -1,3 +1,30 @@
+## 2026-11-22: A03 speaker playback baseline and DSP status probe
+
+Live BOOT0145 USB `ps` reports mediaserverd PID 28 and SpringBoard PID 25.
+Its startup capture shows mediaserverd accessing the HAL plug-in directory.
+That establishes a running process and a search path. Audio output has
+yet to be verified.
+
+The stock SM-A035G live DT identifies VBC v4 at 0x56480000, its digital
+codec at 0x56750000, SC2730 analog codec through ADI at 0x64200000, and
+the external speaker PA on AP GPIO 40. Stock Android logs record 48 kHz
+stereo L16 playback through both FAST_P_CODEC and FAST_P_SMART_AMP scenes,
+with Ext Spk and SC2730 PA transitions in the capture. They also record
+loading vendor DSP profiles dsp_vbc, dsp_smartamp, cvs and audio_structure.
+The stock VBC source calls DSP startup even in its normal AP01 playback
+path. The S7 analog codec and I2S transmitter sequence cannot drive this
+hardware. Its AudioServerPlugIn may supply the iOS-facing PCM interface.
+
+Patch 0216 adds the opt-in live-worker command `audio status`. It reads
+only the stock agdsp-access fields from always-on PMU and AON syscons.
+It reports deep-sleep control, sleep status, both power states, and AP
+access. The stock driver's wake-lock sleep state is 6 and its power
+wake-up state is 0 for both fields. This sample alone cannot establish
+DSP firmware readiness. No gated audio MMIO, mailbox, or register writes
+are used. Patch application after 0215 and local profile staging passed.
+Compare the XNU sample with the stock DSP loader and IPC startup path
+before enabling clocks or trying to stream PCM.
+
 # Galaxy A03 SM-A035G — active bring-up
 
 ## 2026-11-22 UTC — bundled touch firmware build recovered

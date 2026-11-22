@@ -1,0 +1,58 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -13,6 +13,28 @@
+ #include <IOKit/IOLib.h>
+ extern vm_offset_t ml_io_map(vm_offset_t, vm_size_t);
+ extern unsigned a03_console_read(unsigned char *, unsigned);
++/* Always-on syscons from the stock SM-A035G agdsp-access node.
++ * Read status only. AGCP, VBC and mailbox accesses require ownership. */
++void a03_audio_status(void);
++void
++a03_audio_status(void)
++{
++ static vm_offset_t pmu, aon;
++ if (!pmu) pmu = ml_io_map(0x64020000, 0x1000);
++ if (!aon) aon = ml_io_map(0x64000000, 0x1000);
++ if (!pmu || !aon) {
++  printf("A03 AUDIO: status mapping failed\n");
++  return;
++ }
++ uint32_t control = *(volatile uint32_t *)(pmu + 0x850);
++ uint32_t sleep = *(volatile uint32_t *)(pmu + 0x860);
++ uint32_t power = *(volatile uint32_t *)(pmu + 0x544);
++ uint32_t access = *(volatile uint32_t *)(aon + 0x14c);
++ printf("A03 AUDIO: deep=%u sleep=%u dsp=%u system=%u access=%u\n",
++     (control >> 3) & 1, (sleep >> 12) & 15, (power >> 8) & 31,
++     (power >> 16) & 31, (access >> 5) & 1);
++}
++
+ void a03_usb_console_start(void);
+ int a03_usb_debug_command(char *, unsigned);
+ static char command_line[128], command_ready[128];
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -610,6 +610,7 @@
+ }
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
++extern void a03_audio_status(void);
+ extern void a03_gpu_probe(void);
+ extern void a03_gpu_power(void);
+ extern void a03_gpu_clocks(void);
+@@ -623,7 +624,7 @@
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus audio status gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -646,6 +647,7 @@
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
++ else if(!strcmp(command,"audio status"))a03_audio_status();
+  else if(!strcmp(command,"gpu power"))a03_gpu_power();
+  else if(!strcmp(command,"gpu clocks"))a03_gpu_clocks();
+  else if(!strcmp(command,"gpu cores"))a03_gpu_cores();
