@@ -106,8 +106,9 @@ the BOOT0145 arguments and bundled validated touch firmware. BOOT SHA-256
 0fb33e36c60f0558baa3efc584478fc3b11ffcd526b381c2f5f21636c32f8680.
 The installed PIT uses lowercase boot. The first Heimdall attempt passed
 uppercase BOOT and returned partition-not-found before uploading, then
-rebooted the existing phone image. A retry watcher waits for CDC or
-Download mode and will use lowercase boot. No probe sample yet.
+rebooted the existing phone image. The retry used lowercase boot and completed the BOOT-only upload at
+100%, then rebooted. The audio probe capture waits for XNU CDC. No
+probe sample yet.
 
 HAL CI 45014940084 succeeded from f8079c9. Earlier jobs failed on lipo
 argument order and checksum traversal of the code signature directory.

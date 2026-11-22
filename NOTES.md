@@ -1,7 +1,7 @@
 A03 audio BOOT0146 is packaged from successful CI 45014207915. The first
 upload used uppercase BOOT and Heimdall rejected it before transfer.
-The retry is waiting for USB and uses the validated lowercase boot PIT
-entry. HAL CI 45014940084 passed. The signed arm64 iOS 16 bundle is
+The lowercase boot retry completed the BOOT-only upload and rebooted.
+Capture session 75953 waits for the new XNU CDC and audio status. HAL CI 45014940084 passed. The signed arm64 iOS 16 bundle is
 downloaded and checksum-verified. Await DSP status and the PCM sink.
 
 A03 audio bring-up starts from live BOOT0145. mediaserverd PID 28 is
