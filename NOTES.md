@@ -2,9 +2,12 @@ A03 audio bring-up starts from live BOOT0145. mediaserverd PID 28 is
 present. Stock evidence identifies VBC v4, SC2730, AP GPIO 40 speaker PA
 and DSP-backed 48 kHz routes. Patch 0216 stages a read-only `audio status`
 live-worker command for PMU/AON state. CI 45014207915 builds ed3b966
-with the corrected Qogirl6 power-field labels. Next package that build
-and capture the command on the first audio diagnostic BOOT and trace DSP firmware loading and IPC before
-trying PCM. Audible iOS playback is pending. See A03_PROGRESS.md.
+with the corrected Qogirl6 power-field labels. Private
+prepare-audio-0146.py pins the build and validates sources before packing.
+The stock SMSG ring and ready message are mapped in A03_PROGRESS.md.
+Offline revision-8 AGCP image is extracted privately and its match to
+installed firmware remains unverified. Next capture audio status on
+BOOT0146 and use it to qualify the DSP initialization path. Audible iOS playback is pending. See A03_PROGRESS.md.
 
 The bundled touch firmware build is available from CI 44967426084 at
 `1af663a`. The preceding run, 44966189758, failed on two `SecureDTEntry`

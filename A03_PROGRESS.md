@@ -1,3 +1,5 @@
+# Galaxy A03 SM-A035G — active bring-up
+
 ## 2026-11-22: A03 speaker playback baseline and DSP status probe
 
 Live BOOT0145 USB `ps` reports mediaserverd PID 28 and SpringBoard PID 25.
@@ -25,8 +27,6 @@ are used. Patch application after 0215 and local profile staging passed.
 Compare the XNU sample with the stock DSP loader and IPC startup path
 before enabling clocks or trying to stream PCM.
 
-# Galaxy A03 SM-A035G — active bring-up
-
 The Qogirl6 PMU definitions and stock audiocp_boot driver identify 0x544
 bits 12:8 as system and 20:16 as DSP. The agdsp-access DT labels for
 those masks are reversed, so the probe uses the PMU definitions. That
@@ -40,6 +40,26 @@ verification on XNU before porting that sequence.
 
 CI 45014207915 builds ed3b966 and supersedes 45014140606, which
 used the reversed labels. BOOT0145 remains installed.
+
+Offline A035GXXS8CYG1 CP archive contains a 6 MiB AGCP_DSP.bin, extracted
+to ignored research/a03-audio-firmware. Its header identifies
+AUDCP.SharkL6. The artifact is revision 8 and has not been matched to the
+installed revision-5 firmware. The revision-8 vendor image holds EUR
+audio configuration XML. Its /firmware/dsp_vbc and related profile
+entries point into Android's /data/vendor/local/media/audio_params, so
+the vendor entries alone do not supply the compiled profiles.
+
+Stock audio-sipc uses mailbox core 5. Its audio-memory SMSG region at
+0x94380400 is 0xa10 bytes, with two 0x500-byte rings and four 32-bit
+cursors at 0x94380e00. The stock receive handler accepts the AGDSP_BOOT_OK
+message only when channel, command and parameter0 are all 0xbeee.
+The stock driver initializes its software ready flag before receiving a
+message, so that flag alone would not validate a ported transport.
+
+Private prepare-audio-0146.py pins CI 45014207915, verifies the patched
+audio/USB files and kernel markers, and packages with the BOOT0145
+arguments and the already validated touch payload. Packaging and flash
+remain pending while the CI Build step runs.
 
 ## 2026-11-22 UTC — bundled touch firmware build recovered
 
