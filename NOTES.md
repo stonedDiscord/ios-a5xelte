@@ -1,3 +1,9 @@
+The bundled touch firmware build is available from CI 44967426084 at
+`1af663a`. The preceding run, 44966189758, failed on two `SecureDTEntry`
+declarations in patch 0215. Both now use XNU's `DTEntry` type. The A03 USB
+probe link check passed and CI uploaded the kernel and build tree. Next
+checkpoint is BOOT packaging and an on-device touch auto-load test.
+
 BOOT0144 passed CI44950176996 and BOOT-only installation. SHA-256
 a24bde626bf494dcb089ee2fa2b2dc92f39c0da22722cc7209b2bfdd02715a2b.
 LaunchServices reopened its persisted cache and CollectionsPoster launched.

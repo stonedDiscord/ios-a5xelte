@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 UTC — bundled touch firmware build recovered
+
+CI 44966189758 failed while compiling `bsd/dev/a03_usb_console.c`: both
+`/chosen` lookups in patch 0215 declared `SecureDTEntry`, which this XNU
+tree does not define. Commit `1af663a` changes both declarations to
+`DTEntry`. CI 44967426084 built that exact commit, passed the A03 USB probe
+link check, and uploaded the kernel and build tree. BOOT packaging and
+on-device touch auto-load remain unverified for this build.
+
 ## 2026-11-21 — bounded GPU clean retry candidate
 
 Patch 0214 extends the cached GPU CLEAN_INV completion window from 2000 to
