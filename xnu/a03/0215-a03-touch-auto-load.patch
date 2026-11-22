@@ -1,0 +1,115 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -6,6 +6,7 @@
+ #include <sys/systm.h>
+ #include <sys/sysproto.h>
+ #include <pexpert/pexpert.h>
++#include <pexpert/device_tree.h>
+ #include <kern/thread.h>
+ #include <kern/clock.h>
+ #include <machine/machine_routines.h>
+@@ -39,11 +40,12 @@
+ }
+ extern void a03_live_probe(const char *);
+ static void a03_touch_stream_tick(void);
++static void a03_touch_boot_tick(void);
+ static void probe_worker(__unused void *arg,__unused wait_result_t result) {
+  for(;;) {
+   char command[128];
+   if(probe_dequeue(command))a03_live_probe(command);
+-  else { a03_touch_stream_tick();IOSleep(10); }
++  else { a03_touch_boot_tick();a03_touch_stream_tick();IOSleep(10); }
+  }
+ }
+ 
+@@ -382,7 +384,21 @@
+  }
+ }
+ void a03_usb_console_start(void) {
+- uint32_t enable=0;PE_parse_boot_argn("a03usb_console",&enable,sizeof(enable));if(enable!=1)return;
++ uint32_t enable=0,probe=0;
++ PE_parse_boot_argn("a03usb_console",&enable,sizeof(enable));
++ PE_parse_boot_argn("a03_probe",&probe,sizeof(probe));
++ SecureDTEntry chosen;
++ const void *firmware;
++ unsigned int size;
++ if((enable==1&&probe==1) ||
++     (SecureDTLookupEntry(NULL,"/chosen",&chosen)==kSuccess &&
++      SecureDTGetProperty(chosen,"a03-touch-firmware",&firmware,&size)==kSuccess)) {
++  thread_t pt=THREAD_NULL;
++  kern_return_t pk=kernel_thread_start(probe_worker,NULL,&pt);
++  if(pk==KERN_SUCCESS) { thread_deallocate(pt);probe_enabled=enable==1&&probe==1; }
++  printf("A03 PROBE worker start %d enabled=%u\n",pk,probe_enabled);
++ }
++ if(enable!=1)return;
+  vm_offset_t aon=ml_io_map(0x64000000,0x1000),ana=ml_io_map(0x64570000,0x1000);
+  if(!aon||!ana) { printf("A03 USB console: PHY map failed\n");return; }
+  /* PHY probe enables ANA_EB as well as OTG_UTMI_EB. ADI clock is EB2. */
+@@ -404,12 +420,6 @@
+  if(!pio_takeover()){printf("A03 USB: PIO takeover failed; not attaching\n");return;}
+  endpoints();
+  printf("A03 USB: PIO takeover RX csr=%04x\n",ep_read(1,6));
+- uint32_t probe=0;PE_parse_boot_argn("a03_probe",&probe,sizeof(probe));
+- if(probe==1) {
+-  thread_t pt=THREAD_NULL;kern_return_t pk=kernel_thread_start(probe_worker,NULL,&pt);
+-  if(pk==KERN_SUCCESS) { thread_deallocate(pt);probe_enabled=1; }
+-  printf("A03 PROBE worker start %d enabled=%u\n",pk,probe_enabled);
+- }
+  thread_t thread=THREAD_NULL;kern_return_t kr=kernel_thread_start(worker,NULL,&thread);
+  if(kr!=KERN_SUCCESS){usb=0;printf("A03 USB console: thread error %d\n",kr);return;}
+  thread_deallocate(thread);w8(1,0x40);
+@@ -518,6 +528,7 @@
+  */
+ static uint8_t a03_touch_firmware[80*1024];
+ static unsigned a03_touch_fw_size,a03_touch_fw_used;
++static int a03_touch_ram_loaded;
+ static int a03_touch_hex(char c) {
+  if(c>='0'&&c<='9')return c-'0';
+  if(c>='a'&&c<='f')return c-'a'+10;
+@@ -582,6 +593,7 @@
+   printf("A03 TOUCH poll refused: HID provider absent\n");return;
+  }
+  if(!strcmp(command,"load")) {
++  a03_touch_ram_loaded=0;
+   struct a03_jd_firmware f;
+   if(!a03_touch_fw_size||a03_touch_fw_used!=a03_touch_fw_size||
+       a03_jd_firmware_validate(a03_touch_firmware,a03_touch_fw_size,&f)) {
+@@ -629,6 +641,7 @@
+  if(!e&&!strcmp(command,"load")) {
+   printf("A03 TOUCH RAM load begin size=%u; no external flash\n",a03_touch_fw_size);
+   e=a03_jd_load_ram(&b,a03_touch_firmware,a03_touch_fw_size);
++  a03_touch_ram_loaded=!e;
+   printf("A03 TOUCH RAM load result=%d\n",e);
+   if(!e)a03_touch_sections(&b);
+  }
+@@ -654,6 +667,30 @@
+      a03_touch_r32((void *)a03_touch_apb,0),a03_touch_r32((void *)a03_touch_clk,0x58));
+  if(streaming&&!stream_ok)a03_touch_stream_stop();
+ }
++static void a03_touch_boot_tick(void) {
++ static unsigned ticks,attempt;
++ if(ticks>=3000 || a03_touch_streaming || ++ticks%10)return;
++ if(!(a03_hid_action(0)&2) || attempt>=2)return;
++ if(!attempt) {
++  SecureDTEntry chosen;
++  const void *firmware;
++  unsigned int size;
++  struct a03_jd_firmware parsed;
++  if(SecureDTLookupEntry(NULL,"/chosen",&chosen)!=kSuccess ||
++      SecureDTGetProperty(chosen,"a03-touch-firmware",&firmware,&size)!=kSuccess ||
++      size!=79104 || a03_touch_fw_size ||
++      a03_jd_firmware_validate(firmware,size,&parsed)) {
++   ticks=3000;
++   return;
++  }
++  memcpy(a03_touch_firmware,firmware,size);
++  a03_touch_fw_used=a03_touch_fw_size=size;
++  printf("A03 TOUCH boot: loading bundled firmware\n");
++  a03_touch_probe("load");
++ }
++ attempt++;
++ if(a03_touch_ram_loaded)a03_touch_probe("start");
++}
+ static void a03_touch_stream_tick(void) {
+  if(a03_touch_streaming)a03_touch_probe("streamtick");
+ }
