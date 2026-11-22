@@ -242,7 +242,8 @@ def main():
                      '0238-a03-ap01-bounded-tone.patch',
                      '0239-a03-ap01-digital-dac-route.patch',
                      '0240-a03-sc2730-speaker-tone.patch',
-                     '0241-a03-enable-ap01-playback-dma.patch'):
+                     '0241-a03-enable-ap01-playback-dma.patch',
+                     '0242-a03-hakios-pcm-device.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
