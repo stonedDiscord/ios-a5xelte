@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22: VBC mailbox control candidate
+
+Patch 0219 adds explicit `audio vbc` after a positively identified
+AGDSP_BOOT_OK message. It uses the stock R2P0 mailbox at 0x641c0000,
+AON gate bit 2, and mailbox core 5. The request targets channel 0,
+command 8, and the fixed DAC0 FIFO configuration register. It writes
+the stock command block and SMSG, rings the DSP doorbell, and polls
+for the reply. The probe leaves the RX consumer cursor untouched
+and permits one posted request per boot. After sending, it keeps the
+mailbox gate enabled for DSP output. No VBC/codec/PA programming.
+
+Patch application after 0217/0218, A03 profile staging, and actual probe
+source host mock passed. The mock checks cursor wrap, blocked mailbox
+handling, request and doorbell words, reply extraction and duplicate-send
+refusal. It does not emulate hardware ordering or DSP behavior. Keep
+BOOT0147 CI 45015846547 running for isolated DSP startup and touch
+validation before boot-testing this next candidate.
+
 ## 2026-11-22: BOOT0146 touch recovery and delayed autostart
 
 User reported no physical touch after boot. On the running BOOT0146,

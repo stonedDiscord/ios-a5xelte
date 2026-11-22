@@ -1,0 +1,167 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -61,6 +61,8 @@
+  *reg = (*reg & ~mask) | (value & mask);
+ }
+ 
++static vm_offset_t a03_audio_ready_ipc;
++
+ void a03_audio_boot(void);
+ void
+ a03_audio_boot(void)
+@@ -150,6 +152,7 @@
+    unsigned offset = A03_AGDSP_RX_OFFSET + slot * 20;
+    if (a03_audio_read(ipc, offset) == 0xbeeebeee &&
+        a03_audio_read(ipc, offset + 4) == A03_AGDSP_BOOT_OK) {
++    a03_audio_ready_ipc = ipc;
+     printf("A03 AUDIO boot: DSP ready rx=%u slot=%u\n", rx_write, slot);
+     return;
+    }
+@@ -167,6 +170,120 @@
+  a03_audio_update(pmu, 0xba8, A03_AGDSP_RESET, reset_sel);
+  a03_audio_update(pmu, 0xb88, A03_AGDSP_RESET, core_reset);
+  a03_audio_update(pmu, 0xb98, A03_AGDSP_RESET, sys_reset);
++}
++
++/* Stock R2P0 mailbox and audio SMSG. One fixed get for initial bring-up. */
++#define A03_AUDIO_MAILBOX_PA 0x641c0000
++#define A03_AUDIO_MAILBOX_CLOCK (1U << 2)
++#define A03_AUDIO_DSP_CORE 5U
++#define A03_AUDIO_RING_SIZE 64U
++#define A03_AUDIO_TX 0x400
++#define A03_AUDIO_TX_READ 0xe00
++#define A03_AUDIO_TX_WRITE 0xe04
++#define A03_AUDIO_RX_READ 0xe08
++#define A03_AUDIO_MESSAGE_SIZE 20
++#define A03_AUDIO_VBC_GET 8U
++#define A03_AUDIO_DAC0_FIFO_CFG 0x01700eecU
++
++static void
++a03_audio_write(vm_offset_t base, unsigned offset, uint32_t value)
++{
++ *(volatile uint32_t *)(base + offset) = value;
++}
++
++static unsigned
++a03_audio_ring_slot(uint32_t cursor)
++{
++ return (cursor & (A03_AUDIO_RING_SIZE - 1)) * A03_AUDIO_MESSAGE_SIZE;
++}
++
++void a03_audio_vbc_probe(void);
++void
++a03_audio_vbc_probe(void)
++{
++ static vm_offset_t aon, mailbox;
++ static bool sent;
++ vm_offset_t ipc = a03_audio_ready_ipc;
++ if (!ipc || sent) {
++  printf("A03 AUDIO VBC: requires DSP ready and an unused request\n");
++  return;
++ }
++ if (!aon) aon = ml_io_map(0x64000000, 0x1000);
++ if (!mailbox) mailbox = ml_io_map(A03_AUDIO_MAILBOX_PA, 0x1000);
++ if (!aon || !mailbox) {
++  printf("A03 AUDIO VBC: mailbox mapping failed\n");
++  return;
++ }
++
++ uint32_t tx = a03_audio_read(ipc, A03_AUDIO_TX_WRITE);
++ uint32_t rx = a03_audio_read(ipc, A03_AGDSP_RX_WRITE);
++ if (tx != a03_audio_read(ipc, A03_AUDIO_TX_READ) ||
++     rx - a03_audio_read(ipc, A03_AUDIO_RX_READ) > A03_AUDIO_RING_SIZE) {
++  printf("A03 AUDIO VBC: ring state invalid or busy\n");
++  return;
++ }
++
++ /* Stock AON mailbox gate. Leave it enabled after handing a message to
++  * the DSP so its outbound notifications can still complete. */
++ uint32_t gate = a03_audio_read(aon, 4);
++ a03_audio_update(aon, 4, A03_AUDIO_MAILBOX_CLOCK, A03_AUDIO_MAILBOX_CLOCK);
++ __asm__ volatile("dsb sy" ::: "memory");
++ if (!(a03_audio_read(aon, 4) & A03_AUDIO_MAILBOX_CLOCK)) {
++  printf("A03 AUDIO VBC: mailbox clock unavailable\n");
++  return;
++ }
++ unsigned poll;
++ for (poll = 0; poll < 20; poll++) {
++  if (!(a03_audio_read(mailbox, 0x24) & (1U << A03_AUDIO_DSP_CORE)) &&
++      !(a03_audio_read(mailbox, 0x14) & (1U << (16 + A03_AUDIO_DSP_CORE)))) {
++   break;
++  }
++  IOSleep(1);
++ }
++ if (poll == 20) {
++  a03_audio_update(aon, 4, A03_AUDIO_MAILBOX_CLOCK, gate);
++  printf("A03 AUDIO VBC: mailbox blocked\n");
++  return;
++ }
++
++ /* sprd_vbc_kcontrol plus SMSG transport for channel 0, command 8. */
++ a03_audio_write(ipc, 0, A03_AUDIO_DAC0_FIFO_CFG);
++ a03_audio_write(ipc, 4, UINT32_MAX);
++ a03_audio_write(ipc, 8, 0);
++ unsigned slot = A03_AUDIO_TX + a03_audio_ring_slot(tx);
++ a03_audio_write(ipc, slot, A03_AUDIO_VBC_GET);
++ a03_audio_write(ipc, slot + 4, 0);
++ a03_audio_write(ipc, slot + 8, UINT32_MAX);
++ a03_audio_write(ipc, slot + 12, A03_AGDSP_IPC_PA);
++ a03_audio_write(ipc, slot + 16, 0);
++ __asm__ volatile("dmb oshst" ::: "memory");
++ a03_audio_write(ipc, A03_AUDIO_TX_WRITE, tx + 1);
++ __asm__ volatile("dsb sy" ::: "memory");
++ a03_audio_write(mailbox, 4, 0);
++ a03_audio_write(mailbox, 8, A03_AUDIO_VBC_GET << 16);
++ a03_audio_write(mailbox, 0, A03_AUDIO_DSP_CORE);
++ a03_audio_write(mailbox, 12, 1);
++ sent = true;
++
++ /* Preserve events in the receive ring. Ignore entries already present
++  * before this request and bound the total scan on a malformed cursor. */
++ for (poll = 0; poll < 100; poll++) {
++  uint32_t pending = a03_audio_read(ipc, A03_AGDSP_RX_WRITE) - rx;
++  if (pending > A03_AUDIO_RING_SIZE) break;
++  __asm__ volatile("dmb oshld" ::: "memory");
++  for (unsigned index = 0; index < pending; index++) {
++   slot = A03_AGDSP_RX_OFFSET + a03_audio_ring_slot(rx + index);
++   if (a03_audio_read(ipc, slot) != A03_AUDIO_VBC_GET) continue;
++   uint32_t result = a03_audio_read(ipc, slot + 16);
++   printf("A03 AUDIO VBC: GET reply status=%08x fifo=%08x\n",
++       result, a03_audio_read(ipc, 8));
++   return;
++  }
++  IOSleep(10);
++ }
++ printf("A03 AUDIO VBC: no GET reply tx_read=%u rx_write=%u\n",
++     a03_audio_read(ipc, A03_AUDIO_TX_READ),
++     a03_audio_read(ipc, A03_AGDSP_RX_WRITE));
+ }
+ 
+ void a03_usb_console_start(void);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -610,6 +610,7 @@
+ }
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
++extern void a03_audio_vbc_probe(void);
+ extern void a03_audio_boot(void);
+ extern void a03_audio_status(void);
+ extern void a03_gpu_probe(void);
+@@ -625,7 +626,7 @@
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot|audio vbc gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -648,6 +649,7 @@
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
++ else if(!strcmp(command,"audio vbc"))a03_audio_vbc_probe();
+  else if(!strcmp(command,"audio boot"))a03_audio_boot();
+  else if(!strcmp(command,"audio status"))a03_audio_status();
+  else if(!strcmp(command,"gpu power"))a03_gpu_power();

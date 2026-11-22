@@ -1,3 +1,8 @@
+Patch 0219 prepares one fixed DSP VBC GET over the stock audio mailbox
+after DSP-ready validation. Host mock and profile staging passed.
+BOOT0147 CI 45015846547 remains the next device trial for DSP startup
+and delayed touch autostart. No audible playback verified.
+
 BOOT0146 touch recovered live after explicit reload and restart. HID
 streaming is active and validated slice counts advance. Physical input
 confirmation is pending. Patch 0218 delays and bounds automatic starts
