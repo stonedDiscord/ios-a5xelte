@@ -61,6 +61,30 @@ audio/USB files and kernel markers, and packages with the BOOT0145
 arguments and the already validated touch payload. Packaging and flash
 remain pending while the CI Build step runs.
 
+## 2026-11-22: Matching AGCP firmware and audio profile inputs
+
+Extracted the 6 MiB AGCP_DSP.bin from the supplied A035GXXS5CXA1 CP
+archive, which matches the installed firmware package. The stock PIT
+maps this file to l_agdsp (identifier 54). The revision-5 image differs
+from revision 8. Kept both in ignored research/a03-audio-firmware.
+No phone partition was read or written for this comparison.
+
+Extracted the matching revision-5 vendor partition offline. Its
+audio_pcm.xml selects FE_ST_FAST for normal playback, with stereo 16-bit
+48 kHz and 960-frame periods. Its speaker route enables the SC2730
+DACL-to-SPKL mixer and Speaker Function. Stock logs select VBC speaker
+playback profile offset 64 and smart-amp profile offset 7.
+
+tools/a03-compile-audio-profile.py reconstructs the four vendor DSP
+profile containers from the private EUR tuning XML using the stock
+audio_profile header, mode indices, register byte IDs and packed fields.
+Generated lengths match the Android boot log exactly: dsp_vbc 124728,
+dsp_smartamp 29752, cvs 55500, audio_structure 48934. The host check
+verified field packing including sign-extended 16-bit coefficients and
+rejection of offset, overlap and value errors. Exact byte equality to
+Android-generated profiles and DSP acceptance remain unverified.
+The inputs and output blobs are kept out of git.
+
 ## 2026-11-22 UTC — bundled touch firmware build recovered
 
 CI 44966189758 failed while compiling `bsd/dev/a03_usb_console.c`: both
