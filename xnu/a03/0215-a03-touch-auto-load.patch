@@ -30,7 +30,7 @@
 + uint32_t enable=0,probe=0;
 + PE_parse_boot_argn("a03usb_console",&enable,sizeof(enable));
 + PE_parse_boot_argn("a03_probe",&probe,sizeof(probe));
-+ SecureDTEntry chosen;
++ DTEntry chosen;
 + const void *firmware;
 + unsigned int size;
 + if((enable==1&&probe==1) ||
@@ -91,7 +91,7 @@
 + if(ticks>=3000 || a03_touch_streaming || ++ticks%10)return;
 + if(!(a03_hid_action(0)&2) || attempt>=2)return;
 + if(!attempt) {
-+  SecureDTEntry chosen;
++  DTEntry chosen;
 +  const void *firmware;
 +  unsigned int size;
 +  struct a03_jd_firmware parsed;
