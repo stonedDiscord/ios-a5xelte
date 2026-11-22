@@ -1,5 +1,23 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## BOOT0160 codec read and BOOT0161 trial
+
+BOOT0160 passed CI 45032216438 and returned PMU0=0000, CDC14=0000,
+and STS11=0000 under the shared ADI lock. Its startup log records A55A
+followed by an HID stream request. Physical touch across cable-free boots
+remains unverified.
+
+Patch 0231 acquires and restores the SC2730 analog module and clock bits
+under the shared ADI lock. CI 45033595131 builds 905e679 for BOOT0161.
+The existing watcher handles verification, BOOT-only install and capture.
+
+The A03 SC2730 vendor driver places DACS, the DACL-to-SPKL mixer,
+DC offset and speaker gain between the digital DAC and the internal PA.
+The PA depends on CLK_PA_32K, DIG_CLK_PA and DIG_CLK_FGU. The driver's
+PA and DACS handlers sequence the depop registers around power transitions.
+Use this sequence and the live board data when extending the clock trial.
+Speaker output through the normal iOS path remains unverified.
+
 ## BOOT0159 FIFO teardown verified
 
 BOOT0157 restore succeeded and answered ping after the BOOT0158 panic.

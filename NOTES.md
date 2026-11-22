@@ -1,3 +1,10 @@
+BOOT0160 returned zero for the three SC2730 codec registers and logged
+A55A followed by an automatic HID stream request. BOOT0161 CI 45033595131
+runs patch 0231 to check those registers with the analog clocks enabled.
+The existing watcher verifies the build, installs it and captures the
+clock and restore results. Cable-free physical touch and audible iOS
+playback remain unverified.
+
 BOOT0159 reproduced stereo FIFO progress and completed AP01 restoration
 before DSP shutdown. BOOT0160 CI 45032216438 builds the SC2730 ADI
 state probe. Session 98821 handles packaging and capture.
