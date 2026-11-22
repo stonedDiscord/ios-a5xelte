@@ -1,3 +1,7 @@
+Replacement audio-enabled root CI 45049709675 builds 917cfac.
+The handset remains in the p55 USB reader while host write access
+and the replacement image are pending. Settings playback is unverified.
+
 The first audio-root build placed HakiosAudio in System/Library while
 the staged VirtualAudio plug-in lives in Library/Audio/Plug-Ins/HAL.
 Do not install artifact 45044428311. Commit 03164c6 records that
