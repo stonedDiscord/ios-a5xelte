@@ -1,0 +1,36 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -677,12 +677,19 @@
+   return;
+  }
+  /* SC2730 analog module, SCLK/AUDIF clocks, TX inversion and crystal. */
+- static const struct { unsigned reg; uint32_t mask; } clocks[] = {
+-  {0x1808, 0x10}, {0x180c, 0x83}, {0x1b94, 0x02}, {0x1b78, 0x100},
+-  /* ANA_CLK0: analog, DCL/DIG 6.5 MHz, DAC and PA 32 kHz. */
+-  {0x1068, (1u << 15) | (1u << 12) | (1u << 11) | (1u << 8) | (1u << 2)},
++ static const struct { unsigned reg; uint32_t mask, value; } clocks[] = {
++  {0x1808, 0x10, 0x10}, {0x180c, 0x83, 0x83},
++  {0x1b94, 0x02, 0x02}, {0x1b78, 0x100, 0x100},
++  /* ANA_PMU0: enable VB first, then bring it out of standby and enable BG/BIAS. */
++  {0x1000, 0x2000, 0x2000}, {0x1000, 0x0610, 0x0210},
++  /* ANA_DCL1: DCL regulator and interrupt clock. */
++  {0x1100, 0x0300, 0x0300},
++  /* ANA_CLK0: analog, DCL/DIG, DAC and PA clocks. */
++  {0x1068, 0xb904, 0xb904},
+   /* ANA_DCL1: FGU, driver soft-start and PA clocks. */
+-  {0x1100, (1u << 2) | (1u << 1) | 1u}
++  {0x1100, 0x0007, 0x0007},
++  /* audio_dcl_event releases DCL, driver, depop and interrupt resets. */
++  {0x10fc, 0x8601, 0x8601}, {0x1100, 0x0400, 0x0400}
+  };
+  uint32_t saved[sizeof(clocks) / sizeof(clocks[0])], readback;
+  unsigned touched = 0;
+@@ -692,7 +699,7 @@
+    ok = 0;
+    break;
+   }
+-  uint32_t enable = saved[i] | clocks[i].mask;
++  uint32_t enable = (saved[i] & ~clocks[i].mask) | clocks[i].value;
+   touched++;
+   if (!adi_write_raw(clocks[i].reg, enable) ||
+       !adi_read(clocks[i].reg, &readback) || readback != enable) {
