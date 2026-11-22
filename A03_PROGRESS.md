@@ -1,3 +1,17 @@
+## Touch restored and ringtone playback still silent
+
+The user confirmed touch responds after the HID polling restart on the
+CPU-rendered BOOT0172 variant. Settings ringtone previews remain silent.
+During a live capture the PCM worker started the DSP and AP01 scene,
+reached speaker depop 019f, and later restored the speaker and shut down
+the scene successfully. The live worker starts only with queued PCM.
+Sample content and the number of submitted frames are still unknown.
+
+Patch 0243 reports total and nonzero frames submitted per live playback
+session. It applies to the verified BOOT0172 tree. CI 45063949773 builds
+d803f59. Use the CPU-rendering boot arguments and bundled touch firmware
+for the diagnostic image. Cable-free touch across boots remains unverified.
+
 ## CPU rendering with automatic touch startup
 
 On BOOT0124 the user saw lock-screen animation but could not reach Home
