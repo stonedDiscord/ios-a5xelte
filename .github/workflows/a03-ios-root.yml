@@ -8,7 +8,7 @@ on:
         default: false
   push:
     branches: [a03-bringup]
-    paths: [.github/workflows/a03-ios-root.yml, tools/a03-build-ios-root-macos.sh, tools/sweet-root-tweaks.py, tools/a03-stage-wallpaper-catalog.py]
+    paths: [.github/workflows/a03-ios-root.yml, tools/a03-build-ios-root-macos.sh, tools/sweet-root-tweaks.py, tools/a03-stage-wallpaper-catalog.py, gpu/hakios-audio/**]
 concurrency:
   group: a03-ios-root
   cancel-in-progress: false

@@ -16,7 +16,8 @@ screen (image versions v8-v14 in NOTES.md):
                   (on iOS they live on the data volume)
   migration       LastSystemVersion so DataMigration does not run for an hour
                   on every boot
-  audio           VirtualAudio HAL plug-in disabled (mediaserverd crash)
+  audio           VirtualAudio HAL plug-in stays enabled for speaker routing
+                  when HakiosAudio is staged, otherwise is disabled
   MediaToolbox    StartRecorderServer=false (camera filter prewarm calls a
                   NULL OpenGL function without a GPU -> mediaserverd crash loop)
   SpringBoard     BKNoWatchdogs (one slow CPU path, no scene-create watchdog
