@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — BOOT0155 and BOOT0156 AP01 results
+
+BOOT0155 passed CI 45025021246 and BOOT-only upload. The clock gate
+readback changed from 0x00810000 to 0x00a16000. The guarded AP01 control
+read returned 0x00f000f0 and XNU remained responsive.
+
+BOOT0156 passed CI 45025993813 and BOOT-only upload. Both disabled FIFO
+status values stayed at 0x00140000 during sixteen zero writes. Patch
+0227 enables both AP01 channels before writing sixteen low-level test
+samples and restores the enable and format state during cleanup. The
+codec and amplifier are inactive throughout this test. CI 45027442043
+builds 5b8695d and session 64382 handles BOOT0157 packaging and capture.
+
 ## 2026-11-22 — BOOT0154 identifies disabled VBC clocks
 
 BOOT0154 passed CI 45023994730 and BOOT-only installation. The awake

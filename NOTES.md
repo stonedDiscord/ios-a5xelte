@@ -1,3 +1,7 @@
+BOOT0156 confirmed AP01 access with the VBC clock gates enabled. Both
+disabled FIFO pointers stayed static. BOOT0157 CI 45027442043 and
+session 64382 test prefill with both AP01 channels enabled.
+
 BOOT0154 found all three VBC clocks gated after DSP wake. BOOT0155
 CI 45025021246 builds 6711f54 and session 60525 tests clock acquisition
 and a guarded AP01 read. Audible iOS playback remains unverified.
