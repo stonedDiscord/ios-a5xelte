@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — BOOT0151 recovery and PCM FIFO candidate
+
+CI 45020753150 passed and BOOT-only installation succeeded. Capture stopped
+during CPU6 startup at 9472 bytes. No audio-probe marker was observed.
+Follow-up EP0 could not open the console and CDC SEND_BREAK timed out.
+The cause is unresolved. BOOT0150 restore watcher session 84849 awaits
+Download Mode. The user has been asked to enter it physically.
+
+Patch 0223 adds a 16-frame stereo L16 silence prefill trial after the AP
+wake predicates pass. It checks FIFO and DMA enable bits before touching
+AP01, then clears the FIFO and restores the format and watermark fields.
+Patch application and profile staging passed. CI 45021860011 builds
+98adc68. Probe timing should be controlled after a responsive startup
+on the next trial. PCM drain and audible iOS playback remain unverified.
+
 ## 2026-11-22 — BOOT0150 playback scene accepted
 
 CI 45019384758 passed and BOOT-only upload succeeded. The DSP returned

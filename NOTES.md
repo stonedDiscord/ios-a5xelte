@@ -1,3 +1,8 @@
+BOOT0151 flashed and stopped responding during CPU6 startup, before any
+audio result. CDC reset timed out. Session 84849 awaits physical Download
+Mode to restore BOOT0150. CI 45021860011 builds the AP01 silence prefill
+candidate. Run future audio probes after confirmed responsive startup.
+
 BOOT0150 is installed. NORMAL_AP01 startup and shutdown each returned
 status zero. CI 45020753150 builds the AP wake and FIFO probe.
 
