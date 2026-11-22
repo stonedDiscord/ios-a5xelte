@@ -1,5 +1,13 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## BOOT0158 shutdown panic follow-up
+
+User observed BOOT0158 DSP shutdown return status zero, followed by an
+implementation-specific CPU7 panic. The host capture ended before that
+reply. This places the observed panic after shutdown and supports testing
+0229, which moves AP01 and clock cleanup ahead of shutdown. The exact
+faulting instruction remains unknown.
+
 ## BOOT0158 FIFO movement and cleanup failure
 
 CI 45029089674 and BOOT-only flash passed. NORMAL_AP01 started and the DSP consumed command 7. Both FIFO status words advanced from 0x00140000 to 0x00102420. Capture stopped before shutdown was logged. EP0 and CDC reset failed. Patch 0229 restores FIFO state and releases AP access before DSP shutdown. CI 45030688399 builds 68745af. BOOT0159 packaging waits in session 98102. Physical Download Mode is required for recovery.

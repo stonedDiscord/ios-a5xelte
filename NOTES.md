@@ -1,3 +1,9 @@
+User observed BOOT0158 DSP shutdown return status zero, followed by an
+implementation-specific CPU7 panic. The host capture ended before that
+reply. This places the observed panic after shutdown and supports testing
+0229, which moves AP01 and clock cleanup ahead of shutdown. The exact
+faulting instruction remains unknown.
+
 BOOT0158 moved both PCM FIFO pointers, then USB stopped responding during cleanup. Physical Download Mode requested. CI 45030688399 and packaging session 98102 cover the cleanup-order change. Audible playback remains unverified.
 
 BOOT0157 confirmed both AP01 enable bits but FIFO pointers stayed static.
