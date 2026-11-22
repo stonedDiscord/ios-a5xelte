@@ -14,8 +14,8 @@ XNU, mediaserverd, backboardd and SpringBoard were present. Vsync advanced,
 while the first display probes showed no swaps. A later probe counted
 five CPU-rendered copies with GPU copies at zero. The next sample stayed at
 five, so continuous frame progress is not established. A dispatched Home
-event returned success, which is not UI acknowledgement. The physical
-post-reboot screen is awaiting confirmation.
+event returned success. The user later confirmed the iOS lock screen.
+A follow-up probe counted 28 CPU copies and 33 completed swaps.
 
 Current BOOT is 0124 CPU-control. Audio playback remains unverified. The
 installed p55 root still contains the audio-enabled image.
