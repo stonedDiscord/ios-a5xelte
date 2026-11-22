@@ -1,5 +1,13 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+Patch 0232 adds a reversible SC2730 DAC and speaker clock trial using
+the vendor ANA_CLK0 and ANA_DCL1 fields. It uses the BOOT0161 ADI
+readback and reverse-order restore. Patch application against the
+BOOT0161 CI source and full iOS profile staging passed. CI 45035123958
+builds d244cc3 for BOOT0162. Session 6004 watches the build, checks the
+artifact, installs BOOT and captures the probe. The audio plug-in and
+speaker output still need end-to-end verification.
+
 BOOT0161 passed CI 45033595131 and BOOT-only upload. The phone answered
 ping, reported A55A and requested HID streaming at startup. DSP boot
 returned ready. The SC2730 probe completed with clock sequence=1,
