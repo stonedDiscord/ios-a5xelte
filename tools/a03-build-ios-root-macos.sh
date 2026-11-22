@@ -66,10 +66,14 @@ mkdir "$work/root"
 hdiutil attach -nobrowse -owners on -mountpoint "$work/root" "$work/root.dmg"
 # Reuse portable file staging only; no donor hardware or partition tool.
 sudo env STAGE_FULL=1 STAGE_ALL_APPS=1 bash "$repo/tools/a5xelte-stage-ios-root.sh" "$work/os" "$work/sysos" "$work/appos" "$work/root"
-sudo python3 "$repo/tools/sweet-root-tweaks.py" "$work/root"
+tweak_args=()
+if [[ -n $audio_driver ]]; then
+    tweak_args+=(--keep-virtual-audio)
+fi
+sudo python3 "$repo/tools/sweet-root-tweaks.py" "$work/root" ${tweak_args[@]+"${tweak_args[@]}"}
 sudo python3 "$repo/tools/a03-stage-wallpaper-catalog.py" "$work/root"
 if [[ -n $audio_driver ]]; then
-    hal="$work/root/Library/Audio/Plug-Ins/HAL"
+    hal="$work/root/System/Library/Audio/Plug-Ins/HAL"
     sudo mkdir -p "$hal"
     sudo ditto "$audio_driver" "$hal/HakiosAudio.driver"
     sudo chown -R 0:0 "$hal/HakiosAudio.driver"

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Apply the SWEET bring-up changes to an iOS root made by tools/mkiosroot.sh.
 
-  sudo sweet-root-tweaks.py MOUNTED_ROOT
+  sudo sweet-root-tweaks.py MOUNTED_ROOT [--keep-virtual-audio]
 
 MOUNTED_ROOT is the HFS+ image mounted read-write (Linux: run
 `fsck.hfsplus -fy` on the image, then `mount -t hfsplus -o loop,force`).
@@ -106,10 +106,10 @@ def activation(root):
     print('data ark', d)
 
 
-def audio(root):
+def audio(root, keep_virtual_audio=False):
     src = os.path.join(root, 'Library/Audio/Plug-Ins/HAL/VirtualAudio.plugin')
     dst_dir = os.path.join(root, 'Library/Audio/Plug-Ins/HAL.disabled')
-    if os.path.exists(src):
+    if not keep_virtual_audio and os.path.exists(src):
         os.makedirs(dst_dir, exist_ok=True)
         shutil.move(src, dst_dir)
         print('VirtualAudio.plugin disabled')
@@ -123,7 +123,7 @@ def audio(root):
 
 def main():
     global BUILD, VERSION
-    if len(sys.argv) != 2 or not os.path.isdir(os.path.join(sys.argv[1], 'System/Library/xpc')):
+    if sys.argv[2:] not in ([], ['--keep-virtual-audio']) or len(sys.argv) < 2 or not os.path.isdir(os.path.join(sys.argv[1], 'System/Library/xpc')):
         sys.exit(__doc__)
     root = sys.argv[1]
     version = load(os.path.join(root, 'System/Library/CoreServices/SystemVersion.plist'))
@@ -134,7 +134,7 @@ def main():
     launchd(root)
     containers(root)
     activation(root)
-    audio(root)
+    audio(root, keep_virtual_audio=len(sys.argv) == 3)
     merge_pref(root, 'com.apple.migration', {
         'LastSystemVersion': BUILD,
         'DMUserDataDisposition': {'SyntheticDidUpgrade': False, 'buildVersion': BUILD}})
