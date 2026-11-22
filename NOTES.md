@@ -1,3 +1,10 @@
+Patch 0238 queues a quiet 1 kHz PCM waveform through the AP01 FIFO
+for up to 100 ms and 4800 frames. Patch-stack application passed.
+BOOT0168 CI 45041018579 builds e3ffbf6 on macos-26-intel. Session 5179
+verifies the artifact and waits for BOOT0167 to finish using the phone.
+This trial measures sustained FIFO submission. Speaker output and
+iOS Settings playback still require the complete route.
+
 BOOT0166 passed CI 45039447797 and BOOT-only install. Its DSP, analog
 mixer write/readback and restore, and 48 kHz DAC checks completed.
 BOOT0167 CI 45040645597 builds 44a8e3d. Session 87974 verifies and
