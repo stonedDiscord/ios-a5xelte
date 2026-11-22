@@ -1,3 +1,18 @@
+## CPU rendering with automatic touch startup
+
+On BOOT0124 the user saw lock-screen animation but could not reach Home
+using physical input. Repacked the verified BOOT0172 kernel from CI
+45045874873 with the GPU flag removed and the bundled touch firmware
+retained. BOOT-only flash succeeded. Image SHA256 is
+2c6213744a7a4a0255a293169d2b4ff529fe3a51d7ed54361dd35bf8debf5d5f.
+
+The controller reached A55A and started HID polling automatically. Before
+a manual diagnostic restart, polling reached 868 slices with zero contact
+events. Controller ID 9383 and the 720 by 1600 configuration read back.
+Polling was restarted. USB Home and swipe-up returned successful dispatch.
+Physical touch, hardware buttons, Home Screen access and cable-free
+boot acceptance remain unverified on this image.
+
 ## 2026-11-22: Apple-logo report and BOOT-only recovery
 
 The user reported that the display remained at the Apple logo. During the
