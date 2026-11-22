@@ -1,0 +1,37 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -513,16 +513,24 @@
+         int trigger = a03_audio_exchange(7, 0, 0, NULL, 0, 1, NULL);
+         printf("A03 AUDIO FIFO: DSP trigger consumed=%u error=%d\n", !trigger, trigger);
+         if (!trigger) {
+-         static const uint32_t frames[] = {
+-          0x00010001, 0x00020002, 0x00030003, 0x00040004,
+-          0x00050005, 0x00060006, 0x00070007, 0x00080008,
+-          0x00090009, 0x000a000a, 0x000b000b, 0x000c000c,
+-          0x000d000d, 0x000e000e, 0x000f000f, 0x00100010
+-         };
+-         unsigned submitted = a03_audio_submit_pcm(vbc, frames,
+-             sizeof(frames) / sizeof(frames[0]));
+-         __asm__ volatile("dsb sy" ::: "memory");
+-         printf("A03 AUDIO FIFO: submitted=%u\n", submitted);
++         /* Feed a quiet 1 kHz waveform for up to 100 ms. */
++         uint64_t deadline, now;
++         nanoseconds_to_deadline(100000000ULL, &deadline);
++         unsigned submitted = 0;
++         do {
++          uint32_t frames[96];
++          for (unsigned i = 0; i < 96; i++) {
++           unsigned phase = (submitted + i) % 48;
++           int sample = (int)(phase < 24 ? phase : 48 - phase) * 64 - 768;
++           uint32_t channel = (uint16_t)sample;
++           frames[i] = channel | (channel << 16);
++          }
++          unsigned remaining = 4800 - submitted;
++          submitted += a03_audio_submit_pcm(vbc, frames, remaining < 96 ? remaining : 96);
++          IOSleep(1);
++          clock_get_uptime(&now);
++         } while (now < deadline && submitted < 4800);
++         printf("A03 AUDIO FIFO: tone submitted=%u\n", submitted);
+         }
+        }
+        printf("A03 AUDIO FIFO: enable=%08x left=%08x->%08x right=%08x->%08x\n",
