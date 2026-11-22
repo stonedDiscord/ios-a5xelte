@@ -1,0 +1,27 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -360,7 +360,7 @@
+ void
+ a03_audio_ap_probe(void)
+ {
+- static vm_offset_t aon, pmu, mailbox;
++ static vm_offset_t aon, pmu, mailbox, ahb;
+  const uint32_t access = 1U << 5;
+  if (!a03_audio_ready_ipc) return;
+  if (!aon) aon = ml_io_map(0x64000000, 0x1000);
+@@ -395,6 +395,15 @@
+   sleep = (a03_audio_read(pmu, 0x860) >> 12) & 15;
+   power = a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK;
+   if (!deep && sleep == 6 && !power) {
++   if (!ahb) ahb = ml_io_map(0x56000000, 0x1000);
++   if (ahb && !(a03_audio_read(pmu, 0x850) & 8) &&
++       ((a03_audio_read(pmu, 0x860) >> 12) & 15) == 6 &&
++       !(a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK)) {
++    printf("A03 AUDIO AP: reading AUDCP AHB clock gates\n");
++    uint32_t clocks = a03_audio_read(ahb, 0);
++    printf("A03 AUDIO AP: clocks=%08x vbcifd=%u vbc=%u vbc24m=%u\n",
++        clocks, (clocks >> 13) & 1, (clocks >> 14) & 1, (clocks >> 21) & 1);
++   }
+    break;
+   }
+   IOSleep(1);
