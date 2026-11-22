@@ -4,8 +4,10 @@ The user confirmed touch responds after the HID polling restart on the
 CPU-rendered BOOT0172 variant. Settings ringtone previews remain silent.
 During a live capture the PCM worker started the DSP and AP01 scene,
 reached speaker depop 019f, and later restored the speaker and shut down
-the scene successfully. The live worker starts only with queued PCM.
-Sample content and the number of submitted frames are still unknown.
+the scene successfully. The live worker starts only with queued PCM. A separate bounded AP01
+speaker probe submitted 4800 tone frames, restored speaker state and shut
+down the DSP scene successfully. The user has not confirmed whether that
+direct test tone was audible.
 
 Patch 0243 reports total and nonzero frames submitted per live playback
 session. It applies to the verified BOOT0172 tree. CI 45063949773 builds
