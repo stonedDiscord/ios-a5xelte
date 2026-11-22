@@ -140,7 +140,7 @@ def adt_dram(adt_blob):
             struct.unpack('<Q', chosen.prop('dram-size'))[0])
 
 
-def build(kernel_path, adt_path, cmdline, ramdisk_path=None):
+def build(kernel_path, adt_path, cmdline, ramdisk_path=None, *, a03_touch_firmware=None):
     buf = bytearray(open(kernel_path, 'rb').read())
     m = parse_macho(buf)
     nfix = apply_chained_fixups(buf, m)
@@ -154,6 +154,20 @@ def build(kernel_path, adt_path, cmdline, ramdisk_path=None):
     kernel_end = (kernel_end + PAGE - 1) & ~(PAGE - 1)
 
     adt_blob = open(adt_path, 'rb').read()
+    if a03_touch_firmware is not None:
+        from hashlib import sha256
+        from pathlib import Path
+
+        firmware = Path(a03_touch_firmware).read_bytes()
+        expected = '8ba14e32cdeacd6763a9700fd5340f9c91763afc2965231148f72f9c1ceea82d'
+        if len(firmware) != 79104 or sha256(firmware).hexdigest() != expected:
+            raise ValueError('Expected the validated SM-A035G Jadard firmware')
+        root, _ = adt.parse(adt_blob)
+        chosen = next(child for child in root.children if child.name == 'chosen')
+        if chosen.prop('a03-touch-firmware') is not None:
+            raise ValueError('ADT already contains A03 touch firmware')
+        chosen.props.append(('a03-touch-firmware', 0, firmware))
+        adt_blob = adt.serialize(root)
     # The ADT decides where the kernel's RAM is (mkadt.py --highmem).
     PHYS_BASE, MEM_SIZE = adt_dram(adt_blob)
     pieces = [(s['vmaddr'], s['vmsize'], buf[s['fileoff']:s['fileoff'] + s['filesize']]) for s in segs]
@@ -198,8 +212,10 @@ if __name__ == '__main__':
     ap.add_argument('kernel'); ap.add_argument('adt'); ap.add_argument('out')
     ap.add_argument('--cmdline', default='debug=0xc serial=3 cpus=1 keepsyms=1')
     ap.add_argument('--ramdisk', help='root image for md0 (boot with rd=md0)')
+    ap.add_argument('--a03-touch-firmware', help='private SM-A035G Jadard firmware')
     a = ap.parse_args()
-    blob, info = build(a.kernel, a.adt, a.cmdline, a.ramdisk)
+    blob, info = build(a.kernel, a.adt, a.cmdline, a.ramdisk,
+                       a03_touch_firmware=a.a03_touch_firmware)
     open(a.out, 'wb').write(blob)
     for k, v in info.items():
         if k != 'segs':
