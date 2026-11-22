@@ -1,3 +1,11 @@
+The first audio-root build placed HakiosAudio in System/Library while
+the staged VirtualAudio plug-in lives in Library/Audio/Plug-Ins/HAL.
+Do not install artifact 45044428311. Commit 03164c6 records that
+unverified placement. Commit 9ce5e79 corrects the builder to stage
+HakiosAudio beside VirtualAudio. A replacement audio-root build is
+running from this source. The existing writable-reader ACL request
+remains pending.
+
 BOOT0172 passed CI 45045874873 and BOOT-only install. It registered
 /dev/hakios-audio. The separate hardware probe reported depop ready,
 submitted 4800 frames and completed teardown. Acoustic output and
