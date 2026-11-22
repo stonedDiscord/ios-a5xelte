@@ -1,3 +1,13 @@
+## Latest ringtone result
+
+The user still hears only hiss when tapping a ringtone. The hiss confirms
+the external amplifier enable sequence runs. BOOT0179's instrumented
+capture contains no HakiosAudio HAL messages or PCM write counters during
+the preview. The audio root builder places HakiosAudio.driver and
+VirtualAudio.plugin together under /Library/Audio/Plug-Ins/HAL, so the
+remaining failure is before the plugin's PCM write path. No storage or
+partition changes were made.
+
 ## BOOT0179 HAL instrumentation result
 
 CI 45072149425 passed after fixing the HAL ioctl handler's user-address
