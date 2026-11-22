@@ -77,6 +77,10 @@ if [[ -n $audio_driver ]]; then
     sudo mkdir -p "$hal"
     sudo ditto "$audio_driver" "$hal/HakiosAudio.driver"
     sudo chown -R 0:0 "$hal/HakiosAudio.driver"
+    system_hal="$work/root/System/Library/Audio/Plug-Ins/HAL"
+    sudo mkdir -p "$system_hal"
+    sudo ditto "$audio_driver" "$system_hal/HakiosAudio.driver"
+    sudo chown -R 0:0 "$system_hal/HakiosAudio.driver"
 fi
 python3 "$repo/tools/a03-inspect-ios-root.py" "$work/root" | tee "$output.inventory.json"
 sync
