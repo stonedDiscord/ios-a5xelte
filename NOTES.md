@@ -1,3 +1,12 @@
+BOOT0171 passed CI 45044136063 and BOOT-only install. SC2730 depop
+reported 019f and ready=1, AP01 submitted 4800 frames with DMA bits 3,
+and speaker restoration and DSP shutdown passed. Acoustic output
+remains unverified. Patch 0242 adds the opt-in /dev/hakios-audio
+PCM device and feeds the verified route from its queue. BOOT0172 CI
+45045874873 builds b0b9189. Session 10666 verifies and installs the
+image with a03pcm=1 in place of the verbose kprintf flag. The installed
+root still needs the HAL bundle and VirtualAudio routing enabled.
+
 Audio-enabled HFSX root CI 45044428311 uses the new speaker_audio
 input at 9f91836. It builds the HAL and stages it with VirtualAudio.
 This is an image build only. Keep the current USERDATA filesystem for
