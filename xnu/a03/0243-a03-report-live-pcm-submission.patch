@@ -1,0 +1,38 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -446,7 +446,7 @@
+ }
+ 
+ static unsigned
+-a03_pcm_feed(vm_offset_t vbc)
++a03_pcm_feed(vm_offset_t vbc, uint64_t *nonzero)
+ {
+  uint32_t frames[96];
+  lck_spin_lock(&a03_pcm_lock);
+@@ -455,6 +455,8 @@
+   frames[i] = a03_pcm_ring[(a03_pcm_tail + i) % A03_PCM_CAPACITY];
+  lck_spin_unlock(&a03_pcm_lock);
+  unsigned submitted = a03_audio_submit_pcm(vbc, frames, count);
++ for (unsigned i = 0; i < submitted; i++)
++  *nonzero += frames[i] != 0;
+  lck_spin_lock(&a03_pcm_lock);
+  a03_pcm_tail += submitted;
+  lck_spin_unlock(&a03_pcm_lock);
+@@ -870,11 +872,16 @@
+       ok && (depop & 0x100));
+   if (ok && (depop & 0x100) && a03_pcm_live) {
+    unsigned idle = 0;
++   uint64_t submitted = 0, nonzero = 0;
+    while (idle < 30) {
+-    idle = a03_pcm_feed(vbc) ? 0 : idle + 1;
++    unsigned frames = a03_pcm_feed(vbc, &nonzero);
++    submitted += frames;
++    idle = frames ? 0 : idle + 1;
+     a03_touch_stream_tick();
+     IOSleep(1);
+    }
++   printf("A03 AUDIO PCM: submitted=%llu nonzero=%llu\n",
++       (unsigned long long)submitted, (unsigned long long)nonzero);
+   } else if (ok && (depop & 0x100)) {
+    /* Feed a quiet 1 kHz waveform for up to 100 ms. */
+    uint64_t deadline, now;
