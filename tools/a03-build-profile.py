@@ -224,8 +224,7 @@ def main():
                      '0219-a03-dsp-vbc-mailbox-probe.patch',
                      '0220-a03-serialized-vbc-transport.patch',
                      '0221-a03-vbc-playback-scene.patch',
-                     '0222-a03-vbc-ap-wake-probe.patch',
-                     '0223-a03-ap01-pcm-fifo-prefill.patch'):
+                     '0222-a03-vbc-ap-wake-probe.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

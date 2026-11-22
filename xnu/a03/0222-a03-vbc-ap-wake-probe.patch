@@ -1,6 +1,6 @@
 --- a/bsd/dev/a03_usb_console.c
 +++ b/bsd/dev/a03_usb_console.c
-@@ -352,6 +352,59 @@
+@@ -352,6 +352,55 @@
   status = 0;
   error = a03_audio_exchange(5, 0, 0, payload, sizeof(payload) / 4, &status);
   printf("A03 AUDIO scene: shutdown error=%d status=%08x\n", error, status);
@@ -12,7 +12,7 @@
 +void
 +a03_audio_ap_probe(void)
 +{
-+ static vm_offset_t aon, pmu, mailbox, vbc;
++ static vm_offset_t aon, pmu, mailbox;
 + const uint32_t access = 1U << 5;
 + if (!a03_audio_ready_ipc) return;
 + if (!aon) aon = ml_io_map(0x64000000, 0x1000);
@@ -29,10 +29,12 @@
 +  printf("A03 AUDIO AP: wake mailbox busy\n");
 +  return;
 + }
++ printf("A03 AUDIO AP: opening AP access gate\n");
 + a03_audio_update(aon, 0x14c, access, access);
 + if (!(a03_audio_read(aon, 0x14c) & access)) return;
 +
 + /* Stock wake word 100, with no SMSG ring entry. */
++ printf("A03 AUDIO AP: posting DSP wake word\n");
 + a03_audio_write(mailbox, 4, 100);
 + a03_audio_write(mailbox, 8, 0);
 + a03_audio_write(mailbox, 0, A03_AUDIO_DSP_CORE);
@@ -45,12 +47,6 @@
 +  sleep = (a03_audio_read(pmu, 0x860) >> 12) & 15;
 +  power = a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK;
 +  if (!deep && sleep == 6 && !power) {
-+   if (!vbc) vbc = ml_io_map(0x56480000, 0x1000);
-+   if (vbc) {
-+    printf("A03 AUDIO AP: fifo_ctrl=%08x enable=%08x left=%08x right=%08x\n",
-+        a03_audio_read(vbc, 0x20), a03_audio_read(vbc, 0x2c),
-+        a03_audio_read(vbc, 0x34), a03_audio_read(vbc, 0x38));
-+   }
 +   break;
 +  }
 +  IOSleep(1);
