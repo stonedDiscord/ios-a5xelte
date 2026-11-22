@@ -1,0 +1,67 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -1341,6 +1341,9 @@
+ extern int a03_hid_action(unsigned action);
+ static unsigned a03_touch_emit_count,a03_touch_emit_hid;
+ static unsigned a03_touch_streaming,a03_touch_stream_slices;
++static unsigned a03_touch_restart_count;
++static int a03_touch_restart_pending;
++static uint64_t a03_touch_restart_at;
+ static struct a03_jd_contact_state a03_touch_stream_state;
+ static void a03_touch_emit(void *context __unused,unsigned slot,int down,unsigned x,unsigned y) {
+  if(a03_touch_emit_count<64||!down)printf("A03 TOUCH contact slot=%u down=%d x=%u y=%u hid=%u\n",slot,down,x,y,a03_touch_emit_hid);
+@@ -1402,6 +1405,7 @@
+ void a03_touch_probe(const char *command) {
+  if(!strcmp(command,"stop")) {
+   a03_touch_boot_done=1;
++  a03_touch_restart_pending=0;
+   a03_touch_stream_stop();
+   return;
+  }
+@@ -1410,6 +1414,7 @@
+       a03_touch_stream_slices,a03_touch_emit_count);return;
+  }
+  if(!strcmp(command,"start")||!strcmp(command,"startcontacts")) {
++  a03_touch_restart_pending=0;
+   if(a03_touch_streaming){printf("A03 TOUCH already streaming\n");return;}
+   if(!strcmp(command,"start")&&!(a03_hid_action(0)&2)){printf("A03 TOUCH start refused: HID provider absent\n");return;}
+   memset(&a03_touch_stream_state,0,sizeof(a03_touch_stream_state));
+@@ -1502,13 +1507,36 @@
+  if(!(gate&0x100))a03_touch_w32((void *)a03_touch_apb,0x2000,0x100);
+  if(!streaming)printf("A03 TOUCH restored gate=%08x clock=%08x\n",
+      a03_touch_r32((void *)a03_touch_apb,0),a03_touch_r32((void *)a03_touch_clk,0x58));
+- if(streaming&&!stream_ok)a03_touch_stream_stop();
++ if(streaming&&!stream_ok) {
++  a03_touch_stream_stop();
++  if(a03_touch_emit_hid && a03_touch_ram_loaded && !a03_touch_restart_pending) {
++   a03_touch_restart_pending=1;
++   nanoseconds_to_deadline(2000000000ULL,&a03_touch_restart_at);
++   printf("A03 TOUCH restart scheduled after stream error\n");
++  }
++ }
+ }
+ static void a03_touch_boot_tick(void) {
+  static unsigned ticks,attempt;
+  static uint64_t retry_at;
+  uint64_t now;
+- if(a03_touch_boot_done || a03_touch_streaming || ticks>=3000 || ++ticks%10)return;
++ if(a03_touch_streaming)return;
++ if(a03_touch_restart_pending) {
++  clock_get_uptime(&now);
++  if(now<a03_touch_restart_at)return;
++  if(a03_touch_restart_count>=5 || !a03_touch_ram_loaded) {
++   a03_touch_restart_pending=0;
++   printf("A03 TOUCH restart limit reached\n");
++   return;
++  }
++  if(!(a03_hid_action(0)&2))return;
++  a03_touch_restart_pending=0;
++  a03_touch_restart_count++;
++  printf("A03 TOUCH automatic restart %u/5\n",a03_touch_restart_count);
++  a03_touch_probe("start");
++  return;
++ }
++ if(a03_touch_boot_done || ticks>=3000 || ++ticks%10)return;
+  if(!(a03_hid_action(0)&2))return;
+  if(!retry_at) {
+   DTEntry chosen;
