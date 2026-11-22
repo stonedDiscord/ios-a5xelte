@@ -23,7 +23,7 @@ jobs:
           grep -Eq 'platform[[:space:]]+IOS$' out/build-version.txt
           grep -Eq 'minos[[:space:]]+16\.0$' out/build-version.txt
           xcrun nm -gjU "$bundle/HakiosAudio" | grep -x _HakiosAudio_Create
-          (cd out && shasum -a 256 HakiosAudio.driver/* > SHA256SUMS)
+          (cd out && find HakiosAudio.driver -type f -exec shasum -a 256 {} + > SHA256SUMS)
       - uses: actions/upload-artifact@v4
         with:
           name: a03-audio-hal
