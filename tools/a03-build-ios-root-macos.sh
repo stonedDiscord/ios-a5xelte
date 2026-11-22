@@ -1,7 +1,18 @@
 #!/bin/bash
 # Build a local journaled HFSX iOS root. Never accesses a phone or partition.
 set -euo pipefail
-[[ $# == 2 && $(uname -s) == Darwin ]] || { echo 'usage (macOS): script IPSW OUTPUT.img' >&2; exit 2; }
+[[ ($# == 2 || $# == 3) && $(uname -s) == Darwin ]] || {
+    echo 'usage (macOS): script IPSW OUTPUT.img [HakiosAudio.driver]' >&2
+    exit 2
+}
+audio_driver=
+if [[ $# == 3 ]]; then
+    audio_driver=$(cd "$3" && pwd -P)
+    [[ -f "$audio_driver/Info.plist" && -x "$audio_driver/HakiosAudio" ]] || {
+        echo 'Invalid HakiosAudio.driver bundle' >&2
+        exit 1
+    }
+fi
 ipsw=$(cd "$(dirname "$1")" && pwd)/$(basename "$1")
 output=$(cd "$(dirname "$2")" && pwd)/$(basename "$2")
 [[ ! -e $output ]] || { echo 'output exists' >&2; exit 1; }
@@ -57,6 +68,12 @@ hdiutil attach -nobrowse -owners on -mountpoint "$work/root" "$work/root.dmg"
 sudo env STAGE_FULL=1 STAGE_ALL_APPS=1 bash "$repo/tools/a5xelte-stage-ios-root.sh" "$work/os" "$work/sysos" "$work/appos" "$work/root"
 sudo python3 "$repo/tools/sweet-root-tweaks.py" "$work/root"
 sudo python3 "$repo/tools/a03-stage-wallpaper-catalog.py" "$work/root"
+if [[ -n $audio_driver ]]; then
+    hal="$work/root/Library/Audio/Plug-Ins/HAL"
+    sudo mkdir -p "$hal"
+    sudo ditto "$audio_driver" "$hal/HakiosAudio.driver"
+    sudo chown -R 0:0 "$hal/HakiosAudio.driver"
+fi
 python3 "$repo/tools/a03-inspect-ios-root.py" "$work/root" | tee "$output.inventory.json"
 sync
 hdiutil detach "$work/root"
