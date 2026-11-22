@@ -1,6 +1,11 @@
 name: a03-ios-root
 on:
   workflow_dispatch:
+    inputs:
+      speaker_audio:
+        description: Include the A03 speaker HAL and VirtualAudio routing
+        type: boolean
+        default: false
   push:
     branches: [a03-bringup]
     paths: [.github/workflows/a03-ios-root.yml, tools/a03-build-ios-root-macos.sh, tools/sweet-root-tweaks.py, tools/a03-stage-wallpaper-catalog.py]
@@ -17,8 +22,18 @@ jobs:
         run: |
           mkdir -p research/ipsw out
           curl --fail --location --retry 3 --output research/ipsw/source.ipsw https://updates.cdn-apple.com/2022FallFCS/fullrestores/012-65861/0A0400A0-2174-4D49-91B7-43FC9DE24272/iPhone10,3,iPhone10,6_16.0_20A362_Restore.ipsw
+      - name: Build the iOS speaker HAL
+        if: inputs.speaker_audio
+        run: bash gpu/hakios-audio/build-ios.sh out/HakiosAudio.driver
       - name: Stage and verify journaled HFSX root
-        run: bash tools/a03-build-ios-root-macos.sh research/ipsw/source.ipsw out/a03-ios16-root.img
+        env:
+          SPEAKER_AUDIO: ${{ inputs.speaker_audio || 'false' }}
+        run: |
+          args=(research/ipsw/source.ipsw out/a03-ios16-root.img)
+          if [[ "$SPEAKER_AUDIO" == true ]]; then
+            args+=(out/HakiosAudio.driver)
+          fi
+          bash tools/a03-build-ios-root-macos.sh "${args[@]}"
       - name: Compress root for transfer
         if: ${{ always() }}
         run: |
