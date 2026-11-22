@@ -1,3 +1,7 @@
+BOOT0159 reproduced stereo FIFO progress and completed AP01 restoration
+before DSP shutdown. BOOT0160 CI 45032216438 builds the SC2730 ADI
+state probe. Session 98821 handles packaging and capture.
+
 User observed BOOT0158 DSP shutdown return status zero, followed by an
 implementation-specific CPU7 panic. The host capture ended before that
 reply. This places the observed panic after shutdown and supports testing

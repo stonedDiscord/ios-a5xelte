@@ -1,5 +1,17 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## BOOT0159 FIFO teardown verified
+
+BOOT0157 restore succeeded and answered ping after the BOOT0158 panic.
+BOOT0159 passed CI 45030688399 and BOOT-only upload. Both FIFO status
+words advanced to 0x00102420. AP01 cleanup preceded DSP shutdown, which
+returned zero. The probe emitted its completion marker and the console
+continued. No acoustic result was measured.
+
+Patch 0230 adds a fixed SC2730 PMU0, CDC14 and STS11 read under the
+existing ADI lock. CI 45032216438 builds commit 8bdd144 for BOOT0160.
+Session 98821 waits for packaging and capture.
+
 ## BOOT0158 shutdown panic follow-up
 
 User observed BOOT0158 DSP shutdown return status zero, followed by an
