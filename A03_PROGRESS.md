@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22: BOOT0149 serialized VBC control verified
+
+CI 45018453065 passed and the BOOT-only transfer succeeded. Image
+SHA-256 e66532ef74ede75a4ef7e0a2cb32fa2ba7233f7f363b5e89d91b5c19512720d5.
+The live capture shows AGDSP_BOOT_OK followed by two channel 0 command
+8 replies with status zero. The actual transport source also passed a
+host mock for cursor wrap and refusal after timeout. Bundled touch
+requested HID streaming. No audible output measured.
+
+The stock 4H10 stream-startup ABI is 620 bytes, derived by compiling
+the matching VBC header declarations with the A03 board define.
+The embedded scene and direction words start at offsets 32 and 36.
+Use the stock playback routing values with that ABI for stream setup.
+
 ## 2026-11-22: BOOT0148 VBC mailbox reply
 
 CI 45017041887 and exact source/checksum packaging passed. BOOT-only
