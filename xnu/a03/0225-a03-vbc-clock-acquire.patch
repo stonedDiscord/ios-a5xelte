@@ -1,0 +1,38 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -395,7 +395,7 @@
+   sleep = (a03_audio_read(pmu, 0x860) >> 12) & 15;
+   power = a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK;
+   if (!deep && sleep == 6 && !power) {
+-   if (!ahb) ahb = ml_io_map(0x56000000, 0x1000);
++   if (!ahb) ahb = ml_io_map(0x56000000, 0x3000);
+    if (ahb && !(a03_audio_read(pmu, 0x850) & 8) &&
+        ((a03_audio_read(pmu, 0x860) >> 12) & 15) == 6 &&
+        !(a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK)) {
+@@ -403,6 +403,26 @@
+     uint32_t clocks = a03_audio_read(ahb, 0);
+     printf("A03 AUDIO AP: clocks=%08x vbcifd=%u vbc=%u vbc24m=%u\n",
+         clocks, (clocks >> 13) & 1, (clocks >> 14) & 1, (clocks >> 21) & 1);
++    const uint32_t vbc_clocks = (1U << 13) | (1U << 14) | (1U << 21);
++    uint32_t added = vbc_clocks & ~clocks;
++    if (added) a03_audio_write(ahb, 0x1000, added);
++    __asm__ volatile("dsb sy" ::: "memory");
++    uint32_t actual = a03_audio_read(ahb, 0);
++    printf("A03 AUDIO AP: VBC clock enable readback=%08x\n", actual);
++    if ((actual & vbc_clocks) == vbc_clocks &&
++        !(a03_audio_read(pmu, 0x850) & 8) &&
++        ((a03_audio_read(pmu, 0x860) >> 12) & 15) == 6 &&
++        !(a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK)) {
++     static vm_offset_t vbc;
++     if (!vbc) vbc = ml_io_map(0x56480000, 0x1000);
++     if (vbc) {
++      printf("A03 AUDIO AP: reading AP01 FIFO control\n");
++      uint32_t config = a03_audio_read(vbc, 0x20);
++      printf("A03 AUDIO AP: fifo_ctrl=%08x\n", config);
++     }
++    }
++    if (added) a03_audio_write(ahb, 0x2000, added);
++    __asm__ volatile("dsb sy" ::: "memory");
+    }
+    break;
+   }

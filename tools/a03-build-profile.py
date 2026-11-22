@@ -225,7 +225,8 @@ def main():
                      '0220-a03-serialized-vbc-transport.patch',
                      '0221-a03-vbc-playback-scene.patch',
                      '0222-a03-vbc-ap-wake-probe.patch',
-                     '0224-a03-audcp-clock-read.patch'):
+                     '0224-a03-audcp-clock-read.patch',
+                     '0225-a03-vbc-clock-acquire.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
