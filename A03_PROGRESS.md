@@ -1,3 +1,23 @@
+## BOOT0174 touch stream stopped after transient errors
+
+During the ringtone capture, the automatic HID stream produced 80 contact
+transitions across 1216 slices, then returned error -4 with 0 valid frames
+and stopped after releasing held contacts. In the poller, -4 means three
+consecutive failed or malformed reads. The capture does not distinguish a
+SPI transfer failure from an invalid report. Since one valid HID frame had
+already set a boot-done flag, the existing boot worker did not restart the
+stopped stream.
+
+An explicit USB `touch start` restored streaming. The latest status showed
+streaming=1 at 619 slices. CPU display telemetry showed 17,526 completed
+swaps and copies. The user is checking physical response after restart.
+
+Patch 0245 schedules up to five automatic restarts per boot, two seconds
+after a failed stream, only when bundled firmware remains loaded and HID is
+available. Explicit stop cancels a pending restart. CI 45067521789 builds
+35647f2. A BOOT-only trial is pending. Cable-free touch over repeated boots
+and sustained input remain unverified.
+
 ## BOOT0174 external speaker test
 
 CI 45065385204 passed at bafd519. BOOT0174 is an exact verified XNU
