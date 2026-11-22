@@ -1,0 +1,18 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -666,9 +666,13 @@
+  }
+  /* SC2730 analog module, SCLK/AUDIF clocks, TX inversion and crystal. */
+  static const struct { unsigned reg; uint32_t mask; } clocks[] = {
+-  {0x1808, 0x10}, {0x180c, 0x83}, {0x1b94, 0x02}, {0x1b78, 0x100}
++  {0x1808, 0x10}, {0x180c, 0x83}, {0x1b94, 0x02}, {0x1b78, 0x100},
++  /* ANA_CLK0: analog, DCL/DIG 6.5 MHz, DAC and PA 32 kHz. */
++  {0x1068, (1u << 15) | (1u << 12) | (1u << 11) | (1u << 8) | (1u << 2)},
++  /* ANA_DCL1: FGU, driver soft-start and PA clocks. */
++  {0x1100, (1u << 2) | (1u << 1) | 1u}
+  };
+- uint32_t saved[4], readback;
++ uint32_t saved[sizeof(clocks) / sizeof(clocks[0])], readback;
+  unsigned touched = 0;
+  int ok = 1;
+  for (unsigned i = 0; i < sizeof(clocks) / sizeof(clocks[0]); i++) {
