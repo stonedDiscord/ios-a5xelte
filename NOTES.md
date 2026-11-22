@@ -1,3 +1,12 @@
+Offline catalog inspection of root artifact 45044428311 confirmed
+VirtualAudio.plugin under /Library/Audio/Plug-Ins/HAL and
+HakiosAudio.driver under /System/Library/Audio/Plug-Ins/HAL. This
+establishes placement only. Runtime discovery from either directory
+remains unverified. Replacement run 45049709675 stages HakiosAudio
+beside VirtualAudio. Session 98526 downloads and verifies that image.
+Session 2563 checks both bundles in its offline HFSX catalog. The USB
+reader still exposes p55, and the host ACL remains outstanding.
+
 Replacement audio-enabled root CI 45049709675 builds 917cfac.
 The handset remains in the p55 USB reader while host write access
 and the replacement image are pending. Settings playback is unverified.
