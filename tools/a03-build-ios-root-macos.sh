@@ -31,7 +31,7 @@ cleanup() {
     # CI logs/conclusion remain authoritative about whether fsck passed.
     if [[ $build_status != 0 && -f $work/raw.cdr && ! -e $output ]]; then
         mv "$work/raw.cdr" "$output"
-        shasum -a 256 "$output" > "$output.sha256"
+        (cd "$(dirname "$output")" && shasum -a 256 "$(basename "$output")") > "$output.sha256"
         echo 'Converted image retained for diagnosis; final verification FAILED.'
     fi
     echo "Build workspace retained: $work"
@@ -96,5 +96,5 @@ sudo fsck_hfs -fn "/dev/r${check_device#/dev/}"
 hdiutil detach "$check_device"
 check_device=
 mv "$work/raw.cdr" "$output"
-shasum -a 256 "$output" > "$output.sha256"
+(cd "$(dirname "$output")" && shasum -a 256 "$(basename "$output")") > "$output.sha256"
 echo 'Local iOS root prepared; no phone write. Runtime boot remains unverified.'
