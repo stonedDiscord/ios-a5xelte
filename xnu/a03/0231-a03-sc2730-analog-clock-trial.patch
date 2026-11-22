@@ -1,0 +1,49 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -664,9 +664,44 @@
+   printf("A03 AUDIO codec: ADI unavailable\n");
+   return;
+  }
+- int ok = adi_read(0x1000, &power) && adi_read(0x10ac, &speaker) &&
+-     adi_read(0x11b0, &depop);
++ /* SC2730 analog module, SCLK/AUDIF clocks, TX inversion and crystal. */
++ static const struct { unsigned reg; uint32_t mask; } clocks[] = {
++  {0x1808, 0x10}, {0x180c, 0x83}, {0x1b94, 0x02}, {0x1b78, 0x100}
++ };
++ uint32_t saved[4], readback;
++ unsigned touched = 0;
++ int ok = 1;
++ for (unsigned i = 0; i < sizeof(clocks) / sizeof(clocks[0]); i++) {
++  if (!adi_read(clocks[i].reg, &saved[i])) {
++   ok = 0;
++   break;
++  }
++  uint32_t enable = saved[i] | clocks[i].mask;
++  touched++;
++  if (!adi_write_raw(clocks[i].reg, enable) ||
++      !adi_read(clocks[i].reg, &readback) || readback != enable) {
++   ok = 0;
++   break;
++  }
++ }
++ if (ok) {
++  ok = adi_read(0x1000, &power) && adi_read(0x10ac, &speaker) &&
++      adi_read(0x11b0, &depop);
++ }
++ int restored = 1;
++ while (touched) {
++  unsigned i = --touched;
++  uint32_t current;
++  if (!adi_read(clocks[i].reg, &current)) {
++   restored = 0;
++   continue;
++  }
++  uint32_t original = (current & ~clocks[i].mask) | (saved[i] & clocks[i].mask);
++  if (!adi_write_raw(clocks[i].reg, original) ||
++      !adi_read(clocks[i].reg, &readback) || readback != original) restored = 0;
++ }
+  __sync_lock_release(&adi_runtime_busy);
++ printf("A03 AUDIO codec: clock sequence=%d restored=%d\n", ok, restored);
+  if (ok) {
+   printf("A03 AUDIO codec: PMU0=%04x CDC14=%04x STS11=%04x\n",
+       power, speaker, depop);
