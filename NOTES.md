@@ -1,3 +1,10 @@
+BOOT0166 passed CI 45039447797 and BOOT-only install. Its DSP, analog
+mixer write/readback and restore, and 48 kHz DAC checks completed.
+BOOT0167 CI 45040645597 builds 44a8e3d. Session 87974 verifies and
+installs the image, then runs the stereo FIFO probe. That probe checks
+PCM submission and teardown. Settings still needs the kernel playback
+device and HAL plug-in connected to the speaker path.
+
 Patch 0237 submits whole stereo PCM frames through the AP01 FIFO and
 checks both channels for space before each frame. Mock MMIO checks
 passed for zero, partial and full submission, channel order and sample
