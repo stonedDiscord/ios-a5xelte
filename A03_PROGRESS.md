@@ -14,6 +14,7 @@ unverified.
 0220 prepares serialized VBC exchanges with bounded command-block
 writes, fresh-reply matching, RX cursor advancement and timeout
 quarantine. Exact patch application and profile staging passed.
+CI 45018453065 builds 1b7570f for BOOT0149 and two consecutive VBC reads.
 
 ## 2026-11-22: BOOT0147 DSP ready and autonomous touch streaming
 

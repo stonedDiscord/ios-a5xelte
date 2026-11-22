@@ -1,3 +1,8 @@
+BOOT0149 CI 45018453065 builds commit 1b7570f. Private packaging
+session 13114 and BOOT-only install session 17203 verify and test two
+consecutive VBC GET commands after DSP readiness. BOOT0148 is the
+verified single-command checkpoint.
+
 BOOT0148 is installed and returned a successful VBC GET after DSP boot.
 Patch 0220 prepares repeatable exchanges for stream setup. Audible iOS
 playback and cable-free physical touch remain unverified.
