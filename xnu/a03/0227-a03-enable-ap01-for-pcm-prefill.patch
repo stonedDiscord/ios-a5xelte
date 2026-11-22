@@ -1,0 +1,32 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -425,15 +425,23 @@
+           (a03_audio_read(vbc, 0x34) & (1U << 18)) &&
+           (a03_audio_read(vbc, 0x38) & (1U << 18))) {
+        a03_audio_update(vbc, 0x20, 0x6ff, (3U << 9) | 80);
++       a03_audio_update(vbc, 0x30, 4, 4);
++       a03_audio_update(vbc, 0x2c, 0x300, 0x300);
++       __asm__ volatile("dsb sy" ::: "memory");
++       uint32_t enabled = a03_audio_read(vbc, 0x2c);
+        uint32_t left = a03_audio_read(vbc, 0x34);
+        uint32_t right = a03_audio_read(vbc, 0x38);
+-       for (unsigned frame = 0; frame < 16; frame++) {
+-        a03_audio_write(vbc, 0, 0);
+-        a03_audio_write(vbc, 4, 0);
++       if ((enabled & 0x300) == 0x300) {
++        for (unsigned frame = 0; frame < 16; frame++) {
++         a03_audio_write(vbc, 0, frame + 1);
++         a03_audio_write(vbc, 4, frame + 1);
++        }
++        __asm__ volatile("dsb sy" ::: "memory");
+        }
+-       __asm__ volatile("dsb sy" ::: "memory");
+-       printf("A03 AUDIO FIFO: left=%08x->%08x right=%08x->%08x\n",
+-           left, a03_audio_read(vbc, 0x34), right, a03_audio_read(vbc, 0x38));
++       printf("A03 AUDIO FIFO: enable=%08x left=%08x->%08x right=%08x->%08x\n",
++           enabled, left, a03_audio_read(vbc, 0x34),
++           right, a03_audio_read(vbc, 0x38));
++       a03_audio_update(vbc, 0x2c, 0x300, 0);
+        a03_audio_update(vbc, 0x30, 4, 4);
+        a03_audio_update(vbc, 0x20, 0x6ff, config);
+       } else {
