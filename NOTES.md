@@ -1,3 +1,8 @@
+User confirms recovered BOOT0146 touch and requires untethered touch
+on every boot. BOOT0147 install watcher session 18882 waits for the
+verified combined build. Check automatic HID streaming and physical
+touch after cable-disconnected boots, with no host touch commands.
+
 Patch 0219 prepares one fixed DSP VBC GET over the stock audio mailbox
 after DSP-ready validation. Host mock and profile staging passed.
 BOOT0147 CI 45015846547 remains the next device trial for DSP startup

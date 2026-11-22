@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22: Untethered touch acceptance
+
+User confirms touch works again after the live BOOT0146 recovery and
+requires it on every boot without a tether. BOOT0147 carries firmware
+inside the BOOT image. Its worker starts from the chosen firmware property
+even with USB console and probes disabled. A passive boot capture may
+record automatic loading and valid reports. The acceptance check still
+requires repeated cable-disconnected boots with physical touch response
+before reconnecting USB. The authorized BOOT0147 install watcher waits
+for the verified packaging receipt. Audio bring-up remains active.
+
 ## 2026-11-22: VBC mailbox control candidate
 
 Patch 0219 adds explicit `audio vbc` after a positively identified
