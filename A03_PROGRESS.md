@@ -1,5 +1,9 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## BOOT0158 FIFO movement and cleanup failure
+
+CI 45029089674 and BOOT-only flash passed. NORMAL_AP01 started and the DSP consumed command 7. Both FIFO status words advanced from 0x00140000 to 0x00102420. Capture stopped before shutdown was logged. EP0 and CDC reset failed. Patch 0229 restores FIFO state and releases AP access before DSP shutdown. CI 45030688399 builds 68745af. BOOT0159 packaging waits in session 98102. Physical Download Mode is required for recovery.
+
 ## 2026-11-22 — BOOT0157 FIFO enable and BOOT0158 DSP trigger
 
 BOOT0157 passed CI 45027442043 and BOOT-only upload. Both AP01 channel

@@ -1,3 +1,5 @@
+BOOT0158 moved both PCM FIFO pointers, then USB stopped responding during cleanup. Physical Download Mode requested. CI 45030688399 and packaging session 98102 cover the cleanup-order change. Audible playback remains unverified.
+
 BOOT0157 confirmed both AP01 enable bits but FIFO pointers stayed static.
 BOOT0158 CI 45029089674 adds DSP playback trigger. Session 1354 handles
 packaging, BOOT-only install and capture.
