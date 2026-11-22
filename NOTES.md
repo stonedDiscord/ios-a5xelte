@@ -1,3 +1,11 @@
+BOOT0163 CI 45035381713 builds fd8d629. Patch 0233 uses the stock
+SC2730 AGCP AUD and AUDIF gate bits 19 and 20 and the existing DSP wake
+sequence before reading AUD_TOP_CTL and AUD_DAC_CTL at 0x56750000.
+Patch application against BOOT0161 and iOS profile staging passed.
+Dispatching the new run cancelled BOOT0162 CI under the branch concurrency
+setting. Session 22013 verifies and installs BOOT0163 and captures the
+analog clock trial from 0232 before the new digital read.
+
 Patch 0232 adds a reversible SC2730 DAC and speaker clock trial using
 the vendor ANA_CLK0 and ANA_DCL1 fields. It uses the BOOT0161 ADI
 readback and reverse-order restore. Patch application against the
