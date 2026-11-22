@@ -1,0 +1,84 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -304,6 +304,54 @@
+  if (!a03_audio_exchange(A03_AUDIO_VBC_GET, 0, UINT32_MAX, params, 3, &status)) {
+   printf("A03 AUDIO VBC: GET reply status=%08x fifo=%08x\n", status, params[2]);
+  }
++}
++
++/* Stock 4H10 VBC scene NORMAL_AP01, playback, DAC0 and ADC0. */
++void a03_audio_scene_probe(void);
++void
++a03_audio_scene_probe(void)
++{
++ enum {
++  ADC_SOURCE = 52, DAC_OUT = 84, TX_PORT = 100, RX_PORT = 124,
++  PORT_DATA = 156, TX_WIDTH = 196, TX_POLARITY = 220,
++  RX_WIDTH = 244, RX_POLARITY = 276, IIS_MASTER = 324, MIXER = 488,
++  IV_ADC = 580, MASTER_SELECT = 584, VOICE_RECORD = 616
++ };
++ uint32_t payload[620 / sizeof(uint32_t)] = {0};
++ uint32_t status = 0;
++ for (unsigned i = 0; i < 4; i++) {
++  payload[ADC_SOURCE / 4 + i * 2] = i;
++  payload[RX_PORT / 4 + i * 2] = i;
++  payload[RX_PORT / 4 + i * 2 + 1] = i == 3 ? 3 : 1;
++  payload[RX_WIDTH / 4 + i * 2] = i;
++  payload[RX_WIDTH / 4 + i * 2 + 1] = i != 3;
++  payload[RX_POLARITY / 4 + i * 2] = i;
++  payload[MASTER_SELECT / 4 + i * 2] = i;
++ }
++ for (unsigned i = 0; i < 3; i++) {
++  payload[TX_PORT / 4 + i * 2] = i;
++  payload[TX_PORT / 4 + i * 2 + 1] = i;
++  payload[TX_WIDTH / 4 + i * 2] = i;
++  payload[TX_WIDTH / 4 + i * 2 + 1] = i == 0;
++  payload[TX_POLARITY / 4 + i * 2] = i;
++ }
++ for (unsigned i = 0; i < 5; i++) {
++  payload[PORT_DATA / 4 + i * 2] = i;
++  payload[PORT_DATA / 4 + i * 2 + 1] = i < 3 ? i : 0;
++  payload[MIXER / 4 + i * 3 + 1] = i;
++ }
++ payload[DAC_OUT / 4 + 2] = 1;
++ payload[IIS_MASTER / 4] = 1;
++ payload[IV_ADC / 4] = 1;
++ payload[VOICE_RECORD / 4] = 1;
++ int error = a03_audio_exchange(4, 0, 0, payload, sizeof(payload) / 4, &status);
++ printf("A03 AUDIO scene: startup error=%d status=%08x\n", error, status);
++ if (error) return;
++
++ memset(payload, 0, sizeof(payload));
++ status = 0;
++ error = a03_audio_exchange(5, 0, 0, payload, sizeof(payload) / 4, &status);
++ printf("A03 AUDIO scene: shutdown error=%d status=%08x\n", error, status);
+ }
+ 
+ void a03_usb_console_start(void);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -610,6 +610,7 @@
+ }
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
++extern void a03_audio_scene_probe(void);
+ extern void a03_audio_vbc_probe(void);
+ extern void a03_audio_boot(void);
+ extern void a03_audio_status(void);
+@@ -626,7 +627,7 @@
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot|audio vbc gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot|audio vbc|audio scene gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -649,6 +650,7 @@
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
++ else if(!strcmp(command,"audio scene"))a03_audio_scene_probe();
+  else if(!strcmp(command,"audio vbc"))a03_audio_vbc_probe();
+  else if(!strcmp(command,"audio boot"))a03_audio_boot();
+  else if(!strcmp(command,"audio status"))a03_audio_status();
