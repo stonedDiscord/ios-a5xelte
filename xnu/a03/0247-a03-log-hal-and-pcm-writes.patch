@@ -1,0 +1,60 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -405,6 +405,7 @@
+ LCK_SPIN_DECLARE(a03_pcm_lock, &a03_pcm_group);
+ static uint32_t a03_pcm_ring[A03_PCM_CAPACITY];
+ static unsigned a03_pcm_head, a03_pcm_tail;
++static uint64_t a03_pcm_write_calls, a03_pcm_write_bytes;
+ static bool a03_pcm_live;
+ 
+ static int
+@@ -421,6 +422,8 @@
+    if (a03_pcm_head - a03_pcm_tail == A03_PCM_CAPACITY) break;
+    a03_pcm_ring[a03_pcm_head++ % A03_PCM_CAPACITY] = frames[i];
+   }
++  a03_pcm_write_calls++;
++  a03_pcm_write_bytes += bytes;
+   lck_spin_unlock(&a03_pcm_lock);
+  }
+  return 0;
+@@ -433,9 +436,23 @@
+  return 0;
+ }
+ 
++static int
++a03_pcm_ioctl(__unused dev_t dev, u_long command, caddr_t data,
++    __unused int flags, __unused struct proc *p)
++{
++ if (command == 0x80c87202) {
++  char message[200];
++  if (copyin(data, message, sizeof(message) - 1) != 0) return EFAULT;
++  message[sizeof(message) - 1] = 0;
++  printf("A03 AUDIO HAL: %s\n", message);
++  return 0;
++ }
++ return eno_ioctl(dev, command, data, flags, p);
++}
++
+ static const struct cdevsw a03_pcm_device = {
+  .d_open = a03_pcm_open_close, .d_close = a03_pcm_open_close, .d_read = eno_rdwrt,
+- .d_write = a03_pcm_write, .d_ioctl = eno_ioctl, .d_stop = eno_stop,
++ .d_write = a03_pcm_write, .d_ioctl = a03_pcm_ioctl, .d_stop = eno_stop,
+  .d_reset = eno_reset, .d_select = eno_select, .d_mmap = eno_mmap,
+  .d_strategy = eno_strat
+ };
+@@ -929,8 +946,13 @@
+     a03_touch_stream_tick();
+     IOSleep(1);
+    }
+-   printf("A03 AUDIO PCM: submitted=%llu nonzero=%llu\n",
+-       (unsigned long long)submitted, (unsigned long long)nonzero);
++   lck_spin_lock(&a03_pcm_lock);
++   uint64_t write_calls = a03_pcm_write_calls;
++   uint64_t write_bytes = a03_pcm_write_bytes;
++   lck_spin_unlock(&a03_pcm_lock);
++   printf("A03 AUDIO PCM: submitted=%llu nonzero=%llu writes=%llu bytes=%llu\n",
++       (unsigned long long)submitted, (unsigned long long)nonzero,
++       (unsigned long long)write_calls, (unsigned long long)write_bytes);
+   } else if (pa_gpio) {
+    /* Feed a quiet 1 kHz waveform for up to 100 ms. */
+    uint64_t deadline, now;
