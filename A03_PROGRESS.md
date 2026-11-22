@@ -13,7 +13,9 @@ Patch 0218 delays the first bundled-firmware stream attempt by two
 seconds after successful load and spaces up to five attempts by two
 seconds. A validated HID slice or explicit stop ends automatic retries.
 Exact application after 0217 and profile staging passed. The chosen
-timing remains a hardware trial.
+timing remains a hardware trial. CI 45015846547 builds commit 5025d28
+and supersedes DSP-only CI 45015450889 for BOOT0147. Private packaging
+session 4747 now verifies both changes before producing the image.
 
 ## 2026-11-22: BOOT0146 audio domains off, DSP startup candidate
 
