@@ -1,5 +1,10 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+Audio-enabled HFSX root CI 45044428311 uses the new speaker_audio
+input at 9f91836. It builds the HAL and stages it with VirtualAudio.
+This is an image build only. Keep the current USERDATA filesystem for
+in-place deployment. BOOT0171 and the kernel PCM sink remain pending.
+
 BOOT0170 CI 45043422319 was cancelled by branch concurrency before
 installation. The replacement BOOT0171 run is 45044136063 at 4b66e96.
 Session 23955 verifies the artifact, installs BOOT and captures the
