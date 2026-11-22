@@ -1,0 +1,14 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -352,7 +352,11 @@
+   payload[PORT_DATA / 4 + i * 2 + 1] = i < 3 ? i : 0;
+   payload[MIXER / 4 + i * 3 + 1] = i;
+  }
++ /* Route AP01 VBCIF into DAC0; keep the unused DAC1 on IIS. */
++ payload[DAC_OUT / 4] = 0;
++ payload[DAC_OUT / 4 + 1] = 1;
+  payload[DAC_OUT / 4 + 2] = 1;
++ payload[DAC_OUT / 4 + 3] = 0;
+  payload[IIS_MASTER / 4] = 1;
+  payload[IV_ADC / 4] = 1;
+  payload[VOICE_RECORD / 4] = 1;

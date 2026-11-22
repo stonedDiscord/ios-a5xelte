@@ -246,7 +246,8 @@ def main():
                      '0242-a03-hakios-pcm-device.patch',
                      '0243-a03-report-live-pcm-submission.patch',
                      '0244-a03-enable-external-speaker-amplifier.patch',
-                     '0245-a03-restart-touch-stream-after-errors.patch'):
+                     '0245-a03-restart-touch-stream-after-errors.patch',
+                     '0246-a03-route-ap01-to-vbc-dac0.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',
