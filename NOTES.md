@@ -1,3 +1,6 @@
+BOOT0150 is installed. NORMAL_AP01 startup and shutdown each returned
+status zero. CI 45020753150 builds the AP wake and FIFO probe.
+
 Patch 0222 adds the AP wake and FIFO status trial after 0221.
 BOOT0149 still answers DSP GET while the AP access gate is closed.
 

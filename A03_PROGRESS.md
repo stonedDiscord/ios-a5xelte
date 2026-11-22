@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — BOOT0150 playback scene accepted
+
+CI 45019384758 passed and BOOT-only upload succeeded. The DSP returned
+AGDSP_BOOT_OK and acknowledged NORMAL_AP01 startup and shutdown with
+status zero. PCM, codec output and audible playback remain unverified.
+CI 45020753150 builds 0353d0d for the AP wake and FIFO register trial.
+
 ## 2026-11-22 — VBC AP access candidate
 
 On BOOT0149, delayed audio status reports deep=1 sleep=0 system=7
