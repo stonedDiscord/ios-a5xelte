@@ -1,3 +1,8 @@
+A03 iOS speaker HAL CI 45014814033 builds the existing HakiOS plug-in
+as a standalone arm64 iOS 16 bundle. Kernel CI 45014207915 continues
+building the DSP status BOOT0146. BOOT0145 stays installed. The plug-in
+requires the A03 hardware PCM sink before playback can be verified.
+
 A03 audio bring-up starts from live BOOT0145. mediaserverd PID 28 is
 present. Stock evidence identifies VBC v4, SC2730, AP GPIO 40 speaker PA
 and DSP-backed 48 kHz routes. Patch 0216 stages a read-only `audio status`

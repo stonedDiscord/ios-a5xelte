@@ -85,6 +85,18 @@ rejection of offset, overlap and value errors. Exact byte equality to
 Android-generated profiles and DSP acceptance remain unverified.
 The inputs and output blobs are kept out of git.
 
+## 2026-11-22: iOS speaker HAL bundle build
+
+The existing HakiOS AudioServerPlugIn presents the Speaker object and
+writes stereo signed 16-bit LE PCM at 48 kHz to /dev/hakios-audio.
+Its bundle build now runs independently of the S7's graphics build,
+which reuses the same script. Shell syntax checks passed.
+A03 HAL CI 45014814033 at 9029242 verifies arm64, iOS 16 minimum,
+the exported factory and the ad-hoc signature. It is running.
+BOOT0146 kernel CI 45014207915 is also still building, with the
+artifact packaging job waiting. Neither the bundle nor a PCM sink
+has been installed on the phone.
+
 ## 2026-11-22 UTC — bundled touch firmware build recovered
 
 CI 44966189758 failed while compiling `bsd/dev/a03_usb_console.c`: both
