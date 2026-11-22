@@ -1,5 +1,14 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+BOOT0163 passed CI 45035381713, artifact/source verification and BOOT-only
+upload. Ping and DSP boot passed. The analog probe returned clock
+sequence=1, restored=1 and PMU0=0020. The digital probe returned gate
+readback 00990000, AUD_TOP_CTL=00000000 and AUD_DAC_CTL=000083f0, then
+completed with wake monitor 0, sleep 6 and power 0. BOOT0164 CI
+45036949973 at a676273 adds 48 kHz DAC programming and restoration under
+the verified gates. Session 45311 watches build, install and capture.
+Audible Settings playback remains pending.
+
 BOOT0163 CI 45035381713 builds fd8d629. Patch 0233 uses the stock
 SC2730 AGCP AUD and AUDIF gate bits 19 and 20 and the existing DSP wake
 sequence before reading AUD_TOP_CTL and AUD_DAC_CTL at 0x56750000.
