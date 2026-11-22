@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — BOOT0154 identifies disabled VBC clocks
+
+BOOT0154 passed CI 45023994730 and BOOT-only installation. The awake
+AUDCP AHB controller returned 0x00810000, with VBCIFD, VBC and VBC 24 MHz
+all disabled. Patch 0225 acquires those three gates using the stock set
+alias, verifies readback and wake state, and then attempts one AP01
+control read. It releases only gates acquired by the probe. Patch
+application and profile staging passed. CI 45025021246 builds 6711f54
+and session 60525 handles BOOT0155 packaging, installation and capture.
+
 ## 2026-11-22 — BOOT0153 audio wake verified
 
 CI 45022182506 passed; BOOT-only upload succeeded. Image SHA-256

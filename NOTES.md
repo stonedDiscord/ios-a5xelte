@@ -1,3 +1,7 @@
+BOOT0154 found all three VBC clocks gated after DSP wake. BOOT0155
+CI 45025021246 builds 6711f54 and session 60525 tests clock acquisition
+and a guarded AP01 read. Audible iOS playback remains unverified.
+
 BOOT0153 verified DSP wake after responsive startup. BOOT0154 CI
 45023994730 builds the guarded AUDCP AHB clock read in a49c8c7.
 Session 13394 handles packaging, install and capture.
