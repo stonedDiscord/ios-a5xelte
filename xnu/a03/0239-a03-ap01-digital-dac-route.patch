@@ -1,0 +1,92 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -444,7 +444,8 @@
+         clocks, (clocks >> 13) & 1, (clocks >> 14) & 1, (clocks >> 21) & 1);
+     const uint32_t vbc_clocks = (1U << 13) | (1U << 14) | (1U << 21);
+     /* Stock SC2730 AGCP accessor enables AUD and AUDIF auto-clock. */
+-    const uint32_t required = codec ? (1U << 19) | (1U << 20) : vbc_clocks;
++    const uint32_t dac_clocks = (1U << 19) | (1U << 20);
++    const uint32_t required = dac_clocks | (codec ? 0 : vbc_clocks);
+     uint32_t added = required & ~clocks;
+     if (added) a03_audio_write(ahb, 0x1000, added);
+     __asm__ volatile("dsb sy" ::: "memory");
+@@ -454,10 +455,10 @@
+         !(a03_audio_read(pmu, 0x850) & 8) &&
+         ((a03_audio_read(pmu, 0x860) >> 12) & 15) == 6 &&
+         !(a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK);
+-    if (codec && awake) {
+-     static vm_offset_t digital;
++    static vm_offset_t digital;
++    if (awake) {
+      if (!digital) digital = ml_io_map(0x56750000, 0x1000);
+-     if (digital) {
++     if (codec && digital) {
+       uint32_t top = a03_audio_read(digital, 0);
+       uint32_t dac = a03_audio_read(digital, 0x0c);
+       printf("A03 AUDIO digital: top=%08x dac=%08x\n", top, dac);
+@@ -481,7 +482,7 @@
+       }
+      }
+     }
+-    if (!codec && awake) {
++    if (!codec && awake && digital) {
+      static vm_offset_t vbc;
+      if (!vbc) vbc = ml_io_map(0x56480000, 0x1000);
+      if (vbc) {
+@@ -513,24 +514,39 @@
+         int trigger = a03_audio_exchange(7, 0, 0, NULL, 0, 1, NULL);
+         printf("A03 AUDIO FIFO: DSP trigger consumed=%u error=%d\n", !trigger, trigger);
+         if (!trigger) {
+-         /* Feed a quiet 1 kHz waveform for up to 100 ms. */
+-         uint64_t deadline, now;
+-         nanoseconds_to_deadline(100000000ULL, &deadline);
+-         unsigned submitted = 0;
+-         do {
+-          uint32_t frames[96];
+-          for (unsigned i = 0; i < 96; i++) {
+-           unsigned phase = (submitted + i) % 48;
+-           int sample = (int)(phase < 24 ? phase : 48 - phase) * 64 - 768;
+-           uint32_t channel = (uint16_t)sample;
+-           frames[i] = channel | (channel << 16);
++         const uint32_t channels = 5;
++         const uint32_t control = (1U << 15) | 0xf;
++         uint32_t top = a03_audio_read(digital, 0);
++         uint32_t dac = a03_audio_read(digital, 0x0c);
++         if (!(top & channels)) {
++          a03_audio_update(digital, 0x0c, control, 1);
++          a03_audio_update(digital, 0, channels, channels);
++          __asm__ volatile("dsb sy" ::: "memory");
++          if ((a03_audio_read(digital, 0) & channels) == channels &&
++              (a03_audio_read(digital, 0x0c) & control) == 1) {
++           /* Feed a quiet 1 kHz waveform for up to 100 ms. */
++           uint64_t deadline, now;
++           nanoseconds_to_deadline(100000000ULL, &deadline);
++           unsigned submitted = 0;
++           do {
++            uint32_t frames[96];
++            for (unsigned i = 0; i < 96; i++) {
++             unsigned phase = (submitted + i) % 48;
++             int sample = (int)(phase < 24 ? phase : 48 - phase) * 64 - 768;
++             uint32_t channel = (uint16_t)sample;
++             frames[i] = channel | (channel << 16);
++            }
++            unsigned remaining = 4800 - submitted;
++            submitted += a03_audio_submit_pcm(vbc, frames, remaining < 96 ? remaining : 96);
++            IOSleep(1);
++            clock_get_uptime(&now);
++           } while (now < deadline && submitted < 4800);
++           printf("A03 AUDIO FIFO: tone submitted=%u\n", submitted);
+           }
+-          unsigned remaining = 4800 - submitted;
+-          submitted += a03_audio_submit_pcm(vbc, frames, remaining < 96 ? remaining : 96);
+-          IOSleep(1);
+-          clock_get_uptime(&now);
+-         } while (now < deadline && submitted < 4800);
+-         printf("A03 AUDIO FIFO: tone submitted=%u\n", submitted);
++          a03_audio_update(digital, 0, channels, top);
++          a03_audio_update(digital, 0x0c, control, dac);
++          __asm__ volatile("dsb sy" ::: "memory");
++         }
+         }
+        }
+        printf("A03 AUDIO FIFO: enable=%08x left=%08x->%08x right=%08x->%08x\n",
