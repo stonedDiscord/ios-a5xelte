@@ -1,3 +1,20 @@
+## BOOT0179 HAL instrumentation result
+
+CI 45072149425 passed after fixing the HAL ioctl handler's user-address
+conversion. BOOT0179 was packaged and flashed to BOOT only. Its image SHA256
+is 29693f9e71c26baa00b6074d503ca64a1380995c2557e8e2992c0a6870e9fa52.
+
+The kernel now accepts the plugin diagnostic ioctl and logs HAL messages,
+PCM write-call counts and PCM byte counts. The BOOT0179 Settings ringtone
+capture still contains no HAL or PCM markers, although mediaserverd and
+SpringBoard are alive. Therefore this preview did not reach the plugin
+write path. Earlier BOOT0174 data remains the strongest evidence that one
+capture submitted 34,528 nonzero-capable frames through the kernel and
+activated the amplifier, producing hiss without the ringtone.
+
+The DAC0 VBCIF routing correction remains in BOOT0179. Its audible result
+is unverified. The installed root and USERDATA remain intact.
+
 ## Ringtone samples reach the kernel; DAC source corrected
 
 During a Settings preview, the live PCM diagnostic counted 34,528 frames
