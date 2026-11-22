@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+Audio root CI 45049709675 passed. The downloaded 16 GiB image SHA256
+is 594d22a1d0a34a985eff9a7cc529b498fadc4142de91ab9c3d39061ca65bb9ff.
+Offline HFS inspection found HakiosAudio and VirtualAudio together under
+/Library/Audio/Plug-Ins/HAL. The phone is in the Linux install reader,
+and its validated p55 LUN is /dev/disk/by-id/usb-Linux_File-Stor_Gadget_A03LinuxInstallV11-0:1.
+An exclusive read/write open returns EACCES. sudo requires a host password,
+and Heimdall reports no Download-mode device.
+
+BOOT0172 runs the playback device, reaches SC2730 depop-ready, submits
+4800 frames with DMA, restores speaker state, and completes teardown. This
+proves a kernel PCM path and register/FIFO activity, not audible output.
+The replacement root has not been installed. Normal Settings ringtone
+playback remains unverified.
+
 Audio root CI 45049709675 passed. The downloaded 16 GiB image
 matched its SHA256. Offline HFSX checks found the executable and
 Info.plist for HakiosAudio.driver and the VirtualAudio.plugin Info.plist
