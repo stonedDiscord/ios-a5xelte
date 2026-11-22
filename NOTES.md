@@ -1,3 +1,13 @@
+BOOT0168 submitted 249 frames and ended with both FIFO full flags set.
+BOOT0169 enabled the digital DAC during the same test and submitted
+4800 frames with the DMA enable bits clear. DSP shutdown and probe
+completion passed. The earlier throughput limit was resolved by the
+digital DAC setup in this comparison. CI 45043422319 builds 69ad289
+for BOOT0170, which holds the analog route during PCM feed and requires
+the SC2730 depop-ready bit before submitting the tone. Session 20957
+handles verification, BOOT-only install and capture. The HAL bundle
+can be staged in local root builds and is still absent from the phone.
+
 BOOT0167 passed CI 45040645597 and BOOT-only install. AP01 submitted
 16 stereo frames, DSP shutdown returned zero and the probe completed.
 Patch 0239 keeps the digital DAC enabled during the bounded PCM feed and
