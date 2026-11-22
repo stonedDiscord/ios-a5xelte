@@ -221,7 +221,8 @@ def main():
                      '0216-a03-audio-domain-status.patch',
                      '0217-a03-start-audio-dsp.patch',
                      '0218-a03-delay-touch-autostart.patch',
-                     '0219-a03-dsp-vbc-mailbox-probe.patch'):
+                     '0219-a03-dsp-vbc-mailbox-probe.patch',
+                     '0220-a03-serialized-vbc-transport.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

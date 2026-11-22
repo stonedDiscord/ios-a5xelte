@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22: BOOT0148 VBC mailbox reply
+
+CI 45017041887 and exact source/checksum packaging passed. BOOT-only
+flash completed. Image SHA-256
+763aa3fd33f4a979d7351336c0912ae9138b10bc05353f927adeb92881d288fe.
+The DSP returned AGDSP_BOOT_OK and channel 0 command 8 returned status
+zero and FIFO value zero. This verifies a control round trip. Touch
+autoload reached A55A and requested streaming with no stream error in
+the startup capture. Audible playback and cable-free touch remain
+unverified.
+
+0220 prepares serialized VBC exchanges with bounded command-block
+writes, fresh-reply matching, RX cursor advancement and timeout
+quarantine. Exact patch application and profile staging passed.
+
 ## 2026-11-22: BOOT0147 DSP ready and autonomous touch streaming
 
 CI 45015846547 passed and BOOT-only flash completed. Image SHA-256

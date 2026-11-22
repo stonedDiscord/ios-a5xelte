@@ -1,0 +1,151 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -172,7 +172,7 @@
+  a03_audio_update(pmu, 0xb98, A03_AGDSP_RESET, sys_reset);
+ }
+ 
+-/* Stock R2P0 mailbox and audio SMSG. One fixed get for initial bring-up. */
++/* Stock R2P0 mailbox and audio SMSG. Used on the serialized probe worker. */
+ #define A03_AUDIO_MAILBOX_PA 0x641c0000
+ #define A03_AUDIO_MAILBOX_CLOCK (1U << 2)
+ #define A03_AUDIO_DSP_CORE 5U
+@@ -197,22 +197,22 @@
+  return (cursor & (A03_AUDIO_RING_SIZE - 1)) * A03_AUDIO_MESSAGE_SIZE;
+ }
+ 
+-void a03_audio_vbc_probe(void);
+-void
+-a03_audio_vbc_probe(void)
++static int
++a03_audio_exchange(uint16_t command, uint32_t id, uint32_t stream,
++    uint32_t *params, unsigned words, uint32_t *status)
+ {
+  static vm_offset_t aon, mailbox;
+- static bool sent;
++ static bool poisoned;
+  vm_offset_t ipc = a03_audio_ready_ipc;
+- if (!ipc || sent) {
+-  printf("A03 AUDIO VBC: requires DSP ready and an unused request\n");
+-  return;
++ if (!ipc || poisoned || words > 0x400 / sizeof(*params)) {
++  printf("A03 AUDIO VBC: DSP unavailable, transport fault, or invalid payload\n");
++  return EIO;
+  }
+  if (!aon) aon = ml_io_map(0x64000000, 0x1000);
+  if (!mailbox) mailbox = ml_io_map(A03_AUDIO_MAILBOX_PA, 0x1000);
+  if (!aon || !mailbox) {
+   printf("A03 AUDIO VBC: mailbox mapping failed\n");
+-  return;
++  return EIO;
+  }
+ 
+  uint32_t tx = a03_audio_read(ipc, A03_AUDIO_TX_WRITE);
+@@ -220,7 +220,7 @@
+  if (tx != a03_audio_read(ipc, A03_AUDIO_TX_READ) ||
+      rx - a03_audio_read(ipc, A03_AUDIO_RX_READ) > A03_AUDIO_RING_SIZE) {
+   printf("A03 AUDIO VBC: ring state invalid or busy\n");
+-  return;
++  return EIO;
+  }
+ 
+  /* Stock AON mailbox gate. Leave it enabled after handing a message to
+@@ -230,7 +230,7 @@
+  __asm__ volatile("dsb sy" ::: "memory");
+  if (!(a03_audio_read(aon, 4) & A03_AUDIO_MAILBOX_CLOCK)) {
+   printf("A03 AUDIO VBC: mailbox clock unavailable\n");
+-  return;
++  return EIO;
+  }
+  unsigned poll;
+  for (poll = 0; poll < 20; poll++) {
+@@ -243,47 +243,67 @@
+  if (poll == 20) {
+   a03_audio_update(aon, 4, A03_AUDIO_MAILBOX_CLOCK, gate);
+   printf("A03 AUDIO VBC: mailbox blocked\n");
+-  return;
+- }
+-
+- /* sprd_vbc_kcontrol plus SMSG transport for channel 0, command 8. */
+- a03_audio_write(ipc, 0, A03_AUDIO_DAC0_FIFO_CFG);
+- a03_audio_write(ipc, 4, UINT32_MAX);
+- a03_audio_write(ipc, 8, 0);
++  return EIO;
++ }
++
++ /* Release old replies before posting the next serialized request. */
++ a03_audio_write(ipc, A03_AUDIO_RX_READ, rx);
++ for (unsigned i = 0; i < words; i++) {
++  a03_audio_write(ipc, i * sizeof(*params), params[i]);
++ }
+  unsigned slot = A03_AUDIO_TX + a03_audio_ring_slot(tx);
+- a03_audio_write(ipc, slot, A03_AUDIO_VBC_GET);
+- a03_audio_write(ipc, slot + 4, 0);
+- a03_audio_write(ipc, slot + 8, UINT32_MAX);
++ a03_audio_write(ipc, slot, command);
++ a03_audio_write(ipc, slot + 4, id);
++ a03_audio_write(ipc, slot + 8, stream);
+  a03_audio_write(ipc, slot + 12, A03_AGDSP_IPC_PA);
+  a03_audio_write(ipc, slot + 16, 0);
+  __asm__ volatile("dmb oshst" ::: "memory");
+  a03_audio_write(ipc, A03_AUDIO_TX_WRITE, tx + 1);
+  __asm__ volatile("dsb sy" ::: "memory");
+- a03_audio_write(mailbox, 4, 0);
+- a03_audio_write(mailbox, 8, A03_AUDIO_VBC_GET << 16);
++ a03_audio_write(mailbox, 4, id);
++ a03_audio_write(mailbox, 8, (uint32_t)command << 16);
+  a03_audio_write(mailbox, 0, A03_AUDIO_DSP_CORE);
+  a03_audio_write(mailbox, 12, 1);
+- sent = true;
+-
+- /* Preserve events in the receive ring. Ignore entries already present
+-  * before this request and bound the total scan on a malformed cursor. */
++
++
++ /* Match only fresh channel-zero replies and release each consumed slot. */
+  for (poll = 0; poll < 100; poll++) {
+   uint32_t pending = a03_audio_read(ipc, A03_AGDSP_RX_WRITE) - rx;
+   if (pending > A03_AUDIO_RING_SIZE) break;
+   __asm__ volatile("dmb oshld" ::: "memory");
+   for (unsigned index = 0; index < pending; index++) {
+    slot = A03_AGDSP_RX_OFFSET + a03_audio_ring_slot(rx + index);
+-   if (a03_audio_read(ipc, slot) != A03_AUDIO_VBC_GET) continue;
+-   uint32_t result = a03_audio_read(ipc, slot + 16);
+-   printf("A03 AUDIO VBC: GET reply status=%08x fifo=%08x\n",
+-       result, a03_audio_read(ipc, 8));
+-   return;
+-  }
++   uint32_t header = a03_audio_read(ipc, slot);
++   if (header == command) {
++    *status = a03_audio_read(ipc, slot + 16);
++    for (unsigned i = 0; i < words; i++) {
++     params[i] = a03_audio_read(ipc, i * sizeof(*params));
++    }
++    __asm__ volatile("dmb osh" ::: "memory");
++    a03_audio_write(ipc, A03_AUDIO_RX_READ, rx + index + 1);
++    return 0;
++   }
++  }
++  rx += pending;
++  a03_audio_write(ipc, A03_AUDIO_RX_READ, rx);
+   IOSleep(10);
+  }
+- printf("A03 AUDIO VBC: no GET reply tx_read=%u rx_write=%u\n",
++ poisoned = true;
++ printf("A03 AUDIO VBC: no reply tx_read=%u rx_write=%u\n",
+      a03_audio_read(ipc, A03_AUDIO_TX_READ),
+      a03_audio_read(ipc, A03_AGDSP_RX_WRITE));
++ return ETIMEDOUT;
++}
++
++void a03_audio_vbc_probe(void);
++void
++a03_audio_vbc_probe(void)
++{
++ uint32_t params[] = { A03_AUDIO_DAC0_FIFO_CFG, UINT32_MAX, 0 };
++ uint32_t status;
++ if (!a03_audio_exchange(A03_AUDIO_VBC_GET, 0, UINT32_MAX, params, 3, &status)) {
++  printf("A03 AUDIO VBC: GET reply status=%08x fifo=%08x\n", status, params[2]);
++ }
+ }
+ 
+ void a03_usb_console_start(void);

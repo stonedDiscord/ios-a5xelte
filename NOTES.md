@@ -1,3 +1,7 @@
+BOOT0148 is installed and returned a successful VBC GET after DSP boot.
+Patch 0220 prepares repeatable exchanges for stream setup. Audible iOS
+playback and cable-free physical touch remain unverified.
+
 BOOT0147 installed and DSP returned AGDSP_BOOT_OK. Touch started from
 bundled firmware and passed 49 validated slices before any host touch-start
 command. Cable-free physical test requested. CI 45017041887 builds 0219
