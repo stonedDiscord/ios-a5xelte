@@ -1,3 +1,25 @@
+## 2026-11-22: Apple-logo report and BOOT-only recovery
+
+The user reported that the display remained at the Apple logo. During the
+BOOT0172 session, the live console showed mediaserverd, backboardd and
+SpringBoard alive. Display telemetry still showed only four completed GPU
+copies. A dispatched Home event did not increase that count. The sampled
+console contained no CPU panic.
+
+Sent the documented CDC Download reset and flashed the existing BOOT0124
+CPU-control image to BOOT only. Its SHA256 is
+869f9c901071ba12359a0613e10c63e158e880baa17debc291d8f13ee90e0190.
+GPT, USERDATA and the installed audio root were left intact. After reboot,
+XNU, mediaserverd, backboardd and SpringBoard were present. Vsync advanced,
+while the first display probes showed no swaps. A later probe counted
+five CPU-rendered copies with GPU copies at zero. The next sample stayed at
+five, so continuous frame progress is not established. A dispatched Home
+event returned success, which is not UI acknowledgement. The physical
+post-reboot screen is awaiting confirmation.
+
+Current BOOT is 0124 CPU-control. Audio playback remains unverified. The
+installed p55 root still contains the audio-enabled image.
+
 # Galaxy A03 SM-A035G — active bring-up
 
 ## BOOT0172 and installed audio root
