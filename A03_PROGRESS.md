@@ -38,6 +38,9 @@ boot vector in this mode. The startup and IPC handshake still need
 verification on XNU before porting that sequence.
 
 
+CI 45014207915 builds ed3b966 and supersedes 45014140606, which
+used the reversed labels. BOOT0145 remains installed.
+
 ## 2026-11-22 UTC — bundled touch firmware build recovered
 
 CI 44966189758 failed while compiling `bsd/dev/a03_usb_console.c`: both
