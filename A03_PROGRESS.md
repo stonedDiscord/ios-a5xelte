@@ -27,6 +27,17 @@ before enabling clocks or trying to stream PCM.
 
 # Galaxy A03 SM-A035G — active bring-up
 
+The Qogirl6 PMU definitions and stock audiocp_boot driver identify 0x544
+bits 12:8 as system and 20:16 as DSP. The agdsp-access DT labels for
+those masks are reversed, so the probe uses the PMU definitions. That
+does not affect the stock access test, which requires both fields to be
+zero. The live DT sets dsp-reboot-mode=1. Linux's audiocp_boot exposes an
+agdsp image download into the 0x89000000 reservation and releases system
+and core reset through syscon operations. It skips programming the DDR
+boot vector in this mode. The startup and IPC handshake still need
+verification on XNU before porting that sequence.
+
+
 ## 2026-11-22 UTC — bundled touch firmware build recovered
 
 CI 44966189758 failed while compiling `bsd/dev/a03_usb_console.c`: both

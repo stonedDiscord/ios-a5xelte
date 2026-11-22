@@ -21,7 +21,7 @@
 + uint32_t sleep = *(volatile uint32_t *)(pmu + 0x860);
 + uint32_t power = *(volatile uint32_t *)(pmu + 0x544);
 + uint32_t access = *(volatile uint32_t *)(aon + 0x14c);
-+ printf("A03 AUDIO: deep=%u sleep=%u dsp=%u system=%u access=%u\n",
++ printf("A03 AUDIO: deep=%u sleep=%u system=%u dsp=%u access=%u\n",
 +     (control >> 3) & 1, (sleep >> 12) & 15, (power >> 8) & 31,
 +     (power >> 16) & 31, (access >> 5) & 1);
 +}
