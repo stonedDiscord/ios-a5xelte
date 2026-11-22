@@ -97,6 +97,25 @@ BOOT0146 kernel CI 45014207915 is also still building, with the
 artifact packaging job waiting. Neither the bundle nor a PCM sink
 has been installed on the phone.
 
+## 2026-11-22: BOOT0146 packaged and HAL bundle verified
+
+CI 45014207915 succeeded from ed3b966. The packaging job verified the
+kernel artifact checksum, exact USB/probe source files, audio diagnostic
+markers, SMP markers, and the stock DT RAM exclusions. BOOT0146 uses
+the BOOT0145 arguments and bundled validated touch firmware. BOOT SHA-256
+0fb33e36c60f0558baa3efc584478fc3b11ffcd526b381c2f5f21636c32f8680.
+The installed PIT uses lowercase boot. The first Heimdall attempt passed
+uppercase BOOT and returned partition-not-found before uploading, then
+rebooted the existing phone image. A retry watcher waits for CDC or
+Download mode and will use lowercase boot. No probe sample yet.
+
+HAL CI 45014940084 succeeded from f8079c9. Earlier jobs failed on lipo
+argument order and checksum traversal of the code signature directory.
+Downloaded the signed bundle privately and verified its three artifact
+checksums. It is an arm64 Mach-O bundle with iOS 16.0 minimum and the
+expected exported factory. Userspace bundle deployment and PCM playback
+remain pending.
+
 ## 2026-11-22 UTC — bundled touch firmware build recovered
 
 CI 44966189758 failed while compiling `bsd/dev/a03_usb_console.c`: both
