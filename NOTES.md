@@ -1,3 +1,10 @@
+Audio root CI 45049709675 passed. The downloaded 16 GiB image
+matched its SHA256. Offline HFSX checks found the executable and
+Info.plist for HakiosAudio.driver and the VirtualAudio.plugin Info.plist
+in /Library/Audio/Plug-Ins/HAL. The host account still lacks write access
+to the validated p55 USB LUN. Installation and audible iOS playback
+are pending.
+
 Offline HFS catalog inspection of artifact 45044428311 confirmed
 VirtualAudio and HakiosAudio in their respective Library and System HAL
 directories. HakiosAudio uses an AudioServerPlugIn factory type.
