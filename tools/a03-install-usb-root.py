@@ -72,11 +72,15 @@ def main():
     ap.add_argument('image',type=Path)
     ap.add_argument('--target',type=Path,default=Path(TARGET))
     ap.add_argument('--write',action='store_true',help='authorized write of exactly16GiB to validated USERDATA LUN')
+    ap.add_argument('--source-sha256',help='expected image SHA256 from the verified build artifact')
     a=ap.parse_args()
+    expected=a.source_sha256 or ROOT_SHA
+    if len(expected)!=64 or any(c not in '0123456789abcdef' for c in expected):
+        ap.error('source SHA256 must be 64 lowercase hex digits')
     if a.image.stat().st_size!=ROOT_BYTES:ap.error('requires exact16GiB source')
     src=os.open(a.image,os.O_RDONLY)
     actual=digest(src,ROOT_BYTES)
-    if actual!=ROOT_SHA:raise ValueError('source SHA256 mismatch: '+actual)
+    if actual!=expected:raise ValueError('source SHA256 mismatch: '+actual)
     target,rdev=identity(a.target,a.write)
     fd=os.open(target,(os.O_RDWR if a.write else os.O_RDONLY)|os.O_CLOEXEC|os.O_EXCL)
     if os.fstat(fd).st_rdev!=rdev:raise ValueError('target changed during open')
@@ -103,7 +107,7 @@ def main():
         os.fsync(fd)
         # Aligned O_DIRECT reads bypass host cache without privileged BLKFLSBUF.
         actual=direct_digest(fd,ROOT_BYTES)
-        if actual!=ROOT_SHA:raise ValueError('DEVICE READBACK SHA256 MISMATCH: '+actual)
+        if actual!=expected:raise ValueError('DEVICE READBACK SHA256 MISMATCH: '+actual)
         print('FULL DEVICE READBACK PASS '+actual,flush=True)
     print('CATALOG_HEADER '+os.pread(fd,32,0x2cd82000).hex(),flush=True)
     print('CATALOG_ROOT '+os.pread(fd,32,0x2cfa6000).hex(),flush=True)
