@@ -1,3 +1,7 @@
+BOOT0157 confirmed both AP01 enable bits but FIFO pointers stayed static.
+BOOT0158 CI 45029089674 adds DSP playback trigger. Session 1354 handles
+packaging, BOOT-only install and capture.
+
 BOOT0156 confirmed AP01 access with the VBC clock gates enabled. Both
 disabled FIFO pointers stayed static. BOOT0157 CI 45027442043 and
 session 64382 test prefill with both AP01 channels enabled.

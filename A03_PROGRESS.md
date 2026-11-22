@@ -1,5 +1,16 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — BOOT0157 FIFO enable and BOOT0158 DSP trigger
+
+BOOT0157 passed CI 45027442043 and BOOT-only upload. Both AP01 channel
+enable bits read back as set (0x300), but both FIFO status registers
+stayed at 0x00140000. PCM acceptance is still unverified.
+
+Patch 0228 starts NORMAL_AP01 before enabling AP01, posts the stock
+asynchronous trigger command and checks consumption by the DSP. CI
+45029089674 builds 65e7db1. Private session 1354 tests BOOT0158 after
+CI, exact source verification and a responsive startup.
+
 ## 2026-11-22 — BOOT0155 and BOOT0156 AP01 results
 
 BOOT0155 passed CI 45025021246 and BOOT-only upload. The clock gate
