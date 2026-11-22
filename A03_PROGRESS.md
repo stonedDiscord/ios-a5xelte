@@ -1,3 +1,24 @@
+## Ringtone samples reach the kernel; DAC source corrected
+
+During a Settings preview, the live PCM diagnostic counted 34,528 frames
+submitted to AP01, including 22,823 nonzero frames. The external speaker
+amplifier activated, and the user heard hiss that followed the preview.
+They still did not hear the ringtone. DSP startup, speaker depop, AP01
+teardown and register restoration all completed successfully.
+
+Review of the stock VBC startup structure found the playback scene was
+setting the DAC1 selector ID word instead of DAC0's source value. DAC0
+therefore remained on the default IIS source while AP01 received samples.
+Patch 0246 selects VBCIF for DAC0 and preserves the unused DAC1 IIS route.
+
+Patch 0245 now reloads the bundled touch firmware after a failed stream,
+waits two seconds for firmware startup, then starts HID again. It permits
+up to five reloads per boot and cancels pending work on explicit stop.
+CI 45069031752 builds d70b734. BOOT-only installation and live tests are
+pending. Current BOOT0174 touch was manually reloaded and restarted after
+the user reported no response; post-reload physical response awaits a
+new test.
+
 ## BOOT0174 touch stream stopped after transient errors
 
 During the ringtone capture, the automatic HID stream produced 80 contact
