@@ -1,5 +1,8 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+The user tested several ringtone previews in iOS Settings and heard no
+audio. The A03 audio plug-in and PCM device are still pending deployment.
+
 ## BOOT0160 codec read and BOOT0161 trial
 
 BOOT0160 passed CI 45032216438 and returned PMU0=0000, CDC14=0000,

@@ -1,3 +1,6 @@
+The user tested several ringtone previews in iOS Settings and heard no
+audio. The A03 audio plug-in and PCM device are still pending deployment.
+
 BOOT0160 returned zero for the three SC2730 codec registers and logged
 A55A followed by an automatic HID stream request. BOOT0161 CI 45033595131
 runs patch 0231 to check those registers with the analog clocks enabled.
