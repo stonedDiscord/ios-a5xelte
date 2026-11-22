@@ -1,3 +1,10 @@
+BOOT0167 passed CI 45040645597 and BOOT-only install. AP01 submitted
+16 stereo frames, DSP shutdown returned zero and the probe completed.
+Patch 0239 keeps the digital DAC enabled during the bounded PCM feed and
+restores it before audio clock teardown. The local iOS root builder also
+accepts the HakiosAudio.driver bundle for staging. The bundle is still
+pending installation on the phone, and Settings previews remain silent.
+
 Patch 0238 queues a quiet 1 kHz PCM waveform through the AP01 FIFO
 for up to 100 ms and 4800 frames. Patch-stack application passed.
 BOOT0168 CI 45041018579 builds e3ffbf6 on macos-26-intel. Session 5179
