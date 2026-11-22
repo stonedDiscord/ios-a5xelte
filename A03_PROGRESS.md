@@ -1,5 +1,18 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+BOOT0172 passed CI 45045874873 and BOOT-only install. It registered
+/dev/hakios-audio. The separate hardware probe reported depop ready,
+submitted 4800 frames and completed teardown. Acoustic output and
+normal Settings playback remain unverified.
+
+Audio root CI 45044428311 passed HFSX verification and the downloaded
+16 GiB image matches the artifact SHA256. Keep HakiosAudio in the
+System HAL directory specified by its driver source and VirtualAudio
+in the Library HAL directory. The phone is running the temporary Linux
+reader exposing validated p55 via A03LinuxInstallV11 LUN1. Host access
+to that LUN requires the scoped ACL requested from the user. The
+audio root image has yet to be written.
+
 BOOT0171 passed CI 45044136063 and BOOT-only install. SC2730 depop
 reported 019f and ready=1, AP01 submitted 4800 frames with DMA bits 3,
 and speaker restoration and DSP shutdown passed. Acoustic output
