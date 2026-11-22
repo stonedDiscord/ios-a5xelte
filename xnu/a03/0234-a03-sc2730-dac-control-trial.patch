@@ -1,0 +1,27 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -443,6 +443,24 @@
+       uint32_t top = a03_audio_read(digital, 0);
+       uint32_t dac = a03_audio_read(digital, 0x0c);
+       printf("A03 AUDIO digital: top=%08x dac=%08x\n", top, dac);
++      /* AUD_TOP_CTL DAC L/R and AUD_DAC_CTL mute/rate fields. */
++      const uint32_t channels = (1U << 0) | (1U << 2);
++      const uint32_t control = (1U << 15) | 0xf;
++      if (!(top & channels)) {
++       a03_audio_update(digital, 0x0c, control, 1);
++       a03_audio_update(digital, 0, channels, channels);
++       __asm__ volatile("dsb sy" ::: "memory");
++       uint32_t enabled = a03_audio_read(digital, 0);
++       uint32_t configured = a03_audio_read(digital, 0x0c);
++       a03_audio_update(digital, 0, channels, top);
++       a03_audio_update(digital, 0x0c, control, dac);
++       __asm__ volatile("dsb sy" ::: "memory");
++       bool restored = a03_audio_read(digital, 0) == top &&
++           a03_audio_read(digital, 0x0c) == dac;
++       printf("A03 AUDIO digital: configured=%u restored=%u top=%08x dac=%08x\n",
++           (enabled & channels) == channels && (configured & control) == 1,
++           restored, enabled, configured);
++      }
+      }
+     }
+     if (!codec && awake) {
