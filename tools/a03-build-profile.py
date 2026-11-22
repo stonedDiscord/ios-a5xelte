@@ -236,7 +236,8 @@ def main():
                      '0232-a03-sc2730-speaker-clock-trial.patch',
                      '0233-a03-sc2730-digital-codec-read.patch',
                      '0234-a03-sc2730-dac-control-trial.patch',
-                     '0235-a03-sc2730-analog-dac-power.patch'):
+                     '0235-a03-sc2730-analog-dac-power.patch',
+                     '0236-a03-sc2730-speaker-mixer.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

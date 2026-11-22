@@ -1,0 +1,25 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -707,12 +707,21 @@
+   /* ANA_DCL1: FGU, driver soft-start and PA clocks. */
+   {0x1100, 0x0007, 0x0007},
+   /* audio_dcl_event releases DCL, driver, depop and interrupt resets. */
+-  {0x10fc, 0x8601, 0x8601}, {0x1100, 0x0400, 0x0400}
++  {0x10fc, 0x8601, 0x8601}, {0x1100, 0x0400, 0x0400},
++  /* Audio die DAC enable, speaker DAC, then the left speaker mixer. */
++  {0x0108, 0x0014, 0x0014},
++  {0x108c, 0x0008, 0x0008},
++  {0x1098, 0x0010, 0x0010}
+  };
+  uint32_t saved[sizeof(clocks) / sizeof(clocks[0])], readback;
+  unsigned touched = 0;
+  int ok = 1;
+  for (unsigned i = 0; i < sizeof(clocks) / sizeof(clocks[0]); i++) {
++  if (clocks[i].reg == 0x1000 && touched == 4 &&
++      (!adi_read(0x10ac, &speaker) || (speaker & (1U << 6)))) {
++   ok = 0;
++   break;
++  }
+   if (!adi_read(clocks[i].reg, &saved[i])) {
+    ok = 0;
+    break;
