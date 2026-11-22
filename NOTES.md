@@ -1,7 +1,8 @@
 BOOT0146 live XNU DSP sample is deep=1 sleep=0 system=7 dsp=7 access=0.
 Patch 0217 adds explicit stock-mode DSP startup with the privately
 bundled matching revision-5 AGCP image. Host packaging passes. Next
-build and run `audio boot` and verify the DSP's SMSG ready message.
+run `audio boot` and verify the DSP's SMSG ready message. CI 45015450889
+builds dbeec15. Private prepare-audio-0147.py waits for its artifact.
 BOOT0146 touch firmware reports A55A, but automatic streaming failed
 twice at its first slice. Audible iOS playback remains pending.
 

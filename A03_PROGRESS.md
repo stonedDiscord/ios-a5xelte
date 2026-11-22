@@ -18,7 +18,8 @@ SMSG window for the full DSP boot-ready tuple, and restores saved power
 control fields on timeout. No external amplifier or codec enable. No DSP
 partition write. Exact 0216-tree patch application, profile staging and
 host-only BOOT pack/rebuild with the revision-5 image passed. CI and
-hardware validation of 0217 are pending.
+hardware validation of 0217 are pending. CI 45015450889 builds dbeec15.
+Private BOOT0147 packaging waits on session 85118.
 
 ## 2026-11-22: A03 speaker playback baseline and DSP status probe
 
