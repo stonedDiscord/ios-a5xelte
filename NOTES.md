@@ -1,3 +1,11 @@
+Settings ringtone previews are still silent per the latest physical test.
+BOOT0165 adds SC2730 analog DAC power and reset sequencing in patch 0235.
+Local patch application and iOS profile staging passed. CI 45037358504
+builds 92f68c7 on macos-26-intel so BOOT0164 can finish independently.
+Session 25117 verifies the artifact and waits for the BOOT0164 capture
+before attempting the BOOT0165 install. Both builds are in progress.
+The iOS PCM device and HAL deployment remain pending.
+
 BOOT0163 passed CI 45035381713, artifact/source verification and BOOT-only
 upload. Ping and DSP boot passed. The analog probe returned clock
 sequence=1, restored=1 and PMU0=0020. The digital probe returned gate
