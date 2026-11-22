@@ -1,0 +1,71 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -550,7 +550,7 @@
+  */
+ static uint8_t a03_touch_firmware[80*1024];
+ static unsigned a03_touch_fw_size,a03_touch_fw_used;
+-static int a03_touch_ram_loaded;
++static int a03_touch_ram_loaded, a03_touch_boot_done;
+ static int a03_touch_hex(char c) {
+  if(c>='0'&&c<='9')return c-'0';
+  if(c>='a'&&c<='f')return c-'a'+10;
+@@ -590,7 +590,11 @@
+ }
+ void a03_touch_probe(const char *command);
+ void a03_touch_probe(const char *command) {
+- if(!strcmp(command,"stop")){a03_touch_stream_stop();return;}
++ if(!strcmp(command,"stop")) {
++  a03_touch_boot_done=1;
++  a03_touch_stream_stop();
++  return;
++ }
+  if(!strcmp(command,"streamstatus")) {
+   printf("A03 TOUCH streaming=%u slices=%u events=%u\n",a03_touch_streaming,
+       a03_touch_stream_slices,a03_touch_emit_count);return;
+@@ -675,6 +679,7 @@
+    e=a03_jd_poll_slice(&b,16,&a03_touch_stream_state,0,a03_touch_emit,NULL,&valid);
+    a03_touch_stream_slices++;
+    stream_ok=!e&&valid==16;
++   if(stream_ok&&a03_touch_emit_hid)a03_touch_boot_done=1;
+    if(!stream_ok)printf("A03 TOUCH stream error=%d valid=%u\n",e,valid);
+   } else e=a03_jd_poll(&b,300,a03_touch_emit,NULL,&valid);
+   if(!streaming)printf("A03 TOUCH poll result=%d valid=%u events=%u hid=%u; final release\n",
+@@ -691,9 +696,11 @@
+ }
+ static void a03_touch_boot_tick(void) {
+  static unsigned ticks,attempt;
+- if(ticks>=3000 || a03_touch_streaming || ++ticks%10)return;
+- if(!(a03_hid_action(0)&2) || attempt>=2)return;
+- if(!attempt) {
++ static uint64_t retry_at;
++ uint64_t now;
++ if(a03_touch_boot_done || a03_touch_streaming || ticks>=3000 || ++ticks%10)return;
++ if(!(a03_hid_action(0)&2))return;
++ if(!retry_at) {
+   DTEntry chosen;
+   const void *firmware;
+   unsigned int size;
+@@ -709,9 +716,22 @@
+   a03_touch_fw_used=a03_touch_fw_size=size;
+   printf("A03 TOUCH boot: loading bundled firmware\n");
+   a03_touch_probe("load");
++  if(!a03_touch_ram_loaded) {
++   a03_touch_boot_done=1;
++   return;
++  }
++  nanoseconds_to_deadline(2000000000ULL,&retry_at);
++  return;
++ }
++ clock_get_uptime(&now);
++ if(now<retry_at)return;
++ if(attempt==5 || !a03_touch_ram_loaded) {
++  a03_touch_boot_done=1;
++  return;
+  }
+  attempt++;
+- if(a03_touch_ram_loaded)a03_touch_probe("start");
++ a03_touch_probe("start");
++ nanoseconds_to_deadline(2000000000ULL,&retry_at);
+ }
+ static void a03_touch_stream_tick(void) {
+  if(a03_touch_streaming)a03_touch_probe("streamtick");

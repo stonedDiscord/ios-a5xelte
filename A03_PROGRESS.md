@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22: BOOT0146 touch recovery and delayed autostart
+
+User reported no physical touch after boot. On the running BOOT0146,
+explicit `touch load` returned 0 and A55A. An explicit `touch start`
+after the reload produced idle reports and `streamstatus` advanced from
+113 to 173 validated slices. HID streaming remains enabled. Physical
+gesture and visible response need confirmation. No reboot or partition
+write for live recovery.
+
+Patch 0218 delays the first bundled-firmware stream attempt by two
+seconds after successful load and spaces up to five attempts by two
+seconds. A validated HID slice or explicit stop ends automatic retries.
+Exact application after 0217 and profile staging passed. The chosen
+timing remains a hardware trial.
+
 ## 2026-11-22: BOOT0146 audio domains off, DSP startup candidate
 
 BOOT0146 XNU CDC reports `A03 AUDIO: deep=1 sleep=0 system=7 dsp=7

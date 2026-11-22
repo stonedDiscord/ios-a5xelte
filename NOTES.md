@@ -1,3 +1,8 @@
+BOOT0146 touch recovered live after explicit reload and restart. HID
+streaming is active and validated slice counts advance. Physical input
+confirmation is pending. Patch 0218 delays and bounds automatic starts
+after firmware load, to address the initial all-FF report failures.
+
 BOOT0146 live XNU DSP sample is deep=1 sleep=0 system=7 dsp=7 access=0.
 Patch 0217 adds explicit stock-mode DSP startup with the privately
 bundled matching revision-5 AGCP image. Host packaging passes. Next
