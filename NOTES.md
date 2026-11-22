@@ -1,3 +1,24 @@
+## BOOT0174 external speaker test
+
+CI 45065385204 passed at bafd519. BOOT0174 is an exact verified XNU
+kernel packaged with CPU rendering and bundled touch firmware. The
+BOOT-only flash succeeded. Image SHA256
+281ffb5756c1d5d774305eb32c42be67ff304d359b5869f73b7ac91dd7bfe92e.
+
+The stock SM-A035G device tree assigns the external speaker amplifier
+to active-high GPIO40. The stock audio hook pulses it ten times at
+2 microseconds per edge and waits 10 milliseconds. Patch 0244 applies
+that sequence around playback and restores the GPIO state afterward.
+The direct AP01 tone completed with external amp setup reported enabled,
+4800 submitted frames, speaker restoration, and DSP shutdown status zero.
+The user is checking whether the tone was audible. Settings ringtone
+playback remains unresolved.
+
+The latest post-boot probe reports touch HID streaming active at 1014
+slices and 0 events. The user previously confirmed touch was back on
+BOOT0173. Physical touch on BOOT0174 is not yet reconfirmed. CPU display
+telemetry records 39 completed swaps and 35 CPU copies.
+
 ## A03 external speaker amplifier
 
 The direct AP01 probe submitted 4800 tone frames and completed teardown.
