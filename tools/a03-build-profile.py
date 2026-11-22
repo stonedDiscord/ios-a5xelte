@@ -218,7 +218,8 @@ def main():
                      '0213-a03-iosurface-plane-result-layout.patch',
                      '0214-a03-gpu-clean-completion-window.patch',
                      '0215-a03-touch-auto-load.patch',
-                     '0216-a03-audio-domain-status.patch'):
+                     '0216-a03-audio-domain-status.patch',
+                     '0217-a03-start-audio-dsp.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

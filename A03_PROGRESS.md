@@ -1,5 +1,25 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22: BOOT0146 audio domains off, DSP startup candidate
+
+BOOT0146 XNU CDC reports `A03 AUDIO: deep=1 sleep=0 system=7 dsp=7
+access=0`. The DSP and audio system are powered off, and AP access is
+closed. Bundled touch loaded successfully and reported A55A. Both
+automatic stream attempts stopped at their first slice with error -4;
+physical touch remains unverified on this boot.
+
+Patch 0217 adds explicit `audio boot` in the opt-in worker. The packaging
+tools pin the matching revision-5 AGCP image and carry it as a separate
+loader segment in managed RAM, with a compact ADT location. This preserves
+the existing 1 MiB ADT bound. Startup copies into the stock DSP reservation,
+clears only command and SMSG regions, then runs the stock mode-1 PMU/AON
+reset sequence. It preserves the retained boot vector, samples a bounded
+SMSG window for the full DSP boot-ready tuple, and restores saved power
+control fields on timeout. No external amplifier or codec enable. No DSP
+partition write. Exact 0216-tree patch application, profile staging and
+host-only BOOT pack/rebuild with the revision-5 image passed. CI and
+hardware validation of 0217 are pending.
+
 ## 2026-11-22: A03 speaker playback baseline and DSP status probe
 
 Live BOOT0145 USB `ps` reports mediaserverd PID 28 and SpringBoard PID 25.

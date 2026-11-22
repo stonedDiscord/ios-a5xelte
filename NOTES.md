@@ -1,8 +1,9 @@
-A03 audio BOOT0146 is packaged from successful CI 45014207915. The first
-upload used uppercase BOOT and Heimdall rejected it before transfer.
-The lowercase boot retry completed the BOOT-only upload and rebooted.
-Capture session 75953 waits for the new XNU CDC and audio status. HAL CI 45014940084 passed. The signed arm64 iOS 16 bundle is
-downloaded and checksum-verified. Await DSP status and the PCM sink.
+BOOT0146 live XNU DSP sample is deep=1 sleep=0 system=7 dsp=7 access=0.
+Patch 0217 adds explicit stock-mode DSP startup with the privately
+bundled matching revision-5 AGCP image. Host packaging passes. Next
+build and run `audio boot` and verify the DSP's SMSG ready message.
+BOOT0146 touch firmware reports A55A, but automatic streaming failed
+twice at its first slice. Audible iOS playback remains pending.
 
 A03 audio bring-up starts from live BOOT0145. mediaserverd PID 28 is
 present. Stock evidence identifies VBC v4, SC2730, AP GPIO 40 speaker PA

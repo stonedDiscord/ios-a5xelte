@@ -140,7 +140,8 @@ def adt_dram(adt_blob):
             struct.unpack('<Q', chosen.prop('dram-size'))[0])
 
 
-def build(kernel_path, adt_path, cmdline, ramdisk_path=None, *, a03_touch_firmware=None):
+def build(kernel_path, adt_path, cmdline, ramdisk_path=None, *,
+          a03_touch_firmware=None, a03_audio_firmware=None):
     buf = bytearray(open(kernel_path, 'rb').read())
     m = parse_macho(buf)
     nfix = apply_chained_fixups(buf, m)
@@ -182,6 +183,24 @@ def build(kernel_path, adt_path, cmdline, ramdisk_path=None, *, a03_touch_firmwa
         adt_blob = add_ramdisk_to_adt(adt_blob, rd_pa, rd_size)
         ramdisk = (hex(rd_pa), hex(rd_size))
 
+    if a03_audio_firmware is not None:
+        from hashlib import sha256
+        from pathlib import Path
+
+        firmware = Path(a03_audio_firmware).read_bytes()
+        expected = '4f5f034dd30b6746776da2715f932525e38fcee0c6d65b39d3e5f966518899cf'
+        if len(firmware) != 0x600000 or sha256(firmware).hexdigest() != expected:
+            raise ValueError('Expected SM-A035G A035GXXS5CXA1 AGCP firmware')
+        root, _ = adt.parse(adt_blob)
+        chosen = next(child for child in root.children if child.name == 'chosen')
+        if chosen.prop('a03-audio-firmware') is not None:
+            raise ValueError('ADT already contains A03 audio firmware location')
+        phys = kernel_end - virt_base + PHYS_BASE
+        chosen.props.append(('a03-audio-firmware', 0, struct.pack('<2Q', phys, len(firmware))))
+        adt_blob = adt.serialize(root)
+        pieces.append((kernel_end, len(firmware), firmware))
+        kernel_end += len(firmware)
+
     hdr_size = SEG_TABLE + 32 * len(pieces)
     out = bytearray(hdr_size)
     seg_table = []
@@ -213,9 +232,11 @@ if __name__ == '__main__':
     ap.add_argument('--cmdline', default='debug=0xc serial=3 cpus=1 keepsyms=1')
     ap.add_argument('--ramdisk', help='root image for md0 (boot with rd=md0)')
     ap.add_argument('--a03-touch-firmware', help='private SM-A035G Jadard firmware')
+    ap.add_argument('--a03-audio-firmware', help='private A035GXXS5CXA1 AGCP firmware')
     a = ap.parse_args()
     blob, info = build(a.kernel, a.adt, a.cmdline, a.ramdisk,
-                       a03_touch_firmware=a.a03_touch_firmware)
+                       a03_touch_firmware=a.a03_touch_firmware,
+                       a03_audio_firmware=a.a03_audio_firmware)
     open(a.out, 'wb').write(blob)
     for k, v in info.items():
         if k != 'segs':

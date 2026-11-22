@@ -22,6 +22,7 @@ def main():
     ap.add_argument('output', type=Path)
     ap.add_argument('--smp-kernel', type=Path, help='exact kernel Mach-O used in payload; install loader SMP handoff')
     ap.add_argument('--memory-dtb', type=Path, help='live A03 DTB, required for expanded RAM')
+    ap.add_argument('--a03-audio-firmware', type=Path, help='exact private AGCP image used in payload')
     a = ap.parse_args()
     b = a.base.read_bytes()
     assert hashlib.sha256(b).hexdigest() == probe.BASE_SHA256, 'wrong base BOOT'
@@ -46,14 +47,22 @@ def main():
     chosen = next(n for n in tree.children if n.name == 'chosen')
     assert chosen.prop('dram-base') == struct.pack('<Q', phys)
     assert chosen.prop('dram-size') == struct.pack('<Q', mem)
+    audio_location = chosen.prop('a03-audio-firmware')
+    if bool(audio_location) != bool(a.a03_audio_firmware) or (audio_location and not a.smp_kernel):
+        ap.error('an audio payload requires both --a03-audio-firmware and --smp-kernel')
     if a.smp_kernel:
         from mkpayload import build
         # Rebuilding with the exact ADT/cmdline proves kernel symbol provenance.
         command=payload[0x48:0x2a8].split(bytes(1))[0].decode('ascii')
         import tempfile
         with tempfile.TemporaryDirectory() as tmp:
-            original=Path(tmp)/'original.adt';original.write_bytes(payload[ao:ao+al])
-            rebuilt,_=build(str(a.smp_kernel),str(original),command)
+            original = Path(tmp) / 'original.adt'
+            saved_props = chosen.props
+            chosen.props = [prop for prop in saved_props if prop[0] != 'a03-audio-firmware']
+            original.write_bytes(adt.serialize(tree))
+            chosen.props = saved_props
+            rebuilt, _ = build(str(a.smp_kernel), str(original), command,
+                               a03_audio_firmware=a.a03_audio_firmware)
         assert rebuilt==payload, 'SMP kernel does not match payload'
         symbols=subprocess.check_output(['llvm-nm',str(a.smp_kernel)],text=True)
         matches=[int(line.split()[0],16) for line in symbols.splitlines() if line.endswith(' _sweet_secondary_entry')]

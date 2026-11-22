@@ -1,0 +1,169 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -34,6 +34,139 @@
+  printf("A03 AUDIO: deep=%u sleep=%u system=%u dsp=%u access=%u\n",
+      (control >> 3) & 1, (sleep >> 12) & 15, (power >> 8) & 31,
+      (power >> 16) & 31, (access >> 5) & 1);
++}
++
++/* SM-A035G audiocp_boot, dsp-reboot-mode=1. Explicit probe worker only. */
++#define A03_AGDSP_IMAGE_PA 0x89000000
++#define A03_AGDSP_IMAGE_SIZE 0x600000
++#define A03_AGDSP_IPC_PA 0x94380000
++#define A03_AGDSP_IPC_SIZE 0xe10
++#define A03_AGDSP_RX_OFFSET 0x900
++#define A03_AGDSP_RX_WRITE 0xe0c
++#define A03_AGDSP_BOOT_OK 0xbeee
++#define A03_AGDSP_DOMAIN_MASK 0x1f1f00
++#define A03_AGDSP_DOMAINS_OFF 0x070700
++#define A03_AGDSP_RESET (1U << 22)
++
++static uint32_t
++a03_audio_read(vm_offset_t base, unsigned offset)
++{
++ return *(volatile uint32_t *)(base + offset);
++}
++
++static void
++a03_audio_update(vm_offset_t base, unsigned offset, uint32_t mask, uint32_t value)
++{
++ volatile uint32_t *reg = (volatile uint32_t *)(base + offset);
++ *reg = (*reg & ~mask) | (value & mask);
++}
++
++void a03_audio_boot(void);
++void
++a03_audio_boot(void)
++{
++ static vm_offset_t pmu, aon, image, ipc;
++ static bool tried;
++ if (tried) {
++  printf("A03 AUDIO boot: already attempted this boot\n");
++  return;
++ }
++ DTEntry chosen;
++ const void *property;
++ unsigned int size;
++ if (SecureDTLookupEntry(NULL, "/chosen", &chosen) != kSuccess ||
++     SecureDTGetProperty(chosen, "a03-audio-firmware", &property, &size) != kSuccess ||
++     size != 2 * sizeof(uint64_t)) {
++  printf("A03 AUDIO boot: matching image required\n");
++  return;
++ }
++ uint64_t location[2];
++ memcpy(location, property, sizeof(location));
++ if (location[1] != A03_AGDSP_IMAGE_SIZE || (location[0] & 0x3fff) ||
++     location[0] < 0x102000000ULL || location[0] > 0x17e000000ULL - location[1]) {
++  printf("A03 AUDIO boot: invalid image location\n");
++  return;
++ }
++ const uint8_t *bytes = (const uint8_t *)ml_static_ptovirt(location[0]);
++ if (memcmp(bytes + 0x20, "AUDCP.SharkL6", 13)) {
++  printf("A03 AUDIO boot: invalid image header\n");
++  return;
++ }
++ if (!pmu) pmu = ml_io_map(0x64020000, 0x1000);
++ if (!aon) aon = ml_io_map(0x64000000, 0x1000);
++ if (!pmu || !aon ||
++     (a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK) != A03_AGDSP_DOMAINS_OFF ||
++     (a03_audio_read(aon, 0x14c) & 0x20)) {
++  printf("A03 AUDIO boot: audio domains must be off and AP access closed\n");
++  return;
++ }
++ if (!image) image = ml_io_map(A03_AGDSP_IMAGE_PA, A03_AGDSP_IMAGE_SIZE);
++ if (!ipc) ipc = ml_io_map(A03_AGDSP_IPC_PA, A03_AGDSP_IPC_SIZE);
++ if (!image || !ipc) {
++  printf("A03 AUDIO boot: reserved memory mapping failed\n");
++  return;
++ }
++
++ tried = true;
++ for (unsigned offset = 0; offset < A03_AGDSP_IMAGE_SIZE; offset += 4) {
++  uint32_t word;
++  memcpy(&word, bytes + offset, sizeof(word));
++  *(volatile uint32_t *)(image + offset) = word;
++ }
++ for (unsigned offset = 0; offset < A03_AGDSP_IPC_SIZE; offset += 4) {
++  *(volatile uint32_t *)(ipc + offset) = 0;
++ }
++ __asm__ volatile("dsb sy" ::: "memory");
++
++ uint32_t sys = a03_audio_read(pmu, 0x3d0);
++ uint32_t core = a03_audio_read(pmu, 0x3d4);
++ uint32_t sleep = a03_audio_read(pmu, 0x818);
++ uint32_t reset_sel = a03_audio_read(pmu, 0xba8);
++ uint32_t sys_reset = a03_audio_read(pmu, 0xb98);
++ uint32_t core_reset = a03_audio_read(pmu, 0xb88);
++ uint32_t boot_select = a03_audio_read(aon, 0x144);
++ printf("A03 AUDIO boot: retained vector=%08x, loading via stock mode 1\n",
++     a03_audio_read(aon, 0x140));
++ a03_audio_update(pmu, 0xba8, A03_AGDSP_RESET, 0);
++ a03_audio_update(pmu, 0xb88, A03_AGDSP_RESET, A03_AGDSP_RESET);
++ a03_audio_update(pmu, 0xb98, A03_AGDSP_RESET, A03_AGDSP_RESET);
++ a03_audio_update(pmu, 0x3d0, 0x03000000, 0);
++ a03_audio_update(pmu, 0x3d4, 0x03000000, 0);
++ a03_audio_update(pmu, 0x818, 0x08, 0);
++ a03_audio_update(aon, 0x78, 0xffff, 0x9620);
++ a03_audio_update(aon, 0x144, 1, 1);
++ a03_audio_update(pmu, 0xb88, A03_AGDSP_RESET, 0);
++ a03_audio_update(pmu, 0xb98, A03_AGDSP_RESET, 0);
++ __asm__ volatile("dsb sy" ::: "memory");
++
++ uint32_t rx_write = 0;
++ for (unsigned poll = 0; poll < 100; poll++) {
++  rx_write = a03_audio_read(ipc, A03_AGDSP_RX_WRITE);
++  if (rx_write > 64) {
++   break;
++  }
++  __asm__ volatile("dmb oshld" ::: "memory");
++  for (unsigned slot = 0; slot < rx_write; slot++) {
++   unsigned offset = A03_AGDSP_RX_OFFSET + slot * 20;
++   if (a03_audio_read(ipc, offset) == 0xbeeebeee &&
++       a03_audio_read(ipc, offset + 4) == A03_AGDSP_BOOT_OK) {
++    printf("A03 AUDIO boot: DSP ready rx=%u slot=%u\n", rx_write, slot);
++    return;
++   }
++  }
++  IOSleep(10);
++ }
++ printf("A03 AUDIO boot: no ready rx=%u pmu=%08x; restoring power controls\n",
++     rx_write, a03_audio_read(pmu, 0x544));
++ a03_audio_update(pmu, 0xb88, A03_AGDSP_RESET, A03_AGDSP_RESET);
++ a03_audio_update(pmu, 0xb98, A03_AGDSP_RESET, A03_AGDSP_RESET);
++ a03_audio_update(aon, 0x144, 1, boot_select);
++ a03_audio_update(pmu, 0x818, 0x08, sleep);
++ a03_audio_update(pmu, 0x3d4, 0x03000000, core);
++ a03_audio_update(pmu, 0x3d0, 0x03000000, sys);
++ a03_audio_update(pmu, 0xba8, A03_AGDSP_RESET, reset_sel);
++ a03_audio_update(pmu, 0xb88, A03_AGDSP_RESET, core_reset);
++ a03_audio_update(pmu, 0xb98, A03_AGDSP_RESET, sys_reset);
+ }
+ 
+ void a03_usb_console_start(void);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -610,6 +610,7 @@
+ }
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
++extern void a03_audio_boot(void);
+ extern void a03_audio_status(void);
+ extern void a03_gpu_probe(void);
+ extern void a03_gpu_power(void);
+@@ -624,7 +625,7 @@
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus audio status gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -647,6 +648,7 @@
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
++ else if(!strcmp(command,"audio boot"))a03_audio_boot();
+  else if(!strcmp(command,"audio status"))a03_audio_status();
+  else if(!strcmp(command,"gpu power"))a03_gpu_power();
+  else if(!strcmp(command,"gpu clocks"))a03_gpu_clocks();
