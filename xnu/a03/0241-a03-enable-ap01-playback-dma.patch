@@ -1,0 +1,27 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -499,6 +499,10 @@
+        a03_audio_update(vbc, 0x30, 4, 4);
+        started = !a03_audio_scene_start();
+        a03_audio_update(vbc, 0x2c, 0x300, 0x300);
++       /* Stock AP01 path enables both DMA channels before the DSP trigger. */
++       a03_audio_update(vbc, 0x50, 0x3, 0x3);
++       __asm__ volatile("dsb sy" ::: "memory");
++       uint32_t dma_enabled = a03_audio_read(vbc, 0x50);
+        __asm__ volatile("dsb sy" ::: "memory");
+        uint32_t enabled = a03_audio_read(vbc, 0x2c);
+        uint32_t left = a03_audio_read(vbc, 0x34);
+@@ -533,10 +537,11 @@
+          }
+         }
+        }
+-       printf("A03 AUDIO FIFO: enable=%08x left=%08x->%08x right=%08x->%08x\n",
+-           enabled, left, a03_audio_read(vbc, 0x34),
++       printf("A03 AUDIO FIFO: enable=%08x dma=%08x left=%08x->%08x right=%08x->%08x\n",
++           enabled, dma_enabled, left, a03_audio_read(vbc, 0x34),
+            right, a03_audio_read(vbc, 0x38));
+        printf("A03 AUDIO FIFO: restoring AP01 before DSP shutdown\n");
++       a03_audio_update(vbc, 0x50, 0x3, 0);
+        a03_audio_update(vbc, 0x2c, 0x300, 0);
+        a03_audio_update(vbc, 0x30, 4, 4);
+        a03_audio_update(vbc, 0x20, 0x6ff, config);
