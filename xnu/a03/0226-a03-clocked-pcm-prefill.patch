@@ -1,0 +1,29 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -419,6 +419,26 @@
+       printf("A03 AUDIO AP: reading AP01 FIFO control\n");
+       uint32_t config = a03_audio_read(vbc, 0x20);
+       printf("A03 AUDIO AP: fifo_ctrl=%08x\n", config);
++      /* Exercise the idle AP01 FIFO without enabling DMA or playback. */
++      if (!(a03_audio_read(vbc, 0x2c) & 0x300) &&
++          !(a03_audio_read(vbc, 0x50) & 3) &&
++          (a03_audio_read(vbc, 0x34) & (1U << 18)) &&
++          (a03_audio_read(vbc, 0x38) & (1U << 18))) {
++       a03_audio_update(vbc, 0x20, 0x6ff, (3U << 9) | 80);
++       uint32_t left = a03_audio_read(vbc, 0x34);
++       uint32_t right = a03_audio_read(vbc, 0x38);
++       for (unsigned frame = 0; frame < 16; frame++) {
++        a03_audio_write(vbc, 0, 0);
++        a03_audio_write(vbc, 4, 0);
++       }
++       __asm__ volatile("dsb sy" ::: "memory");
++       printf("A03 AUDIO FIFO: left=%08x->%08x right=%08x->%08x\n",
++           left, a03_audio_read(vbc, 0x34), right, a03_audio_read(vbc, 0x38));
++       a03_audio_update(vbc, 0x30, 4, 4);
++       a03_audio_update(vbc, 0x20, 0x6ff, config);
++      } else {
++       printf("A03 AUDIO FIFO: AP01 is not idle and empty\n");
++      }
+      }
+     }
+     if (added) a03_audio_write(ahb, 0x2000, added);
