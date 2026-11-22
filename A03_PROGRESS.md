@@ -1,5 +1,19 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22: BOOT0147 DSP ready and autonomous touch streaming
+
+CI 45015846547 passed and BOOT-only flash completed. Image SHA-256
+84e650dbffa093aa3a02d2bdce5cca2f79ff31c611054d3101d133e61b39c5f8.
+Bundled touch firmware returned A55A and HID streamstatus reported 49
+validated slices without a host touch-start command. The USB cable was
+attached for diagnostics. Cable-free reboot and physical swipe remain
+unverified.
+
+Explicit audio boot preserved vector 0x32802300 and received the
+AGDSP_BOOT_OK tuple in RX slot 0 with write cursor 1. This establishes
+firmware startup. CI 45017041887 at 5963a66 builds the VBC mailbox probe.
+Audible iOS playback remains pending.
+
 ## 2026-11-22: Untethered touch acceptance
 
 User confirms touch works again after the live BOOT0146 recovery and

@@ -1,3 +1,8 @@
+BOOT0147 installed and DSP returned AGDSP_BOOT_OK. Touch started from
+bundled firmware and passed 49 validated slices before any host touch-start
+command. Cable-free physical test requested. CI 45017041887 builds 0219
+for the VBC mailbox test. Speaker playback remains pending.
+
 User confirms recovered BOOT0146 touch and requires untethered touch
 on every boot. BOOT0147 install watcher session 18882 waits for the
 verified combined build. Check automatic HID streaming and physical
