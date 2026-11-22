@@ -18,10 +18,10 @@ jobs:
           set -euo pipefail
           bundle=out/HakiosAudio.driver
           bash gpu/hakios-audio/build-ios.sh "$bundle"
-          xcrun lipo -verify_arch arm64 "$bundle/HakiosAudio"
+          test "$(xcrun lipo "$bundle/HakiosAudio" -archs)" = arm64
           xcrun vtool -show-build "$bundle/HakiosAudio" | tee out/build-version.txt
-          grep -q 'platform IOS' out/build-version.txt
-          grep -q 'minos 16.0' out/build-version.txt
+          grep -Eq 'platform[[:space:]]+IOS$' out/build-version.txt
+          grep -Eq 'minos[[:space:]]+16\.0$' out/build-version.txt
           xcrun nm -gjU "$bundle/HakiosAudio" | grep -x _HakiosAudio_Create
           (cd out && shasum -a 256 HakiosAudio.driver/* > SHA256SUMS)
       - uses: actions/upload-artifact@v4
