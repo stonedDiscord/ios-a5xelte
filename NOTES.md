@@ -1,3 +1,6 @@
+Patch 0222 adds the AP wake and FIFO status trial after 0221.
+BOOT0149 still answers DSP GET while the AP access gate is closed.
+
 BOOT0150 CI 45019384758 builds 255c2fb with a NORMAL_AP01 VBC startup
 and shutdown trial. Session 83751 waits for the verified BOOT image,
 then captures both DSP replies. BOOT0149 verified two consecutive GETs.

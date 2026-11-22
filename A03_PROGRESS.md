@@ -1,5 +1,15 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — VBC AP access candidate
+
+On BOOT0149, delayed audio status reports deep=1 sleep=0 system=7
+dsp=7 access=0. The same boot still answers VBC GET. DSP mailbox
+availability therefore cannot qualify CPU access to the VBC aperture.
+Patch 0222 uses the stock AP gate and mailbox wake word 100, waits for
+all stock awake predicates, and samples only AP playback FIFO status
+before restoring the access bit. Exact application after 0221 and
+profile staging passed. Hardware validation remains pending.
+
 ## 2026-11-22 — NORMAL_AP01 playback scene candidate
 
 Patch 0221 constructs the stock 620-byte startup parameter block and
