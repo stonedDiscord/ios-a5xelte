@@ -27,7 +27,7 @@
 +{
 + if (command == 0x80c87202) {
 +  char message[200];
-+  if (copyin(data, message, sizeof(message) - 1) != 0) return EFAULT;
++  if (copyin((user_addr_t)data, message, sizeof(message) - 1) != 0) return EFAULT;
 +  message[sizeof(message) - 1] = 0;
 +  printf("A03 AUDIO HAL: %s\n", message);
 +  return 0;
