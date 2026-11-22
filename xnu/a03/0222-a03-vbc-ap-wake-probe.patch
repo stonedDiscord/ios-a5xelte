@@ -1,0 +1,89 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -352,6 +352,59 @@
+  status = 0;
+  error = a03_audio_exchange(5, 0, 0, payload, sizeof(payload) / 4, &status);
+  printf("A03 AUDIO scene: shutdown error=%d status=%08x\n", error, status);
++}
++
++/* Wake the audio domain the same way as the stock agdsp_access driver.
++ * The probe worker owns this gate while accessing the AP VBC aperture. */
++void a03_audio_ap_probe(void);
++void
++a03_audio_ap_probe(void)
++{
++ static vm_offset_t aon, pmu, mailbox, vbc;
++ const uint32_t access = 1U << 5;
++ if (!a03_audio_ready_ipc) return;
++ if (!aon) aon = ml_io_map(0x64000000, 0x1000);
++ if (!pmu) pmu = ml_io_map(0x64020000, 0x1000);
++ if (!mailbox) mailbox = ml_io_map(A03_AUDIO_MAILBOX_PA, 0x1000);
++ if (!aon || !pmu || !mailbox) return;
++
++ uint32_t old_access = a03_audio_read(aon, 0x14c);
++ a03_audio_update(aon, 4, A03_AUDIO_MAILBOX_CLOCK, A03_AUDIO_MAILBOX_CLOCK);
++ __asm__ volatile("dsb sy" ::: "memory");
++ if (!(a03_audio_read(aon, 4) & A03_AUDIO_MAILBOX_CLOCK)) return;
++ if ((a03_audio_read(mailbox, 0x24) & (1U << A03_AUDIO_DSP_CORE)) ||
++     (a03_audio_read(mailbox, 0x14) & (1U << (16 + A03_AUDIO_DSP_CORE)))) {
++  printf("A03 AUDIO AP: wake mailbox busy\n");
++  return;
++ }
++ a03_audio_update(aon, 0x14c, access, access);
++ if (!(a03_audio_read(aon, 0x14c) & access)) return;
++
++ /* Stock wake word 100, with no SMSG ring entry. */
++ a03_audio_write(mailbox, 4, 100);
++ a03_audio_write(mailbox, 8, 0);
++ a03_audio_write(mailbox, 0, A03_AUDIO_DSP_CORE);
++ a03_audio_write(mailbox, 12, 1);
++ __asm__ volatile("dsb sy" ::: "memory");
++
++ uint32_t deep = 0, sleep = 0, power = 0;
++ for (unsigned poll = 0; poll < 50; poll++) {
++  deep = a03_audio_read(pmu, 0x850) & 8;
++  sleep = (a03_audio_read(pmu, 0x860) >> 12) & 15;
++  power = a03_audio_read(pmu, 0x544) & A03_AGDSP_DOMAIN_MASK;
++  if (!deep && sleep == 6 && !power) {
++   if (!vbc) vbc = ml_io_map(0x56480000, 0x1000);
++   if (vbc) {
++    printf("A03 AUDIO AP: fifo_ctrl=%08x enable=%08x left=%08x right=%08x\n",
++        a03_audio_read(vbc, 0x20), a03_audio_read(vbc, 0x2c),
++        a03_audio_read(vbc, 0x34), a03_audio_read(vbc, 0x38));
++   }
++   break;
++  }
++  IOSleep(1);
++ }
++ printf("A03 AUDIO AP: wake monitor=%x sleep=%x power=%x\n", deep, sleep, power);
++ a03_audio_update(aon, 0x14c, access, old_access);
+ }
+ 
+ void a03_usb_console_start(void);
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -610,6 +610,7 @@
+ }
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
++extern void a03_audio_ap_probe(void);
+ extern void a03_audio_scene_probe(void);
+ extern void a03_audio_vbc_probe(void);
+ extern void a03_audio_boot(void);
+@@ -627,7 +628,7 @@
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot|audio vbc|audio scene gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot|audio vbc|audio scene|audio ap gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -650,6 +651,7 @@
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
++ else if(!strcmp(command,"audio ap"))a03_audio_ap_probe();
+  else if(!strcmp(command,"audio scene"))a03_audio_scene_probe();
+  else if(!strcmp(command,"audio vbc"))a03_audio_vbc_probe();
+  else if(!strcmp(command,"audio boot"))a03_audio_boot();
