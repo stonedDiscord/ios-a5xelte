@@ -1,3 +1,11 @@
+BOOT0165 passed CI 45037358504, artifact verification and BOOT-only
+install. DSP boot passed. Analog power read back PMU0=2230 with
+restored=1. The digital DAC again returned configured=1 and restored=1.
+BOOT0166 CI 45039447797 builds ac5df60 to verify the ADie DAC,
+DACS and DACL-to-SPKL mixer fields with the speaker amplifier off.
+Session 94668 watches build, install and capture. The iOS PCM sink
+and audible Settings playback remain pending.
+
 BOOT0164 passed CI 45036949973 and BOOT-only upload. DSP boot passed.
 The digital DAC probe configured stereo at 48 kHz and read back
 AUD_TOP_CTL=00000005 and AUD_DAC_CTL=000003f1. It reported configured=1
