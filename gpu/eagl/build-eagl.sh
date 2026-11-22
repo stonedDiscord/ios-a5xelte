@@ -60,11 +60,7 @@ $CC -O2 -Wall -dynamiclib -o "$OUT/lib/libheroapp.dylib" "$HERE/src/heroapp.c" -
   -lobjc -L "$OUT/lib" -ldrm.2 -Wl,-rpath,/private/var/herolte/lib
 
 # The audio plug-in of mediaserverd, for hero-run to put in /System/Library/Audio/Plug-Ins/HAL/HakiosAudio.driver.
-mkdir -p "$OUT/audio"
-$CC -O2 -w -bundle -I"$HERE/../hakios-audio" -o "$OUT/audio/HakiosAudio" "$HERE/../hakios-audio/audio_plugin.c" \
-  -framework CoreFoundation -lm
-cp "$HERE/../hakios-audio/audio_plugin.plist" "$OUT/audio/Info.plist"
-codesign -s - -f "$OUT/audio/HakiosAudio"
+bash "$HERE/../hakios-audio/build-ios.sh" "$OUT/audio"
 
 for f in "$OUT/lib/libheroeagl.dylib" "$OUT/lib/libhakiosgl.dylib" "$OUT/lib/libherosb.dylib" "$OUT/lib/libheroapp.dylib" "$OUT/eagl_ca_test" "$OUT/hero-run"; do
   codesign -s - -f "$f"

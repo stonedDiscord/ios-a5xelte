@@ -1,0 +1,25 @@
+name: a03-audio-hal
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15-intel
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and verify the iOS HAL bundle
+        run: |
+          set -euo pipefail
+          bundle=out/HakiosAudio.driver
+          bash gpu/hakios-audio/build-ios.sh "$bundle"
+          xcrun lipo -verify_arch arm64 "$bundle/HakiosAudio"
+          xcrun vtool -show-build "$bundle/HakiosAudio" | tee out/build-version.txt
+          grep -q 'platform IOS' out/build-version.txt
+          grep -q 'minos 16.0' out/build-version.txt
+          xcrun nm -gjU "$bundle/HakiosAudio" | grep -x _HakiosAudio_Create
+          (cd out && shasum -a 256 HakiosAudio.driver/* > SHA256SUMS)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a03-audio-hal
+          path: out/
