@@ -230,7 +230,8 @@ def main():
                      '0226-a03-clocked-pcm-prefill.patch',
                      '0227-a03-enable-ap01-for-pcm-prefill.patch',
                      '0228-a03-trigger-ap01-playback-scene.patch',
-                     '0229-a03-restore-fifo-before-shutdown.patch'):
+                     '0229-a03-restore-fifo-before-shutdown.patch',
+                     '0230-a03-sc2730-speaker-state.patch'):
             shutil.copyfile(ROOT/'xnu/a03'/name, a.destination/name)
     (a.destination/'A03-PROFILE.txt').write_text(chr(10).join([
         'SWEET '+SHA+' through 0018; native 16K, arm64; boot CPU by default.',

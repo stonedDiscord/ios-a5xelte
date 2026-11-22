@@ -1,0 +1,58 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -651,6 +651,28 @@
+ /* Shared ADI ownership: USB supply setup finishes before workers start.
+  * No arbitrary PMIC API or expansion of the USB write allowlist. */
+ static volatile unsigned adi_runtime_busy;
++
++/* SC2730 audio-codec@1000, fixed analog registers from sprd-codec.h. */
++void a03_audio_codec_probe(void);
++void
++a03_audio_codec_probe(void)
++{
++ uint32_t power, speaker, depop;
++ if (!adi || !__sync_bool_compare_and_swap(&adi_runtime_busy, 0, 1)) {
++  printf("A03 AUDIO codec: ADI unavailable\n");
++  return;
++ }
++ int ok = adi_read(0x1000, &power) && adi_read(0x10ac, &speaker) &&
++     adi_read(0x11b0, &depop);
++ __sync_lock_release(&adi_runtime_busy);
++ if (ok) {
++  printf("A03 AUDIO codec: PMU0=%04x CDC14=%04x STS11=%04x\n",
++      power, speaker, depop);
++ } else {
++  printf("A03 AUDIO codec: ADI read failed\n");
++ }
++}
++
+ int a03_gpu_supply_status(uint32_t *, uint32_t *);
+ int a03_gpu_supply_status(uint32_t *pd, uint32_t *voltage) {
+  if (!adi || !__sync_bool_compare_and_swap(&adi_runtime_busy, 0, 1)) return 0;
+--- a/bsd/kern/sweet_amfi.c
++++ b/bsd/kern/sweet_amfi.c
+@@ -610,6 +610,7 @@
+ }
+ extern void a03_display_probe(void);
+ extern void a03_cpu_usage_probe(void);
++extern void a03_audio_codec_probe(void);
+ extern void a03_audio_ap_probe(void);
+ extern void a03_audio_scene_probe(void);
+ extern void a03_audio_vbc_probe(void);
+@@ -628,7 +629,7 @@
+  printf("A03 PROBE %u BEGIN %s\n",id,command);
+  if(!strcmp(command,"ping"))printf("A03 PROBE pong\n");
+  else if(!strcmp(command,"help"))
+-  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot|audio vbc|audio scene|audio ap gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
++  printf("A03 PROBE help: ping ps vm io display cpus audio status|audio boot|audio vbc|audio scene|audio ap|audio codec gpu|gpu power|gpu clocks|gpu cores|gpu job|gpu copy creds PID threads PID sample PID mem PID HEXADDR HEXCOUNT<=100; stat|acl /private/var/PATH; input status|home|swipeup; time status|UNIX_UTC_SECONDS\n");
+  else if(!strncmp(command,"time ",5))a03_probe_time(command+5);
+  else if(!strncmp(command,"touch ",6))a03_touch_probe(command+6);
+  else if(!strncmp(command,"input ",6))a03_probe_input(command+6);
+@@ -651,6 +652,7 @@
+  else if(!strcmp(command,"display"))a03_display_probe();
+  else if(!strcmp(command,"cpus"))a03_cpu_usage_probe();
+  else if(!strcmp(command,"gpu"))a03_gpu_probe();
++ else if(!strcmp(command,"audio codec"))a03_audio_codec_probe();
+  else if(!strcmp(command,"audio ap"))a03_audio_ap_probe();
+  else if(!strcmp(command,"audio scene"))a03_audio_scene_probe();
+  else if(!strcmp(command,"audio vbc"))a03_audio_vbc_probe();
