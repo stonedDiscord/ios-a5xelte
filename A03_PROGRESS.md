@@ -1,5 +1,11 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+Patch 0237 submits whole stereo PCM frames through the AP01 FIFO and
+checks both channels for space before each frame. Mock MMIO checks
+passed for zero, partial and full submission, channel order and sample
+bit preservation. Patch application and profile staging passed. Commit
+0bd0dff awaits a hardware build after the BOOT0166 mixer trial.
+
 BOOT0165 passed CI 45037358504, artifact verification and BOOT-only
 install. DSP boot passed. Analog power read back PMU0=2230 with
 restored=1. The digital DAC again returned configured=1 and restored=1.
