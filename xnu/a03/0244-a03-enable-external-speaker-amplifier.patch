@@ -1,0 +1,87 @@
+--- a/bsd/dev/a03_usb_console.c
++++ b/bsd/dev/a03_usb_console.c
+@@ -806,6 +806,45 @@
+ 
+ /* SC2730 audio-codec@1000, fixed analog registers from sprd-codec.h. */
+ void a03_audio_codec_probe(void);
++/* SM-A035G live DT: active-high AP GPIO40, general speaker music mode 10. */
++#define A03_SPK_PA_BIT (1u << 8)
++
++static vm_offset_t
++a03_speaker_amp_start(uint32_t saved[4])
++{
++ static vm_offset_t aon, gpio;
++ if (!aon) aon = ml_io_map(0x64000000, 0x2000);
++ if (!gpio) gpio = ml_io_map(0x641b0000, 0x1000);
++ if (!aon || !gpio) return 0;
++
++ /* GPIO_EB set alias, shared with the physical key driver. */
++ *(volatile uint32_t *)(aon + 0x1004) = 1u << 1;
++ __asm__ volatile("dsb sy" ::: "memory");
++ if (!(a03_audio_read(aon, 4) & (1u << 1))) return 0;
++
++ vm_offset_t bank = gpio + 2 * 0x80;
++ saved[1] = a03_audio_read(bank, 4);
++ a03_audio_update(bank, 4, A03_SPK_PA_BIT, A03_SPK_PA_BIT);
++ saved[0] = a03_audio_read(bank, 0);
++ saved[2] = a03_audio_read(bank, 8);
++ saved[3] = a03_audio_read(bank, 0x28);
++ a03_audio_update(bank, 0, A03_SPK_PA_BIT, 0);
++ a03_audio_update(bank, 8, A03_SPK_PA_BIT, A03_SPK_PA_BIT);
++ a03_audio_update(bank, 0x28, A03_SPK_PA_BIT, 0);
++ IOSleep(1);
++
++ boolean_t interrupts = ml_set_interrupts_enabled(FALSE);
++ for (unsigned pulse = 0; pulse < 10; pulse++) {
++  a03_audio_update(bank, 0, A03_SPK_PA_BIT, 0);
++  IODelay(2);
++  a03_audio_update(bank, 0, A03_SPK_PA_BIT, A03_SPK_PA_BIT);
++  IODelay(2);
++ }
++ ml_set_interrupts_enabled(interrupts);
++ IOSleep(10);
++ return bank;
++}
++
+ static void
+ a03_audio_analog_trial(vm_offset_t vbc)
+ {
+@@ -870,7 +909,13 @@
+   }
+   printf("A03 AUDIO speaker: depop=%04x ready=%u\n", depop,
+       ok && (depop & 0x100));
+-  if (ok && (depop & 0x100) && a03_pcm_live) {
++  uint32_t pa_gpio_saved[4];
++  vm_offset_t pa_gpio = 0;
++  if (ok && (depop & 0x100)) {
++   pa_gpio = a03_speaker_amp_start(pa_gpio_saved);
++   printf("A03 AUDIO: external speaker amp enabled=%u\n", pa_gpio != 0);
++  }
++  if (pa_gpio && a03_pcm_live) {
+    unsigned idle = 0;
+    uint64_t submitted = 0, nonzero = 0;
+    while (idle < 30) {
+@@ -882,7 +927,7 @@
+    }
+    printf("A03 AUDIO PCM: submitted=%llu nonzero=%llu\n",
+        (unsigned long long)submitted, (unsigned long long)nonzero);
+-  } else if (ok && (depop & 0x100)) {
++  } else if (pa_gpio) {
+    /* Feed a quiet 1 kHz waveform for up to 100 ms. */
+    uint64_t deadline, now;
+    nanoseconds_to_deadline(100000000ULL, &deadline);
+@@ -901,6 +946,14 @@
+     clock_get_uptime(&now);
+    } while (now < deadline && submitted < 4800);
+    printf("A03 AUDIO FIFO: tone submitted=%u\n", submitted);
++  }
++  if (pa_gpio) {
++   a03_audio_update(pa_gpio, 0, A03_SPK_PA_BIT, 0);
++   IOSleep(1);
++   a03_audio_update(pa_gpio, 8, A03_SPK_PA_BIT, pa_gpio_saved[2]);
++   a03_audio_update(pa_gpio, 0x28, A03_SPK_PA_BIT, pa_gpio_saved[3]);
++   a03_audio_update(pa_gpio, 0, A03_SPK_PA_BIT, pa_gpio_saved[0]);
++   a03_audio_update(pa_gpio, 4, A03_SPK_PA_BIT, pa_gpio_saved[1]);
+   }
+   bool pa_restored = adi_write_raw(0x10ac, speaker) &&
+       adi_read(0x10ac, &value) && (value & pa_mask) == (speaker & pa_mask);
