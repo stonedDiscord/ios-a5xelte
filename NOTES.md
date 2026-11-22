@@ -1,3 +1,9 @@
+BOOT0170 CI 45043422319 was cancelled by branch concurrency before
+installation. The replacement BOOT0171 run is 45044136063 at 4b66e96.
+Session 23955 verifies the artifact, installs BOOT and captures the
+depop result, PCM submission and teardown. The HAL staging fix has
+passed local checks. Installed Settings playback remains silent.
+
 Settings ringtone previews remain silent in the latest user test.
 Commit fbafc98 stages HakiosAudio.driver in System/Library/Audio/Plug-Ins/HAL
 and keeps VirtualAudio enabled for audio-enabled root builds. Shell and
