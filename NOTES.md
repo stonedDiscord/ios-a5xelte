@@ -1,3 +1,9 @@
+Settings ringtone previews remain silent in the latest user test.
+Commit fbafc98 stages HakiosAudio.driver in System/Library/Audio/Plug-Ins/HAL
+and keeps VirtualAudio enabled for audio-enabled root builds. Shell and
+Python syntax checks and a temporary-root routing check passed. The
+installed root still needs the bundle and the kernel PCM device.
+
 BOOT0168 submitted 249 frames and ended with both FIFO full flags set.
 BOOT0169 enabled the digital DAC during the same test and submitted
 4800 frames with the DMA enable bits clear. DSP shutdown and probe
