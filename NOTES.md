@@ -1,3 +1,7 @@
+BOOT0153 verified DSP wake after responsive startup. BOOT0154 CI
+45023994730 builds the guarded AUDCP AHB clock read in a49c8c7.
+Session 13394 handles packaging, install and capture.
+
 BOOT0150 restored after BOOT0151 audio ap panic. USB ping and touch
 autostart markers recovered. CI 45022182506 builds a73a5c1, which removes
 VBC aperture reads and the untested FIFO write. BOOT0153 packaging

@@ -1,5 +1,20 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — BOOT0153 audio wake verified
+
+CI 45022182506 passed; BOOT-only upload succeeded. Image SHA-256
+34ad4b76d91861edf34ba613e75e196a1169f7edcca7099b6831cecc05da8c24.
+After the console answered ping, a separate request booted the DSP and
+received AGDSP_BOOT_OK. The wake-only test then opened the AP gate,
+posted the DSP wake word and completed with deep monitor 0, sleep state
+6 and power state 0. This isolates the earlier failure to the removed
+portion of the original probe or the timing of that trial.
+
+Patch 0224 reads only the AUDCP AHB clock gate register after wake.
+Application and profile staging passed. CI 45023994730 builds a49c8c7.
+Private session 13394 handles BOOT0154 packaging, BOOT-only install and
+separate ping, DSP boot and clock samples. PCM remains unverified.
+
 ## 2026-11-22 — BOOT0151 panic localized, BOOT0150 restored
 
 The user reported BEGIN audio ap followed by an implementation-specific
