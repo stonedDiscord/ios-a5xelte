@@ -2,6 +2,11 @@ name: a03-audio-hal
 
 on:
   workflow_dispatch:
+  push:
+    branches: [a03-bringup]
+    paths:
+      - 'gpu/hakios-audio/**'
+      - '.github/workflows/a03-audio-hal.yml'
 
 jobs:
   build:
