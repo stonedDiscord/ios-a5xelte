@@ -1,3 +1,7 @@
+BOOT0150 CI 45019384758 builds 255c2fb with a NORMAL_AP01 VBC startup
+and shutdown trial. Session 83751 waits for the verified BOOT image,
+then captures both DSP replies. BOOT0149 verified two consecutive GETs.
+
 BOOT0149 is installed. DSP boot and two consecutive VBC GETs passed
 with status zero. Next port the stock VBC stream setup and PCM path.
 

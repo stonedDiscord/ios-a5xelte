@@ -1,5 +1,12 @@
 # Galaxy A03 SM-A035G — active bring-up
 
+## 2026-11-22 — NORMAL_AP01 playback scene candidate
+
+Patch 0221 constructs the stock 620-byte startup parameter block and
+sends startup then shutdown for NORMAL_AP01. No PCM is submitted.
+Patch application and profile staging passed. CI 45019384758 builds
+255c2fb. Private BOOT0150 packaging and capture session 83751 is live.
+
 ## 2026-11-22: BOOT0149 serialized VBC control verified
 
 CI 45018453065 passed and the BOOT-only transfer succeeded. Image
